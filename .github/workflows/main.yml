@@ -35,7 +35,7 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
     with:
-      env-name: dev-swahilipot
+      env-name: dev-njira
       env-type: dev
       target-git-sha: ${{ github.sha }}
       target-git-branch: ${{ github.ref_name }}
