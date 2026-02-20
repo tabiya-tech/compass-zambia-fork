@@ -21,5 +21,12 @@ export const LocalesLabels = {
   [Locale.NY_ZM]: "Nyanja (Zambia)",
 } as const;
 
-export const SupportedLocales: Locale[] = [Locale.EN_GB, Locale.EN_US, Locale.ES_ES, Locale.ES_AR, Locale.SW_KE, Locale.NY_ZM];
+export const SupportedLocales: Locale[] = [
+  Locale.EN_GB,
+  Locale.EN_US,
+  Locale.ES_ES,
+  Locale.ES_AR,
+  Locale.SW_KE,
+  Locale.NY_ZM,
+];
 export const FALL_BACK_LOCALE = Locale.EN_GB;

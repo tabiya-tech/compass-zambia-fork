@@ -58,6 +58,12 @@ Array [
           "id": "language-context-menu-f4d06e4b-0e0c-49c7-ad93-924c5ac89070-sw-KE",
           "text": "Kiswahili (Kenya)",
         },
+        Object {
+          "action": [Function],
+          "disabled": false,
+          "id": "language-context-menu-f4d06e4b-0e0c-49c7-ad93-924c5ac89070-ny-ZM",
+          "text": "Nyanja (Zambia)",
+        },
       ],
       "notifyOnClose": [Function],
       "open": false,
