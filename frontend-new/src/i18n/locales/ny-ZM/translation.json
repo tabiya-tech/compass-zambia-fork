@@ -1,0 +1,772 @@
+{
+  "common": {
+    "buttons": {
+      "login": "Lowani",
+      "logout": "Tsekani",
+      "submit": "Tumizani",
+      "register": "Lembetsani",
+      "startNewConversation": "Yambani nkhani yatsopano",
+      "settings": "Zokonda",
+      "cancel": "Lambani",
+      "confirm": "Inde, ndili ndi chitsimikizo",
+      "backToLogin": "Bwerani ku Lowani",
+      "save": "Sungani",
+      "goBack": "Bwerani",
+      "restore": "Bwezerani",
+      "revert": "Bwezerani",
+      "continue": "Pitilizani",
+      "noThankYou": "Ayi, zikomo",
+      "iWantToStay": "Ndikufuna kukhala",
+      "yes": "Inde",
+      "no": "Ayi",
+      "skip": "Siya",
+      "yesExit": "Inde, pitani"
+    },
+    "fields": {
+      "email": "Imelo",
+      "password": "Mawu achinsinsi",
+      "confirmEmail": "Tsinkaninani Imelo"
+    },
+    "validation": {
+      "validEmailRequired": "Chonde lembani imelo yovomerezeka",
+      "emailsDoNotMatch": "Imelo sizikugwirizana",
+      "passwordMinLength": "Mawu achinsinsi ayenera kukhala osachepera zilembo 8.",
+      "passwordNeedLowercase": "Mawu achinsinsi ayenera kukhala ndi chilembo chimodzi chaching'ono.",
+      "passwordNeedUppercase": "Mawu achinsinsi ayenera kukhala ndi chilembo chimodzi chachikulu.",
+      "passwordNeedNumber": "Mawu achinsinsi ayenera kukhala ndi nambala imodzi.",
+      "passwordNeedSpecialChar": "Mawu achinsinsi ayenera kukhala ndi chilembo chapadera chimodzi monga: !@#$%*& nk."
+    },
+    "chat": {
+      "errors": {
+        "messageLimit": "Malire a uthenga ndi zilembo {{max}}.",
+        "invalidSpecialCharacters": "Zilembo zapadera zosagwirizana: {{chars}}"
+      }
+    },
+    "upload": {
+      "errors": {
+        "maxFileSize": "Fayilo yosankhidwa ndi yayikulu kwambiri. Kukula kwapamwamba ndi 3 MB.",
+        "tooDense": "Zomwe mwakena zayikulu kuti zigwiritsidwe ntchito. Chonde chepetsani kutalika ndipo yesani kenako.",
+        "emptyParse": "Sitinathe kuona chitukuko mu CV yanu. Chonde onani fayilo ndipo yesani kenako.",
+        "generic": "Kugwiritsa ntchito CV yanu kunalephera. Chonde yesani kenako kapena gwiritsani ntchito fayilo ina.",
+        "rateLimit": "Kukena kwambiri pamodzi. Chonde dikirani phindi imodzi ndipo yesani kenako.",
+        "maxUploadsReached": "Mwafika chiwerengero chapamwamba cha kukena CV pa nkhaniyi. Kukena kwina sikuloledwa.",
+        "duplicate": "CV iyi yidakenedwa kale. Sankhani kuchokera ku CV zanu zidakenedwa kale.",
+        "unsupportedFileType": "Mtundu wa fayilo sazigwiritsidwa. Zololedwa: PDF, DOCX, TXT.",
+        "timeout": "Kukena kunalira nthawi. Chonde yesani kenako.",
+        "unauthorized": "Simuloledwa. Chonde lowani kenako.",
+        "uploadNotFound": "Kukena sikunapezeke. Zingakhale kunalephera kuyamba.",
+        "cvMarkdownTooLong": "Zomwe zili mu CV yanu ndi zatali kwambiri. Chonde fupitsani CV yanu ndipo yesani kenako."
+      }
+    },
+    "time": {
+      "onDate": "pa {{date}}",
+      "yesterday": "dzulo",
+      "daySingular": "tsiku",
+      "dayPlural": "masiku",
+      "hourSingular": "ola",
+      "hourPlural": "maola",
+      "minuteSingular": "dengu",
+      "minutePlural": "madengu",
+      "ago": "{{time}} yapitayo",
+      "justNow": "posachedwapa"
+    },
+    "errors": {
+      "updateState": "Kusintha kalembedwe ka nzeru kunalephera. Chonde yesani kenako.",
+      "generic": "Chinthu chinachitika cholakwika. Chonde yesani kenako.",
+      "api": {
+        "requestTooLong": "Zomwe zatumizidwa kwa ntchito zikuoneka kuti ndi zayikulu. Chonde yesani ndi zochepera. Ngati vuto likupitirira, chotsani cache ya browser yanu ndipo tsitsani tsamba.",
+        "tooManyRequests": "Zikuoneka kuti mukupempha zambiri. Chonde chepetsani ndipo yesani kenako.",
+        "unexpectedError": "Cholakwika chosayembekezereka chachitika. Chonde yesani kenako.",
+        "serverConnectionError": "Sitingathe kulumikiza ku ntchito. Chonde onani intaneti yanu kapena yesani kenako.",
+        "resourceNotFound": "Zomwe mwapempha sizinapezeke. Chonde chotsani cache ya browser yanu ndipo tsitsani tsamba.",
+        "authenticationFailure": "Zikuoneka kuti simunalowe. Chonde lowani kuti mupitilize.",
+        "permissionDenied": "Zikuoneka kuti mulibe chilolezo chofunika. Chonde tsekani ndipo lowani kenako.",
+        "unableToProcessResponse": "Tidaonana ndi vuto pamene tikugwiritsa ntchito data. Chotsani cache ya browser ndipo tsitsani kapena yesani kenako.",
+        "serviceUnavailable": "Ntchitoyo palibe pano. Chonde yesani kenako.",
+        "dataValidationError": "Zikuoneka kuti pali vuto ndi pempho lanu. Ngati mukumtumiza data, onetsetsani kuti ndi yovomerezeka ndipo yesani kenako. Ngati vuto likupitirira, chotsani cache ndipo tsitsani tsamba.",
+        "unableToProcessRequest": "Pepani. Chinthu chinachitika cholakwika pamene tikugwiritsa ntchito pempho lanu."
+      }
+    },
+    "status": {
+      "calculating": "Kuwerengera",
+      "cancelling": "Kulamba",
+      "saving": "Kusunga"
+    },
+    "backdrop": {
+      "loggingYouOut": "Mukutulutsidwa..."
+    },
+    "modal": {
+      "areYouSure": "Mukutsimikiza?",
+      "areYouSureYouWantToExit": "Mukutsimikiza kuti mukufuna kupita?"
+    }
+  },
+  "chat": {
+    "chatHeader": {
+      "viewExperiences": "Onani zochitika",
+      "feedbackMessage": "Tikufuna kumva nkhani yanu pa chitukuko chanu mpaka pano!",
+      "giveFeedback": "Perekani nkhani",
+      "feedbackMessagePlaceholder": "Tikufuna kumva maganizo anu! Chonde gawani nkhani kapena malangizo omwe muli nawo okonza {{appName}}.",
+      "sendFeedback": "Tumizani nkhani",
+      "feedbackSuccessMessage": "Zikomo chifukwa cha nkhani yanu!",
+      "giveGeneralFeedback": "Perekani nkhani yonse",
+      "userInfo": "Zobisika za wogwiritsa",
+      "userIconAlt": "Chizindikiro cha Wogwiritsa",
+      "beforeYouGo": "Musanapite",
+      "logoutConfirmationMessage": "Mukutsimikiza kuti mukufuna kutuluka?",
+      "anonymousAccountWarning": "Pano mukugwiritsa ntchito akaunti yosadziwika. Mutuluka, mudzachita chilakwira mbiri ya nkhani ndi zochitika zanu.",
+      "logoutWarningAnonymous": "Mutuluka, mudzachita chilakwira mbiri ya nkhani ndi zochitika zanu.",
+      "createAccountToSaveProgress": "Lembetsani akaunti kuti musunge mapeto anu",
+      "continueYourJourneyLater": "ndipo pitilizani ulendo wanu kenako.",
+      "formTitle": "Perekani nkhani yonse",
+      "nameLabel": "Dzina",
+      "namePlaceholder": "Dzina Lanu",
+      "emailLabel": "Imelo",
+      "descriptionLabel": "Kufotokozera",
+      "emailPlaceholder": "imelo.yanu@chitsanzo.org",
+      "addScreenshot": "Onjezani chithunzi cha skrini",
+      "requiredLabel": "(zofunika)",
+      "cancelButton": "Lambani"
+    },
+    "cvUploadPolling": {
+      "uploadingCv": "Kukena CV",
+      "cancelled": "Kukena CV kudalambidwa",
+      "uploadedSuccessfully": "CV yadakedwa bwino",
+      "converting": "Kusintha CV",
+      "processing": "Kugwiritsa ntchito CV",
+      "extractingExperiences": "Kutulutsa zochitika",
+      "savingCv": "Kusunga CV",
+      "failed": "Kukena CV kunalephera",
+      "failedToStart": "Kuyamba kukena kunalephera.",
+      "networkErrorStatus": "Cholakwika cha intaneti pamene tikungodziwa kalembedwe ka kukena.",
+      "failedToCancel": "Kulamba kukena kunalephera",
+      "uploadingFileNamed": "Kukena {{filename}}...",
+      "thinkingMessage": "Kugwiritsa ntchito CV yanu, izi zingachitire nthawi..."
+    },
+    "chatMessageField": {
+      "addActionAriaLabel": "onjezani",
+      "moreActionsTooltip": "zochita zambiri",
+      "sendMessageTooltip": "tumizani uthenga",
+      "uploadCvIntro": "Mungakene CV yanu pomwe tikuyamba kufufuza zochitika zanu",
+      "uploadCvCollectExperiences": "PDF, DOCX, TXT • Pamwamba {{MAX_FILE_SIZE_MB}} MB • zilembo {{MAX_MARKDOWN_CHARS}} pamwamba",
+      "uploadCvOtherPhase": "Kukena CV kulipo pokha pamene tikukusanyira zochitika",
+      "uploadCvLabel": "Kenani CV",
+      "viewUploadedLabel": "CV zidakenedwa kale",
+      "placeholders": {
+        "chatFinished": "Nkhani yatha. Simungatume uthenga wina.",
+        "aiTyping": "AI ikulemba..., dikirani imalize.",
+        "offline": "Simuli pa intaneti. Chonde lumikizani pa intaneti kuti mutume uthenga.",
+        "default": "Lembani uthenga wanu...",
+        "uploading": "Kukena CV..."
+      }
+    },
+    "chatMessage": {
+      "typingChatMessage": {
+        "typing": "Kulemba",
+        "thinking": "Kufufuza nzeru zokhudzana ndi chitukukochi"
+      },
+      "conversationConclusionFooter": {
+        "youCanNow": "Tsopano mungathe",
+        "viewAndDownloadCv": "Onani ndi Tsitsani CV yanu",
+        "here": "pano.",
+        "createAccountIntro": "Ngati mukufuna kufufuza nzeru ndi zochitika zanu mtsogolo, mungathe",
+        "createAccount": "Lembetsani Akaunti",
+        "verificationReminder": "Imelo yotsimikiza yatumizidwa kwa imelo yanu. Chonde tsimikizani akaunti yanu musanalowe kenako.",
+        "feedbackWelcome": "Tikufuna kupata",
+        "feedbackLinkText": "Nkhani",
+        "feedbackFromYouSuffix": "zambiri kuchokera kwa inu. Zingachitire madengu 5 okha ndipo zithandiza ife kukonza!",
+        "feedbackInProgressPrefix": "Chonde",
+        "feedbackInProgressLinkText": "Kwaniritsani Nkhani yanu",
+        "feedbackInProgressSuffix": "kuti tithandize kukonza chitukuko chanu!"
+      },
+      "sent": "yatumizidwa "
+    },
+    "chat": {
+      "notifications": {
+        "experiencesFetchFailed": "Kutenga zochitika kunalephera",
+        "logoutSuccess": "Mwatuluka bwino",
+        "startConversationFailed": "Kuyamba nkhani yatsopano kunalephera",
+        "startConversationSuccess": "Nkhani yatsopano yayambira"
+      },
+      "backdrop": {
+        "loggingOut": "Mukutulutsidwa, dikirani pang'ono..."
+      },
+      "startNewConversationDialog": {
+        "title": "Yambani Nkhani Yatsopano?",
+        "content": "Muyamba nkhani yatsopano, uthenga wonse wa nkhani yano udzachitika chilakwira nthawi zonse.",
+        "confirmation": "Mukutsimikiza kuti mukufuna kuyamba nkhani yatsopano?"
+      },
+      "refreshConfirmationDialog": {
+        "title": "Mukutsimikiza kuti mukufuna kutsitsa tsamba?",
+        "content": "{{appName}} ikulemba ndipo kutsitsa tsamba kungabweretse mavuto. Mungachita chilakwira mapeto a nkhani yano.",
+        "question": "Mukufuna kudikira {{appName}} imalize, kapena tsitsani kenako?",
+        "waitButton": "Dikirani {{appName}}",
+        "refreshButton": "Tsitsani"
+      }
+    },
+    "chatProgressbar": {
+      "labels": {
+        "workTypes": "mitundu ya ntchito",
+        "experiences": "zochitika",
+        "questions": "mafunso",
+        "tasks": "ntchito"
+      },
+      "phases": {
+        "initializing": "Kuyambitsa...",
+        "intro": "Chiyambi",
+        "collecting": "Kusonkhanitsa",
+        "exploring": "Kufufuza",
+        "discoveringPreferences": "Kufufuza zokonda",
+        "rankingOccupations": "Kupanga ntchito",
+        "recommendations": "Kukambirana malangizo",
+        "finished": "Nkhani yatha",
+        "unknown": "Gawo losadziwika"
+      }
+    },
+    "util": {
+      "feedbackThankYou": "Zikomo chifukwa cha nthawi yopereka nkhani yanu yofunika.",
+      "ratingThankYou": "Zikomo chifukwa cha kuwerenga {{appName}}.",
+      "errorSomethingWentWrong": "Pepani, zikuoneka kuti chinthu chinachitika cholakwika kwa ine... Chonde tsitsani tsamba ndipo yesani kenako?",
+      "errorPleaseRepeat": "Pepani, zikuoneka kuti chinthu chinachitika cholakwika kwa ine... Chonde buuzani kenako?",
+      "messages": {
+        "experiencesIntro": "Awa ndi zochitika zanga:"
+      }
+    },
+    "reaction": {
+      "components": {
+        "dislikeReasonPopover": {
+          "title": "Chonde tiuzeni kuti vuto ndi chiyani?",
+          "closeButton": "tsekani nkhani",
+          "reasons": {
+            "inappropriateTone": "Mawu osayenera",
+            "offensiveLanguage": "Chilankhulo chowawa",
+            "biased": "Chosagwirizana",
+            "incorrectInformation": "Zobisika zolakwika",
+            "irrelevant": "Zosakhudza",
+            "confusing": "Zosokoneza"
+          }
+        },
+        "reactionButtons": {
+          "likeLabel": "ndikonda",
+          "dislikeLabel": "sindikonda",
+          "errors": {
+            "submitLike": "Kutumiza nkhani kunalephera. Chonde yesani kenako.",
+            "removeLike": "Kuchotsa nkhani kunalephera. Chonde yesani kenako.",
+            "submitDislike": "Kutumiza nkhani kunalephera. Chonde yesani kenako.",
+            "removeDislike": "Kuchotsa nkhani kunalephera. Chonde yesani kenako."
+          }
+        }
+      }
+    }
+  },
+  "auth": {
+    "pages": {
+      "login": {
+        "welcomeTitle": "Takulandilani ku {{appName}}!",
+        "welcomeBack": "Mwalandilidwa!",
+        "loginToYourAccountToContinue": "Lowani ku akaunti yanu kuti mupitilize",
+        "loginUsing": "Lowani pogwiritsa ntchito",
+        "loggingYouIn": "Mukulowetsedwa...",
+        "loggingInAria": "Kulowa",
+        "dontHaveAnAccount": "Mulibe akaunti? ",
+        "fillInEmailAndPassword": "Chonde lembani imelo ndi mawu achinsinsi",
+        "orLoginToYourAccountToContinue": "Kapena lowani ku akaunti yanu kuti mupitilize",
+        "or": "kapena",
+        "invitationCodeValid": "Code yokondera ndi yovomerezeka",
+        "continueAsGuest": "Pitilizani ngati Mnyamata",
+        "components": {
+          "loginWithInviteCodeForm": {
+            "loginCode": "Code ya Kulowa"
+          }
+        }
+      },
+      "register": {
+        "welcomeTitle": "Takulandilani ku {{appName}}!",
+        "welcomeBack": "Mwalandilidwa!",
+        "subtitle": "Tikufuna zobisika zina kuti tiyambe",
+        "registerWithGoogle": "Lembetsani ndi Google",
+        "alreadyHaveAccount": "Mwadzakhala ndi akaunti?",
+        "registeringYou": "Mukulembetsedwa...",
+        "enterRegistrationCode": "Lembani code yanu yolembetsa",
+        "registrationCode": "Code yolembetsa",
+        "andEitherContinueWith": "ndipo pitilizani ndi",
+        "components": {
+          "registerWithEmailForm": {
+            "registeringAria": "Kulembetsa"
+          }
+        }
+      },
+      "landing": {
+        "continueAsGuest": "Pitilizani ngati Mnyamata",
+        "subtitleBold": "Fufuzani Kachitidwe Kanu Kanatha",
+        "subtitleBody": "Fufuzani ndipo tchulani nzeru zanu kudzera m'nkhani zongozedwa ndi AI. Mangani mbiri yanu ya nzeru ndipo tsitsani CV kuti muyambe kufufuza ntchito. Lembetsani akaunti yaulere kuti musunge mapeto ndipo mubwerere ku mbiri ya nkhani yanu.",
+        "invitationCodeValid": "Code yokondera ndi yovomerezeka",
+        "welcome": "Takulandilani!",
+        "welcomeTitle": "Takulandilani ku {{appName}}!",
+        "or": "kapena",
+        "loggingYouIn": "Mukulowetsedwa..."
+      },
+      "verifyEmail": {
+        "registrationThankYou": "Zikomo chifukwa cha kulembetsa ku {{appName}}.",
+        "verificationEmailSentMessage": "Imelo yotsimikiza yatumizidwa kwa imelo yanu. Kuti mupitilize, chonde tsimikizani imelo yanu koyamba."
+      }
+    },
+    "components": {
+      "anonymousAccountConversionDialog": {
+        "registerAccount": "Lembetsani Akaunti",
+        "registrationInfo": "Chonde lembetsani ndi imelo kuti mukhalenso ndi kupeza nkhaniyi. Popanda kulembetsa, simudzatha kulowa kenako kapena kubwerera ku nkhaniyi.",
+        "emailWarning": "Chonde onetsetsani kuti mukugwiritsa ntchito imelo yovomerezeka, chifukwa sizingasinthidwe kenako ndipo mudzapemphedwa kuitsimikiza.",
+        "closeRegistrationForm": "Tsekani fomu yolembetsa",
+        "invalidEmail": "Chonde lembani imelo yovomerezeka",
+        "emailsMismatch": "Chonde onetsetsani kuti imelo zonse ziwiri zikugwirizana",
+        "passwordRequirementsNotMet": "Chonde onetsetsani kuti mawu achinsinsi anu akukwaniritsa zofunika zonse",
+        "registrationSuccess": "Akaunti yalembetsedwa bwino!",
+        "verificationSentWithEmail": "Pano mwalowa ndi imelo: {{email}}. Imelo yotsimikiza yatumizidwa kwa imelo yanu. Chonde tsimikizani akaunti yanu musanalowe kenako.",
+        "registrationFailed": "Kulembetsa akaunti kunalephera"
+      },
+      "passwordReset": {
+        "forgotPassword": "Muwala mawu achinsinsi?",
+        "pleaseEnterEmail": "Chonde lembani imelo yanu",
+        "passwordResetEmailSent": "Imelo yosinthira mawu achinsinsi yatumizidwa!",
+        "failedToSendResetEmail": "Kutumiza imelo yosinthira kunalephera",
+        "passwordResetLinkSent": "Chingwe chosinthira mawu achinsinsi chatumizidwa kwa imelo yanu.",
+        "resetPassword": "Sinthani Mawu Achinsinsi",
+        "closePasswordResetForm": "Tsekani fomu yosinthira mawu achinsinsi"
+      },
+      "registrationCodeFormModal": {
+        "closeRegistrationCodeForm": "Tsekani fomu ya code yolembetsa",
+        "noRegistrationCodePrompt": "Mulibe code yolembetsa?",
+        "reachOut": "Lumikizanani nafe"
+      },
+      "requestInvitationCodeFormModal": {
+        "requestAccessTitle": "Pemphani kupeza {{appName}}",
+        "requestAccessSubtitle": "Chonde tiuzeni momwe mupangira kugwiritsa ntchito {{appName}}. Tidzayang'anira pempho lanu ndipo tidzalumikizana posachedwapa.",
+        "closeRequestInvitationForm": "Tsekani fomu yopempha code yokondera",
+        "name": "Dzina",
+        "message": "Uthenga",
+        "messagePlaceholder": "Chonde gawani momwe mupangira kugwiritsa ntchito {{appName}}",
+        "invitationRequestSubmitSuccess": "Pempho lanu la kupeza {{appName}} latumizidwa bwino. Tidzabwerera posachedwapa.",
+        "invitationRequestSubmitError": "Chinthu chinachitika cholakwika pamene tinayesa kutuma pempho lanu"
+      },
+      "requestInvitationCode": {
+        "requestLoginCode": "Mulibe code ya kulowa?"
+      },
+      "resendVerificationEmail": {
+        "emailNotVerified": "Imelo yanu sinatsimikizidwe. Chonde onani bokosi lanu la imelo la imelo yotsimikiza.",
+        "resendVerificationEmail": "Tumizani kenako imelo yotsimikiza",
+        "resendVerificationEmailSuccess": "Imelo yotsimikiza yatumizidwa bwino",
+        "resendVerificationEmailFailedWithMessage": "Kutumiza imelo yotsimikiza kunalephera: {{message}}"
+      },
+      "socialAuth": {
+        "orContinueWith": "Kapena pitilizani ndi",
+        "loginWithGoogle": "Lowani ndi Google",
+        "googleLoginIsNotAvailableWhenOffline": "Kulowa ndi Google sikulipo pamene simuli pa intaneti.",
+        "socialFailedLoginWithMessage": "Kulowa kunalephera: {{message}}",
+        "accountNotRegistered": "Akauntiyi sinilembetsedwe. Chonde lumikizanani ndi omwe adapatsa chingwechi."
+      }
+    },
+    "loggingYouOutNotice": "Tikukutulutsani...",
+    "errors": {
+      "loginFailedWithMessage": "Kulowa kunalephera: {{message}}",
+      "registerFailedWithMessage": "Kulembetsa Kunalephera: {{message}}",
+      "preferencesFetchFailedWithMessage": "Cholakwika chachitika pamene tinayesa kutenga zokonda zanu: {{message}}",
+      "firebase": {
+        "emailAlreadyInUse": "Imelo yokhayo ikugwiritsidwa ndi akaunti ina.",
+        "emailNotVerified": "Imelo yomwe mukugwiritsa ntchito yalembetsedwa, koma simunatsimikiza. Chonde tsimikizani imelo yanu kuti mupitilize.",
+        "invalidCredential": "Imelo/mawu achinsinsi omwe mwatumiza ndi ovutika.",
+        "invalidEmail": "Imelo yokhayo ndi yovutika.",
+        "operationNotAllowed": "Akaunti za imelo/mawu achinsinsi siziloledwa.",
+        "weakPassword": "Mawu achinsinsi ndi ofooka kwambiri.",
+        "userDisabled": "Akaunti ya wogwiritsa yazimitsidwa.",
+        "userNotFound": "Palibe wogwiritsa anapezeka pa zobisika zomwe mwatumiza.",
+        "wrongPassword": "Mawu achinsinsi ndi ovutika.",
+        "tooManyRequests": "Tatseka mapempho onse kuchokera pa chipangizochi chifukwa cha zochita zosachilengedwe. Yesani kenako.",
+        "internalError": "Cholakwika mkati chachitika.",
+        "tooManyUsers": "Pali ogwiritsa ambiri kwambiri pa pulojekiti ya Firebase.",
+        "invalidRegistrationCode": "Code yolembetsa yomwe mwalemba ndi yovutika. Chonde onani code ndipo yesani kenako.",
+        "invalidInvitationCode": "Code yokondera yomwe mwalemba ndi yovutika. Chonde onani code ndipo yesani kenako.",
+        "invalidInvitationType": "Code yomwe mwagwiritsa ntchito ndi yolembetsa osati yokulowerani. Chonde pitani ku tsamba lolembetsa.",
+        "invalidRegistrationType": "Code yomwe mwagwiritsa ntchito ndi yokulowerani osati yolembetsa. Chonde pitani ku tsamba lokulowerani.",
+        "popupClosedByUser": "Popup ya Google yatsekedwa musanathe kulowa.",
+        "invalidLoginMethod": "Ntchitoyi siloledwa ndi njira yano yokulowerani.",
+        "emailAlreadyVerified": "Imelo yokhayo yatsimikizidwa kale."
+      }
+    },
+    "verificationEmailSentShort": "Imelo Yotsimikiza Yatumizidwa!"
+  },
+  "cv": {
+    "cvTypingChatMessage": {
+      "uploading": "Chonde dikirani pamene ndikukena ndi kugwiritsa ntchito CV yanu",
+      "uploadedReady": "Zomwe zili mu CV yanu zili m'munda wa mawu. Yang'anani ndipo tumizani mukonzekera."
+    },
+    "uploadedCVsMenu": {
+      "backTitle": "Bwerani ku menyu yayikulu",
+      "titleWithCount": "CV zidakenedwa kale ({{count}})",
+      "helpCollect": "Dinani CV kuti mutulutse zomwe zili m'munda wa mawu. Yang'anani ndipo tumizani mukonzekera.",
+      "helpDisabled": "Kusankha CV kulipo pokha pamene tikukusanyira zochitika.",
+      "empty": "Palibe CV zidakenedwa zomwe zinapezeka."
+    },
+    "cancellableTypingChatMessage": {
+      "typing": "Kulemba",
+      "thinking": "Chonde dikirani, izi zingachitire nthawi",
+      "cancel": "Lambani"
+    }
+  },
+  "experiences": {
+    "experiencesDrawer": {
+      "components": {
+        "experienceEditForm": {
+          "components": {
+            "summaryEditField": {
+              "summaryPlaceholder": "Fupikizo la chitukuko",
+              "restoreFailed": "Kubwezeretsa fupikizo kunalephera. Chonde yesani kenako.",
+              "restored": "Fupikizo labwezeretsedwa."
+            }
+          },
+          "updateSuccess": "Chitukuko chasinthidwa bwino!",
+          "updateFailed": "Kusintha chitukuko kunalephera. Chonde yesani kenako.",
+          "skillsAddedSuccess": "Nzeru zawonjezedwa bwino!",
+          "editTitle": "Sinthani Chitukuko",
+          "infoLabel": "Zobisika za chitukuko",
+          "infoHelp": "Dinani munda kuti musinthe mtundu wa ntchito, mutu, tsiku, kampani, malo, kapena fupikizo la chitukuko chanu.",
+          "field": {
+            "experienceTitlePlaceholder": "Mutu wa chitukuko",
+            "experienceTitleRequired": "* Mutu wa chitukuko ndi wofunika",
+            "startDatePlaceholder": "Tsiku loyambira",
+            "endDatePlaceholder": "Tsiku lomaliza",
+            "companyPlaceholder": "Kampani",
+            "locationPlaceholder": "Malo"
+          },
+          "topSkillsHelpEdit": "Dinani nzeru kuti muone zambiri. Gwiritsani ntchito dropdown kusintha chilembo cha nzeru ndi chizindikiro chofuta kuchichotsa. Dinani batani la Onjezani Nzeru kuti muonjezere.",
+          "addSkillButton": "Onjezani nzeru",
+          "updatingBackdrop": "Kusintha chitukuko...",
+          "maxCharsAllowed": "Zilembo {{count}} pamwamba zololedwa."
+        },
+        "experiencesDrawerHeader": {
+          "closeTitle": "Tsekani zochitika"
+        },
+        "experiencesDrawerContent": {
+          "menu": {
+            "edit": "Sinthani",
+            "delete": "Chotsani",
+            "revert": "Bwezerani"
+          },
+          "actionsUnavailableUntilExplored": "Zochitazi zidzapezeka pomwe mwakambirana chitukuko ndi {{appName}} mwatsatanetsatane.",
+          "moreOptionsTitle": "Zosankha zambiri",
+          "topSkillsLabel": "Nzeru Zapamwamba",
+          "topSkillsHelp": "Dinani nzeru kuti muone zambiri.",
+          "noSkillsYet": "Palibe nzeru zinapezeka pano",
+          "untitled": "Bila mutu!"
+        },
+        "skillPopover": {
+          "alsoKnownAs": "Ponso amadziwika ngati:"
+        },
+        "restoreExperiencesDrawer": {
+          "title": "Bwezeretsani Zochitika Zachotsedwa",
+          "fetchFailed": "Kutenga zochitika zachotsedwa kunalephera. Chonde yesani kenako.",
+          "empty": "Palibe zochitika zachotsedwa zomwe zinapezeka."
+        },
+        "downloadReportButton": {
+          "downloadCv": "Tsitsani CV",
+          "downloading": "Kutsitsa",
+          "helpTipBlockedMessage": "Simungathe kutsitsa report mpaka mwatha kufufuza chitukuko chimodzi."
+        }
+      },
+      "deleteSuccess": "Chitukuko chachotsedwa bwino!",
+      "deleteFailed": "Kuchotsa chitukuko kunalephera.",
+      "userHasNoSessions": "Wogwiritsa alibe masession",
+      "noActiveSession": "Palibe session yogwira zinapezeka",
+      "restoreSuccess": "Chitukuko chabwezeretsedwa bwino!",
+      "restoreFailed": "Kubwezeretsa chitukuko kunalephera.",
+      "personalInfoTooltip": "Minda yazazidwa ndi zobisika zomwe mungadziwe kupereka kale ndipo zasungidwa bwino pa chipangizo chanu. Lembani zosagwirizana kuti mupangire CV yanu.",
+      "andSkillsTitle": "Zochitika ndi Nzeru",
+      "personalInformationTitle": "Zobisika Za Munthu",
+      "personalInfo": {
+        "nameLabel": "Dzina:",
+        "namePlaceholder": "Lembani dzina lanu pano",
+        "emailLabel": "Imelo:",
+        "emailPlaceholder": "Lembani imelo yanu pano",
+        "phoneLabel": "Foni:",
+        "phonePlaceholder": "Lembani nambala yanu ya foni pano",
+        "addressLabel": "Adilesi:",
+        "addressPlaceholder": "Lembani adilesi yanu pano"
+      },
+      "uncategorizedTooltip": "Pamalingaliro a nkhani, zochitikazi sizinathe kugawidwa yekha.",
+      "restoreDeletedLink": "Bwezeretsani zochitika zachotsedwa",
+      "unsavedChanges": {
+        "title": "Zosungidwa Zosinasungidwe",
+        "content": "Muli ndi zosintha zosinasungidwe. Mukutsimikiza kuti mukufuna kutseka popanda kusunga?",
+        "closeButton": "Tsekani",
+        "keepEditingButton": "Pitilizani Kusintha"
+      },
+      "delete": {
+        "title": "Chotsani Chitukuko",
+        "content": "Mukutsimikiza kuti mukufuna kuchotsa chitukukochi? Chochitachi sichingabweretsedwe.",
+        "confirmButton": "Chotsani"
+      },
+      "revert": {
+        "title": "Bwezerani Chitukuko",
+        "content": "Mukutsimikiza kuti mukufuna kubwezeretsa chitukukochi ku mtundu wosinasinthidwe? Izizi zidzachita chilakwira zosintha zilizonse zomwe mwachita.",
+        "confirmButton": "Bwezerani"
+      },
+      "deletingBackdrop": "Kuchotsa chitukuko...",
+      "restoringBackdrop": "Kubwezeretsa chitukuko...",
+      "emptyStateMessage": "Tinabe kufufuza zochitika mpaka pano. Tiyeni tipitilize kukambirana.",
+      "util": {
+        "workTypeDescription": {
+          "selfEmployment": "Mukugwira ntchito nokha, mukuyendetsa bizinesi yanu, kapena mukutenga ntchito za freelance kapena kontrakiti",
+          "formalSectorWagedEmployment": "Muli ndi ntchito yolipidwa ndipo mukugwira ntchito kwa wogwiritsa, kampani, kapena bungwe",
+          "formalSectorUnpaidTraineeWork": "Muli mu udindo wa maphunziro kapena internship kuti mupeze nzeru kapena chitukuko",
+          "unseenUnpaid": "Mukugwira ntchito yosolipidwa monga kusamalira, ntchito za nyumba, kapena kudyerera m'dera",
+          "uncategorized": "{{appName}} sinathe kugawa mtundu wa ntchitowu"
+        },
+        "errors": {
+          "experienceTitleMaxLength": "Zilembo {{max}} pamwamba zololedwa.",
+          "companyMaxLength": "Zilembo {{max}} pamwamba zololedwa.",
+          "locationMaxLength": "Zilembo {{max}} pamwamba zololedwa.",
+          "summaryMaxLength": "Zilembo {{max}} pamwamba zololedwa.",
+          "timelineMaxLength": "Zilembo {{max}} pamwamba zololedwa."
+        }
+      }
+    },
+    "report": {
+      "skillsReportTitle": "Report ya Nzeru",
+      "skillsDescriptionTitle": "Kufotokozera Nzeru",
+      "experiencesTitle": "ZOCHITIKA",
+      "selfEmploymentTitle": "Kugwira Ntchito Nokha",
+      "salaryWorkTitle": "Ntchito Ya Mphotho",
+      "unpaidWorkTitle": "Ntchito Yosolipidwa",
+      "traineeWorkTitle": "Ntchito Ya Wophunzira",
+      "uncategorizedTitle": "Zosagawidwa",
+      "topSkillsTitle": "Nzeru Zapamwamba: ",
+      "skillsDescriptionText": "Pansipa, mupeza mndandanda wa nzeru zinapezeka pamene mukukambirana ndi {{appName}}, limodzi ndi kufotokozera kwake.",
+      "disclaimer": {
+        "part1": "Chidziwitso: ",
+        "part2": "Nzeru zolembedwa zimakhudza nkhani ndi wogwiritsa, sizitsimikizidwa ndi Tabiya, ndipo zingakhale zolakwika. ",
+        "part3": "Zobisika ziyenera kuyang'aniridwa musanagwiritsidwe ntchito kufufuza ntchito, mafunso a ntchito, kapena kupanga CV. Kusintha zobisikazi, kambiranani ndi {{appName}} kenako kapena pangani CV yathunthu kutengera report iyi."
+      },
+      "bodyText": "Report iyi imafupikiza zobisika zofunika zomwe zinasonkhanitsidwa pamene mukukambirana ndi {{appName}} pa {{date}}. {{appName}} ndi chatbot ya AI yomwe imathandiza oyenera ntchito kufufuza nzeru ndi zochitika zawo. Report iyi imaonetsa chitukuko cha ntchito cha wogwiritsa ndi nzeru zinapezeka kuchokera pa chitukuko chilichonse. Zobisikazi zingagwiritsidwe ntchito kutsogolera kufufuza ntchito ndi kuonetsa nzeru zawo pamene akupempha ntchito, makamaka pamene akukambirana ndi ogwiritsa angapo. Zingakhale yoyamba yabwino yopanga CV yathunthu."
+    }
+  },
+  "features": {
+    "skillsRanking": {
+      "components": {
+        "skillsRankingPrompt": {
+          "mainMessage": "Posachedwapa! Yankhani mafunso angapo ena a fufuzo ndipo tidzakutumizirani <0>{{compensationAmount}}</0> airtime mukamaliza ntchito zonse."
+        },
+        "skillsRankingBriefing": {
+          "introWorkBased": "Ngati mukufuna, ndingawerengere gawo liti la mwayi a <0>{{jobPlatformUrl}}</0> omwe agwirizana ndi nzeru zanu ndi momwe mukugwirizanira ndi oyenera ena — mukufunira kundionetsa kuti zobisikazi ndi zofunika bwanji kwa inu.",
+          "introTimeBased": "Ngati mukufuna, ndingawerengere gawo liti la mwayi a <0>{{jobPlatformUrl}}</0> omwe agwirizana ndi nzeru zanu ndi momwe mukugwirizanira ndi oyenera ena. Izizi zingachitire nthawi — ngati simukufuna kudikira, mungadinani <0>lambani</0> nthawi iliyonse m'uthenga wotsatira, pamene ndikugwerera. Mukonzekera chonde dinani <1>pitilizani</1>.",
+          "puzzleInstructions": "Muona zilembo zopindika pa skrini zingapo. Pindani chilembo chilichonse cholondola pogwiritsa ntchito mabatani ophindika. Mungalambire nthawi iliyonse. Mwa 5% ya zochitika, <0>zilembo zambiri zokonzedwa = mwayi wapamwamba wopeza zobisikazi.</0> Nthawi ina zimadalira ine.",
+          "failedToContinue": "Kupitiliza kunalephera. Chonde yesani kenako."
+        },
+        "skillsRankingProofOfValue": {
+          "waitingMessage": "Chonde dikirani pamene ndikugwerera ma calculation, kapena dinani lambani nthawi iliyonse ngati simukufuna kudikira zobisikazi.",
+          "puzzleAutoCompleteMessage": "Kukwaniritsa mapuzzle otsalira yekha..."
+        },
+        "skillsRankingCompletionAdvice": {
+          "adviceMessage": "Malangizo: Manambala awa ndi anu. Manambala awa angasinthe bwanji momwe mukufufuzira ntchito mu sabata ino? Imani ndipo ganizirani kuti nthawi ndi mphamvu zanu pano zikugwira bwanji mu ndondomeko yanu yopeza ntchito."
+        },
+        "skillsRankingRetypedRank": {
+          "question_1": "Monga funso lomaliza, tikumbukire zomwe ndinakuuzani pamwambapa okhudza kugwirizana kwanu ndi mwayi:",
+          "question_2": "onani kenako zomwe ndinati uthenga utatu wapitawa, asilimia angati ya mwayi",
+          "question_3": " pa",
+          "question_4": " mukukwaniritsa nzeru zofunika?",
+          "sliderAria": "Slider ya asilimia ya rank yolembedwa kenako"
+        },
+        "skillsRankingPerceivedRank": {
+          "questionWithDisclosure": "Tsopano, ganizirani ogwiritsa 100 awa a <0>{{jobPlatformUrl}}</0>, omwe ambiri ndi oyenera ntchito kuchokera ku South Africa zaka 18-34 ndi matric kuchokera ku sukulu ya tauni kapena kumudzi. <0>Ndi angati mwa 100 amenewa</0> mukumvera kuti angagwirizane ndi <0>mwayi ochepera</0> pa <0>{{jobPlatformUrl}}</0> <0>kuposa inu</0>?",
+          "questionWithoutDisclosure": "Musanathe nkhani yathu, ndili ndi funso limodzi lomaliza lokhudza zomwe tatchula pamwambapa — ngati munganizire anthu 100 omwe ndi oyenera ntchito kuchokera ku South Africa zaka 18-34 ndi matric kuchokera ku sukulu ya tauni kapena kumudzi. Ndi angati mwa oyenera ntchito 100 amenewa mukumvera kuti angagwirizane ndi <0>udindo ochepera</0> pa <1>{{jobPlatformUrl}}</1> kuposa inu?",
+          "sliderAria": "Slider ya asilimia ya rank yomwe mukuganizira"
+        },
+        "skillsRankingDisclosure": {
+          "skillsRankingMarketDisclosure": {
+            "message_1": "Mukukwaniritsa nzeru zofunika pa ",
+            "message_2": " ya mwayi otchulidwa pa ",
+            "message_3": ". Ndi mwayi wabwino wa zosankha!"
+          },
+          "skillsRankingJobSeekerDisclosure": {
+            "pendingMessage": "Zikomo! Tikungodziwanso mwayi apano a {{jobPlatformUrl}} kuti manambala akhale olondola. Tidzagawana zotsatira zanu posachedwapa kapena mungapemphe pamene tidzakuitanira pa foni.",
+            "comparisonPart1_prefix": "Kupatulira apo, ",
+            "comparisonPart1_main": "Pofananitsa ndi ogwiritsa ena a \n{{jobPlatformUrl}}\n, muli mu gulu [\n{{groupIndex}}\n] mwa \n{{groupTotal}}\n.",
+            "comparisonPart2_prefix": "Ganizirani kupanga mndandanda wa ogwiritsa 100 a \n{{jobPlatformUrl}}\n kuchokera kwa omwe ali ndi ntchito zochepera mpaka zambiri zomwe angagwirizane. Tidagawana mndandanda m'mablock asanu a anthu 20. Block 1 (apamwamba 20) agwirizana ndi ntchito zambiri; block 5 (apansi 20) agwirizana ndi zochepera. Muli mu block ",
+            "comparisonPart2_group": "[\n{{groupIndex}}\n]",
+            "comparisonPart2_middle": ", ndicho ndi block ",
+            "comparisonPart2_label": "[\n{{comparisonLabel}}\n]",
+            "comparisonPart2_suffix": ".",
+            "updateError": "Kusintha kalembedwe ka nzeru kunalephera. Chonde yesani kenako."
+          }
+        },
+        "rotateToSolve": {
+          "instructions1": "Pindani chilembo chilichonse mpaka chikhale cholondola. Sankhani chilembo pogwiritsa ntchito dinani, kenako pindani clockwise ndi",
+          "instructions2": " kapena counterclockwise ndi",
+          "allCompleteMessage": "Mapuzzle onse atha! Zabwino!",
+          "puzzleCompleteMessage": "Puzzle yatha! Chonde yesaninso kapena lambani ngati simukufuna kwambiri zobisikazi.",
+          "rotateLeftAria": "Pindani chilembo kumanzere",
+          "rotateRightAria": "Pindani chilembo kudzanja"
+        }
+      }
+    }
+  },
+  "consent": {
+    "components": {
+      "consentPage": {
+        "beforeWeBeginTitle": "Musanayambe...",
+        "introPart1": "Tinapanga chida ichi cha AI kwa inu mwatsatane kuti tithandize inu ndi anyamata ena monga inu kufufuza nzeru zawo ndi kupeza mwayi watsopano.",
+        "introHighlightResponsibly": "Chonde gwiritsani ntchito AI mwamphamvu!",
+        "introPart2": "Tekinolojia ya AI ndi yatsopano ndipo yayikulu kufika pachilengedwe. Sikumvetsa m'mtundu monga anthu.",
+        "introPart3": "Nthawi zonse yang'anirani zofunika ndipo pepani kugawana zobisika za inu ndi ena ndi AI pamene mukukambirana.",
+        "introPart4": "Tithandizeni kusunga zonse za AI ndi zabwino!",
+        "termsAndConditions": "Zikhalidwe ndi Zikhalidwe",
+        "privacyPolicy": "Policy Ya Chinsinsi",
+        "checkboxTermsAndConditions": "Ndadwerenga ndipo ndikuvomereza <0>{{terms_and_conditions}}</0> ya {{appName}}.",
+        "checkboxPrivacyPolicy": "Ndadwerenga ndipo ndikuvomereza <0>{{privacy_policy}}</0> ya {{appName}}.",
+        "areYouReady": "Mukonzekera kuyamba?",
+        "acceptButton": "Inde, ndili ndi chitsimikizo",
+        "withSupportFrom": "Ndi thandizo kuchokera kwa",
+        "modalApology": "Tikuombola kuti mwasankha kusavomereza {{terms_and_conditions}} ndi {{privacy_policy}}.",
+        "modalCannotProceed": "Simudzatha kupitiliza ndipo mudzakhala",
+        "modalLoggedOutHighlight": "atulutsidwa.",
+        "modalYesExit": "Inde, pitani",
+        "snackbarAgreementAccepted": "Chivomerezo Chavomerezedwa",
+        "snackbarUserNotFound": "Wogwiritsa sanapezeke",
+        "snackbarLoggedOutSuccess": "Mwatuluka bwino.",
+        "snackbarLoggedOutFailure": "Kutuluka kunalephera.",
+        "snackbarFailedUpdatePreferences": "Kusintha zokonda za wogwiritsa kunalephera"
+      }
+    }
+  },
+  "sensitiveData": {
+    "components": {
+      "sensitiveDataForm": {
+        "title": "Perekani Zobisika Zanu",
+        "subtitle": "Tikugwiritsa ntchito data yanu kupangira chitukuko chanu ndipo tingalumikizane ndi inu za {{appName}}.",
+        "unskippableSubtitle": "Chonde perekani zobisika zotsatirazi kuti mupitilize.",
+        "skippableSubtitle": "Mungasiye gawo ili.",
+        "helpTipText": "Zobisika zanu zasungidwa ndi encryption yapamwamba ndipo zasungidwa bwino.",
+        "failedToLoadConfig": "Kutenga config ya fomu kunalephera",
+        "invalidForm": "Chonde konzani zolakwika m'fomu musanatume.",
+        "savedSuccess": "Data ya munthu yasungidwa bwino ndi mwamphamvu.",
+        "errorDefault": "Data ya munthu sinathe kusungidwa. Chonde yesani kenako ndipo ngati vuto likupitirira, chotsani cache ya browser ndipo tsitsani tsamba.",
+        "errorEncryptedDataTooLarge": "Data ya munthu zikuoneka kuti ndi yayikulu kusungidwa. Chonde yesani ndi mtengo waching'ono m'minda. Ngati vuto likupitirira, chotsani cache ndipo tsitsani tsamba.",
+        "collectionSkipped": "Kusonkhanitsa data ya munthu kudasiyidwa.",
+        "rejectParagraph1": "Tikuombola kuti mwasankha kusapereka data yanu. Kupereka zobisikazi kumathandiza {{appName}} kupereka chitukuko chanu. Simudzatha kupitilize ndipo mudzatulutsidwa.",
+        "skipParagraph1": "Tikuombola kuti mwakonda kusapereka data yanu. Kupereka zobisikazi kumathandiza {{appName}} kupereka chitukuko chanu. Chonde dziwani kuti ngati mwasiya gawo ili,",
+        "skipParagraph1Highlighted": " simudzatha kupereka zobisikazi kenako.",
+        "startConversation": "Yambani nkhani",
+        "areYouSureYouWantToSkip": "Mukutsimikiza kuti mukufuna kusiya?",
+        "yesSkip": "Inde, siyani",
+        "shareData": "Gawani data",
+        "skipping": "Kusiya...",
+        "refreshPage": "Tsitsani Tsamba"
+      },
+      "enumField": {
+        "pleaseSelectX": "Chonde sankhani {{x}}",
+        "clearSelection": "Chotsani chosankha"
+      }
+    }
+  },
+  "feedback": {
+    "overallFeedback": {
+      "feedbackForm": {
+        "components": {
+          "customerSatisfactionRating": {
+            "questionText": "Pomaliza, tikufuna kumva maganizo anu pa chitukuko chanu mpaka pano! Mukondwa bwanji ndi {{appName}}?",
+            "ratingLabelLow": "Sikondwa",
+            "ratingLabelHigh": "Ndkondwa",
+            "submitSuccess": "Nkhani ya kuwerenga yatumizidwa bwino!",
+            "submitError": "Kutumiza nkhani kunalephera. Chonde yesani kenako."
+          },
+          "feedbackFormContent": {
+            "previous": "Zomwe zidadza",
+            "next": "Zotsatira"
+          }
+        },
+        "submitSuccess": "Nkhani yatumizidwa bwino!",
+        "submitError": "Kutumiza nkhani kunalephera. Chonde yesani kenako.",
+        "helpUsImprove": "Tithandizeni kukonza!",
+        "closeForm": "tsekani fomu ya nkhani",
+        "submittingFeedback": "Kutumiza nkhani..."
+      }
+    },
+    "bugReport": {
+      "reportBug": "Lengezani cholakwika"
+    }
+  },
+  "error": {
+    "errorPage": {
+      "illustrationAlt": "chithunzi cha cholakwika",
+      "defaultMessage": "Chinthu chinachitika cholakwika ndi {{appName}}. Yesani kutsitsa tsamba...",
+      "notFound": "Cholakwika 404 - Tsamba Silinapezeke"
+    },
+    "restAPIError": {
+      "storyChooseMessageLabel": "Sankhani uthenga wa cholakwika woonesedwa m'chidziwitso:",
+      "storySelectPlaceholder": "Sankhani uthenga wa cholakwika"
+    }
+  },
+  "app": {
+    "isOnlineProvider": {
+      "offline": "Simuli pa intaneti",
+      "backOnline": "Mwabwerera pa intaneti"
+    },
+    "compassLogoAlt": "Chizindikiro cha {{appName}}"
+  },
+  "info": {
+    "infoDrawer": {
+      "frontendTitle": "Frontend",
+      "backendTitle": "Backend",
+      "applicationInformation": "Zobisika Za Pulogalamu",
+      "closeApplicationInformation": "Tsekani zobisika za pulogalamu",
+      "versionInfo": {
+        "date": "Tsiku",
+        "version": "Mtundu",
+        "buildNumber": "Nambala Ya Kuyika",
+        "gitSha": "GIT SHA"
+      }
+    }
+  },
+  "theme": {
+    "confirmModalDialog": {
+      "closeConfirmModal": "tsekani modal yotsimikiza"
+    },
+    "passwordInput": {
+      "togglePasswordVisibility": "sinthani kuonekera kwa mawu achinsinsi"
+    },
+    "helpTip": {
+      "tooltip": "thandizo"
+    }
+  },
+  "i18n": {
+    "languageContextMenu": {
+      "selector": "Chosankha Chilankhulo"
+    }
+  },
+  "_deprecated": {
+    "bias_experience_accuracy": "Kulondola Kwa Chosagwirizana ndi Chitukuko",
+    "inaccurate": "Sazolondola",
+    "very_accurate": "Zolondola kwambiri",
+    "skill_accuracy": "Kulondola Kwa Nzeru",
+    "final_feedback": "Nkhani yomaliza",
+    "difficult": "Zovuta",
+    "easy": "Zosavuta",
+    "unlikely": "Sizotheka",
+    "likely": "Zotheka"
+  },
+  "steps": {
+    "biasAndExperience": "Kulondola Kwa Chosagwirizana ndi Chitukuko",
+    "skillAccuracy": "Kulondola Kwa Nzeru",
+    "finalFeedback": "Nkhani yomaliza"
+  },
+  "labels": {
+    "inaccurate": "Sazolondola",
+    "veryAccurate": "Zolondola kwambiri",
+    "difficult": "Zovuta",
+    "easy": "Zosavuta",
+    "unlikely": "Sizotheka",
+    "likely": "Zotheka"
+  },
+  "buttons": {
+    "submit": "Tumizani",
+    "next": "Zotsatira",
+    "previous": "Zomwe zidadza"
+  }
+}

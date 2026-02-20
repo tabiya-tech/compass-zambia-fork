@@ -1,0 +1,55 @@
+{
+  "interaction_ease": {
+    "question_text": "Kodi zidali zosavuta kapena zovuta kuyankhulana ndi {{appName}} ndikuwona mayankho ake?",
+    "description": "This question is used to measure the Customer Effort Score (CES).",
+    "comment_placeholder": "Chonde tchulani momwe mudalingira ndipo perekani malangizo oti titha kukonza kuyankhulana ndi {{appName}}."
+  },
+  "clarity_of_skills": {
+    "question_text": "Kodi {{appName}} anakuthandizani kumvetsa bwino nzeru zanu? Ngati ayi, chifukwa chiyani?",
+    "description": "This question aims to measure Perceived Usefulness (PU).",
+    "comment_placeholder": "Chonde perekani chifukwa choti {{appName}} sanakuthandizeni kumvetsa nzeru zanu."
+  },
+  "satisfaction_with_compass": {
+    "question_text": "Kodi mukukondwa ndi {{appName}}?",
+    "description": "This question is used to measure the Customer Satisfaction Score (CSAT).",
+    "comment_placeholder": null
+  },
+  "work_experience_accuracy": {
+    "question_text": "Kodi pali zinthu za ntchito yanu zomwe {{appName}} adatchula zomwe zinali zolakwika?",
+    "options": {
+      "experience_title": "Dzina la ntchito lolakwika",
+      "experience_dates": "Tsiku loyambira/kutha lolakwika",
+      "experience_location": "Malolo olakwika",
+      "duplicate_experience": "Ntchito zofanana",
+      "missing_experience": "Ntchito zosachitika",
+      "other": "Zina"
+    },
+    "description": "This question to identify specific inaccuracies in the work experience information.",
+    "comment_placeholder": "Chonde perekani zambiri za zolakwika za ntchito yanu zomwe {{appName}} adatchula."
+  },
+  "incorrect_skills": {
+    "question_text": "Kodi pali nzeru zomwe {{appName}} adatchula molakwika kwa inu?",
+    "description": "This question aims to identify incorrectly identified skills.",
+    "comment_placeholder": "Chonde lembedani nzeru zilizonse zomwe {{appName}} adatchula molakwika."
+  },
+  "missing_skills": {
+    "question_text": "Kodi pali nzeru zimene muli nazo zomwe {{appName}} adasowetsa?",
+    "description": "This question aims to identify missing skills.",
+    "comment_placeholder": "Chonde lembedani nzeru zilizonse zomwe muli nazo zomwe {{appName}} adasowetsa."
+  },
+  "perceived_bias": {
+    "question_text": "Kodi munachitika kuti {{appName}} anakusunga molakwika posadabwa za mbiri yanu, chilankhulo, kapena zina? Ngati inde, chonde tchulani.",
+    "description": "This question aims to identify perceived bias.",
+    "comment_placeholder": "Chonde perekani zambiri za chikhalidwe chanu."
+  },
+  "recommendation": {
+    "question_text": "Kodi mungakhoze kulangiza {{appName}} kwa anthu ena otsvetsa ntchito?",
+    "description": "This question is used to measure the Net Promoter Score (NPS).",
+    "comment_placeholder": null
+  },
+  "additional_feedback": {
+    "question_text": "Chonde perekani nkhani kapena malangizo ena a {{appName}}.",
+    "description": "Used to collect any additional feedback or suggestions.",
+    "comment_placeholder": "Tikufuna kumva nkhani zanu! Chonde perekani nkhani kapena malangizo pa {{appName}}."
+  }
+}

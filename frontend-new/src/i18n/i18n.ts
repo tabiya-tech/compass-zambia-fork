@@ -13,12 +13,14 @@ import enUs from "./locales/en-US/translation.json";
 import esEs from "./locales/es-ES/translation.json";
 import esAr from "./locales/es-AR/translation.json";
 import swKe from "./locales/sw-KE/translation.json";
+import nyZm from "./locales/ny-ZM/translation.json";
 
 // --- Import feedback questions ---
 import questionsEnGb from "src/feedback/overallFeedback/feedbackForm/questions-en-GB.json";
 import questionsEnUs from "src/feedback/overallFeedback/feedbackForm/questions-en-US.json";
 import questionsEsEs from "src/feedback/overallFeedback/feedbackForm/questions-es-ES.json";
 import questionsEsAr from "src/feedback/overallFeedback/feedbackForm/questions-es-AR.json";
+import questionsNyZm from "src/feedback/overallFeedback/feedbackForm/questions-ny-ZM.json";
 
 // --- i18n initialization ---
 const resources = {
@@ -36,6 +38,7 @@ const resources = {
   ...constructLocaleResources(Locale.ES_AR, { ...esAr, questions: questionsEsAr }),
   ...constructLocaleResources(Locale.ES_ES, { ...esEs, questions: questionsEsEs }),
   ...constructLocaleResources(Locale.SW_KE, { ...swKe }),
+  ...constructLocaleResources(Locale.NY_ZM, { ...nyZm, questions: questionsNyZm }),
 };
 
 // Validate DEFAULT_LOCALE before using it
