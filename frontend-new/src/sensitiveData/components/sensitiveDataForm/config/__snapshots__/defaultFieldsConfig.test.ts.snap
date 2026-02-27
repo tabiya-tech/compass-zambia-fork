@@ -5,6 +5,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "name",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Name",
     "name": "name",
     "questionText": undefined,
@@ -18,6 +19,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "contact_email",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Contact email",
     "name": "contactEmail",
     "questionText": undefined,
@@ -31,6 +33,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "gender",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Gender",
     "name": "gender",
     "questionText": undefined,
@@ -44,6 +47,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "age",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Age",
     "name": "age",
     "questionText": undefined,
@@ -57,6 +61,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "education_status",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Education",
     "name": "educationStatus",
     "questionText": "What is the highest level of education you have completed?",
@@ -74,6 +79,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "main_activity",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Main activity",
     "name": "mainActivity",
     "questionText": "In the last 30 days, what was your main activity in terms of time spent?",
@@ -96,6 +102,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "name",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Name",
     "name": "name",
     "questionText": undefined,
@@ -109,6 +116,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "contact_email",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Contact email",
     "name": "contactEmail",
     "questionText": undefined,
@@ -122,6 +130,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "gender",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Gender",
     "name": "gender",
     "questionText": undefined,
@@ -135,6 +144,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "age",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Age",
     "name": "age",
     "questionText": undefined,
@@ -148,6 +158,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "education_status",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Education",
     "name": "educationStatus",
     "questionText": "What is the highest level of education you have completed?",
@@ -165,6 +176,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "main_activity",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Main activity",
     "name": "mainActivity",
     "questionText": "In the last 30 days, what was your main activity in terms of time spent?",
@@ -187,6 +199,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "name",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Nombre",
     "name": "name",
     "questionText": undefined,
@@ -200,6 +213,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "contact_email",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Correo electrónico de contacto",
     "name": "contactEmail",
     "questionText": undefined,
@@ -213,6 +227,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "gender",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Género",
     "name": "gender",
     "questionText": undefined,
@@ -226,6 +241,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "age",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Edad",
     "name": "age",
     "questionText": undefined,
@@ -239,6 +255,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "education_status",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Educación",
     "name": "educationStatus",
     "questionText": "¿Cuál es el nivel educativo más alto que ha completado?",
@@ -256,6 +273,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "main_activity",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Actividad principal",
     "name": "mainActivity",
     "questionText": "En los últimos 30 días, ¿cuál fue su actividad principal en términos de tiempo dedicado?",
@@ -278,6 +296,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "name",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Nombre",
     "name": "name",
     "questionText": undefined,
@@ -291,6 +310,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "contact_email",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Correo electrónico de contacto",
     "name": "contactEmail",
     "questionText": undefined,
@@ -304,6 +324,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "gender",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Género",
     "name": "gender",
     "questionText": undefined,
@@ -317,6 +338,7 @@ Array [
   StringFieldDefinition {
     "dataKey": "age",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Edad",
     "name": "age",
     "questionText": undefined,
@@ -330,6 +352,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "education_status",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Educación",
     "name": "educationStatus",
     "questionText": "¿Cuál es el nivel educativo más alto que ha completado?",
@@ -347,6 +370,7 @@ Array [
   EnumFieldDefinition {
     "dataKey": "main_activity",
     "defaultValue": undefined,
+    "encrypt": true,
     "label": "Actividad principal",
     "name": "mainActivity",
     "questionText": "En los últimos 30 días, ¿cuál fue su actividad principal en términos de tiempo dedicado?",
@@ -359,6 +383,200 @@ Array [
       "Trabajé como pasante o aprendiz",
       "Estuve en la escuela, universidad o capacitación",
       "Desempleado",
+    ],
+  },
+]
+`;
+
+exports[`DEFAULT_FIELDS_CONFIG parseFieldsConfig should not throw given the locale is ny-ZM 1`] = `
+Array [
+  StringFieldDefinition {
+    "dataKey": "name",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Name",
+    "name": "name",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Name should contain only letters and be 2-50 characters long.",
+      "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
+    },
+  },
+  StringFieldDefinition {
+    "dataKey": "contact_email",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Contact email",
+    "name": "contactEmail",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Please enter a valid email address.",
+      "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,256}$",
+    },
+  },
+  EnumFieldDefinition {
+    "dataKey": "gender",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Gender",
+    "name": "gender",
+    "questionText": undefined,
+    "required": true,
+    "type": "ENUM",
+    "values": Array [
+      "Male",
+      "Female",
+    ],
+  },
+  StringFieldDefinition {
+    "dataKey": "age",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Age",
+    "name": "age",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Please enter a valid age. You must be at 16 years old or older to participate.",
+      "pattern": "^(?:1[6-9]|[2-9][0-9]|1[01][0-9]|120)$",
+    },
+  },
+  EnumFieldDefinition {
+    "dataKey": "education_status",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Education",
+    "name": "educationStatus",
+    "questionText": "What is the highest level of education you have completed?",
+    "required": true,
+    "type": "ENUM",
+    "values": Array [
+      "Less than primary / no formal education",
+      "Primary",
+      "Secondary",
+      "College / Diploma",
+      "University degree",
+      "Postgraduate degree",
+    ],
+  },
+  EnumFieldDefinition {
+    "dataKey": "main_activity",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Main activity",
+    "name": "mainActivity",
+    "questionText": "In the last 30 days, what was your main activity in terms of time spent?",
+    "required": true,
+    "type": "ENUM",
+    "values": Array [
+      "Worked for wages",
+      "Worked for my own account (trader, shopkeeper, barber, dressmaker)",
+      "Worked as a volunteer",
+      "Worked as intern or apprentice",
+      "In school, university, or training",
+      "Unemployed",
+    ],
+  },
+]
+`;
+
+exports[`DEFAULT_FIELDS_CONFIG parseFieldsConfig should not throw given the locale is sw-KE 1`] = `
+Array [
+  StringFieldDefinition {
+    "dataKey": "name",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Name",
+    "name": "name",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Name should contain only letters and be 2-50 characters long.",
+      "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
+    },
+  },
+  StringFieldDefinition {
+    "dataKey": "contact_email",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Contact email",
+    "name": "contactEmail",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Please enter a valid email address.",
+      "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,256}$",
+    },
+  },
+  EnumFieldDefinition {
+    "dataKey": "gender",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Gender",
+    "name": "gender",
+    "questionText": undefined,
+    "required": true,
+    "type": "ENUM",
+    "values": Array [
+      "Male",
+      "Female",
+    ],
+  },
+  StringFieldDefinition {
+    "dataKey": "age",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Age",
+    "name": "age",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Please enter a valid age. You must be at 16 years old or older to participate.",
+      "pattern": "^(?:1[6-9]|[2-9][0-9]|1[01][0-9]|120)$",
+    },
+  },
+  EnumFieldDefinition {
+    "dataKey": "education_status",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Education",
+    "name": "educationStatus",
+    "questionText": "What is the highest level of education you have completed?",
+    "required": true,
+    "type": "ENUM",
+    "values": Array [
+      "Less than primary / no formal education",
+      "Primary",
+      "Secondary",
+      "College / Diploma",
+      "University degree",
+      "Postgraduate degree",
+    ],
+  },
+  EnumFieldDefinition {
+    "dataKey": "main_activity",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Main activity",
+    "name": "mainActivity",
+    "questionText": "In the last 30 days, what was your main activity in terms of time spent?",
+    "required": true,
+    "type": "ENUM",
+    "values": Array [
+      "Worked for wages",
+      "Worked for my own account (trader, shopkeeper, barber, dressmaker)",
+      "Worked as a volunteer",
+      "Worked as intern or apprentice",
+      "In school, university, or training",
+      "Unemployed",
     ],
   },
 ]

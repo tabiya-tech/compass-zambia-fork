@@ -13,6 +13,7 @@ export class BaseFieldDefinition {
   dataKey: string;
   type: FieldType;
   required: boolean;
+  encrypt?: boolean; // true by default; false means the field is sent as plaintext
   label: string;
   questionText?: string; // Optional extended text displayed above the field
   constructor(attributes: any) {
@@ -45,11 +46,16 @@ export class BaseFieldDefinition {
     if (attributes.questionText && typeof attributes.questionText !== "string") {
       throw new ConfigurationError("SensitiveData: Field 'questionText' must be a string");
     }
+    // if encrypt is provided, it must be a boolean
+    if (attributes.encrypt !== undefined && typeof attributes.encrypt !== "boolean") {
+      throw new ConfigurationError("SensitiveData: Field 'encrypt' must be a boolean");
+    }
 
     this.name = attributes.name;
     this.dataKey = attributes.dataKey;
     this.type = attributes.type;
     this.required = attributes.required;
+    this.encrypt = attributes.encrypt !== false; // default to true
     this.label = attributes.label;
     this.questionText = attributes.questionText;
   }
