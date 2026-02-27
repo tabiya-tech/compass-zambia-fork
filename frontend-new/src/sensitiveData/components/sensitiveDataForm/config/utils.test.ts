@@ -1,6 +1,6 @@
 import "src/_test_utilities/consoleMock";
 import { FieldType, FieldDefinition } from "./types";
-import { toEncryptionPayload, createEmptySensitivePersonalData, extractPersonalInfo } from "./utils";
+import { toEncryptionPayload, toPlainPayload, createEmptySensitivePersonalData, extractPersonalInfo } from "./utils";
 import { SensitivePersonalData } from "src/sensitiveData/types";
 
 describe("Config Utilities", () => {
@@ -88,6 +88,7 @@ describe("Config Utilities", () => {
           type: FieldType.String,
           label: "First Name",
           required: true,
+          encrypt: true,
         },
         {
           name: "lastName",
@@ -95,6 +96,7 @@ describe("Config Utilities", () => {
           type: FieldType.String,
           label: "Last Name",
           required: true,
+          encrypt: true,
         },
         {
           name: "dateOfBirth",
@@ -102,6 +104,7 @@ describe("Config Utilities", () => {
           type: FieldType.String,
           label: "Date of Birth",
           required: false,
+          encrypt: true,
         },
       ];
 
@@ -125,6 +128,119 @@ describe("Config Utilities", () => {
       expect(result).not.toHaveProperty("firstName");
       expect(result).not.toHaveProperty("lastName");
       expect(result).not.toHaveProperty("dateOfBirth");
+    });
+
+    test("should exclude fields with encrypt === false", () => {
+      // GIVEN a mixed set of fields where one has encrypt === false
+      const mixedFields: FieldDefinition[] = [
+        {
+          name: "firstName",
+          dataKey: "first_name",
+          type: FieldType.String,
+          label: "First Name",
+          required: true,
+          encrypt: true,
+        },
+        {
+          name: "age",
+          dataKey: "age",
+          type: FieldType.String,
+          label: "Age",
+          required: true,
+          encrypt: false,
+        },
+      ];
+      const data: SensitivePersonalData = { firstName: "John", age: "30" };
+
+      // WHEN toEncryptionPayload is called
+      const result = toEncryptionPayload(data, mixedFields);
+
+      // THEN only encrypted fields are included
+      expect(result).toEqual({ first_name: "John" });
+      expect(result).not.toHaveProperty("age");
+    });
+  });
+
+  describe("toPlainPayload", () => {
+    test("should return only fields with encrypt === false", () => {
+      // GIVEN a mixed set of fields
+      const mixedFields: FieldDefinition[] = [
+        {
+          name: "firstName",
+          dataKey: "first_name",
+          type: FieldType.String,
+          label: "First Name",
+          required: true,
+          encrypt: true,
+        },
+        {
+          name: "age",
+          dataKey: "age",
+          type: FieldType.String,
+          label: "Age",
+          required: true,
+          encrypt: false,
+        },
+        {
+          name: "gender",
+          dataKey: "gender_type",
+          type: FieldType.Enum,
+          label: "Gender",
+          required: true,
+          values: ["Male", "Female"],
+          encrypt: false,
+        },
+      ];
+      const data: SensitivePersonalData = { firstName: "John", age: "30", gender: "Male" };
+
+      // WHEN toPlainPayload is called
+      const result = toPlainPayload(data, mixedFields);
+
+      // THEN only plain (encrypt === false) fields are included
+      expect(result).toEqual({ age: "30", gender_type: "Male" });
+      expect(result).not.toHaveProperty("first_name");
+    });
+
+    test("should return an empty object when all fields are encrypted", () => {
+      // GIVEN fields that are all encrypted (encrypt defaults to true)
+      const encryptedFields: FieldDefinition[] = [
+        {
+          name: "firstName",
+          dataKey: "first_name",
+          type: FieldType.String,
+          label: "First Name",
+          required: true,
+          encrypt: true,
+        },
+      ];
+      const data: SensitivePersonalData = { firstName: "John" };
+
+      // WHEN toPlainPayload is called
+      const result = toPlainPayload(data, encryptedFields);
+
+      // THEN the result is empty
+      expect(result).toEqual({});
+    });
+
+    test("should only include defined values in the plain payload", () => {
+      // GIVEN a plain field whose value is undefined in data
+      const plainFields: FieldDefinition[] = [
+        {
+          name: "age",
+          dataKey: "age",
+          type: FieldType.String,
+          label: "Age",
+          required: false,
+          encrypt: false,
+        },
+      ];
+      const data: SensitivePersonalData = {};
+
+      // WHEN toPlainPayload is called
+      const result = toPlainPayload(data, plainFields);
+
+      // THEN the result is empty because the value is undefined
+      expect(result).toEqual({});
     });
   });
 
