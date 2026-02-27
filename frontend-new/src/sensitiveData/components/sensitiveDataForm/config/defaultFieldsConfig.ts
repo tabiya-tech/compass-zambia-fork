@@ -8,6 +8,7 @@ import { FieldType } from "./types";
 export type RawFieldConfig = {
   dataKey: string;
   required: boolean;
+  encrypt?: boolean; // defaults to true if absent; set to false for plain (unencrypted) fields
   label: Record<string, string>;
   questionText?: Record<string, string>;
   validation?: {
