@@ -14,6 +14,7 @@ from app.invitations import add_user_invitations_routes
 from app.jobs import add_jobs_routes
 from app.job_preferences import add_job_preferences_routes
 from app.career_path import add_career_path_routes
+from app.career_readiness import add_career_readiness_routes
 from app.metrics.routes.routes import add_metrics_routes
 from app.sentry_init import init_sentry, set_sentry_contexts
 from app.server_dependencies.db_dependencies import CompassDBProvider
@@ -401,6 +402,11 @@ add_job_preferences_routes(app)
 # Add the career path routes
 ############################################
 add_career_path_routes(app)
+
+############################################
+# Add the career readiness routes
+############################################
+add_career_readiness_routes(app, auth)
 
 ############################################
 # Add routes relevant for esco search
