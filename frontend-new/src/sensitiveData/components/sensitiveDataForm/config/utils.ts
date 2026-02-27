@@ -7,10 +7,11 @@ import {
 
 /**
  * Converts sensitive personal data to an encryption payload.
+ * Only includes fields where encrypt !== false (i.e. encrypted fields).
  *
  * @param data - The sensitive personal data object
  * @param fields - The field definitions that describe the data structure
- * @returns An encryption payload with the sensitive data
+ * @returns An encryption payload with only the encrypted fields
  */
 export const toEncryptionPayload = (
   data: SensitivePersonalData,
@@ -19,8 +20,31 @@ export const toEncryptionPayload = (
   const result: SensitivePersonalDataEncryptionPayload = {};
 
   fields.forEach((field) => {
-    if (data[field.name] !== undefined) {
+    if (field.encrypt !== false && data[field.name] !== undefined) {
       result[field.dataKey] = data[field.name];
+    }
+  });
+
+  return result;
+};
+
+/**
+ * Converts sensitive personal data to a plain (unencrypted) payload.
+ * Only includes fields where encrypt === false.
+ *
+ * @param data - The sensitive personal data object
+ * @param fields - The field definitions that describe the data structure
+ * @returns A plain payload containing only unencrypted fields
+ */
+export const toPlainPayload = (
+  data: SensitivePersonalData,
+  fields: FieldDefinition[]
+): Record<string, string | string[]> => {
+  const result: Record<string, string | string[]> = {};
+
+  fields.forEach((field) => {
+    if (field.encrypt === false && data[field.name] !== undefined) {
+      result[field.dataKey] = data[field.name] as string | string[];
     }
   });
 

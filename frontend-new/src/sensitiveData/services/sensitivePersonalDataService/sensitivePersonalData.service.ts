@@ -12,7 +12,7 @@ import {
 import { EncryptedDataTooLarge } from "./errors";
 import { PersistentStorageService } from "src/app/PersistentStorageService/PersistentStorageService";
 import { FieldDefinition } from "src/sensitiveData/components/sensitiveDataForm/config/types";
-import { toEncryptionPayload } from "../../components/sensitiveDataForm/config/utils";
+import { toEncryptionPayload, toPlainPayload } from "../../components/sensitiveDataForm/config/utils";
 
 export class SensitivePersonalDataSkipError extends Error {
   constructor(
@@ -26,14 +26,18 @@ export class SensitivePersonalDataSkipError extends Error {
 
 class SensitivePersonalDataService {
   private readonly sensitivePersonalDataBaseUrl: string;
+  private readonly plainPersonalDataBaseUrl: string;
   private readonly encryptionService = new EncryptionService();
 
   constructor() {
     this.sensitivePersonalDataBaseUrl = `${getBackendUrl()}/users/{user_id}/sensitive-personal-data`;
+    this.plainPersonalDataBaseUrl = `${getBackendUrl()}/users/{user_id}/plain-personal-data`;
   }
 
   /**
    * Creates sensitive personal data for a user.
+   * Encrypted fields are sent to the sensitive-personal-data endpoint.
+   * Plain (unencrypted) fields are sent to the plain-personal-data endpoint.
    *
    * @param personal_data - The sensitive personal data to save
    * @param user_id - The ID of the user
@@ -59,40 +63,64 @@ class SensitivePersonalDataService {
       contactEmail: personal_data["contactEmail"] as string,
     });
 
-    // Convert frontend model to backend request model
-    const payload = toEncryptionPayload(personal_data, fields);
+    // Determine which fields are encrypted vs plain
+    const encryptedFields = fields.filter((f) => f.encrypt !== false);
+    const plainFields = fields.filter((f) => f.encrypt === false);
 
-    const encryptSensitivePersonalData = await this.encryptionService.encryptSensitivePersonalData(payload);
-
-    // if for some reason the data to encrypt is too large, we should not proceed.
-    // the backend will reject the request if the data is too large.
-    if (
-      encryptSensitivePersonalData.aes_encrypted_data.length > MaximumAESEncryptedDataSize ||
-      encryptSensitivePersonalData.aes_encryption_key.length > MaximumAESEncryptedKeySize ||
-      encryptSensitivePersonalData.rsa_key_id.length > MaximumRSAKeyIdSize
-    ) {
-      throw new EncryptedDataTooLarge(encryptSensitivePersonalData);
+    // --- Send plain (unencrypted) fields ---
+    if (plainFields.length > 0) {
+      const plainData = toPlainPayload(personal_data, plainFields);
+      await customFetch(this.plainPersonalDataBaseUrl.replace("{user_id}", user_id), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // 200 is returned on upsert (create or update)
+        expectedStatusCode: [StatusCodes.OK],
+        serviceName: "SensitivePersonalData",
+        serviceFunction: "createSensitivePersonalData",
+        failureMessage: `Failed to create plain personal data for user with id ${user_id}`,
+        body: JSON.stringify({ data: plainData }),
+        expectedContentType: "application/json",
+      });
     }
 
-    const response = await customFetch(this.sensitivePersonalDataBaseUrl.replace("{user_id}", user_id), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // 409 is returned if the user has already provided sensitive data
-      // This may happen if the user has already provided sensitive data but
-      // the frontend failed to process the response and the user tries to provide it again
-      expectedStatusCode: [StatusCodes.CREATED, StatusCodes.CONFLICT],
-      serviceName: "SensitivePersonalData",
-      serviceFunction: "createSensitivePersonalData",
-      failureMessage: `Failed to create sensitive personal data for user with id ${user_id}`,
-      body: JSON.stringify({
-        sensitive_personal_data: encryptSensitivePersonalData,
-      }),
-      expectedContentType: "application/json",
-    });
-    if (response.status === StatusCodes.CONFLICT) {
-      console.warn(`User with id ${user_id} has already provided sensitive personal data`);
+    // --- Send encrypted fields ---
+    if (encryptedFields.length > 0) {
+      const payload = toEncryptionPayload(personal_data, encryptedFields);
+
+      const encryptSensitivePersonalData = await this.encryptionService.encryptSensitivePersonalData(payload);
+
+      // if for some reason the data to encrypt is too large, we should not proceed.
+      // the backend will reject the request if the data is too large.
+      if (
+        encryptSensitivePersonalData.aes_encrypted_data.length > MaximumAESEncryptedDataSize ||
+        encryptSensitivePersonalData.aes_encryption_key.length > MaximumAESEncryptedKeySize ||
+        encryptSensitivePersonalData.rsa_key_id.length > MaximumRSAKeyIdSize
+      ) {
+        throw new EncryptedDataTooLarge(encryptSensitivePersonalData);
+      }
+
+      const response = await customFetch(this.sensitivePersonalDataBaseUrl.replace("{user_id}", user_id), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // 409 is returned if the user has already provided sensitive data
+        // This may happen if the user has already provided sensitive data but
+        // the frontend failed to process the response and the user tries to provide it again
+        expectedStatusCode: [StatusCodes.CREATED, StatusCodes.CONFLICT],
+        serviceName: "SensitivePersonalData",
+        serviceFunction: "createSensitivePersonalData",
+        failureMessage: `Failed to create sensitive personal data for user with id ${user_id}`,
+        body: JSON.stringify({
+          sensitive_personal_data: encryptSensitivePersonalData,
+        }),
+        expectedContentType: "application/json",
+      });
+      if (response.status === StatusCodes.CONFLICT) {
+        console.warn(`User with id ${user_id} has already provided sensitive personal data`);
+      }
     }
   }
 

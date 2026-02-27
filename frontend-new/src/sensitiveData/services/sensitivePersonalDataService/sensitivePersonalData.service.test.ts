@@ -13,6 +13,7 @@ import { EncryptionService } from "src/sensitiveData/services/encryptionService/
 import { EncryptedDataTooLarge } from "./errors";
 import { PersistentStorageService } from "src/app/PersistentStorageService/PersistentStorageService";
 import { FieldDefinition, FieldType } from "src/sensitiveData/components/sensitiveDataForm/config/types";
+import { StatusCodes } from "http-status-codes";
 
 // Define gender values as constants to match the mockConfig
 const Gender = {
@@ -197,6 +198,114 @@ describe("SensitivePersonalDataService", () => {
         });
       }
     );
+
+    test("should call both endpoints when form has mixed encrypted and plain fields", async () => {
+      // GIVEN a mix of encrypted and plain fields
+      const mixedConfig: FieldDefinition[] = [
+        {
+          name: "firstName",
+          dataKey: "first_name",
+          type: FieldType.String,
+          required: true,
+          label: "First name",
+          encrypt: true,
+        },
+        {
+          name: "age",
+          dataKey: "age",
+          type: FieldType.String,
+          required: true,
+          label: "Age",
+          encrypt: false,
+        },
+      ];
+
+      // AND sample data
+      const givenSensitivePersonalData = {
+        firstName: "John",
+        age: "30",
+      };
+      const givenUserId = getRandomLorem(10);
+
+      // AND encryption returns a valid response
+      const givenEncryptReturnValue = {
+        rsa_key_id: "given_key_id",
+        aes_encrypted_data: "given_encrypted_data",
+        aes_encryption_key: "given_encryption_key",
+      };
+      jest
+        .spyOn(EncryptionService.prototype, "encryptSensitivePersonalData")
+        .mockResolvedValue(givenEncryptReturnValue);
+
+      const customFetch = jest.spyOn(CustomFetchModule, "customFetch").mockResolvedValue(new Response());
+
+      // WHEN createSensitivePersonalData is called
+      await sensitivePersonalDataService.createSensitivePersonalData(
+        givenSensitivePersonalData,
+        givenUserId,
+        mixedConfig
+      );
+
+      // THEN customFetch is called twice: once for plain and once for encrypted
+      expect(customFetch).toHaveBeenCalledTimes(2);
+
+      // AND the first call is to the plain-personal-data endpoint
+      expect(customFetch).toHaveBeenCalledWith(
+        `/users/${givenUserId}/plain-personal-data`,
+        expect.objectContaining({
+          method: "POST",
+          expectedStatusCode: [StatusCodes.OK],
+          body: JSON.stringify({ data: { age: "30" } }),
+        })
+      );
+
+      // AND the second call is to the sensitive-personal-data endpoint (with encrypted data only)
+      expect(customFetch).toHaveBeenCalledWith(
+        `/users/${givenUserId}/sensitive-personal-data`,
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify({ sensitive_personal_data: givenEncryptReturnValue }),
+        })
+      );
+    });
+
+    test("should only call the encrypted endpoint when all fields are encrypted", async () => {
+      // GIVEN all-encrypted config (the default mockConfig)
+      const givenSensitivePersonalData = {
+        contactEmail: "contact_email",
+        firstName: "first_name",
+        lastName: "last_name",
+        phoneNumber: "phone_number",
+        address: "address",
+        gender: Gender.PREFER_NOT_TO_SAY,
+      };
+      const givenUserId = getRandomLorem(10);
+
+      const givenEncryptReturnValue = {
+        rsa_key_id: "given_key_id",
+        aes_encrypted_data: "given_encrypted_data",
+        aes_encryption_key: "given_encryption_key",
+      };
+      jest
+        .spyOn(EncryptionService.prototype, "encryptSensitivePersonalData")
+        .mockResolvedValue(givenEncryptReturnValue);
+
+      const customFetch = jest.spyOn(CustomFetchModule, "customFetch").mockResolvedValue(new Response());
+
+      // WHEN createSensitivePersonalData is called with all-encrypted config
+      await sensitivePersonalDataService.createSensitivePersonalData(
+        givenSensitivePersonalData,
+        givenUserId,
+        mockConfig // all fields default to encrypt: true (no encrypt: false)
+      );
+
+      // THEN only the encrypted endpoint is called
+      expect(customFetch).toHaveBeenCalledTimes(1);
+      expect(customFetch).toHaveBeenCalledWith(
+        `/users/${givenUserId}/sensitive-personal-data`,
+        expect.objectContaining({ method: "POST" })
+      );
+    });
 
     test("should throw an error if the encrypted data is too large", async () => {
       // GIVEN the encryption service returns data that is too large
