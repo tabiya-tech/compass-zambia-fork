@@ -171,7 +171,6 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
         const form = await feedback.createForm(feedbackFormLabels);
         form.appendToDom();
         form.open();
-        // Set feedback notification as seen when user opens the feedback form
         const user = authenticationStateService.getInstance().getUser();
         if (user) {
           PersistentStorageService.setSeenFeedbackNotification(user.id);
@@ -182,7 +181,6 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
     }
   }, [sentryEnabled, feedbackFormLabels]);
 
-  // Show notification after 30 minutes if conversation is not completed
   useEffect(() => {
     const user = authenticationStateService.getInstance().getUser();
     if (!user) {
@@ -190,13 +188,13 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
       return;
     }
 
-    // Clean up any existing timer
-    if (feedbackTimerRef.current) {
+    if (
+      feedbackTimerRef.current
+    ) {
       clearTimeout(feedbackTimerRef.current);
       feedbackTimerRef.current = null;
     }
 
-    // Don't set timer if conversation is completed, notification already shown, or no time was given
     if (
       conversationCompleted ||
       PersistentStorageService.hasSeenFeedbackNotification(user.id) ||
@@ -208,11 +206,9 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
 
     feedbackTimerRef.current = setTimeout(() => {
       if (conversationCompleted) {
-        // Don't show a notification if the conversation is completed
         return;
       }
 
-      // Check if phase progress is 66% or less
       const shouldPrompt: boolean = (progressPercentage ?? 0) <= 66;
 
       if (shouldPrompt && !notificationShownRef.current) {
@@ -236,7 +232,6 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
             preventDuplicate: true,
           }
         );
-        // Mark the notification as shown
         notificationShownRef.current = true;
       }
     }, timeUntilNotification);
@@ -270,14 +265,6 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
             },
           ]
         : []),
-      // Temporarily removed "Settings" menu item; not useful to users at the moment.
-      // Will be added back once it has meaningful functionality.
-      // {
-      //   id: MENU_ITEM_ID.SETTINGS_SELECTOR,
-      //   text: t("common.buttons.settings").toLowerCase(),
-      //   disabled: !isOnline,
-      //   action: () => setIsDrawerOpen(true),
-      // },
       ...(sentryEnabled
         ? [
             {
@@ -290,7 +277,7 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
                   feedback.createForm(feedbackFormLabels).then((form) => {
                     if (form) {
                       form.appendToDom();
-                      form.open(); // shows the feedback form
+                      form.open();
                     }
                   });
                 }
@@ -331,7 +318,7 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
         <img
           src={logoSrc}
           alt={t("app.compassLogoAlt")}
-          height={12 * theme.tabiyaSpacing.xl} // xl wasn't quite big enough, we're going for ~48px
+          height={12 * theme.tabiyaSpacing.xl}
           data-testid={DATA_TEST_ID.CHAT_HEADER_LOGO}
         />
       </NavLink>
