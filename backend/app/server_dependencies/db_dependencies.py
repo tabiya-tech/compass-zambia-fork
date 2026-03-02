@@ -245,6 +245,15 @@ class CompassDBProvider:
                 ("user_id", 1)
             ], unique=True)
 
+            # Create the career readiness conversations indexes
+            await application_db.get_collection(Collections.CAREER_READINESS_CONVERSATIONS).create_index([
+                ("conversation_id", 1)
+            ], unique=True)
+
+            await application_db.get_collection(Collections.CAREER_READINESS_CONVERSATIONS).create_index([
+                ("user_id", 1), ("module_id", 1)
+            ], unique=True)
+
             logger.info("Finished creating indexes for the application database")
         except Exception as e:
             logger.exception(e)

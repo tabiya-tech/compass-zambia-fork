@@ -19,3 +19,4 @@ class Collections:
     JOB_PREFERENCES: str = "job_preferences"
     CAREER_PATH: str = "career_path"
     USER_RECOMMENDATIONS: str = "user_recommendations"
+    CAREER_READINESS_CONVERSATIONS: str = "career_readiness_conversations"
