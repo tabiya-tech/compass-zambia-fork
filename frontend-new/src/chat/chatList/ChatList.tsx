@@ -16,10 +16,7 @@ export type ChatListProps = {
 const ChatListContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  height: "100%",
-  overflowX: "hidden",
-  flexGrow: 1,
-  overflowY: "auto",
+  overflow: "hidden",
   [theme.breakpoints.up("md")]: {
     width: "60%",
     margin: "auto",
