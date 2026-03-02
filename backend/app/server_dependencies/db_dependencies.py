@@ -119,6 +119,11 @@ class CompassDBProvider:
                 ("user_id", 1)
             ], unique=True)
 
+            # Create the plain personal data indexes
+            await userdata_db.get_collection(Collections.PLAIN_PERSONAL_DATA).create_index([
+                ("user_id", 1)
+            ], unique=True)
+
             # Create the indexes related to the user cv uploads (only if CV upload is enabled)
             app_config = get_application_config()
             if app_config.enable_cv_upload:

@@ -1,6 +1,7 @@
 class Collections:
     USER_PREFERENCES: str = "user_preferences"
     SENSITIVE_PERSONAL_DATA: str = "sensitive_personal_data"
+    PLAIN_PERSONAL_DATA: str = "plain_personal_data"
     USER_INVITATIONS: str = "user_invitations"
     AGENT_DIRECTOR_STATE = "agent_director_state"
     WELCOME_AGENT_STATE = "welcome_agent_state"
