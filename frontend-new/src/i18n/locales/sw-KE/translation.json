@@ -110,6 +110,7 @@
       "feedbackSuccessMessage": "Asante kwa maoni yako!",
       "giveGeneralFeedback": "Toa maoni ya jumla",
       "userInfo": "Taarifa za mtumiaji",
+      "viewMyProfile": "Tazama wasifu wangu",
       "userIconAlt": "Ikoni ya Mtumiaji",
       "beforeYouGo": "Kabla hujaondoka",
       "logoutConfirmationMessage": "Una uhakika unataka kutoka?",
@@ -768,5 +769,39 @@
     "submit": "Wasilisha",
     "next": "Inayofuata",
     "previous": "Iliyotangulia"
+  },
+  "home": {
+    "dashboard": "Kituo Chako cha Kazi",
+    "backToDashboard": "Rudi kwenye dashibodi",
+    "welcomeBack": "Karibu tena, {{name}}",
+    "subtitle": "{{appName}} ni daraja kati ya ulichojifunza na unakoelekea. Zungumza na AI ili kugundua ujuzi wako, kujiandaa kwa mahojiano, na kuchunguza njia za kazi nchini Zambia.",
+    "profileStrength": "Nguvu ya wasifu wako sasa ni {{progress}}%.",
+    "profileStrengthHint": "Ni mwanzo mzuri — jaribu Ujuzi na Mapendeleo Yangu ili kugundua zaidi kuhusu unachokijua na kufurahia.",
+    "seeProfile": "Tazama wasifu →",
+    "whatToDo": "Ungependa kufanya nini leo?",
+    "whatToDoSubtitle": "Kila moduli ni mazungumzo yanayoongozwa na AI au rasilimali kukusaidia katika safari yako ya kazi.",
+    "modules": {
+      "skillsDiscovery": "Ujuzi na Mapendeleo Yangu",
+      "skillsDiscoverySubtitle": "Gundua ujuzi na mapendeleo yako",
+      "careerDiscovery": "Kuchunguza Kazi",
+      "jobReadiness": "Kujiandaa kwa Kazi",
+      "careerExplorer": "Kulinganisha Kazi na Uchambuzi",
+      "knowledgeHub": "Kituo cha Maarifa",
+      "skillsDiscoveryDesc": "Zungumza na {{appName}} ili kugundua ujuzi na mapendeleo yako — kutoka masomo yako, kazi, na maisha ya kila siku.",
+      "careerDiscoveryDesc": "Chunguza njia za kazi katika Nishati, Madini, Kilimo na zaidi — na data ya mishahara na njia za sifa.",
+      "jobReadinessDesc": "Jenga ujuzi muhimu wa kazi kupitia moduli zinazoongozwa na AI — kutoka kuandika CV hadi mazoezi ya mahojiano.",
+      "careerExplorerDesc": "Angalia jinsi ujuzi wako unavyolingana na nafasi za kazi halisi na chunguza maarifa ya soko la ajira nchini Zambia.",
+      "knowledgeHubDesc": "Chunguza wasifu wa sekta, viwango vya mishahara, na njia za sifa za TEVET mahali pamoja.",
+      "continue": "Endelea",
+      "completed": "Imekamilika",
+      "comingSoon": "Inakuja Hivi Karibuni"
+    },
+    "footer": {
+      "privacyPolicy": "Sera ya Faragha",
+      "termsOfUse": "Sheria za Matumizi",
+      "accessibility": "Ufikiaji",
+      "contact": "Wasiliana",
+      "collaboration": "{{appName}} ni ushirikiano kati ya Kikundi cha Benki ya Dunia na Tabiya."
+    }
   }
 }

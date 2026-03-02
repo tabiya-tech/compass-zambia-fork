@@ -16,10 +16,11 @@ import {
 } from "./util";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import { Box, useTheme } from "@mui/material";
-import ChatHeader from "./ChatHeader/ChatHeader";
-import ChatMessageField from "./ChatMessageField/ChatMessageField";
 import { useNavigate } from "react-router-dom";
 import { routerPaths } from "src/app/routerPaths";
+import ChatHeader from "./ChatHeader/ChatHeader";
+import ChatMessageField from "./ChatMessageField/ChatMessageField";
+import PageHeader from "src/home/components/PageHeader/PageHeader";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
 import { ConversationMessage, ConversationMessageSender, ConversationResponse } from "./ChatService/ChatService.types";
 import { Backdrop } from "src/theme/Backdrop/Backdrop";
@@ -28,7 +29,6 @@ import { DiveInPhase, Experience } from "src/experiences/experienceService/exper
 import ExperienceService from "src/experiences/experienceService/experienceService";
 import InactiveBackdrop from "src/theme/Backdrop/InactiveBackdrop";
 import ConfirmModalDialog from "src/theme/confirmModalDialog/ConfirmModalDialog";
-import AuthenticationServiceFactory from "src/auth/services/Authentication.service.factory";
 import { ChatError, MetricsError } from "src/error/commonErrors";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
 import { issueNewSession } from "./issueNewSession";
@@ -110,6 +110,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const theme = useTheme();
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<IChatMessage<any>[]>([]);
   const [conversationCompleted, setConversationCompleted] = useState<boolean>(false);
   const [exploredExperiences, setExploredExperiences] = useState<number>(0);
@@ -119,7 +120,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const [experiences, setExperiences] = React.useState<Experience[]>([]);
   const [prefillMessage, setPrefillMessage] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [isLoggingOut, setIsLoggingOut] = React.useState<boolean>(false);
   const [showBackdrop, setShowBackdrop] = useState(showInactiveSessionAlert);
   const [lastActivityTime, setLastActivityTime] = React.useState<number>(Date.now());
   const [newConversationDialog, setNewConversationDialog] = React.useState<boolean>(false);
@@ -138,8 +138,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const [activeUploads, setActiveUploads] = useState<
     Map<string, { messageId: string; intervalId: NodeJS.Timeout; timeoutId: NodeJS.Timeout }>
   >(new Map());
-
-  const navigate = useNavigate();
 
   const initializingRef = useRef(false);
   const [initialized, setInitialized] = useState<boolean>(false);
@@ -303,17 +301,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
     setIsDrawerOpen(true);
     await fetchExperiences();
   }, [fetchExperiences]);
-
-  // Goes to the authentication service to log the user out
-  // Navigates to the login page
-  const handleLogout = useCallback(async () => {
-    setIsLoggingOut(true);
-    const authenticationService = AuthenticationServiceFactory.getCurrentAuthenticationService();
-    await authenticationService!.logout();
-    navigate(routerPaths.LANDING, { replace: true });
-    enqueueSnackbar(t("chat.chat.notifications.logoutSuccess"), { variant: "success" });
-    setIsLoggingOut(false);
-  }, [enqueueSnackbar, navigate, t]);
 
   // Helper to stop polling and cleanup
   const stopPollingForUpload = useCallback(
@@ -1017,34 +1004,56 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
 
   return (
     <Suspense fallback={<Backdrop isShown={true} transparent={true} />}>
-      {isLoggingOut ? (
-        <Backdrop isShown={isLoggingOut} message={t("chat.chat.backdrop.loggingOut")} />
-      ) : (
-        <ChatProvider
-          handleOpenExperiencesDrawer={handleOpenExperiencesDrawer}
-          removeMessageFromChat={removeMessageFromChat}
-          addMessageToChat={addMessageToChat}
+      <ChatProvider
+        handleOpenExperiencesDrawer={handleOpenExperiencesDrawer}
+        removeMessageFromChat={removeMessageFromChat}
+        addMessageToChat={addMessageToChat}
+      >
+        <Box
+          width="100%"
+          height="100%"
+          display="flex"
+          flexDirection="column"
+          position="relative"
+          data-testid={DATA_TEST_ID.CHAT_CONTAINER}
+          // The "is-initialized" attribute helps make the component testable.
+          // When the component mounts, an initialization function runs, changing the state and causing a rerender.
+          // Tests need to wait for the component to "settle" after mounting, but they don't know when that happens.
+          // To check if the component is settled, tests can wait for the "is-initialized" attribute to be true:
+          //   await waitFor(() => {
+          //     expect(screen.getByTestId(DATA_TEST_ID.CHAT_CONTAINER)).toHaveAttribute("is-initialized", "true");
+          //   });
+          // This technique can solve the "Warning: An update to Chat inside a test was not wrapped in act(...)" warning.
+          is-initialized={`${initialized}`}
         >
+          <PageHeader
+            title="home.modules.skillsDiscovery"
+            subtitle="home.modules.skillsDiscoverySubtitle"
+            backLinkLabel="home.backToDashboard"
+            onBackClick={() => navigate(routerPaths.ROOT)}
+          />
           <Box
-            width="100%"
-            height="100%"
-            display="flex"
-            flexDirection="column"
-            position="relative"
-            data-testid={DATA_TEST_ID.CHAT_CONTAINER}
-            // The "is-initialized" attribute helps make the component testable.
-            // When the component mounts, an initialization function runs, changing the state and causing a rerender.
-            // Tests need to wait for the component to "settle" after mounting, but they don't know when that happens.
-            // To check if the component is settled, tests can wait for the "is-initialized" attribute to be true:
-            //   await waitFor(() => {
-            //     expect(screen.getByTestId(DATA_TEST_ID.CHAT_CONTAINER)).toHaveAttribute("is-initialized", "true");
-            //   });
-            // This technique can solve the "Warning: An update to Chat inside a test was not wrapped in act(...)" warning.
-            is-initialized={`${initialized}`}
+            sx={{
+              paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.sm),
+              paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.md),
+              paddingX: theme.spacing(theme.tabiyaSpacing.md),
+              display: "flex",
+              alignItems: "center",
+              width: { xs: "100%", md: "60%" },
+              margin: { xs: "0", md: "0 auto" },
+              gap: theme.spacing(theme.tabiyaSpacing.sm),
+            }}
           >
-            <Box padding={theme.spacing(theme.tabiyaSpacing.lg)}>
+            <Box sx={{ flex: 1 }}>
+              <ChatProgressBar
+                percentage={currentPhase.percentage}
+                phase={currentPhase.phase}
+                current={currentPhase.current}
+                total={currentPhase.total}
+              />
+            </Box>
+            <Box sx={{ flexShrink: 0 }}>
               <ChatHeader
-                notifyOnLogout={handleLogout}
                 startNewConversation={() => setNewConversationDialog(true)}
                 experiencesExplored={exploredExperiencesCount.length}
                 exploredExperiencesNotification={exploredExperiencesNotification}
@@ -1056,79 +1065,71 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
                 collectedExperiences={experiences?.length}
               />
             </Box>
-            <Box paddingBottom={theme.spacing(theme.tabiyaSpacing.lg)} paddingX={theme.spacing(theme.tabiyaSpacing.md)}>
-              <ChatProgressBar
-                percentage={currentPhase.percentage}
-                phase={currentPhase.phase}
-                current={currentPhase.current}
-                total={currentPhase.total}
-              />
-            </Box>
-            <Box sx={{ flex: 1, overflowY: "auto", paddingX: theme.spacing(theme.tabiyaSpacing.lg) }}>
-              <ChatList messages={messages} />
-            </Box>
-            {showBackdrop && <InactiveBackdrop isShown={showBackdrop} />}
-            <Box sx={{ flexShrink: 0, padding: theme.tabiyaSpacing.lg, paddingTop: theme.tabiyaSpacing.xs }}>
-              <ChatMessageField
-                handleSend={handleSend}
-                aiIsTyping={aiIsTyping}
-                isChatFinished={conversationCompleted}
-                isUploadingCv={isUploadingCv || activeUploads.size > 0}
-                onUploadCv={handleUploadCv}
-                currentPhase={currentPhase.phase}
-                prefillMessage={prefillMessage}
-                cvUploadError={cvUploadError}
-              />
-            </Box>
           </Box>
-          <ExperiencesDrawer
-            isOpen={isDrawerOpen}
-            notifyOnClose={handleDrawerClose}
-            isLoading={isLoading}
-            experiences={experiences}
-            conversationConductedAt={conversationConductedAt}
-            onExperiencesUpdated={fetchExperiences}
+          <Box sx={{ flex: 1, overflowY: "auto", paddingX: theme.spacing(theme.tabiyaSpacing.lg) }}>
+            <ChatList messages={messages} />
+          </Box>
+          {showBackdrop && <InactiveBackdrop isShown={showBackdrop} />}
+          <Box sx={{ flexShrink: 0, padding: theme.tabiyaSpacing.lg, paddingTop: theme.tabiyaSpacing.xs }}>
+            <ChatMessageField
+              handleSend={handleSend}
+              aiIsTyping={aiIsTyping}
+              isChatFinished={conversationCompleted}
+              isUploadingCv={isUploadingCv || activeUploads.size > 0}
+              onUploadCv={handleUploadCv}
+              currentPhase={currentPhase.phase}
+              prefillMessage={prefillMessage}
+              cvUploadError={cvUploadError}
+            />
+          </Box>
+        </Box>
+        <ExperiencesDrawer
+          isOpen={isDrawerOpen}
+          notifyOnClose={handleDrawerClose}
+          isLoading={isLoading}
+          experiences={experiences}
+          conversationConductedAt={conversationConductedAt}
+          onExperiencesUpdated={fetchExperiences}
+        />
+        {newConversationDialog && (
+          <ConfirmModalDialog
+            isOpen={newConversationDialog}
+            title={t("chat.chat.startNewConversationDialog.title")}
+            content={
+              <>
+                {t("chat.chat.startNewConversationDialog.content")}
+                <br />
+                <br />
+                {t("chat.chat.startNewConversationDialog.confirmation")}
+              </>
+            }
+            onCancel={() => setNewConversationDialog(false)}
+            onConfirm={handleConfirmNewConversation}
+            onDismiss={() => setNewConversationDialog(false)}
+            cancelButtonText={t("common.buttons.cancel")}
+            confirmButtonText={t("common.buttons.confirm")}
           />
-          {newConversationDialog && (
-            <ConfirmModalDialog
-              isOpen={newConversationDialog}
-              title={t("chat.chat.startNewConversationDialog.title")}
-              content={
-                <>
-                  {t("chat.chat.startNewConversationDialog.content")}
-                  <br />
-                  <br />
-                  {t("chat.chat.startNewConversationDialog.confirmation")}
-                </>
-              }
-              onCancel={() => setNewConversationDialog(false)}
-              onConfirm={handleConfirmNewConversation}
-              onDismiss={() => setNewConversationDialog(false)}
-              cancelButtonText={t("common.buttons.cancel")}
-              confirmButtonText={t("common.buttons.confirm")}
-            />
-          )}
-          {showRefreshConfirmDialog && (
-            <ConfirmModalDialog
-              isOpen={showRefreshConfirmDialog}
-              title={t("chat.chat.refreshConfirmationDialog.title")}
-              content={
-                <>
-                  {t("chat.chat.refreshConfirmationDialog.content")}
-                  <br />
-                  <br />
-                  {t("chat.chat.refreshConfirmationDialog.question")}
-                </>
-              }
-              onCancel={handleCancelRefresh}
-              onConfirm={handleConfirmRefresh}
-              onDismiss={handleCancelRefresh}
-              cancelButtonText={t("chat.chat.refreshConfirmationDialog.waitButton")}
-              confirmButtonText={t("chat.chat.refreshConfirmationDialog.refreshButton")}
-            />
-          )}
-        </ChatProvider>
-      )}
+        )}
+        {showRefreshConfirmDialog && (
+          <ConfirmModalDialog
+            isOpen={showRefreshConfirmDialog}
+            title={t("chat.chat.refreshConfirmationDialog.title")}
+            content={
+              <>
+                {t("chat.chat.refreshConfirmationDialog.content")}
+                <br />
+                <br />
+                {t("chat.chat.refreshConfirmationDialog.question")}
+              </>
+            }
+            onCancel={handleCancelRefresh}
+            onConfirm={handleConfirmRefresh}
+            onDismiss={handleCancelRefresh}
+            cancelButtonText={t("chat.chat.refreshConfirmationDialog.waitButton")}
+            confirmButtonText={t("chat.chat.refreshConfirmationDialog.refreshButton")}
+          />
+        )}
+      </ChatProvider>
     </Suspense>
   );
 };

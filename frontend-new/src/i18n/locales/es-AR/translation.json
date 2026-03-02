@@ -240,6 +240,7 @@
       "feedbackSuccessMessage": "¡Gracias por tus comentarios!",
       "giveGeneralFeedback": "Dar comentarios generales",
       "userInfo": "Información del usuario",
+      "viewMyProfile": "Ver mi perfil",
       "userIconAlt": "Ícono de usuario",
       "beforeYouGo": "Antes de irte",
       "logoutConfirmationMessage": "¿Estás seguro de que deseas cerrar sesión?",
@@ -768,5 +769,39 @@
     "submit": "Enviar",
     "next": "Siguiente",
     "previous": "Anterior"
+  },
+  "home": {
+    "dashboard": "Tu Centro de Carrera",
+    "backToDashboard": "Volver al panel",
+    "welcomeBack": "Bienvenido de nuevo, {{name}}",
+    "subtitle": "{{appName}} es el puente entre lo que aprendiste y hacia dónde vas. Chateá con la IA para descubrir tus habilidades, prepararte para entrevistas y explorar caminos laborales reales.",
+    "profileStrength": "Tu fortaleza de perfil actual es {{progress}}%.",
+    "profileStrengthHint": "Es un buen comienzo — probá Mis Habilidades e Intereses para descubrir más sobre lo que sabés y disfrutás.",
+    "seeProfile": "Ver perfil →",
+    "whatToDo": "¿Qué te gustaría hacer hoy?",
+    "whatToDoSubtitle": "Cada módulo es una conversación guiada por IA o un recurso para ayudarte en tu camino profesional.",
+    "modules": {
+      "skillsDiscovery": "Mis habilidades e intereses",
+      "skillsDiscoverySubtitle": "Descubrí tus habilidades e intereses",
+      "careerDiscovery": "Explorador de carreras",
+      "jobReadiness": "Preparación profesional",
+      "careerExplorer": "Búsqueda y análisis de empleo",
+      "knowledgeHub": "Centro de conocimiento",
+      "skillsDiscoveryDesc": "Chateá con {{appName}} para descubrir tus habilidades e intereses — desde tus estudios, trabajo y vida cotidiana.",
+      "careerDiscoveryDesc": "Explorá caminos profesionales en Energía, Minería, Agricultura y más — con datos salariales y rutas de calificación.",
+      "jobReadinessDesc": "Desarrollá habilidades esenciales para el trabajo a través de módulos guiados por IA — desde redacción de CV hasta práctica de entrevistas.",
+      "careerExplorerDesc": "Mirá cómo tus habilidades coinciden con ofertas de trabajo reales y explorá información del mercado laboral.",
+      "knowledgeHubDesc": "Explorá perfiles sectoriales, referencias salariales y rutas de calificación en un solo lugar.",
+      "continue": "Continuar",
+      "completed": "Completado",
+      "comingSoon": "Próximamente"
+    },
+    "footer": {
+      "privacyPolicy": "Política de Privacidad",
+      "termsOfUse": "Términos de Uso",
+      "accessibility": "Accesibilidad",
+      "contact": "Contacto",
+      "collaboration": "{{appName}} es una colaboración entre el Grupo del Banco Mundial y Tabiya."
+    }
   }
 }
