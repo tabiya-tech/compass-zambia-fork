@@ -1,20 +1,55 @@
 """
 This module contains the routes for the career readiness module.
 """
+import asyncio
+import logging
 from http import HTTPStatus
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import FastAPI, APIRouter, Depends, HTTPException, Path
+from motor.motor_asyncio import AsyncIOMotorDatabase
 
+from app.career_readiness.errors import (
+    CareerReadinessModuleNotFoundError,
+    ConversationAccessDeniedError,
+    ConversationAlreadyExistsError,
+    ConversationModuleMismatchError,
+    ConversationNotFoundError,
+)
+from app.career_readiness.module_loader import get_module_registry
+from app.career_readiness.repository import CareerReadinessConversationRepository
+from app.career_readiness.service import CareerReadinessService, ICareerReadinessService
 from app.career_readiness.types import (
     ModuleListResponse,
     ModuleDetail,
-    ModuleStatusUpdateRequest,
     CareerReadinessConversationResponse,
     CareerReadinessConversationInput,
 )
 from app.constants.errors import HTTPErrorResponse
+from app.conversations.constants import MAX_MESSAGE_LENGTH
+from app.server_dependencies.db_dependencies import CompassDBProvider
 from app.users.auth import Authentication, UserInfo
+
+logger = logging.getLogger(__name__)
+
+# Lock to ensure that the singleton instance is thread-safe
+_career_readiness_service_lock = asyncio.Lock()
+_career_readiness_service_singleton: Optional[ICareerReadinessService] = None
+
+
+async def get_career_readiness_service(
+    application_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_application_db),
+) -> ICareerReadinessService:
+    """Get or create the career readiness service singleton."""
+    global _career_readiness_service_singleton
+    if _career_readiness_service_singleton is None:
+        async with _career_readiness_service_lock:
+            if _career_readiness_service_singleton is None:
+                _career_readiness_service_singleton = CareerReadinessService(
+                    repository=CareerReadinessConversationRepository(application_db),
+                    module_registry=get_module_registry(),
+                )
+    return _career_readiness_service_singleton
 
 
 def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
@@ -36,9 +71,14 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
         description="List all career readiness modules with the current user's progress status.",
     )
     async def _list_modules(
-        user_info: UserInfo = Depends(authentication.get_user_info()),  # noqa: ARG001
+        user_info: UserInfo = Depends(authentication.get_user_info()),
+        service: ICareerReadinessService = Depends(get_career_readiness_service),
     ):
-        raise HTTPException(status_code=HTTPStatus.NOT_IMPLEMENTED, detail="Not implemented yet")
+        try:
+            return await service.list_modules(user_info.user_id)
+        except Exception as e:
+            logger.exception("Error listing modules: %s", e)
+            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.get(
         path="/modules/{module_id}",
@@ -51,26 +91,16 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
     )
     async def _get_module(
         module_id: Annotated[str, Path(description="The module identifier slug.", examples=["cv-resume-creation"])],
-        user_info: UserInfo = Depends(authentication.get_user_info()),  # noqa: ARG001
+        user_info: UserInfo = Depends(authentication.get_user_info()),
+        service: ICareerReadinessService = Depends(get_career_readiness_service),
     ):
-        raise HTTPException(status_code=HTTPStatus.NOT_IMPLEMENTED, detail="Not implemented yet")
-
-    @router.patch(
-        path="/modules/{module_id}/status",
-        response_model=ModuleDetail,
-        responses={
-            HTTPStatus.NOT_FOUND: {"model": HTTPErrorResponse},
-            HTTPStatus.BAD_REQUEST: {"model": HTTPErrorResponse},
-            HTTPStatus.INTERNAL_SERVER_ERROR: {"model": HTTPErrorResponse},
-        },
-        description="Manually update the status of a career readiness module (e.g. to reset it).",
-    )
-    async def _update_module_status(
-        module_id: Annotated[str, Path(description="The module identifier slug.", examples=["cv-resume-creation"])],
-        body: ModuleStatusUpdateRequest,  # noqa: ARG001
-        user_info: UserInfo = Depends(authentication.get_user_info()),  # noqa: ARG001
-    ):
-        raise HTTPException(status_code=HTTPStatus.NOT_IMPLEMENTED, detail="Not implemented yet")
+        try:
+            return await service.get_module(user_info.user_id, module_id)
+        except CareerReadinessModuleNotFoundError as exc:
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Module not found: {module_id}") from exc
+        except Exception as e:
+            logger.exception("Error getting module: %s", e)
+            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.post(
         path="/modules/{module_id}/conversations",
@@ -85,9 +115,19 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
     )
     async def _create_conversation(
         module_id: Annotated[str, Path(description="The module identifier slug.", examples=["cv-resume-creation"])],
-        user_info: UserInfo = Depends(authentication.get_user_info()),  # noqa: ARG001
+        user_info: UserInfo = Depends(authentication.get_user_info()),
+        service: ICareerReadinessService = Depends(get_career_readiness_service),
     ):
-        raise HTTPException(status_code=HTTPStatus.NOT_IMPLEMENTED, detail="Not implemented yet")
+        try:
+            return await service.create_conversation(user_info.user_id, module_id)
+        except CareerReadinessModuleNotFoundError as exc:
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Module not found: {module_id}") from exc
+        except ConversationAlreadyExistsError as exc:
+            raise HTTPException(status_code=HTTPStatus.CONFLICT,
+                                detail=f"A conversation already exists for module {module_id}") from exc
+        except Exception as e:
+            logger.exception("Error creating conversation: %s", e)
+            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.post(
         path="/modules/{module_id}/conversations/{conversation_id}/messages",
@@ -104,10 +144,23 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
     async def _send_message(
         module_id: Annotated[str, Path(description="The module identifier slug.", examples=["cv-resume-creation"])],
         conversation_id: Annotated[str, Path(description="The conversation identifier.", examples=["conv_abc123"])],
-        body: CareerReadinessConversationInput,  # noqa: ARG001
-        user_info: UserInfo = Depends(authentication.get_user_info()),  # noqa: ARG001
+        body: CareerReadinessConversationInput,
+        user_info: UserInfo = Depends(authentication.get_user_info()),
+        service: ICareerReadinessService = Depends(get_career_readiness_service),
     ):
-        raise HTTPException(status_code=HTTPStatus.NOT_IMPLEMENTED, detail="Not implemented yet")
+        if len(body.user_input) > MAX_MESSAGE_LENGTH:
+            logger.warning("User input exceeded maximum length of %d characters", MAX_MESSAGE_LENGTH)
+            raise HTTPException(status_code=HTTPStatus.REQUEST_ENTITY_TOO_LARGE, detail="Too long user input")
+
+        try:
+            return await service.send_message(user_info.user_id, module_id, conversation_id, body.user_input)
+        except (CareerReadinessModuleNotFoundError, ConversationNotFoundError, ConversationModuleMismatchError) as exc:
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Conversation not found") from exc
+        except ConversationAccessDeniedError as exc:
+            raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Access denied") from exc
+        except Exception as e:
+            logger.exception("Error sending message: %s", e)
+            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.get(
         path="/modules/{module_id}/conversations/{conversation_id}/messages",
@@ -122,9 +175,18 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
     async def _get_conversation_history(
         module_id: Annotated[str, Path(description="The module identifier slug.", examples=["cv-resume-creation"])],
         conversation_id: Annotated[str, Path(description="The conversation identifier.", examples=["conv_abc123"])],
-        user_info: UserInfo = Depends(authentication.get_user_info()),  # noqa: ARG001
+        user_info: UserInfo = Depends(authentication.get_user_info()),
+        service: ICareerReadinessService = Depends(get_career_readiness_service),
     ):
-        raise HTTPException(status_code=HTTPStatus.NOT_IMPLEMENTED, detail="Not implemented yet")
+        try:
+            return await service.get_conversation_history(user_info.user_id, module_id, conversation_id)
+        except (CareerReadinessModuleNotFoundError, ConversationNotFoundError, ConversationModuleMismatchError) as exc:
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Conversation not found") from exc
+        except ConversationAccessDeniedError as exc:
+            raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Access denied") from exc
+        except Exception as e:
+            logger.exception("Error getting conversation history: %s", e)
+            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.delete(
         path="/modules/{module_id}/conversations/{conversation_id}",
@@ -139,8 +201,17 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
     async def _delete_conversation(
         module_id: Annotated[str, Path(description="The module identifier slug.", examples=["cv-resume-creation"])],
         conversation_id: Annotated[str, Path(description="The conversation identifier.", examples=["conv_abc123"])],
-        user_info: UserInfo = Depends(authentication.get_user_info()),  # noqa: ARG001
+        user_info: UserInfo = Depends(authentication.get_user_info()),
+        service: ICareerReadinessService = Depends(get_career_readiness_service),
     ):
-        raise HTTPException(status_code=HTTPStatus.NOT_IMPLEMENTED, detail="Not implemented yet")
+        try:
+            await service.delete_conversation(user_info.user_id, module_id, conversation_id)
+        except (CareerReadinessModuleNotFoundError, ConversationNotFoundError, ConversationModuleMismatchError) as exc:
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Conversation not found") from exc
+        except ConversationAccessDeniedError as exc:
+            raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Access denied") from exc
+        except Exception as e:
+            logger.exception("Error deleting conversation: %s", e)
+            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     app.include_router(router)
