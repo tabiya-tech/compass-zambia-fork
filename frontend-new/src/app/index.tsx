@@ -31,6 +31,9 @@ const LazyLoadedSensitiveDataForm = lazyWithPreload(
 );
 const LazyLoadedChat = lazyWithPreload(() => import("src/chat/Chat"));
 
+const LazyLoadedKnowledgeHubDocument = lazyWithPreload(() => import("src/knowledgeHub/pages/KnowledgeHubDocument"));
+const LazyLoadedKnowledgeHubList = lazyWithPreload(() => import("src/knowledgeHub/pages/KnowledgeHubList"));
+
 // Wrap the createHashRouter function with Sentry to capture errors that occur during router initialization
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV6(createHashRouter);
 
@@ -50,6 +53,8 @@ const ProtectedRouteKeys = {
   VERIFY_EMAIL: "VERIFY_EMAIL",
   CONSENT: "CONSENT",
   SENSITIVE_DATA: "SENSITIVE_DATA",
+  KNOWLEDGE_HUB: "KNOWLEDGE_HUB",
+  KNOWLEDGE_HUB_DOCUMENT: "KNOWLEDGE_HUB_DOCUMENT",
 };
 
 const NotFound: React.FC = () => {
@@ -314,6 +319,22 @@ const App = () => {
       element: (
         <ProtectedRoute key={ProtectedRouteKeys.SENSITIVE_DATA}>
           <LazyLoadedSensitiveDataForm />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routerPaths.KNOWLEDGE_HUB,
+      element: (
+        <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB}>
+          <LazyLoadedKnowledgeHubList />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routerPaths.KNOWLEDGE_HUB_DOCUMENT,
+      element: (
+        <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB_DOCUMENT}>
+          <LazyLoadedKnowledgeHubDocument />
         </ProtectedRoute>
       ),
     },

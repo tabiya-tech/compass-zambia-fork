@@ -76,13 +76,16 @@
     "jwt-decode": "^4.0.0",
     "lodash.debounce": "^4.0.8",
     "notistack": "^3.0.1",
+    "raw-loader": "^4.0.2",
     "react": "18.3.1",
     "react-device-detect": "^2.2.3",
     "react-dom": "~18.2.0",
     "react-i18next": "^14.1.2",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^6.23.1",
     "react-scripts": "^5.0.1",
     "react-swipeable": "^7.0.2",
+    "remark-gfm": "^4.0.1",
     "source-map-explorer": "^2.5.3",
     "web-vitals": "^2.1.4"
   },
@@ -123,6 +126,12 @@
     "transformIgnorePatterns": [
       "node_modules/(?!p-limit)/"
     ],
+    "transform": {
+      "^.+\\.md$": "<rootDir>/src/_test_utilities/rawLoaderTransformer.js"
+    },
+    "moduleNameMapper": {
+      "^!!raw-loader!(.*)$": "$1"
+    },
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!<rootDir>/node_modules/",
