@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 from app.agent.agent_director.abstract_agent_director import ConversationPhase
 from app.agent.agent_director.llm_agent_director import LLMAgentDirector
-from app.conversations.phase_state_machine import JourneyPhase, PhaseDataStatus, determine_start_phase
+from app.conversations.phase_state_machine import determine_start_phase
 from app.agent.agent_types import AgentInput
 from app.agent.explore_experiences_agent_director import DiveInPhase
 from app.application_state import ApplicationState
@@ -22,6 +22,7 @@ from app.job_preferences.service import IJobPreferencesService
 from app.conversations.phase_data import (
     apply_entry_phase,
     build_phase_data_status_from_state,
+    CONVERSATION_ALLOWED_PHASES,
 )
 from app.user_recommendations.services.service import IUserRecommendationsService
 from app.job_preferences.types import JobPreferences
@@ -29,7 +30,7 @@ from app.job_preferences.types import JobPreferences
 from app.app_config import get_application_config
 from app.context_vars import turn_index_ctx_var, detected_language_ctx_var, user_language_ctx_var
 from app.agent.persona_detector import detect_persona
-from app.agent.language_detector import detect_language, get_locale_for_detected_language, DetectedLanguage
+from app.agent.language_detector import detect_language, get_locale_for_detected_language
 from app.i18n.types import Locale
 
 class ConversationAlreadyConcludedError(Exception):
@@ -108,7 +109,7 @@ class ConversationService(IConversationService):
             data = await build_phase_data_status_from_state(
                 state, user_id, self._user_recommendations_service
             )
-            entry_phase = determine_start_phase(data)
+            entry_phase = determine_start_phase(data, allowed_phases=CONVERSATION_ALLOWED_PHASES)
             self._logger.info(
                 "Step-skip check: session=%s user=%s entry_phase=%s",
                 session_id, user_id, entry_phase.value,
@@ -134,11 +135,6 @@ class ConversationService(IConversationService):
         self._agent_director.get_explore_experiences_agent().get_exploring_skills_agent().set_state(
             state.skills_explorer_agent_state)
         self._agent_director.get_preference_elicitation_agent().set_state(state.preference_elicitation_agent_state)
-
-        # Prepare recommender state with skills and preferences if not already set
-        await self._prepare_recommender_state_if_needed(state, user_id)
-
-        self._agent_director.get_recommender_advisor_agent().set_state(state.recommender_advisor_agent_state)
         self._conversation_memory_manager.set_state(state.conversation_memory_manager_state)
 
         # Handle the user input
@@ -306,99 +302,3 @@ class ConversationService(IConversationService):
             # Don't fail the conversation - just log the error
             # This is a denormalized copy; the primary data is already in DB6
             self._logger.error(f"Failed to save preference vector to JobPreferences: {e}", exc_info=True)
-
-    async def _prepare_recommender_state_if_needed(self, state: ApplicationState, user_id: str) -> None:
-        """
-        Prepare RecommenderAdvisorAgent state with skills and preferences if not already initialized.
-
-        When skip_to_phase is RECOMMENDATION, loads pre-computed recommendations from
-        user_recommendations collection and passes them to the agent.
-
-        Otherwise populates:
-        - Skills vector from explored experiences
-        - Preference vector from preference elicitation agent
-        - BWS occupation scores from preference elicitation
-        - Location data (city/province) - optional for v1
-
-        Args:
-            state: Application state containing all agent states
-            user_id: User ID for loading pre-computed recommendations when skipping
-        """
-        rec_state = state.recommender_advisor_agent_state
-
-        if (state.agent_director_state.skip_to_phase == JourneyPhase.RECOMMENDATION
-                and rec_state.recommendations is None):
-            self._logger.info(
-                "Step-skip: loading pre-computed recommendations for user=%s", user_id
-            )
-            try:
-                db_recs = await self._user_recommendations_service.get_by_user_id(user_id)
-                if db_recs:
-                    from app.agent.recommender_advisor_agent.user_recommendations_converter import (
-                        user_recommendations_to_node2vec,
-                    )
-                    rec_state.recommendations = user_recommendations_to_node2vec(user_id, db_recs)
-                    rec_state.youth_id = user_id
-                    self._logger.info(
-                        "Loaded pre-computed recommendations for recommender: "
-                        "%d occupations, %d opportunities, %d skill gaps",
-                        len(db_recs.occupation_recommendations),
-                        len(db_recs.opportunity_recommendations),
-                        len(db_recs.skill_gap_recommendations),
-                    )
-            except Exception as e:
-                self._logger.warning(
-                    "Failed to load pre-computed recommendations for skip: %s", e, exc_info=True
-                )
-
-        if rec_state.skills_vector is not None and rec_state.preference_vector is not None:
-            return
-
-        try:
-            # Extract skills from explored experiences
-            if rec_state.skills_vector is None:
-                from app.agent.recommender_advisor_agent.skills_extractor import SkillsExtractor
-
-                explored_experiences = state.explore_experiences_director_state.explored_experiences
-                extractor = SkillsExtractor()
-                skills_vector = extractor.extract_skills_vector(explored_experiences)
-
-                rec_state.skills_vector = skills_vector
-                self._logger.info(
-                    f"Extracted skills vector for recommender: "
-                    f"{len(skills_vector.get('skills', []))} skills from "
-                    f"{skills_vector.get('total_experiences', 0)} experiences"
-                )
-
-            # Extract preference vector from preference elicitation agent
-            if rec_state.preference_vector is None:
-                pref_state = state.preference_elicitation_agent_state
-                if pref_state.preference_vector is not None:
-                    rec_state.preference_vector = pref_state.preference_vector
-                    self._logger.info(
-                        f"Loaded preference vector for recommender "
-                        f"(confidence: {pref_state.preference_vector.confidence_score:.2f})"
-                    )
-
-            # Extract BWS occupation scores from preference elicitation
-            if rec_state.bws_scores is None:
-                pref_state = state.preference_elicitation_agent_state
-                if pref_state.bws_scores:
-                    rec_state.bws_scores = pref_state.bws_scores
-                    self._logger.info(
-                        f"Loaded BWS scores for recommender: "
-                        f"{len(pref_state.bws_scores)} items"
-                    )
-
-            # Set youth_id (use session_id as fallback)
-            if rec_state.youth_id is None:
-                rec_state.youth_id = f"youth_{state.session_id}"
-
-            # Location data (city/province) - optional for v1
-            # TODO: Extract from user profile or welcome agent when implemented
-            # For now, matching service will use defaults
-
-        except Exception as e:
-            # Don't fail - just log the error
-            # Recommender agent will work with whatever data is available
-            self._logger.warning(f"Error preparing recommender state: {e}", exc_info=True)
