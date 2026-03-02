@@ -3,11 +3,18 @@ Builds PhaseDataStatus from application state and user_recommendations.
 
 PhaseDataStatus drives determine_start_phase; no override or external store.
 """
+from typing import Sequence
+
 from app.application_state import ApplicationState
 from app.conversations.phase_state_machine import JourneyPhase, PhaseDataStatus
 from app.agent.explore_experiences_agent_director import DiveInPhase
 from app.agent.agent_director.abstract_agent_director import ConversationPhase
 from app.user_recommendations.services.service import IUserRecommendationsService
+
+CONVERSATION_ALLOWED_PHASES: Sequence[JourneyPhase] = (
+    JourneyPhase.SKILLS_ELICITATION,
+    JourneyPhase.PREFERENCE_ELICITATION,
+)
 
 
 def conversation_phase_for_entry(journey_phase: JourneyPhase) -> ConversationPhase | None:
