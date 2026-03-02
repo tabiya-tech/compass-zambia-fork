@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from enum import Enum
 
-from pydantic import BaseModel, field_serializer, field_validator
+from pydantic import BaseModel, Field, field_serializer, field_validator
 
 
 class ModuleStatus(str, Enum):
@@ -93,18 +93,6 @@ class ModuleListResponse(BaseModel):
         extra = "forbid"
 
 
-class ModuleStatusUpdateRequest(BaseModel):
-    """
-    Request to manually update a module's status.
-    """
-
-    status: ModuleStatus
-    """The new status for the module"""
-
-    class Config:
-        extra = "forbid"
-
-
 class CareerReadinessMessage(BaseModel):
     """
     Represents a single message in a career readiness conversation.
@@ -123,15 +111,16 @@ class CareerReadinessMessage(BaseModel):
     """The sender of the message, either USER or AGENT"""
 
     @field_serializer('sent_at')
-    def serialize_sent_at(self, value: datetime) -> str:
+    def _serialize_sent_at(self, value: datetime) -> str:
         return value.astimezone(timezone.utc).isoformat()
 
     @field_serializer("sender")
-    def serialize_sender(self, sender: CareerReadinessMessageSender, _info) -> str:
+    def _serialize_sender(self, sender: CareerReadinessMessageSender, _info) -> str:
         return sender.name
 
+    @classmethod
     @field_validator("sender", mode='before')
-    def deserialize_sender(cls, value: str | CareerReadinessMessageSender) -> CareerReadinessMessageSender:
+    def _deserialize_sender(cls, value: str | CareerReadinessMessageSender) -> CareerReadinessMessageSender:
         if isinstance(value, str):
             return CareerReadinessMessageSender[value]
         elif isinstance(value, CareerReadinessMessageSender):
@@ -171,6 +160,60 @@ class CareerReadinessConversationInput(BaseModel):
 
     user_input: str
     """The user input"""
+
+    class Config:
+        extra = "forbid"
+
+
+class CareerReadinessConversationDocument(BaseModel):
+    """
+    Represents a career readiness conversation document in MongoDB.
+    """
+
+    conversation_id: str
+    """The unique identifier for the conversation"""
+
+    module_id: str
+    """The module this conversation belongs to"""
+
+    user_id: str
+    """The user who owns this conversation"""
+
+    messages: list[CareerReadinessMessage] = Field(default_factory=list)
+    """The messages in the conversation"""
+
+    created_at: datetime
+    """When the conversation was created"""
+
+    updated_at: datetime
+    """When the conversation was last updated"""
+
+    @field_serializer("created_at", "updated_at")
+    def _serialize_datetime(self, value: datetime) -> str:
+        return value.astimezone(timezone.utc).isoformat()
+
+    @classmethod
+    @field_validator("created_at", "updated_at", mode="before")
+    def _deserialize_datetime(cls, value: str | datetime) -> datetime:
+        if isinstance(value, str):
+            dt = datetime.fromisoformat(value)
+        elif isinstance(value, datetime):
+            dt = value
+        else:
+            raise ValueError(f"Invalid datetime value: {value}")
+        return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+    @staticmethod
+    def from_dict(_dict: dict) -> "CareerReadinessConversationDocument":
+        """Convert a MongoDB document dictionary to a typed object."""
+        return CareerReadinessConversationDocument(
+            conversation_id=str(_dict["conversation_id"]),
+            module_id=str(_dict["module_id"]),
+            user_id=str(_dict["user_id"]),
+            messages=[CareerReadinessMessage(**msg) for msg in _dict.get("messages", [])],
+            created_at=_dict["created_at"],
+            updated_at=_dict["updated_at"],
+        )
 
     class Config:
         extra = "forbid"
