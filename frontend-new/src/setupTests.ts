@@ -17,3 +17,21 @@ jest.mock("firebase/compat/app", () => require("src/_test_utilities/firebaseMock
 
 // Mock the i18n module to use English language during test.
 import "src/_test_utilities/i18nMock";
+
+// Mock react-markdown to avoid ESM issues in Jest
+jest.mock("react-markdown", () => {
+  return {
+    __esModule: true,
+    default: ({ children }: { children: string }) => {
+      return children;
+    },
+  };
+});
+
+// Mock remark-gfm
+jest.mock("remark-gfm", () => {
+  return {
+    __esModule: true,
+    default: () => {},
+  };
+});
