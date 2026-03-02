@@ -39,7 +39,7 @@ const DEFAULT_MODULES: Module[] = [
     id: "knowledge_hub",
     labelKey: "home.modules.knowledgeHub",
     descriptionKey: "home.modules.knowledgeHubDesc",
-    route: routerPaths.SKILLS_INTERESTS,
+    route: routerPaths.KNOWLEDGE_HUB,
   },
 ];
 

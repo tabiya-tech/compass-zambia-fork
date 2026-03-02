@@ -9,4 +9,6 @@ export const routerPaths = {
   VERIFY_EMAIL: "/verify-email",
   CONSENT: "/consent",
   SENSITIVE_DATA: "/sensitive-data",
+  KNOWLEDGE_HUB: "/knowledge-hub",
+  KNOWLEDGE_HUB_DOCUMENT: "/knowledge-hub/:documentId",
 };

@@ -770,6 +770,13 @@
     "next": "Zotsatira",
     "previous": "Zomwe zidadza"
   },
+  "knowledgeHub": {
+    "backToDashboard": "Bwererani ku Dashibodi",
+    "backToKnowledgeHub": "Bwererani ku Malo Ophunzirira",
+    "documentNotFound": "Chikalata sichinapezeke",
+    "introduction": "Awa ndi magawo ofunikira a Zambia kwa omaliza maphunziro a TEVET. Mbiri iliyonse ikukupatsani chiwonetsero cha momwe makampaniwo akuwonekera, ntchito zomwe zilipo, ndi zomwe mungayembekezere kupeza. Fufuzani magawo omwe amakusangalatsani kuti mupange zisankho zanzeru pa njira yanu ya ntchito.",
+    "noDocumentsAvailable": "Palibe zikalata zomwe zilipo pakadali pano."
+  },
   "home": {
     "dashboard": "Malo Anu a Ntchito",
     "welcomeBack": "Takulandirani, {{name}}",
