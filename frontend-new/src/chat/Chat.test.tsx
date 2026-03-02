@@ -10,6 +10,7 @@ import Chat, {
 } from "src/chat/Chat";
 import i18n from "src/i18n/i18n";
 import ChatHeader, { DATA_TEST_ID as CHAT_HEADER_TEST_ID } from "src/chat/ChatHeader/ChatHeader";
+import PageHeader, { DATA_TEST_ID as PAGE_HEADER_TEST_ID } from "src/home/components/PageHeader/PageHeader";
 import ChatList, { DATA_TEST_ID as CHAT_LIST_TEST_ID } from "src/chat/chatList/ChatList";
 import ChatMessageField, {
   DATA_TEST_ID as CHAT_MESSAGE_FIELD_TEST_ID,
@@ -69,6 +70,19 @@ jest.mock("src/theme/SnackbarProvider/SnackbarProvider", () => {
       enqueueSnackbar: jest.fn(),
       closeSnackbar: jest.fn(),
     }),
+  };
+});
+
+// mock the PageHeader component
+jest.mock("src/home/components/PageHeader/PageHeader", () => {
+  const actual = jest.requireActual("src/home/components/PageHeader/PageHeader");
+  const mockPageHeader = jest
+    .fn()
+    .mockImplementation(() => <div data-testid={actual.DATA_TEST_ID.PAGE_HEADER_CONTAINER}></div>);
+  return {
+    __esModule: true,
+    default: mockPageHeader,
+    DATA_TEST_ID: actual.DATA_TEST_ID,
   };
 });
 
@@ -361,6 +375,16 @@ describe("Chat", () => {
       await assertChatInitialized();
       // AND expect the container to be visible
       expect(screen.getByTestId(DATA_TEST_ID.CHAT_CONTAINER)).toBeVisible();
+      // AND expect the page header to be visible
+      expect(screen.getByTestId(PAGE_HEADER_TEST_ID.PAGE_HEADER_CONTAINER)).toBeInTheDocument();
+      // AND expect PageHeader to be called with correct props
+      expect(PageHeader as jest.Mock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: "home.modules.skillsDiscovery",
+          subtitle: "home.modules.skillsDiscoverySubtitle",
+        }),
+        {}
+      );
       // AND expect the chat header to be visible
       expect(screen.getByTestId(CHAT_HEADER_TEST_ID.CHAT_HEADER_CONTAINER)).toBeInTheDocument();
       // AND expect the chat list to be visible

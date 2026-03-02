@@ -1,0 +1,127 @@
+{
+  "branding": {
+    "appName": "Njira",
+    "browserTabTitle": "Njira",
+    "metaDescription": "Welcome to Njira. An AI-powered career assistant that helps jobseekers identify and showcase their skills. Join now to create a digital profile and connect with new opportunities.",
+    "seo": {
+      "name": "Njira",
+      "url": "https://www.example.org/njira",
+      "image": "https://www.example.org/assets/logo.svg",
+      "description": "Njira is an AI-powered conversational tool that helps jobseekers discover and articulate their skills. Through natural dialogue, Njira guides users to identify abilities gained through all types of work."
+    },
+    "assets": {
+      "logo": "/nijra_logo.svg",
+      "favicon": "/nijra_logo.svg",
+      "appIcon": "/nijra_logo.svg"
+    },
+    "theme": {
+      "brand-primary": "239 123 0",
+      "brand-primary-light": "250 166 39",
+      "brand-primary-dark": "233 108 0",
+      "brand-primary-contrast-text": "0 0 0",
+      "brand-secondary": "25 138 0",
+      "brand-secondary-light": "87 183 69",
+      "brand-secondary-dark": "1 121 0",
+      "brand-secondary-contrast-text": "255 255 255",
+      "text-primary": "0 33 71",
+      "text-secondary": "65 64 61",
+      "text-accent": "38 94 167"
+    }
+  },
+  "auth": {
+    "disableLoginCode": true,
+    "disableRegistrationCode": true
+  },
+  "cv": {
+    "enabled": true
+  },
+  "skillsReport": {
+    "logos": [
+      {
+        "url": "/logo.png",
+        "docxStyles": {
+          "width": 250,
+          "height": 62
+        },
+        "pdfStyles": {
+          "height": 46
+        }
+      }
+    ],
+    "downloadFormats": [
+      "DOCX",
+      "PDF"
+    ],
+    "report": {
+      "summary": {
+        "show": true
+      },
+      "experienceDetails": {
+        "title": true,
+        "summary": true,
+        "location": true,
+        "dateRange": true,
+        "companyName": true
+      }
+    }
+  },
+  "i18n": {
+    "ui": {
+      "defaultLocale": "en-US",
+      "supportedLocales": [
+        "en-US",
+        "en-GB",
+        "ny-ZM"
+      ]
+    },
+    "conversation": {
+      "default_locale": "en-US",
+      "available_locales": [
+        {
+          "locale": "en-US",
+          "date_format": "YYYY/MM/DD"
+        }
+      ]
+    }
+  },
+  "modules": {
+    "enabled": true,
+    "list": [
+      {
+        "id": "skills_discovery",
+        "labelKey": "home.modules.skillsDiscovery",
+        "descriptionKey": "home.modules.skillsDiscoveryDesc",
+        "route": "skills-discovery",
+        "isStub": false
+      },
+      {
+        "id": "career_discovery",
+        "labelKey": "home.modules.careerDiscovery",
+        "descriptionKey": "home.modules.careerDiscoveryDesc",
+        "route": "career-discovery",
+        "isStub": false
+      },
+      {
+        "id": "job_readiness",
+        "labelKey": "home.modules.jobReadiness",
+        "descriptionKey": "home.modules.jobReadinessDesc",
+        "route": "job-readiness",
+        "isStub": true
+      },
+      {
+        "id": "career_explorer",
+        "labelKey": "home.modules.careerExplorer",
+        "descriptionKey": "home.modules.careerExplorerDesc",
+        "route": "career-explorer",
+        "isStub": true
+      },
+      {
+        "id": "knowledge_hub",
+        "labelKey": "home.modules.knowledgeHub",
+        "descriptionKey": "home.modules.knowledgeHubDesc",
+        "route": "knowledge-hub",
+        "isStub": true
+      }
+    ]
+  }
+}

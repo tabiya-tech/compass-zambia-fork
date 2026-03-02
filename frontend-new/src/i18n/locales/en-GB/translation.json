@@ -240,6 +240,7 @@
       "feedbackSuccessMessage": "Thank you for your feedback!",
       "giveGeneralFeedback": "Give general feedback",
       "userInfo": "User info",
+      "viewMyProfile": "View my profile",
       "userIconAlt": "User Icon",
       "beforeYouGo": "Before you go",
       "logoutConfirmationMessage": "Are you sure you want to log out?",
@@ -768,5 +769,39 @@
     "submit": "Submit",
     "next": "Next",
     "previous": "Previous"
+  },
+  "home": {
+    "dashboard": "Your Career Hub",
+    "backToDashboard": "Back to dashboard",
+    "welcomeBack": "Welcome back, {{name}}",
+    "subtitle": "{{appName}} is the bridge between what you've learned and where you're headed. Chat with AI to surface your skills, prep for interviews, and explore real career routes across Zambia.",
+    "profileStrength": "Your current profile strength is {{progress}}%.",
+    "profileStrengthHint": "That's a strong start — try My Skills & Interests to surface more about what you know and enjoy.",
+    "seeProfile": "See profile →",
+    "whatToDo": "What would you like to do today?",
+    "whatToDoSubtitle": "Each module is an AI-guided conversation or resource to help you on your career journey.",
+    "modules": {
+      "skillsDiscovery": "My Skills & Interests",
+      "skillsDiscoverySubtitle": "Uncover your skills and interests",
+      "careerDiscovery": "Career Explorer",
+      "jobReadiness": "Career Readiness",
+      "careerExplorer": "Job Matching & Analytics",
+      "knowledgeHub": "Knowledge Hub",
+      "skillsDiscoveryDesc": "Chat with {{appName}} to uncover your skills and interests — from your studies, work, and everyday life.",
+      "careerDiscoveryDesc": "Explore career pathways in Energy, Mining, Agriculture and more — with salary data and qualification routes.",
+      "jobReadinessDesc": "Build essential workplace skills through guided AI modules — from CV writing to interview practice.",
+      "careerExplorerDesc": "See how your skills match to real job openings and explore labour market insights across Zambia.",
+      "knowledgeHubDesc": "Explore sector profiles, salary benchmarks, and TEVET qualification pathways all in one place.",
+      "continue": "Continue",
+      "completed": "Completed",
+      "comingSoon": "Coming Soon"
+    },
+    "footer": {
+      "privacyPolicy": "Privacy Policy",
+      "termsOfUse": "Terms of Use",
+      "accessibility": "Accessibility",
+      "contact": "Contact",
+      "collaboration": "{{appName}} is a collaboration between the World Bank Group and Tabiya."
+    }
   }
 }
