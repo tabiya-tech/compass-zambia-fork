@@ -24,11 +24,7 @@ const ChatProgressBar: React.FC<CurrentPhase> = (currentPhase) => {
         display: "flex",
         flexDirection: "column",
         gap: theme.fixedSpacing(theme.tabiyaSpacing.xs),
-        // to match the width of the message list container
-        [theme.breakpoints.up("md")]: {
-          width: "60%",
-          margin: "auto",
-        },
+        width: "100%",
       }}
     >
       <Box
