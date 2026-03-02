@@ -72,3 +72,12 @@ def test_raises_when_allowed_phases_empty_after_filter():
     with pytest.raises(ValueError):
         determine_start_phase(status, allowed_phases=[])
 
+
+def test_conversation_allowed_phases_restricts_to_skills_and_preference():
+    from app.conversations.phase_data import CONVERSATION_ALLOWED_PHASES
+
+    assert list(CONVERSATION_ALLOWED_PHASES) == [
+        JourneyPhase.SKILLS_ELICITATION,
+        JourneyPhase.PREFERENCE_ELICITATION,
+    ]
+

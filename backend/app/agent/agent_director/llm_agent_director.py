@@ -120,24 +120,16 @@ class LLMAgentDirector(AbstractAgentDirector):
         if phase == ConversationPhase.INTRO:
             return AgentType.WELCOME_AGENT
 
+        # In the consulting phase, the agent type is determined by the user's intent.
+        # Matching and recommendation are detached from the conversation flow (Phase 1 simplification).
         if phase == ConversationPhase.COUNSELING:
             # Priority 1: Explicit phase skip overrides everything
             skip_phase = self._state.skip_to_phase
-            if skip_phase == JourneyPhase.RECOMMENDATION:
-                self._logger.info(
-                    "Step-skip: routing to RECOMMENDER_ADVISOR_AGENT (skip_to_phase=RECOMMENDATION)"
-                )
-                return AgentType.RECOMMENDER_ADVISOR_AGENT
             if skip_phase == JourneyPhase.PREFERENCE_ELICITATION:
                 self._logger.info(
                     "Step-skip: routing to PREFERENCE_ELICITATION_AGENT (skip_to_phase=PREFERENCE_ELICITATION)"
                 )
                 return AgentType.PREFERENCE_ELICITATION_AGENT
-            if skip_phase == JourneyPhase.MATCHING:
-                self._logger.info(
-                    "Step-skip: routing to RECOMMENDER_ADVISOR_AGENT (skip_to_phase=MATCHING)"
-                )
-                return AgentType.RECOMMENDER_ADVISOR_AGENT
 
             # Priority 2: Deterministic sub-phase routing
             sub_phase = self._state.counseling_sub_phase
@@ -145,8 +137,6 @@ class LLMAgentDirector(AbstractAgentDirector):
                 return AgentType.EXPLORE_EXPERIENCES_AGENT
             if sub_phase == CounselingSubPhase.PREFERENCE_ELICITATION:
                 return AgentType.PREFERENCE_ELICITATION_AGENT
-            if sub_phase == CounselingSubPhase.RECOMMENDER_ADVISOR:
-                return AgentType.RECOMMENDER_ADVISOR_AGENT
 
             # Fallback: use the LLM router (should not normally reach here)
             self._logger.warning("Unexpected counseling sub-phase state, falling back to LLM router")
@@ -176,19 +166,15 @@ class LLMAgentDirector(AbstractAgentDirector):
                 and agent_output.finished):
             return ConversationPhase.COUNSELING
 
-        if current_phase == ConversationPhase.COUNSELING and agent_output.finished:
-            if agent_output.agent_type == AgentType.EXPLORE_EXPERIENCES_AGENT:
-                self._state.counseling_sub_phase = CounselingSubPhase.PREFERENCE_ELICITATION
-                self._logger.info("COUNSELING sub-phase advanced: EXPLORE_EXPERIENCES -> PREFERENCE_ELICITATION")
-                return ConversationPhase.COUNSELING
-
-            if agent_output.agent_type == AgentType.PREFERENCE_ELICITATION_AGENT:
-                self._state.counseling_sub_phase = CounselingSubPhase.RECOMMENDER_ADVISOR
-                self._logger.info("COUNSELING sub-phase advanced: PREFERENCE_ELICITATION -> RECOMMENDER_ADVISOR")
-                return ConversationPhase.COUNSELING
-
-            if agent_output.agent_type == AgentType.RECOMMENDER_ADVISOR_AGENT:
-                return ConversationPhase.CHECKOUT
+        # In the consulting phase, Explore Experiences or Preference Elicitation agents can end the phase.
+        # Matching and recommendation are detached; conversation flow ends at preference elicitation.
+        if (current_phase == ConversationPhase.COUNSELING
+                and agent_output.finished
+                and agent_output.agent_type in (
+                    AgentType.EXPLORE_EXPERIENCES_AGENT,
+                    AgentType.PREFERENCE_ELICITATION_AGENT,
+                )):
+            return ConversationPhase.CHECKOUT
 
         if (current_phase == ConversationPhase.CHECKOUT
                 and agent_output.agent_type == AgentType.FAREWELL_AGENT
@@ -245,7 +231,7 @@ class LLMAgentDirector(AbstractAgentDirector):
                     self._state.sticky_turn_counter = 1
                 else:
                     self._state.sticky_turn_counter += 1
-                
+
                 # Set agent_type in context for observability logging
                 agent_type_ctx_var.set(suitable_agent_type.value if suitable_agent_type else ":none:")
                 
