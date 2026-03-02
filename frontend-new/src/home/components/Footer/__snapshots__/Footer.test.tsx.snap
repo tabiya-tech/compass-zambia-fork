@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer should render the footer container, logos, links, and collaboration text 1`] = `
+<footer
+  class="MuiBox-root css-14r34si"
+  data-testid="footer-container-a7f3d2b1-8e4c-4a9f-b6d5-3c1e2f7a8b9d"
+>
+  <hr
+    class="MuiDivider-root MuiDivider-fullWidth css-59uilh-MuiDivider-root"
+  />
+  <div
+    class="MuiContainer-root MuiContainer-maxWidthMd css-1np76bk-MuiContainer-root"
+  >
+    <div
+      class="MuiBox-root css-o5x28k"
+    >
+      <div
+        class="MuiBox-root css-1hb1pxt"
+        data-testid="footer-logos-container-a7f3d2b1-8e4c-4a9f-b6d5-3c1e2f7a8b9d"
+      >
+        <img
+          alt="World Bank Group Logo"
+          data-testid="footer-world-bank-logo-a7f3d2b1-8e4c-4a9f-b6d5-3c1e2f7a8b9d"
+          src="/world-bank-logo.svg"
+          style="max-width: 40%;"
+        />
+        <img
+          alt="Tabiya Logo"
+          data-testid="footer-tabiya-logo-a7f3d2b1-8e4c-4a9f-b6d5-3c1e2f7a8b9d"
+          src="/tabiya-logo.svg"
+          style="max-width: 35%;"
+        />
+      </div>
+      <div
+        class="MuiBox-root css-cwtzif"
+      >
+        <a
+          aria-disabled="false"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-e660e7-MuiTypography-root-MuiLink-root"
+          data-testid="footer-privacy-link-a7f3d2b1-8e4c-4a9f-b6d5-3c1e2f7a8b9d"
+        >
+          Privacy Policy
+        </a>
+        •
+        <a
+          aria-disabled="false"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-e660e7-MuiTypography-root-MuiLink-root"
+          data-testid="footer-terms-link-a7f3d2b1-8e4c-4a9f-b6d5-3c1e2f7a8b9d"
+        >
+          Terms of Use
+        </a>
+        •
+        <a
+          aria-disabled="false"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-e660e7-MuiTypography-root-MuiLink-root"
+          data-testid="footer-accessibility-link-a7f3d2b1-8e4c-4a9f-b6d5-3c1e2f7a8b9d"
+        >
+          Accessibility
+        </a>
+        •
+        <a
+          aria-disabled="false"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-e660e7-MuiTypography-root-MuiLink-root"
+          data-testid="footer-contact-link-a7f3d2b1-8e4c-4a9f-b6d5-3c1e2f7a8b9d"
+        >
+          Contact
+        </a>
+      </div>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-4todhm-MuiTypography-root"
+        data-testid="footer-collaboration-a7f3d2b1-8e4c-4a9f-b6d5-3c1e2f7a8b9d"
+      >
+        mockProduct is a collaboration between the World Bank Group and Tabiya.
+      </p>
+    </div>
+  </div>
+</footer>
+`;

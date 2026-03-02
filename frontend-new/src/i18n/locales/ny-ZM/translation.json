@@ -110,6 +110,7 @@
       "feedbackSuccessMessage": "Zikomo chifukwa cha nkhani yanu!",
       "giveGeneralFeedback": "Perekani nkhani yonse",
       "userInfo": "Zobisika za wogwiritsa",
+      "viewMyProfile": "Onani mbiri yanga",
       "userIconAlt": "Chizindikiro cha Wogwiritsa",
       "beforeYouGo": "Musanapite",
       "logoutConfirmationMessage": "Mukutsimikiza kuti mukufuna kutuluka?",
@@ -768,5 +769,38 @@
     "submit": "Tumizani",
     "next": "Zotsatira",
     "previous": "Zomwe zidadza"
+  },
+  "home": {
+    "dashboard": "Malo Anu a Ntchito",
+    "welcomeBack": "Takulandirani, {{name}}",
+    "subtitle": "{{appName}} ndi mlatho pakati pa zomwe mwaphunzira ndi komwe mukupita. Lankhulani ndi AI kuti mupeze luso lanu, mukonzekere mafunso antchito, ndikufufuza njira za ntchito ku Zambia.",
+    "profileStrength": "Mphamvu ya mbiri yanu ndi {{progress}}%.",
+    "profileStrengthHint": "Ndi chiyambi chabwino — yesani Luso ndi Zomwe Ndimakonda kuti mudziwe zambiri za zomwe mukudziwa ndikusangalala nazo.",
+    "seeProfile": "Onani mbiri →",
+    "whatToDo": "Mungakonde kuchita chiyani lero?",
+    "whatToDoSubtitle": "Module iliyonse ndi kukambirana kotsogoleredwa ndi AI kapena chinthu chothandiza pa ulendo wanu wa ntchito.",
+    "modules": {
+      "skillsDiscovery": "Luso ndi Zomwe Ndimakonda",
+      "skillsDiscoverySubtitle": "Pezani luso lanu ndi zomwe mumakonda",
+      "careerDiscovery": "Kufufuza Ntchito",
+      "jobReadiness": "Kukonzekera Ntchito",
+      "careerExplorer": "Kufananiza Ntchito ndi Kusanthula",
+      "knowledgeHub": "Malo Ophunzirira",
+      "skillsDiscoveryDesc": "Lankhulani ndi {{appName}} kuti mupeze luso lanu ndi zomwe mumakonda — kuchokera ku maphunziro anu, ntchito, ndi moyo wa tsiku ndi tsiku.",
+      "careerDiscoveryDesc": "Fufuzani njira za ntchito mu Mphamvu, Migodi, Ulimi ndi zina — ndi chidziwitso cha malipiro ndi njira zoyenera.",
+      "jobReadinessDesc": "Phunzirani luso lofunikira la ntchito kudzera mu ma module otsogoleredwa ndi AI — kuyambira kulemba CV mpaka kuchita mafunso oyeserera.",
+      "careerExplorerDesc": "Onani momwe luso lanu limafanana ndi maudindo a ntchito enieni ndikufufuza chidziwitso cha msika wa ntchito ku Zambia.",
+      "knowledgeHubDesc": "Fufuzani mbiri ya magawo, malipiro, ndi njira za maphunziro a TEVET pamalo amodzi.",
+      "continue": "Pitirizani",
+      "completed": "Zatha",
+      "comingSoon": "Zikubwera posachedwa"
+    },
+    "footer": {
+      "privacyPolicy": "Ndondomeko ya Chinsinsi",
+      "termsOfUse": "Malamulo a Ntchito",
+      "accessibility": "Kufikira",
+      "contact": "Lumikizani",
+      "collaboration": "{{appName}} ndi chiyanjano pakati pa Gulu la Banki ya Dziko Lonse ndi Tabiya."
+    }
   }
 }

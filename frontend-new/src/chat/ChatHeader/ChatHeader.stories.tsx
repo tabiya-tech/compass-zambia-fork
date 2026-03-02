@@ -9,8 +9,8 @@ const meta: Meta<typeof ChatHeader> = {
   component: ChatHeader,
   tags: ["autodocs"],
   argTypes: {
-    notifyOnLogout: { action: "notifyOnLogout" },
     setExploredExperiencesNotification: { action: "setExploredExperiencesNotification" },
+    startNewConversation: { action: "startNewConversation" },
   },
   decorators: [
     (Story) => {
@@ -58,25 +58,5 @@ export const ShownWithFeedbackNotification: Story = {
     experiencesExplored: 0,
     progressPercentage: 10,
     timeUntilNotification: 0,
-  },
-};
-
-export const AnonymousUserLogoutConfirmation: Story = {
-  decorators: [
-    (Story) => {
-      authenticationStateService.getInstance().getUser = () => ({
-        id: "123",
-        name: "",
-        email: "",
-      });
-      return Story();
-    },
-  ],
-  args: {
-    exploredExperiencesNotification: false,
-    experiencesExplored: 0,
-    conversationCompleted: false,
-    progressPercentage: 0,
-    timeUntilNotification: null,
   },
 };

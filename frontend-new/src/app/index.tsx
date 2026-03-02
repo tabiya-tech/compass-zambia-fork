@@ -24,6 +24,7 @@ import { TokenValidationFailureCause } from "src/auth/services/Authentication.se
 import { AuthBroadcastChannel, AuthChannelMessage } from "src/auth/services/authBroadcastChannel/authBroadcastChannel";
 import { getRegistrationDisabled } from "src/envService";
 import { useTranslation } from "react-i18next";
+import Home from "src/home/Home";
 
 const LazyLoadedSensitiveDataForm = lazyWithPreload(
   () => import("src/sensitiveData/components/sensitiveDataForm/SensitiveDataForm")
@@ -41,6 +42,7 @@ export const SNACKBAR_KEYS = {
 
 const ProtectedRouteKeys = {
   ROOT: "ROOT",
+  SKILLS_INTERESTS: "SKILLS_INTERESTS",
   LANDING: "LANDING",
   SETTINGS: "SETTINGS",
   REGISTER: "REGISTER",
@@ -250,6 +252,14 @@ const App = () => {
       path: routerPaths.ROOT,
       element: (
         <ProtectedRoute key={ProtectedRouteKeys.ROOT}>
+          <Home />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routerPaths.SKILLS_INTERESTS,
+      element: (
+        <ProtectedRoute key={ProtectedRouteKeys.SKILLS_INTERESTS}>
           <LazyLoadedChat />
         </ProtectedRoute>
       ),
