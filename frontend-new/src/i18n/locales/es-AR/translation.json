@@ -770,10 +770,17 @@
     "next": "Siguiente",
     "previous": "Anterior"
   },
+  "knowledgeHub": {
+    "backToDashboard": "Volver al Panel",
+    "backToKnowledgeHub": "Volver al Centro de conocimiento",
+    "documentNotFound": "Documento no encontrado",
+    "introduction": "Estos son los sectores prioritarios de Zambia para graduados de TEVET. Cada perfil te brinda una descripción general de cómo se ve la industria, qué roles existen y qué podés esperar ganar. Explorá los sectores que te interesen para tomar decisiones más informadas sobre tu trayectoria profesional.",
+    "noDocumentsAvailable": "Aún no hay documentos disponibles."
+  },
   "home": {
     "dashboard": "Tu Centro de Carrera",
-    "backToDashboard": "Volver al panel",
     "welcomeBack": "Bienvenido de nuevo, {{name}}",
+    "backToDashboard": "Volver al panel",
     "subtitle": "{{appName}} es el puente entre lo que aprendiste y hacia dónde vas. Chateá con la IA para descubrir tus habilidades, prepararte para entrevistas y explorar caminos laborales reales.",
     "profileStrength": "Tu fortaleza de perfil actual es {{progress}}%.",
     "profileStrengthHint": "Es un buen comienzo — probá Mis Habilidades e Intereses para descubrir más sobre lo que sabés y disfrutás.",
