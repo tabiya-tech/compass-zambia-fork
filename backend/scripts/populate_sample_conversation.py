@@ -186,7 +186,7 @@ def create_explore_experiences_director_state(_session_id: int) -> ExploreExperi
         experience_title="Baker at Sweet Delights Bakery",
         company="Sweet Delights Bakery",
         location="Cape Town",
-        work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
+        work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         responsibilities=ResponsibilitiesData(
             responsibilities=[
                 "Prepared a variety of breads, pastries, and desserts daily",
@@ -245,7 +245,7 @@ def create_explore_experiences_director_state(_session_id: int) -> ExploreExperi
         experience_title="Freelance Cake Designer",
         company="Self-employed",
         location="Johannesburg",
-        work_type=WorkType.SELF_EMPLOYMENT,
+        work_type=WorkType.UNSEEN_UNPAID,
         responsibilities=ResponsibilitiesData(
             responsibilities=[
                 "Designed and created custom cakes for special events and weddings",
@@ -337,7 +337,7 @@ def create_collect_experience_state(_session_id: int) -> CollectExperiencesAgent
             start_date="January 2019",
             end_date="December 2021",
             paid_work=True,
-            work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+            work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
         ),
         CollectedData(
             index=1,
@@ -348,7 +348,7 @@ def create_collect_experience_state(_session_id: int) -> CollectExperiencesAgent
             start_date="January 2022",
             end_date="Present",
             paid_work=True,
-            work_type=WorkType.SELF_EMPLOYMENT.name
+            work_type=WorkType.UNSEEN_UNPAID.name
         )
     ]
 
@@ -356,7 +356,7 @@ def create_collect_experience_state(_session_id: int) -> CollectExperiencesAgent
         session_id=_session_id,
         collected_data=collected_data,
         unexplored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
-        explored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT],
+        explored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
         first_time_visit=False
     )
 

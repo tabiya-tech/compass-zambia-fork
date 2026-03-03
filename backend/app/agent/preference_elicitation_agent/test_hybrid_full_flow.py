@@ -33,7 +33,7 @@ def create_sample_experiences():
             company="Alliance High School",
             location="Kikuyu",
             timeline=Timeline(start="2018", end="2023"),
-            work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+            work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
         ),
         ExperienceEntity(
             uuid="exp-2",
@@ -41,7 +41,7 @@ def create_sample_experiences():
             company="Self-employed",
             location="Nairobi",
             timeline=Timeline(start="2023", end="Present"),
-            work_type=WorkType.SELF_EMPLOYMENT
+            work_type=WorkType.UNSEEN_UNPAID
         )
     ]
 

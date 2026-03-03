@@ -18,8 +18,6 @@ import {
   WORK_TYPE_DESCRIPTIONS,
 } from "src/experiences/experiencesDrawer/util";
 import { ReportContent } from "src/experiences/report/reportContent";
-import StoreIcon from "@mui/icons-material/Store";
-import WorkIcon from "@mui/icons-material/Work";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import SchoolIcon from "@mui/icons-material/School";
 import QuizIcon from "@mui/icons-material/Quiz";
@@ -27,9 +25,6 @@ import { mockExperiences } from "src/experiences/experienceService/_test_utiliti
 
 describe("experiencesDrawer util", () => {
   test.each([
-    // GIVEN a work type and its expected title
-    [WorkType.SELF_EMPLOYMENT, ReportContent.SELF_EMPLOYMENT_TITLE],
-    [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, ReportContent.SALARY_WORK_TITLE],
     [WorkType.UNSEEN_UNPAID, ReportContent.UNPAID_WORK_TITLE],
     [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, ReportContent.TRAINEE_WORK_TITLE],
     [null, ReportContent.UNCATEGORIZED_TITLE],
@@ -40,9 +35,6 @@ describe("experiencesDrawer util", () => {
   });
 
   test.each([
-    // GIVEN a work type and its expected description
-    [WorkType.SELF_EMPLOYMENT, WORK_TYPE_DESCRIPTIONS.SELF_EMPLOYMENT],
-    [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WORK_TYPE_DESCRIPTIONS.FORMAL_SECTOR_WAGED_EMPLOYMENT],
     [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WORK_TYPE_DESCRIPTIONS.FORMAL_SECTOR_UNPAID_TRAINEE_WORK],
     [WorkType.UNSEEN_UNPAID, WORK_TYPE_DESCRIPTIONS.UNSEEN_UNPAID],
     [null, WORK_TYPE_DESCRIPTIONS.UNCATEGORIZED],
@@ -53,9 +45,6 @@ describe("experiencesDrawer util", () => {
   });
 
   test.each([
-    // GIVEN a work type and its expected icon
-    [WorkType.SELF_EMPLOYMENT, StoreIcon],
-    [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkIcon],
     [WorkType.UNSEEN_UNPAID, VolunteerActivismIcon],
     [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, SchoolIcon],
     [null, QuizIcon],
@@ -91,7 +80,7 @@ describe("experiencesDrawer util", () => {
         },
         top_skills: [],
         remaining_skills: [],
-        work_type: WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
+        work_type: WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         exploration_phase: DiveInPhase.PROCESSED,
       };
 
@@ -124,7 +113,6 @@ describe("experiencesDrawer util", () => {
     });
 
     test("should return object with changed fields only", () => {
-      // GIVEN an original experience and a modified current experience
       const original: Experience = mockExperiences[0];
       const current: Experience = {
         ...original,
@@ -132,7 +120,7 @@ describe("experiencesDrawer util", () => {
         company: "Bar Company",
         location: "Baz Location",
         summary: "Foo Summary",
-        work_type: WorkType.SELF_EMPLOYMENT,
+        work_type: WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         timeline: {
           start: original.timeline.start,
           end: "December 2023",
@@ -157,7 +145,7 @@ describe("experiencesDrawer util", () => {
         company: current.company,
         location: current.location,
         summary: current.summary,
-        work_type: WorkType.SELF_EMPLOYMENT,
+        work_type: WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         timeline: {
           start: current.timeline.start,
           end: current.timeline.end,

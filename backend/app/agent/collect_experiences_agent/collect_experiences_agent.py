@@ -83,9 +83,7 @@ class CollectExperiencesAgentState(BaseModel):
     The data collected during the conversation.
     """
 
-    unexplored_types: list[WorkType] = Field(default_factory=lambda: [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-                                                                      WorkType.SELF_EMPLOYMENT,
-                                                                      WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+    unexplored_types: list[WorkType] = Field(default_factory=lambda: [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
                                                                       WorkType.UNSEEN_UNPAID])
     """
     The types of work experiences that have not been explored yet.
@@ -336,7 +334,7 @@ class CollectExperiencesAgent(Agent):
                 "\n  - all work types explored: %s"
                 "\n  - discovered experiences: %s"
                 "\n  - reasoning: %s",
-                len(self._state.explored_types) == 4,
+                len(self._state.explored_types) == 2,
                 self._state.collected_data,
                 reasoning_text
             )

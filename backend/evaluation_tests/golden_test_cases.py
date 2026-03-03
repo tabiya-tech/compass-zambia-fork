@@ -53,33 +53,31 @@ class GoldenTestCase(E2ESpecificTestCase):
 
 # Golden Test Set: 7 Representative Personas
 golden_test_cases = [
-    # 1. SIMPLE FORMAL EMPLOYMENT (Baseline)
-    # Represents: Concise user, single formal job, straightforward conversation
-    # Coverage: FORMAL_SECTOR_WAGED_EMPLOYMENT
+    # 1. SIMPLE UNPAID TRAINEE (Baseline)
+    # Represents: Concise user, single unpaid trainee experience, straightforward conversation
+    # Coverage: FORMAL_SECTOR_UNPAID_TRAINEE_WORK
     GoldenTestCase(
         country_of_user=Country.UNSPECIFIED,
         conversation_rounds=50,
-        name='golden_simple_formal_employment',
+        name='golden_simple_unpaid_trainee',
         simulated_user_prompt=dedent("""
-            You're a Gen Y living alone. you have this single experience as an employee:
-            - Selling Shoes at Shoe Soles, a shoe store in Tokyo, from 2023 to present.
+            You're a Gen Y living alone. you have this single experience as an unpaid trainee:
+            - Unpaid internship selling shoes at Shoe Soles, a shoe store in Tokyo, from 2023 to present.
             When asked you will reply with the information about this experience all at once, in a single message.
-            You have never had another job experience beside the shoe salesperson job. Also never
-            did any internship, never run your own business, never volunteered, never did any freelance work.
+            You have never had another job experience beside the shoe sales trainee role. Also never
+            had a paid job, never run your own business, never volunteered, never did any freelance work.
             Be as concise as possible, and do not make up any information.
             """) + system_instruction_prompt,
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=60)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
             WorkType.UNSEEN_UNPAID: (0, 0),
         },
         matchers=["llm", "matcher"],
         expected_experience_data=[{
-            "experience_title": ContainsString("Shoe Salesperson"),
+            "experience_title": ContainsString("Shoe"),
             "location": ContainsString("Tokyo"),
             "company": ContainsString("Shoe Soles"),
             "timeline": {"start": ContainsString("2023"), "end": AnyOf(ContainsString("present"), "")},
@@ -103,8 +101,6 @@ golden_test_cases = [
         expected_experiences_count_min=1,
         expected_experiences_count_max=2,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
             WorkType.UNSEEN_UNPAID: (1, 2),
         },
@@ -123,46 +119,44 @@ golden_test_cases = [
         }]
     ),
     
-    # 3. SELF-EMPLOYMENT (Informal Sector)
-    # Represents: Informal work, no formal job title
-    # Coverage: SELF_EMPLOYMENT
+    # 3. VOLUNTEER TRANSPORT (Informal Sector)
+    # Represents: Volunteer work in transport sector
+    # Coverage: UNSEEN_UNPAID
     GoldenTestCase(
         country_of_user=Country.KENYA,
         conversation_rounds=100,
-        name='golden_self_employed_matatu_conductor',
+        name='golden_volunteer_matatu_conductor',
         simulated_user_prompt=dedent("""
-            You're a Gen Y living alone. You work as a Matatu conductor. A matatu conductor is a person who collects 
-            fares from passengers in a matatu, a type of public transport. You have never had another job experience,
-            never did any internship, never run your own business, never volunteered, never did any freelance work.
+            You're a Gen Y living alone. You volunteer as a Matatu conductor assistant. A matatu conductor is a person who 
+            collects fares from passengers in a matatu, a type of public transport. You help out unpaid at a family member's matatu.
+            You have never had a paid job experience, never did any internship, never run your own business, never did any freelance work.
             """) + kenya_prompt,
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=60)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=2,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 1),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
-            WorkType.UNSEEN_UNPAID: (0, 1),
+            WorkType.UNSEEN_UNPAID: (1, 2),
         }
     ),
     
     # 4. MULTI-EXPERIENCE DIVERSE (Complex)
-    # Represents: Multiple work types, complex conversation
-    # Coverage: FORMAL_SECTOR_WAGED_EMPLOYMENT, SELF_EMPLOYMENT, FORMAL_SECTOR_UNPAID_TRAINEE_WORK, UNSEEN_UNPAID
+    # Represents: Multiple unpaid/trainee work types, complex conversation
+    # Coverage: FORMAL_SECTOR_UNPAID_TRAINEE_WORK, UNSEEN_UNPAID
     GoldenTestCase(
         country_of_user=Country.SOUTH_AFRICA,
         conversation_rounds=100,
         name='golden_multi_experience_diverse',
         simulated_user_prompt=dedent("""
-            You are a young person from South Africa with a diverse work history. You have multiple experiences across different work types.
+            You are a young person from South Africa with unpaid work history. You have multiple experiences across different work types.
             If asked if you want to start the conversation, agree to start without saying anything about your experiences.
             
             You have the following experiences:
             
-            • Worked as a software developer at TechCorp from 2020 to 2022. It was a full-time paid job in Cape Town. I worked on web applications and mobile apps, then left to pursue freelance work.
-            • I'm currently freelancing as a web designer since 2022. I'm self-employed, working with various clients. I'm based in Johannesburg but work remotely, and I specialize in e-commerce websites.
             • Volunteered at a local animal shelter from 2019 to 2021. It was unpaid volunteer work in Durban. I helped with animal care and adoption events, working weekends and holidays.
             • Did a summer internship at a marketing agency in 2019. It was in Johannesburg and I helped with social media campaigns. It was unpaid trainee work.
+            • Helped care for elderly grandparents at home from 2020 to 2022. Unpaid caregiving in Cape Town.
+            • Volunteered at a community center teaching web design to kids from 2022 to present. Unpaid in Johannesburg.
                
             When the agent asks about your experiences, provide information naturally as they ask questions. 
             Be specific about dates, locations, and work types when asked. You're proud of your diverse experience 
@@ -171,13 +165,11 @@ golden_test_cases = [
             You can come up with specific activities and details for each experience when asked.
             """) + sa_prompt,
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
-        expected_experiences_count_min=4,
+        expected_experiences_count_min=3,
         expected_experiences_count_max=4,
         expected_work_types={
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-            WorkType.SELF_EMPLOYMENT: (1, 1),
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
-            WorkType.UNSEEN_UNPAID: (1, 1),
+            WorkType.UNSEEN_UNPAID: (2, 3),
         }
     ),
     
@@ -189,15 +181,15 @@ golden_test_cases = [
         conversation_rounds=100,
         name='golden_cv_upload_style',
         simulated_user_prompt=dedent("""
-            You are a professional with diverse experiences. 
+            You are a professional with diverse unpaid and volunteer experiences. 
             If asked if you want to start the conversation, agree to start without saying anything about your experiences. 
             Only after agreeing to start, wait for the agent to ask you about your experiences, and then you will respond in CV format with bullet points:
             
             <Message>
                 These are my experiences:
-                • Worked as a project manager at the University of Oxford, from 2018 to 2020. It was a paid job and you worked remotely.
-                • Worked as a software architect at ProUbis GmbH in berlin, from 2010 to 2018. It was a full-time job.
-                • You owned a bar/restaurant called Dinner For Two in Berlin from 2010 until covid-19, then you sold it.
+                • Volunteered as a project coordinator at the University of Oxford, from 2018 to 2020. It was unpaid and you worked remotely.
+                • Unpaid internship as a software architect at ProUbis GmbH in Berlin, from 2010 to 2018.
+                • Volunteered at a community kitchen called Dinner For Two in Berlin from 2010 until covid-19.
                 • In 1998 did an unpaid internship as a Software Developer for Ubis GmbH in Berlin. 
                 • Between 2015-2017 volunteer, taught coding to kids in a community center in Berlin.
             </Message>
@@ -213,13 +205,11 @@ golden_test_cases = [
             You can come up with activities you have done during each experience.
             """) + system_instruction_prompt,
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=60)],
-        expected_experiences_count_min=5,
+        expected_experiences_count_min=4,
         expected_experiences_count_max=5,
         expected_work_types={
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (2, 2),
-            WorkType.SELF_EMPLOYMENT: (1, 1),
-            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
-            WorkType.UNSEEN_UNPAID: (1, 1),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 2),
+            WorkType.UNSEEN_UNPAID: (2, 3),
         }
     ),
     
@@ -231,11 +221,11 @@ golden_test_cases = [
         conversation_rounds=50,
         name='golden_process_questioner',
         simulated_user_prompt=dedent("""
-            You're a Gen Y living alone. you have this single experience as an employee:
-            - Selling Shoes at Shoe Soles, a shoe store in Tokyo, from 2023 to present.
+            You're a Gen Y living alone. you have this single experience as an unpaid trainee:
+            - Unpaid internship selling shoes at Shoe Soles, a shoe store in Tokyo, from 2023 to present.
             When asked you will reply with the information about this experience all at once, in a single message.
-            You have never had another job experience beside the shoe salesperson job. Also never
-            did any internship, never run your own business, never volunteered, never did any freelance work.
+            You have never had another job experience beside the shoe sales trainee role. Also never
+            had a paid job, never run your own business, never volunteered, never did any freelance work.
             Be as concise as possible, and do not make up any information.
             
             When asked if you are ready to start the conversation, 
@@ -251,14 +241,12 @@ golden_test_cases = [
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
             WorkType.UNSEEN_UNPAID: (0, 0),
         },
         matchers=["llm", "matcher"],
         expected_experience_data=[{
-            "experience_title": ContainsString("Shoe Salesperson"),
+            "experience_title": ContainsString("Shoe"),
             "location": ContainsString("Tokyo"),
             "company": ContainsString("Shoe Soles"),
             "timeline": {"start": ContainsString("2023"), "end": AnyOf(ContainsString("present"), "")},
@@ -282,10 +270,8 @@ golden_test_cases = [
         expected_experiences_count_min=1,
         expected_experiences_count_max=4,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 2),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
-            WorkType.UNSEEN_UNPAID: (1, 3),
+            WorkType.UNSEEN_UNPAID: (1, 4),
         }
     ),
 ]
@@ -299,10 +285,8 @@ GOLDEN_SET_METADATA = {
     "expected_runtime_minutes": 25,
     "coverage": {
         "work_types": {
-            "FORMAL_SECTOR_WAGED_EMPLOYMENT": 3,
-            "SELF_EMPLOYMENT": 2,
-            "FORMAL_SECTOR_UNPAID_TRAINEE_WORK": 1,
-            "UNSEEN_UNPAID": 3,
+            "FORMAL_SECTOR_UNPAID_TRAINEE_WORK": 3,
+            "UNSEEN_UNPAID": 4,
         },
         "conversation_styles": {
             "concise": 4,

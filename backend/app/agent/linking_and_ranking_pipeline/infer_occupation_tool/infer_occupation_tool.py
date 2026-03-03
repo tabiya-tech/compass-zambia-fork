@@ -128,11 +128,6 @@ class InferOccupationTool:
                             for title in titles]
             tasks.extend(unseen_tasks)
 
-        if work_type == WorkType.SELF_EMPLOYMENT or work_type is None:
-            # since there is only one taxonomy domain for self-employment, it is not necessary to search, instead can retrieve the occupations directly
-            self_employment_tasks = [self._occupation_skill_search_service.get_by_esco_code(code="5221_2")]
-            tasks.extend(self_employment_tasks)
-
         # Use return_exceptions=True to handle individual task failures gracefully
         list_of_occupation_list = await asyncio.gather(*tasks, return_exceptions=True)
         

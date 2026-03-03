@@ -51,7 +51,7 @@ test_cases: list[TemporalAndWorkTypeClassifierToolTestCase] = [
             "start_date": "05/2021",
             "end_date": AnyOf(None, ContainsString("present")),
             "paid_work": True,
-            "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+            "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
         }
     ),
     TemporalAndWorkTypeClassifierToolTestCase(
@@ -85,7 +85,7 @@ test_cases: list[TemporalAndWorkTypeClassifierToolTestCase] = [
         users_input="Yes, as a baker at a local restaurant.",
         expected_extracted_data={
             "paid_work": True,
-            "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+            "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
         }
     ),
     TemporalAndWorkTypeClassifierToolTestCase(
@@ -107,7 +107,7 @@ test_cases: list[TemporalAndWorkTypeClassifierToolTestCase] = [
         users_input="Yes, selling tomatoes in local market.",
         expected_extracted_data={
             "paid_work": True,
-            "work_type": WorkType.SELF_EMPLOYMENT.name
+            "work_type": WorkType.UNSEEN_UNPAID.name
         }
     ),
     TemporalAndWorkTypeClassifierToolTestCase(

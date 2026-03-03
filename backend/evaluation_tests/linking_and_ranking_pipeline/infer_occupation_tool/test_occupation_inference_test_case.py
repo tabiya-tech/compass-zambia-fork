@@ -32,7 +32,7 @@ test_cases = [
     InferOccupationToolTestCase(
         name="Baker",
         given_experience_title="Baker",
-        given_work_type=WorkType.SELF_EMPLOYMENT,
+        given_work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         given_company="",
         given_responsibilities=["I bake bread", "I clean my work place", "I order supplies", "I sell bread"],
         given_country_of_interest=Country.SOUTH_AFRICA,
@@ -43,7 +43,7 @@ test_cases = [
     InferOccupationToolTestCase(
         name="Baker at the limits of LLM response Context size ",
         given_experience_title="Baker",
-        given_work_type=WorkType.SELF_EMPLOYMENT,
+        given_work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         given_company="",
         given_responsibilities=["I bake bread", "I clean my work place", "I order supplies", "I sell bread"],
         given_country_of_interest=Country.SOUTH_AFRICA,
@@ -59,7 +59,7 @@ test_cases = [
     InferOccupationToolTestCase(
         name="Title is not useful, infer from responsibilities",
         given_experience_title="Foo",
-        given_work_type=WorkType.SELF_EMPLOYMENT,
+        given_work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         given_company="",
         given_responsibilities=["I cook street food", "I sell food to the local community"],
         given_country_of_interest=Country.SOUTH_AFRICA,
@@ -68,7 +68,7 @@ test_cases = [
     InferOccupationToolTestCase(
         name="Title is misleading, infer from responsibilities",
         given_experience_title="I sell gully to the local community",
-        given_work_type=WorkType.SELF_EMPLOYMENT,
+        given_work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         given_company="",
         given_responsibilities=["I visit the Embassy every day",
                                 "I talk with the embassy staff",
@@ -80,7 +80,7 @@ test_cases = [
     InferOccupationToolTestCase(
         name="Infer from responsibilities",
         given_experience_title="GDE Brigade member",
-        given_work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
+        given_work_type=WorkType.UNSEEN_UNPAID,
         given_company="Gauteng Department of Education",
         given_responsibilities=[
             # https://search67.com/2021/07/19/careers-employment-opportunity-for-youth-as-c0vid-19-screeners/
@@ -96,7 +96,7 @@ test_cases = [
     InferOccupationToolTestCase(
         name="Should not change title (emtpy responsibilities)",
         given_experience_title="Software Engineer",
-        given_work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
+        given_work_type=WorkType.UNSEEN_UNPAID,
         given_company="Google",
         given_country_of_interest=Country.SOUTH_AFRICA,
         given_responsibilities=[],
@@ -107,7 +107,7 @@ test_cases = [
     InferOccupationToolTestCase(
         name="Infer from glossary (emtpy responsibilities)",
         given_experience_title="I sell kota to the local community",
-        given_work_type=WorkType.SELF_EMPLOYMENT,
+        given_work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         given_company="",
         given_country_of_interest=Country.SOUTH_AFRICA,
         given_responsibilities=[],
@@ -116,7 +116,7 @@ test_cases = [
     InferOccupationToolTestCase(
         name="Infer from glossary (emtpy responsibilities)",
         given_experience_title="I make bunny chow",
-        given_work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
+        given_work_type=WorkType.UNSEEN_UNPAID,
         given_company="Hungry Lion",
         given_country_of_interest=Country.SOUTH_AFRICA,
         given_responsibilities=[],
@@ -125,7 +125,7 @@ test_cases = [
     InferOccupationToolTestCase(
         name="Infer from glossary & company name (emtpy responsibilities)",
         given_experience_title="I make bunny chow",
-        given_work_type=WorkType.SELF_EMPLOYMENT,
+        given_work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         given_company="Hungry Tiger",
         given_country_of_interest=Country.SOUTH_AFRICA,
         given_responsibilities=[],
