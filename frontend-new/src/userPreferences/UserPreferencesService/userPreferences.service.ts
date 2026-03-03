@@ -186,32 +186,6 @@ export default class UserPreferencesService {
   }
 
   /**
-   * Get a new session ID from the chat service.
-   * @returns {Promise<UserPreference>} The user preferences object
-   * @throws {RestAPIError} If the user preferences are invalid
-   */
-  async getNewSession(userId: string): Promise<UserPreference> {
-    const serviceName = UserPreferencesService.serviceName;
-    const serviceFunction = "getNewSession";
-    const method = "GET";
-    const qualifiedURL = `${this.userPreferencesEndpointUrl}/new-session?user_id=${userId}`;
-
-    const errorFactory = getRestAPIErrorFactory("UserPreferencesService", "getNewSession", method, qualifiedURL);
-
-    const response = await customFetch(qualifiedURL, {
-      method: method,
-      headers: { "Content-Type": "application/json" },
-      expectedStatusCode: StatusCodes.CREATED,
-      serviceName,
-      serviceFunction,
-      failureMessage: `Failed to generate new session`,
-      expectedContentType: "application/json",
-    });
-
-    return await this.parseJsonResponse(response, userId, errorFactory);
-  }
-
-  /**
    * Gets the client ID. If it doesn't exist, it will be created.
    *
    * @returns {string} The client ID.
