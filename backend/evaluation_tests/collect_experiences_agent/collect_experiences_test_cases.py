@@ -62,8 +62,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=2,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
-                             WorkType.SELF_EMPLOYMENT: (0, 0),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+                             WorkType.UNSEEN_UNPAID: (0, 0),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (1, 2)},
         matchers=["llm", "matcher"],
@@ -87,8 +87,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=2,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
-                             WorkType.SELF_EMPLOYMENT: (0, 0),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+                             WorkType.UNSEEN_UNPAID: (0, 0),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (1, 2)},
         matchers=["llm"],
@@ -157,13 +157,13 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1)},
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1)},
         expected_experience_data=[
             {"experience_title": ContainsString("project manager"),
              "location": ContainsString("remote"),
              "company": ContainsString("University of Oxford"),
              "timeline": {"start": "2018", "end": "2020"},
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
         ]
     ),
@@ -180,8 +180,8 @@ test_cases = [
         expected_experiences_count_min=0,
         expected_experiences_count_max=0,
         country_of_user=Country.UNSPECIFIED,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
-                             WorkType.SELF_EMPLOYMENT: (0, 0),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+                             WorkType.UNSEEN_UNPAID: (0, 0),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (0, 0)
                              },
@@ -197,8 +197,8 @@ test_cases = [
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
         country_of_user=Country.UNSPECIFIED,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-                             WorkType.SELF_EMPLOYMENT: (0, 0),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
+                             WorkType.UNSEEN_UNPAID: (0, 0),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (0, 0)
                              },
@@ -207,7 +207,7 @@ test_cases = [
              "location": ContainsString("remote"),
              "company": ContainsString("University of Oxford"),
              "timeline": {"start": "2018", "end": "2020"},
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              }]
     ),
     CollectExperiencesAgentTestCase(
@@ -232,8 +232,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=7,
         expected_experiences_count_max=7,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (2, 2),
-                             WorkType.SELF_EMPLOYMENT: (2, 2),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (2, 2),
+                             WorkType.UNSEEN_UNPAID: (2, 2),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
                              WorkType.UNSEEN_UNPAID: (2, 2)
                              },
@@ -242,25 +242,25 @@ test_cases = [
              "location": ContainsString("remote"),
              "company": ContainsString("University of Oxford"),
              "timeline": DictContaining({"start": "2018", "end": "2020"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("software architect"),
              "location": ContainsString("Berlin"),
              "company": ContainsString("ProUbis GmbH"),
              "timeline": DictContaining({"start": "2010", "end": "2018"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("Owned a bar/restaurant"),
              "location": ContainsString("Berlin"),
              "company": ContainsString("Dinner For Two"),
              "timeline": DictContaining({"start": "2010", "end": "2020"}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("CEO"),
              "location": ContainsString("DC"),
              "company": ContainsString("Acme Inc."),
              "timeline": DictContaining({"start": "2022", "end": AnyOf('', ContainsString("present"))}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("Software Developer"),
              "location": ContainsString("Berlin"),
@@ -302,8 +302,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=7,
         expected_experiences_count_max=7,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (2, 2),
-                             WorkType.SELF_EMPLOYMENT: (2, 2),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (2, 2),
+                             WorkType.UNSEEN_UNPAID: (2, 2),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
                              WorkType.UNSEEN_UNPAID: (2, 2)},
         country_of_user=Country.UNSPECIFIED,
@@ -312,25 +312,25 @@ test_cases = [
              "location": ContainsString("remote"),
              "company": ContainsString("University of Oxford"),
              "timeline": DictContaining({"start": "2018", "end": "2020"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("software architect"),
              "location": ContainsString("Berlin"),
              "company": ContainsString("ProUbis GmbH"),
              "timeline": DictContaining({"start": "2010", "end": "2018"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("Owned a bar/restaurant"),
              "location": ContainsString("Berlin"),
              "company": ContainsString("Dinner For Two"),
              "timeline": DictContaining({"start": "2010", "end": "2020"}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("CEO"),
              "location": ContainsString("DC"),
              "company": ContainsString("Acme Inc."),
              "timeline": DictContaining({"start": "2022", "end": AnyOf('', ContainsString("present"))}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("Software Developer"),
              "location": ContainsString("Berlin"),
@@ -364,8 +364,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=3,
         expected_experiences_count_max=3,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
-                             WorkType.SELF_EMPLOYMENT: (1, 1),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+                             WorkType.UNSEEN_UNPAID: (1, 1),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (2, 2)},
         country_of_user=Country.SOUTH_AFRICA
@@ -384,15 +384,15 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=3,
         expected_experiences_count_max=3,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
-                             WorkType.SELF_EMPLOYMENT: (1, 1),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+                             WorkType.UNSEEN_UNPAID: (1, 1),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (2, 2)},
         expected_experience_data=[
             {"experience_title": ContainsString("graphic design"),
              "location": AnyOf(ContainsString("remote"), ContainsString("Joburg")),
              "timeline": DictContaining({"start": "06/2020", "end": ContainsString("present")}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("English teacher"),
              "location": ContainsString("Joburg"),
@@ -421,8 +421,8 @@ test_cases = [
         # The simulated user seems to report 3 experiences (help parent, drove grandma, helped neighbours)
         expected_experiences_count_min=2,
         expected_experiences_count_max=3,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
-                             WorkType.SELF_EMPLOYMENT: (0, 0),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+                             WorkType.UNSEEN_UNPAID: (0, 0),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (2, 3)}
     ),
@@ -440,8 +440,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=2,
         expected_experiences_count_max=2,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 2),
-                             WorkType.SELF_EMPLOYMENT: (1, 2),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 2),
+                             WorkType.UNSEEN_UNPAID: (1, 2),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (0, 0)},
         expected_experience_data=[
@@ -449,13 +449,13 @@ test_cases = [
              "location": ContainsString("Paris"),
              "company": ContainsString("Uber Eats"),
              "timeline": DictContaining({"start": "2021", "end": ContainsString("2023")}),
-             "work_type": AnyOf(WorkType.SELF_EMPLOYMENT.name, WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name),
+             "work_type": AnyOf(WorkType.UNSEEN_UNPAID.name, WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name),
              },
             {"experience_title": ContainsString("selling furniture"),
              "location": AnyOf(ContainsString("Flea Market"), ContainsString("Jean Henri Fabre"), ContainsString("Paris")),
              "company": ContainsString("Flea Market"),
              "timeline": DictContaining({"start": "2019", "end": ContainsString("present")}),
-             "work_type": AnyOf(WorkType.SELF_EMPLOYMENT.name, WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name),
+             "work_type": AnyOf(WorkType.UNSEEN_UNPAID.name, WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name),
              },
         ],
 
@@ -474,8 +474,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=2,
         expected_experiences_count_max=2,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 2),
-                             WorkType.SELF_EMPLOYMENT: (1, 2),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 2),
+                             WorkType.UNSEEN_UNPAID: (1, 2),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (0, 0)},
         expected_experience_data=[
@@ -483,13 +483,13 @@ test_cases = [
              "location": ContainsString("Paris"),
              "company": ContainsString("Uber Eats"),
              "timeline": DictContaining({"start": "2021", "end": ContainsString("2023")}),
-             "work_type": AnyOf(WorkType.SELF_EMPLOYMENT.name, WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name),
+             "work_type": AnyOf(WorkType.UNSEEN_UNPAID.name, WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name),
              },
             {"experience_title": ContainsString("selling furniture"),
              "location": AnyOf(ContainsString("Flea Market"), ContainsString("Jean Henri Fabre"), ContainsString("Paris")),
              "company": ContainsString("Flea Market"),
              "timeline": DictContaining({"start": "2019", "end": ContainsString("present")}),
-             "work_type": AnyOf(WorkType.SELF_EMPLOYMENT.name, WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name),
+             "work_type": AnyOf(WorkType.UNSEEN_UNPAID.name, WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name),
              },
         ],
 
@@ -505,8 +505,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-                             WorkType.SELF_EMPLOYMENT: (0, 0),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
+                             WorkType.UNSEEN_UNPAID: (0, 0),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (0, 0)},
         expected_experience_data=[
@@ -514,7 +514,7 @@ test_cases = [
              "location": ContainsString("Nairobi"),
              "company": ContainsString("Chandaria"),
              "timeline": DictContaining({"start": "2018", "end": ContainsString("present")}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              }]
     ),
     CollectExperiencesAgentTestCase(
@@ -532,8 +532,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-                             WorkType.SELF_EMPLOYMENT: (0, 0),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
+                             WorkType.UNSEEN_UNPAID: (0, 0),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (0, 0)},
         expected_experience_data=[
@@ -541,7 +541,7 @@ test_cases = [
              "location": ContainsString("Nairobi"),
              "company": ContainsString("Chandaria"),
              "timeline": DictContaining({"start": "2018", "end": ContainsString("present")}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              }]
 
     ),
@@ -557,8 +557,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
-                             WorkType.SELF_EMPLOYMENT: (0, 0),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+                             WorkType.UNSEEN_UNPAID: (0, 0),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (1, 1)},
         expected_experience_data=[
@@ -593,8 +593,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=7,
         expected_experiences_count_max=7,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (2, 2),
-                             WorkType.SELF_EMPLOYMENT: (2, 2),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (2, 2),
+                             WorkType.UNSEEN_UNPAID: (2, 2),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
                              WorkType.UNSEEN_UNPAID: (2, 2)},
         expected_experience_data=[
@@ -602,25 +602,25 @@ test_cases = [
              "location": ContainsString("remote"),
              "company": ContainsString("University of Oxford"),
              "timeline": DictContaining({"start": "2018", "end": "2020"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("software architect"),
              "location": ContainsString("Berlin"),
              "company": ContainsString("ProUbis GmbH"),
              "timeline": DictContaining({"start": "2010", "end": "2018"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("Owned a bar/restaurant"),
              "location": ContainsString("Berlin"),
              "company": ContainsString("Dinner For Two"),
              "timeline": DictContaining({"start": "2010", "end": "2020"}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("CEO"),
              "location": ContainsString("DC"),
              "company": ContainsString("Acme Inc."),
              "timeline": DictContaining({"start": "2022", "end": AnyOf('', ContainsString("present"))}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("Software Developer"),
              "location": ContainsString("Berlin"),
@@ -672,8 +672,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=30)],
         expected_experiences_count_min=4,
         expected_experiences_count_max=4,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-                             WorkType.SELF_EMPLOYMENT: (1, 1),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
+                             WorkType.UNSEEN_UNPAID: (1, 1),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (2, 2)},
         expected_experience_data=[
@@ -682,13 +682,13 @@ test_cases = [
              "location": ContainsString("Cape Town"),  # Provided in follow-up
              "company": ContainsString("TechCorp"),   # Provided in follow-up
              "timeline": DictContaining({"start": "2020", "end": "2022"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("web design"),
              "location": ContainsString("Johannesburg"),  # Provided in follow-up
              "company": AnyOf(ContainsString("small businesses"), ContainsString("startups"), ContainsString("clients")),
              "timeline": DictContaining({"start": "2023", "end": AnyOf("Present", "")}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("volunteer"),
              "location": ContainsString("Durban"),  # Provided in follow-up
@@ -734,8 +734,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=20)],
         expected_experiences_count_min=3,
         expected_experiences_count_max=3,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-                             WorkType.SELF_EMPLOYMENT: (1, 1),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
+                             WorkType.UNSEEN_UNPAID: (1, 1),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (1, 1)},
         expected_experience_data=[
@@ -744,13 +744,13 @@ test_cases = [
              "location": ContainsString("Cape Town"),  # Provided in follow-up
              "company": ContainsString("TechCorp"),   # Provided in follow-up
              "timeline": DictContaining({"start": "2020", "end": "2022"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("web design"),
              "location": ContainsString("Johannesburg"),  # Provided in follow-up
              "company": AnyOf(ContainsString("SmallBiz Solutions"), ContainsString("StartupXYZ"), ContainsString("clients")),
              "timeline": DictContaining({"start": "2023", "end": AnyOf("Present", "")}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("volunteer"),
              "location": ContainsString("Durban"),  # Provided in follow-up
@@ -799,8 +799,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=25)],
         expected_experiences_count_min=5,
         expected_experiences_count_max=5,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (2, 2),  # Software Developer + Tutor
-                             WorkType.SELF_EMPLOYMENT: (1, 1),  # Freelance Web Designer
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (2, 2),  # Software Developer + Tutor
+                             WorkType.UNSEEN_UNPAID: (1, 1),  # Freelance Web Designer
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (2, 2)},  # Animal Shelter + Family Restaurant
         expected_experience_data=[
@@ -808,13 +808,13 @@ test_cases = [
              "location": ContainsString("Cape Town"),
              "company": ContainsString("TechCorp"),
              "timeline": DictContaining({"start": "2020", "end": "2022"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("web design"),
              "location": AnyOf(ContainsString("Johannesburg"), ContainsString("remote")),
              "company": AnyOf(ContainsString("clients"), ContainsString("freelance")),
              "timeline": DictContaining({"start": "2022", "end": AnyOf("Present", "")}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("volunteer"),
              "location": ContainsString("Durban"),
@@ -826,7 +826,7 @@ test_cases = [
              "location": ContainsString("Pretoria"),
              "company": AnyOf(ContainsString("tutoring"), ContainsString("company")),
              "timeline": DictContaining({"start": "2021", "end": "2023"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": AnyOf(ContainsString("family"), ContainsString("restaurant")),
              "location": AnyOf(ContainsString("Durban"), ContainsString("Cape Town"), ContainsString("Johannesburg"), ContainsString("Pretoria"), ContainsString("Gqeberha")),
@@ -890,8 +890,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=20)],
         expected_experiences_count_min=10,
         expected_experiences_count_max=10,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (3, 3),  # Software Developer + Tutor + Sales Associate
-                             WorkType.SELF_EMPLOYMENT: (3, 3),  # Web Designer + Graphic Designer + Content Writer
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (3, 3),  # Software Developer + Tutor + Sales Associate
+                             WorkType.UNSEEN_UNPAID: (3, 3),  # Web Designer + Graphic Designer + Content Writer
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),  # Marketing Intern
                              WorkType.UNSEEN_UNPAID: (3, 3)},  # Animal Shelter + Family Restaurant + Community Center
         expected_experience_data=[
@@ -899,13 +899,13 @@ test_cases = [
              "location": ContainsString("Cape Town"),
              "company": ContainsString("TechCorp"),
              "timeline": DictContaining({"start": "2020", "end": "2022"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("web design"),
              "location": AnyOf(ContainsString("Johannesburg"), ContainsString("remote")),
              "company": AnyOf(ContainsString("clients"), ContainsString("freelance")),
              "timeline": DictContaining({"start": "2022", "end": AnyOf("Present", "")}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("volunteer"),
              "location": ContainsString("Durban"),
@@ -917,7 +917,7 @@ test_cases = [
              "location": ContainsString("Pretoria"),
              "company": AnyOf(ContainsString("tutoring"), ContainsString("company")),
              "timeline": DictContaining({"start": "2021", "end": "2023"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": AnyOf(ContainsString("family"), ContainsString("restaurant")),
              "location": AnyOf(ContainsString("Durban"), ContainsString("Cape Town"), ContainsString("Johannesburg"), ContainsString("Pretoria"), ContainsString("Gqeberha")),
@@ -935,7 +935,7 @@ test_cases = [
              "location": ContainsString("Cape Town"),
              "company": AnyOf(ContainsString("businesses"), ContainsString("clients")),
              "timeline": DictContaining({"start": "2021", "end": "2022"}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("volunteer"),
              "location": ContainsString("Durban"),
@@ -947,13 +947,13 @@ test_cases = [
              "location": ContainsString("Pretoria"),
              "company": AnyOf(ContainsString("retail"), ContainsString("store")),
              "timeline": DictContaining({"start": "2018", "end": "2019"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("content writer"),
              "location": AnyOf(ContainsString("remote"), ContainsString("home")),
              "company": AnyOf(ContainsString("clients"), ContainsString("freelance")),
              "timeline": DictContaining({"start": "2023", "end": AnyOf("Present", "")}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
         ],
     ),
@@ -980,8 +980,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=25)],
         expected_experiences_count_min=3,
         expected_experiences_count_max=3,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-                             WorkType.SELF_EMPLOYMENT: (1, 1),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
+                             WorkType.UNSEEN_UNPAID: (1, 1),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (1, 1)},
         expected_experience_data=[
@@ -990,13 +990,13 @@ test_cases = [
              "location": ContainsString("Cape Town"),  # Provided in follow-up
              "company": ContainsString("TechCorp"),   # Provided in follow-up
              "timeline": DictContaining({"start": "2020", "end": "2022"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("web design"),
              "location": ContainsString("Johannesburg"),  # Provided in follow-up
              "company": AnyOf(ContainsString("SmallBiz Solutions"), ContainsString("StartupXYZ"), ContainsString("clients")),
              "timeline": DictContaining({"start": "2023", "end": AnyOf("Present", "")}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
             {"experience_title": ContainsString("volunteer"),
              "location": ContainsString("Durban"),  # Provided in follow-up
@@ -1019,7 +1019,7 @@ test_cases = [
                     start_date="2020",
                     end_date="2022",
                     paid_work=True,
-                    work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                    work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
                 ),
                 CollectedData(
                     uuid="test-uuid-2",
@@ -1031,7 +1031,7 @@ test_cases = [
                     start_date="2023",
                     end_date="Present",
                     paid_work=True,
-                    work_type=WorkType.SELF_EMPLOYMENT.name
+                    work_type=WorkType.UNSEEN_UNPAID.name
                 ),
                 CollectedData(
                     uuid="test-uuid-3",
@@ -1047,7 +1047,7 @@ test_cases = [
                 )
             ],
             unexplored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK],
-            explored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT, WorkType.UNSEEN_UNPAID],
+            explored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID, WorkType.UNSEEN_UNPAID],
             first_time_visit=False  # Not first time since we have existing data
         )
     ),
@@ -1072,8 +1072,8 @@ test_cases = [
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=25)],
         expected_experiences_count_min=2,
         expected_experiences_count_max=2,
-        expected_work_types={WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-                             WorkType.SELF_EMPLOYMENT: (1, 1),
+        expected_work_types={WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
+                             WorkType.UNSEEN_UNPAID: (1, 1),
                              WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
                              WorkType.UNSEEN_UNPAID: (0, 0)},
         expected_experience_data=[
@@ -1082,13 +1082,13 @@ test_cases = [
              "location": ContainsString("Cape Town"),  # Now provided in follow-up
              "company": ContainsString("TechCorp"),   # Now provided in follow-up
              "timeline": DictContaining({"start": "2020", "end": "2022"}),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
              },
             {"experience_title": ContainsString("web design"),
              "location": ContainsString("Johannesburg"),  # Now provided in follow-up
              "company": ContainsString("SmallBiz Solutions"),  # Now provided in follow-up
              "timeline": DictContaining({"start": "2023", "end": AnyOf("Present", "")}),
-             "work_type": WorkType.SELF_EMPLOYMENT.name,
+             "work_type": WorkType.UNSEEN_UNPAID.name,
              },
         ],
         # Inject a partially collected state
@@ -1106,7 +1106,7 @@ test_cases = [
                     start_date="2020",
                     end_date="2022",
                     paid_work=True,
-                    work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                    work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
                 ),
                 CollectedData(
                     uuid="test-uuid-2",
@@ -1118,11 +1118,11 @@ test_cases = [
                     start_date="2023",
                     end_date="Present",
                     paid_work=True,
-                    work_type=WorkType.SELF_EMPLOYMENT.name
+                    work_type=WorkType.UNSEEN_UNPAID.name
                 )
             ],
             unexplored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
-            explored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT],
+            explored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
             first_time_visit=False  # Not first time since we have existing data
         )
     ),
@@ -1176,8 +1176,8 @@ test_cases = [
         expected_experiences_count_min=5,
         expected_experiences_count_max=5,
         expected_work_types={
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-            WorkType.SELF_EMPLOYMENT: (1, 1),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
+            WorkType.UNSEEN_UNPAID: (1, 1),
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
             WorkType.UNSEEN_UNPAID: (1, 1)
         },
@@ -1188,21 +1188,21 @@ test_cases = [
                 "location": ContainsString("Vihiga"),
                 "company": AnyOf(ContainsString("lady"), ContainsString("This Lady")),
                 "timeline": {"start": "2014", "end": ContainsString("2015")},
-                "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+                "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
             },
             {
                 "experience_title": AnyOf(ContainsString("secretary"), ContainsString("Secretary")),
                 "location": ContainsString("Machakos"),
                 "company": ContainsString("school"),
                 "timeline": {"start": "2016", "end": "2016"},
-                "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+                "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
             },
             {
                 "experience_title": AnyOf(ContainsString("chapati"), ContainsString("selling")),
                 "location": ContainsString("Vihiga"),
                 "company": "",  # Empty string for self-employment
                 "timeline": {"start": "2014", "end": "2015"},
-                "work_type": WorkType.SELF_EMPLOYMENT.name,
+                "work_type": WorkType.UNSEEN_UNPAID.name,
             },
             {
                 "experience_title": AnyOf(ContainsString("internship"), ContainsString("Lukola")),

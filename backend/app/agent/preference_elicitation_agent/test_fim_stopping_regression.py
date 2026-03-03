@@ -398,7 +398,7 @@ async def test_agent_adaptive_phase_not_skipped():
                 experience_title="Contract Software Developer",
                 company="Tabiya Organization",
                 timeline=Timeline(start="11/2025", end="Present"),
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             )
         ],
         use_db6_for_fresh_data=False,

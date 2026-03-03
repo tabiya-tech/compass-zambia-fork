@@ -58,8 +58,7 @@
   "exploreSkills": {
     "finalMessage": "Thank you for sharing these details! I have all the information I need.",
     "question": {
-      "formalWaged": "What do you think is important when working in such a company?",
-      "selfEmployment": "What do you think is important when you are your own boss?",
+      "unpaidTrainee": "What do you think is important when working as an unpaid trainee?",
       "unseenUnpaid": "What do you think is most important when helping out in the community or caring for others?"
     }
   }

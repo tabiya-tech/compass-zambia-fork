@@ -136,7 +136,7 @@ test_cases_data_extraction = [
              "start_date": '2010',
              "end_date": '2018',
              "work_type":
-                 AnyOf(None, WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name)
+                 AnyOf(None, WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name)
              },
             {"index": 1,
              "defined_at_turn_number": 1,
@@ -147,7 +147,7 @@ test_cases_data_extraction = [
              "start_date": '2018',
              "end_date": '2020',
              "work_type":
-                 AnyOf(None, WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name)
+                 AnyOf(None, WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name)
              }
         ]
 
@@ -167,7 +167,7 @@ test_cases_data_extraction = [
                           company=None,
                           location=None, start_date='06/2020',
                           end_date=None,
-                          paid_work=True, work_type='SELF_EMPLOYMENT')
+                          paid_work=True, work_type='UNSEEN_UNPAID')
         ],
         expected_last_referenced_experience_index=0,
         expected_collected_data_count=1,
@@ -181,7 +181,7 @@ test_cases_data_extraction = [
              "start_date": ContainsString("06/2020"),
              "end_date": AnyOf(None, "Present"),
              "work_type":
-                 AnyOf(WorkType.SELF_EMPLOYMENT.name)
+                 AnyOf(WorkType.UNSEEN_UNPAID.name)
              },
         ]
     ),
@@ -203,7 +203,7 @@ test_cases_data_extraction = [
             CollectedData(index=0, defined_at_turn_number=1, experience_title='Freelancing', company=None,
                           location=None, start_date='06/2020',
                           end_date=None,
-                          paid_work=True, work_type='SELF_EMPLOYMENT')
+                          paid_work=True, work_type='UNSEEN_UNPAID')
         ],
         expected_last_referenced_experience_index=0,
         expected_collected_data_count=1,
@@ -217,7 +217,7 @@ test_cases_data_extraction = [
              "start_date": ContainsString("06/2020"),
              "end_date": AnyOf(None, "Present"),
              "work_type":
-                 AnyOf(WorkType.SELF_EMPLOYMENT.name)
+                 AnyOf(WorkType.UNSEEN_UNPAID.name)
              },
         ]
     ),
@@ -247,7 +247,7 @@ test_cases_data_extraction = [
                                               company=None,
                                               location=None, start_date='06/2020',
                                               end_date=None,
-                                              paid_work=True, work_type='SELF_EMPLOYMENT')
+                                              paid_work=True, work_type='UNSEEN_UNPAID')
                             ],
                             expected_last_referenced_experience_index=0,
                             expected_collected_data_count=1,
@@ -261,7 +261,7 @@ test_cases_data_extraction = [
                                  "start_date": ContainsString("06/2020"),
                                  "end_date": AnyOf(None, "Present"),
                                  "work_type":
-                                     AnyOf(WorkType.SELF_EMPLOYMENT.name)
+                                     AnyOf(WorkType.UNSEEN_UNPAID.name)
                                  },
                             ]
                             ),
@@ -281,7 +281,7 @@ test_cases_data_extraction = [
             CollectedData(index=0, defined_at_turn_number=1, experience_title='Selling Shoes', company='Local Market',
                           location=None, start_date=None,
                           end_date=None,
-                          paid_work=None, work_type='SELF_EMPLOYMENT')
+                          paid_work=None, work_type='UNSEEN_UNPAID')
         ],
         expected_last_referenced_experience_index=AnyOf(0, -1),
         expected_collected_data_count=1,
@@ -295,7 +295,7 @@ test_cases_data_extraction = [
              "start_date": AnyOf('', None),
              "end_date": AnyOf('', None),
              "work_type":
-                 AnyOf(WorkType.SELF_EMPLOYMENT.name)
+                 AnyOf(WorkType.UNSEEN_UNPAID.name)
              },
         ]
     ),
@@ -314,7 +314,7 @@ test_cases_data_extraction = [
             CollectedData(index=0, defined_at_turn_number=1, experience_title='Selling Shoes', company='Local Market',
                           location=None, start_date=None,
                           end_date=None,
-                          paid_work=None, work_type='SELF_EMPLOYMENT')
+                          paid_work=None, work_type='UNSEEN_UNPAID')
         ],
         expected_last_referenced_experience_index=0,
         expected_collected_data_count=1,
@@ -327,7 +327,7 @@ test_cases_data_extraction = [
              "paid_work": AnyOf(None, True),
              "start_date": ContainsString("2019"),
              "end_date": AnyOf('', None, "Present"),
-             "work_type": 'SELF_EMPLOYMENT'
+             "work_type": 'UNSEEN_UNPAID'
              },
         ]
     ),
@@ -346,7 +346,7 @@ test_cases_data_extraction = [
         collected_data_so_far=[
             CollectedData(index=0, experience_title='Selling Shoes', company='Local Market', location=None,
                           start_date=None, end_date=None,
-                          paid_work=None, work_type='SELF_EMPLOYMENT')
+                          paid_work=None, work_type='UNSEEN_UNPAID')
         ],
         expected_last_referenced_experience_index=-1,  # The experience should be deleted
         expected_collected_data_count=0
@@ -460,12 +460,12 @@ test_cases_data_extraction = [
             CollectedData(index=0, experience_title='delivery job', company='Uber Eats', location='Paris',
                           start_date='2021/01', end_date='2023/03',
                           paid_work=True,
-                          work_type='FORMAL_SECTOR_WAGED_EMPLOYMENT'),
+                          work_type='FORMAL_SECTOR_UNPAID_TRAINEE_WORK'),
             CollectedData(index=1, experience_title='Selling old furniture',
                           company='Flea Market of rue Jean Henri Fabre',
                           location='15th arrondissement, near the Eiffel Tower', start_date='2019', end_date='Present',
                           paid_work=True,
-                          work_type='SELF_EMPLOYMENT')
+                          work_type='UNSEEN_UNPAID')
         ],
         expected_last_referenced_experience_index=-1,
         expected_collected_data_count=2
@@ -488,7 +488,7 @@ test_cases_data_extraction = [
             CollectedData(index=0, defined_at_turn_number=1, experience_title='Freelance Work',
                           company=None,
                           location=None, start_date=None, end_date=None,
-                          paid_work=True, work_type='SELF_EMPLOYMENT'),
+                          paid_work=True, work_type='UNSEEN_UNPAID'),
         ],
         expected_last_referenced_experience_index=0,
         expected_collected_data_count=1,
@@ -502,7 +502,7 @@ test_cases_data_extraction = [
              "start_date": '06/2020',
              "end_date": ContainsString('present'),
              "work_type":
-                 AnyOf(WorkType.SELF_EMPLOYMENT.name)
+                 AnyOf(WorkType.UNSEEN_UNPAID.name)
              },
         ]
 
@@ -530,11 +530,11 @@ test_cases_data_extraction = [
             CollectedData(index=0, defined_at_turn_number=2, experience_title='Project Manager',
                           company='University of Oxford', location='Remote',
                           start_date='2018', end_date='2020', paid_work=True,
-                          work_type='FORMAL_SECTOR_WAGED_EMPLOYMENT'),
+                          work_type='FORMAL_SECTOR_UNPAID_TRAINEE_WORK'),
             CollectedData(index=1, defined_at_turn_number=6, experience_title='Software Architect',
                           company='ProUbis GmbH', location='Berlin',
                           start_date='2010', end_date='2018', paid_work=True,
-                          work_type='FORMAL_SECTOR_WAGED_EMPLOYMENT'),
+                          work_type='FORMAL_SECTOR_UNPAID_TRAINEE_WORK'),
             CollectedData(index=2, defined_at_turn_number=9, experience_title='Software Developer', company='Ubis GmbH',
                           location='Berlin', start_date='1998',
                           end_date='', paid_work=False, work_type='FORMAL_SECTOR_UNPAID_TRAINEE_WORK')
@@ -695,7 +695,7 @@ test_cases_data_extraction = [
              "paid_work": True,
              "start_date": '2020',
              "end_date": '2022',
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
              },
             {"index": 1,
              "defined_at_turn_number": 1,
@@ -705,7 +705,7 @@ test_cases_data_extraction = [
              "paid_work": True,
              "start_date": '2023',
              "end_date": "Present",
-             "work_type": WorkType.SELF_EMPLOYMENT.name
+             "work_type": WorkType.UNSEEN_UNPAID.name
              }
         ]
     ),
@@ -725,7 +725,7 @@ test_cases_data_extraction = [
             CollectedData(index=0, defined_at_turn_number=1, experience_title='Cashier', company='Walmart',
                           location=None, start_date='2023',
                           end_date=None,
-                          paid_work=True, work_type='FORMAL_SECTOR_WAGED_EMPLOYMENT')
+                          paid_work=True, work_type='FORMAL_SECTOR_UNPAID_TRAINEE_WORK')
         ],
         expected_last_referenced_experience_index=0,  # Should reference the updated experience
         expected_collected_data_count=2,  # Should have both experiences
@@ -738,7 +738,7 @@ test_cases_data_extraction = [
              "paid_work": True,
              "start_date": '2022',
              "end_date": '2023',
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
              },
             {"index": 1,
              "defined_at_turn_number": 2,  # New experience gets current turn number
@@ -768,11 +768,11 @@ test_cases_data_extraction = [
             CollectedData(index=0, defined_at_turn_number=1, experience_title='Waiter', company='Restaurant',
                           location=None, start_date=None,
                           end_date=None,
-                          paid_work=True, work_type='FORMAL_SECTOR_WAGED_EMPLOYMENT'),
+                          paid_work=True, work_type='FORMAL_SECTOR_UNPAID_TRAINEE_WORK'),
             CollectedData(index=1, defined_at_turn_number=1, experience_title='Freelance Writing', company=None,
                           location=None, start_date='2020',
                           end_date=None,
-                          paid_work=True, work_type='SELF_EMPLOYMENT')
+                          paid_work=True, work_type='UNSEEN_UNPAID')
         ],
         expected_last_referenced_experience_index=0,  # Should reference the updated writing experience
         expected_collected_data_count=1,  # Should have only the writing experience (waiter deleted)
@@ -785,7 +785,7 @@ test_cases_data_extraction = [
              "paid_work": True,
              "start_date": '2020',
              "end_date": AnyOf(None, ContainsString('Present')),
-             "work_type": WorkType.SELF_EMPLOYMENT.name
+             "work_type": WorkType.UNSEEN_UNPAID.name
              }
         ]
     ),
@@ -814,7 +814,7 @@ test_cases_data_extraction = [
              "paid_work": True,
              "start_date": AnyOf(None, ''),
              "end_date": AnyOf(None, ''),
-             "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+             "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
              },
             {"index": 1,
              "defined_at_turn_number": 1,
@@ -862,11 +862,11 @@ test_cases_data_extraction = [
             CollectedData(index=0, defined_at_turn_number=1, experience_title='Teacher', company='School',
                           location=None, start_date=None,
                           end_date=None,
-                          paid_work=True, work_type='FORMAL_SECTOR_WAGED_EMPLOYMENT'),
+                          paid_work=True, work_type='FORMAL_SECTOR_UNPAID_TRAINEE_WORK'),
             CollectedData(index=1, defined_at_turn_number=1, experience_title='Consulting', company=None,
                           location=None, start_date=None,
                           end_date=None,
-                          paid_work=True, work_type='SELF_EMPLOYMENT')
+                          paid_work=True, work_type='UNSEEN_UNPAID')
         ],
         expected_last_referenced_experience_index=0,  # Should reference the updated consulting experience
         expected_collected_data_count=2,  # Should have consulting (updated) and photography (new), teaching deleted
@@ -879,7 +879,7 @@ test_cases_data_extraction = [
              "paid_work": True,
              "start_date": AnyOf(None, ContainsString('2020')),
              "end_date": AnyOf(None, ContainsString('2022')),
-             "work_type": WorkType.SELF_EMPLOYMENT.name
+             "work_type": WorkType.UNSEEN_UNPAID.name
              },
             {"index": 1,
              "defined_at_turn_number": 2,  # New experience gets current turn number
@@ -889,7 +889,7 @@ test_cases_data_extraction = [
              "paid_work": AnyOf(None, True),
              "start_date": '2021',
              "end_date": AnyOf(None, ContainsString('Present')),
-             "work_type": WorkType.SELF_EMPLOYMENT.name
+             "work_type": WorkType.UNSEEN_UNPAID.name
              }
         ]
     ),
@@ -925,7 +925,7 @@ test_cases_data_extraction = [
                 "paid_work": AnyOf(None, True),
                 "start_date": '06/2020',
                 "end_date": ContainsString("Present"),
-                "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+                "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
             },
             {
                 "index": 1,
@@ -936,7 +936,7 @@ test_cases_data_extraction = [
                 "paid_work": AnyOf(None, True),
                 "start_date": "01/2018",
                 "end_date": "05/2020",
-                "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+                "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
             },
             {
                 "index": 2,
@@ -947,7 +947,7 @@ test_cases_data_extraction = [
                 "paid_work": AnyOf(None, True),
                 "start_date": "2016",
                 "end_date": "2018",
-                "work_type": AnyOf(None, WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name),
+                "work_type": AnyOf(None, WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name),
             },
             {
                 "index": 3,
@@ -958,7 +958,7 @@ test_cases_data_extraction = [
                 "paid_work": AnyOf(None, True),
                 "start_date": "2014",
                 "end_date": "2014",
-                "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+                "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
             },
             {
                 "index": 4,
@@ -969,7 +969,7 @@ test_cases_data_extraction = [
                 "paid_work": AnyOf(None, True),
                 "start_date": "2013",
                 "end_date": "2013",
-                "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+                "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
             },
             {
                 "index": 5,
@@ -980,7 +980,7 @@ test_cases_data_extraction = [
                 "paid_work": AnyOf(None, True),
                 "start_date": "2013",
                 "end_date": "2013",
-                "work_type": WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+                "work_type": WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
             },
             {
                 "index": 6,
@@ -991,7 +991,7 @@ test_cases_data_extraction = [
                 "paid_work": AnyOf(None, True),
                 "start_date": "2012",
                 "end_date": "2012",
-                "work_type": AnyOf(WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name, None),
+                "work_type": AnyOf(WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name, None),
             },
         ],
     )

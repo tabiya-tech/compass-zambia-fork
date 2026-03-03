@@ -594,12 +594,8 @@ def _get_not_missing_fields(collected_data: list[CollectedData], index: int) -> 
 
 
 def _get_experience_type(work_type: WorkType | None) -> str:
-    if work_type == WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT:
-        return t("messages", "collectExperiences.workType.formalWagedDescription")
-    elif work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
+    if work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
         return t("messages", "collectExperiences.workType.unpaidTraineeDescription")
-    elif work_type == WorkType.SELF_EMPLOYMENT:
-        return t("messages", "collectExperiences.workType.selfEmploymentDescription")
     elif work_type == WorkType.UNSEEN_UNPAID:
         return t("messages", "collectExperiences.workType.unseenUnpaidDescription")
     elif work_type is None:
@@ -614,18 +610,10 @@ def _get_experience_types(work_type: list[WorkType]) -> str:
 
 def _get_excluding_experiences(work_type: WorkType) -> str:
     excluding_experience_types: list[WorkType] = []
-    if work_type == WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT:
-        excluding_experience_types = [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.SELF_EMPLOYMENT, WorkType.UNSEEN_UNPAID]
-        #  return "unpaid trainee work, self-employment, or unpaid work such as community volunteering work etc."
-    elif work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
-        excluding_experience_types = [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT, WorkType.UNSEEN_UNPAID]
-        #  return "wage employment, self-employment, or unpaid work such as community volunteering work etc."
-    elif work_type == WorkType.SELF_EMPLOYMENT:
-        excluding_experience_types = [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID]
-        #  return "wage employment, unpaid trainee work, or unpaid work such as community volunteering work etc."
+    if work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
+        excluding_experience_types = [WorkType.UNSEEN_UNPAID]
     elif work_type == WorkType.UNSEEN_UNPAID:
-        excluding_experience_types = [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.SELF_EMPLOYMENT]
-        #  return "wage employment, unpaid trainee work, or self-employment"
+        excluding_experience_types = [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK]
     else:
         raise ValueError("The work type is not supported")
 
@@ -634,12 +622,8 @@ def _get_excluding_experiences(work_type: WorkType) -> str:
 
 def _ask_experience_type_question(work_type: WorkType) -> str:
     question_to_ask: str
-    if work_type == WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT:
-        question_to_ask = "Have I been employed in a company or someone else's business for money?"
-    elif work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
+    if work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
         question_to_ask = "Have I worked as an unpaid trainee for a company or organization?"
-    elif work_type == WorkType.SELF_EMPLOYMENT:
-        question_to_ask = "Have I run my own business or done freelance or contract work?"
     elif work_type == WorkType.UNSEEN_UNPAID:
         question_to_ask = "Have I done unpaid work such as community volunteering, caregiving for my own or another family, or helping in a household?"
     else:
@@ -694,7 +678,7 @@ def _get_explore_experiences_instructions(*,
         
         IMPORTANT: Do NOT provide a recap or summary of all experiences until we have explored ALL work types. 
         Do NOT say things like "We've now gone through the different types" or "Here's what we have so far" 
-        until we have finished exploring all four work types (paid employment, self-employment, unpaid trainee work, and unpaid work).
+        until we have finished exploring all work types (unpaid trainee work and unpaid work such as volunteering).
         """)
         return replace_placeholders_with_indent(instructions_template,
                                                 questions_to_ask=questions_to_ask,

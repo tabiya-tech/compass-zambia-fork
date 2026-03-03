@@ -196,7 +196,7 @@ class TestRecorderFlow:
         # Add a new experience is discovered
         collected_data = CollectedData(
             experience_title=get_random_printable_string(10),
-            work_type=WorkType.SELF_EMPLOYMENT.name,
+            work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
             company=None,
             location=None,
             start_date=None,

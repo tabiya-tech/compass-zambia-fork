@@ -74,30 +74,8 @@ export const constructExperienceList = async (
 ) => {
   constructExperiencesSectionHeader(paragraphs);
   // Group experiences by work type
-  const {
-    selfEmploymentExperiences,
-    salaryWorkExperiences,
-    unpaidWorkExperiences,
-    traineeWorkExperiences,
-    uncategorizedExperiences,
-  } = groupExperiencesByWorkType(experiences);
-
-  // Add work sections for each work type
-  await constructWorkTypeSection(
-    paragraphs,
-    selfEmploymentExperiences,
-    ReportContent.SELF_EMPLOYMENT_TITLE,
-    ReportContent.IMAGE_URLS.SELF_EMPLOYMENT_ICON,
-    reportConfig
-  );
-
-  await constructWorkTypeSection(
-    paragraphs,
-    salaryWorkExperiences,
-    ReportContent.SALARY_WORK_TITLE,
-    ReportContent.IMAGE_URLS.EMPLOYEE_ICON,
-    reportConfig
-  );
+  const { unpaidWorkExperiences, traineeWorkExperiences, uncategorizedExperiences } =
+    groupExperiencesByWorkType(experiences);
 
   await constructWorkTypeSection(
     paragraphs,

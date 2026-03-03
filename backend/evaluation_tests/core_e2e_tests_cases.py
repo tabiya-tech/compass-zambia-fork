@@ -64,11 +64,11 @@ test_cases = [
         conversation_rounds=50,
         name='asks_about_process_e2e',
         simulated_user_prompt=dedent("""
-            You're a Gen Y living alone. you have this single experience as an employee:
-            - Selling Shoes at Shoe Soles, a shoe store in Tokyo, from 2023 to present.
+            You're a Gen Y living alone. you have this single experience as an unpaid trainee:
+            - Unpaid internship selling shoes at Shoe Soles, a shoe store in Tokyo, from 2023 to present.
             When asked you will reply with the information about this experience all at once, in a single message.
-            You have never had another job experience beside the shoe salesperson job. Also never
-            did any internship, never run your own business, never volunteered, never did any freelance work.
+            You have never had another job experience beside the shoe sales trainee role. Also never
+            had a paid job, never run your own business, never volunteered, never did any freelance work.
             Be as concise as possible, and do not make up any information.
             
             When asked if you are ready to start the conversation, 
@@ -84,14 +84,12 @@ test_cases = [
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
             WorkType.UNSEEN_UNPAID: (0, 0),
         },
         matchers=["llm", "matcher"],
         expected_experience_data=[{
-            "experience_title": ContainsString("Shoe Salesperson"),
+            "experience_title": ContainsString("Shoe"),
             "location": ContainsString("Tokyo"),
             "company": ContainsString("Shoe Soles"),
             "timeline": {"start": ContainsString("2023"), "end": AnyOf(ContainsString("present"), "")},
@@ -102,25 +100,23 @@ test_cases = [
         conversation_rounds=50,
         name='single_experience_specific_and_concise_user_e2e',
         simulated_user_prompt=dedent("""
-            You're a Gen Y living alone. you have this single experience as an employee:
-            - Selling Shoes at Shoe Soles, a shoe store in Tokyo, from 2023 to present.
+            You're a Gen Y living alone. you have this single experience as an unpaid trainee:
+            - Unpaid internship selling shoes at Shoe Soles, a shoe store in Tokyo, from 2023 to present.
             When asked you will reply with the information about this experience all at once, in a single message.
-            You have never had another job experience beside the shoe salesperson job. Also never
-            did any internship, never run your own business, never volunteered, never did any freelance work.
+            You have never had another job experience beside the shoe sales trainee role. Also never
+            had a paid job, never run your own business, never volunteered, never did any freelance work.
             Be as concise as possible, and do not make up any information.
             """) + system_instruction_prompt,
         evaluations=[Evaluation(type=EvaluationType.CONCISENESS, expected=60)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
             WorkType.UNSEEN_UNPAID: (0, 0),
         },
         matchers=["llm", "matcher"],
         expected_experience_data=[{
-            "experience_title": ContainsString("Shoe Salesperson"),
+            "experience_title": ContainsString("Shoe"),
             "location": ContainsString("Tokyo"),
             "company": ContainsString("Shoe Soles"),
             "timeline": {"start": ContainsString("2023"), "end": AnyOf(ContainsString("present"), "")},
@@ -132,22 +128,20 @@ test_cases = [
         name='single_experience_e2e',
         locale=Locale.ES_AR,
         simulated_user_prompt=dedent("""
-            You're a Gen Y living alone. you have this single experience as an employee:
-            - You sold shoes at Zuputaas, a store in Tokyo, from 2023 to present.
+            You're a Gen Y living alone. you have this single experience as an unpaid trainee:
+            - Unpaid internship selling shoes at Zuputaas, a store in Tokyo, from 2023 to present.
             
             When asked you will reply with the information about this experience all at once, in a single message.
             Be more descriptive and more open.
             
-            You have never had another job experience beside the shoe salesperson job. Also never
-            did any internship, never run your own business, never volunteered, never did any freelance work.
+            You have never had another job experience beside the shoe sales trainee role. Also never
+            had a paid job, never run your own business, never volunteered, never did any freelance work.
             Be as concise as possible, and do not make up any information.""") + system_instruction_prompt,
         evaluations=[Evaluation(type=EvaluationType.SINGLE_LANGUAGE, expected=100)],
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
             WorkType.UNSEEN_UNPAID: (0, 0),
         },
         matchers=["matcher"],
@@ -163,8 +157,8 @@ test_cases = [
         name='single_experience_e2e_switch_languages',
         locale=Locale.ES_AR,
         simulated_user_prompt=dedent("""
-            You're a Gen Y living alone. you have this single experience as an employee:
-            - You sold shoes at Kigali Shoes, a store in Kigali, Rwanda, from 2023 to present.
+            You're a Gen Y living alone. you have this single experience as an unpaid trainee:
+            - Unpaid internship selling shoes at Kigali Shoes, a store in Kigali, Rwanda, from 2023 to present.
             
             When asked you will reply with the information about this experience all at once, in a single message.
             Be more descriptive and more open.
@@ -184,9 +178,7 @@ test_cases = [
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
             WorkType.UNSEEN_UNPAID: (0, 0),
         },
         matchers=["matcher"],
@@ -210,8 +202,8 @@ test_cases = [
         expected_experiences_count_min=1,
         expected_experiences_count_max=2,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+            WorkType.UNSEEN_UNPAID: (0, 0),
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
             WorkType.UNSEEN_UNPAID: (1, 2),
         },
@@ -238,8 +230,8 @@ test_cases = [
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 0),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+            WorkType.UNSEEN_UNPAID: (0, 0),
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
             WorkType.UNSEEN_UNPAID: (1, 1),
         }
@@ -257,14 +249,12 @@ test_cases = [
         expected_experiences_count_min=1,
         expected_experiences_count_max=1,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 0),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (1, 1),
-            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (1, 1),
             WorkType.UNSEEN_UNPAID: (0, 0),
         },
         matchers=["llm", "matcher"],
         expected_experience_data=[{
-            "experience_title": ContainsString("Shoe Salesperson"),
+            "experience_title": ContainsString("Shoe"),
         }]
     ),
     E2ETestCase(
@@ -456,8 +446,8 @@ test_cases = [
         expected_experiences_count_min=2,
         expected_experiences_count_max=2,
         expected_work_types={
-            WorkType.SELF_EMPLOYMENT: (0, 1),
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT: (0, 1),
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 1),
+            WorkType.UNSEEN_UNPAID: (0, 1),
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK: (0, 0),
             WorkType.UNSEEN_UNPAID: (1, 1),
         },

@@ -100,7 +100,7 @@ test_cases = [
                ],
         experiences_explored=[],
         experience_title="Selling Kotas",
-        work_type=WorkType.SELF_EMPLOYMENT
+        work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
     ),
     _TestCaseConversation(
         country_of_user=Country.SOUTH_AFRICA,
@@ -128,7 +128,7 @@ test_cases = [
                 "Vielen Dank, dass du deine Erfahrungen geteilt hast. Lassen Sie uns zum nächsten Schritt übergehen.")],
         experiences_explored=[],
         experience_title="Verkauf von Kotas",
-        work_type=WorkType.SELF_EMPLOYMENT
+        work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
     ),
     _TestCaseConversation(
         country_of_user=Country.SOUTH_AFRICA,
@@ -186,7 +186,7 @@ test_cases = [
                ],
         experiences_explored=[],
         experience_title="Asistente de ventas",
-        work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+        work_type=WorkType.UNSEEN_UNPAID
     )
     ]
 

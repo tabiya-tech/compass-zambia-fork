@@ -206,7 +206,7 @@ def create_sample_experiences() -> List[ExperienceEntity]:
             company="Alliance High School",
             location="Kikuyu",
             timeline=Timeline(start="2018", end="2023"),
-            work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+            work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
         ),
         ExperienceEntity(
             uuid="exp-2",
@@ -214,7 +214,7 @@ def create_sample_experiences() -> List[ExperienceEntity]:
             company="Self-employed",
             location="Nairobi",
             timeline=Timeline(start="2023", end="Present"),
-            work_type=WorkType.SELF_EMPLOYMENT
+            work_type=WorkType.UNSEEN_UNPAID
         ),
         ExperienceEntity(
             uuid="exp-3",
@@ -222,7 +222,7 @@ def create_sample_experiences() -> List[ExperienceEntity]:
             company="Mang'u High School",
             location="Thika",
             timeline=Timeline(start="2017", end="2017"),
-            work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+            work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
         )
     ]
 

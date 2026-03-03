@@ -119,7 +119,7 @@ class TestExportConversationsRoundtrip:
 
         given_imported_import_session_id = new_user_preferences.sessions[0]
 
-        # AND the imported conversation is imported for the second time
+        # AND the imported conversation is imported for the second time (copy to new session, single-session replaces)
         successfully_imported_2 = await import_conversation(
             source_session_id=given_imported_import_session_id,
             source_type="DB",
@@ -127,14 +127,13 @@ class TestExportConversationsRoundtrip:
             target_user_id=given_user_id
         )
 
-        # AND the conversation is successfully for the second time.
         assert successfully_imported_2
 
         new_user_preferences = await user_preferences_repository.get_user_preference_by_user_id(user_id=given_user_id)
-        # GUARD user_preferences.sessions.length should be now two
-        assert len(new_user_preferences.sessions) == 2
+        assert len(new_user_preferences.sessions) == 1
+        second_import_session_id = new_user_preferences.sessions[0]
 
-        # AND the second conversation is exported from first JSON to md.
+        # Phase 2: Exporting.
         await export_conversations(
             session_ids=[given_first_session_id],
             source_type="JSON",
@@ -143,41 +142,26 @@ class TestExportConversationsRoundtrip:
             queue_size=1
         )
 
-        # Phase 2: Exporting.
-        # AND the 2nd imported conversation is exported into JSON
         await export_conversations(
-            session_ids=new_user_preferences.sessions,
+            session_ids=[second_import_session_id],
             source_type="DB",
             target_type="JSON",
             output_directory=given_output_directory,
             queue_size=1
         )
 
-        # AND the 2nd imported conversation is exported into markdown
         await export_conversations(
-            session_ids=new_user_preferences.sessions,
+            session_ids=[second_import_session_id],
             source_type="DB",
             target_type="MD",
             output_directory=given_output_directory,
             queue_size=1
         )
 
-        # Phase 3: assertions
-
-        assert new_user_preferences.sessions[0] != new_user_preferences.sessions[1]
-        assert given_first_session_id != new_user_preferences.sessions[1]
-
-        # Assert given_json = exported_json
-        _compare_jsons(given_output_directory, given_first_session_id, new_user_preferences.sessions[1])
-
-        # AND the first imported/exported json should match the second imported/exported json.
-        _compare_jsons(given_output_directory, new_user_preferences.sessions[0], new_user_preferences.sessions[1])
-
-        # Assert exported_md = exported_md_1
-        _compare_markdowns(given_output_directory, given_first_session_id, new_user_preferences.sessions[1])
-
-        # AND the first imported/exported md should match the second imported/exported md.
-        _compare_markdowns(given_output_directory, new_user_preferences.sessions[0], new_user_preferences.sessions[1])
+        # Phase 3: assertions - roundtrip: original JSON should match exported-from-DB JSON
+        assert given_first_session_id != second_import_session_id
+        _compare_jsons(given_output_directory, given_first_session_id, second_import_session_id)
+        _compare_markdowns(given_output_directory, given_first_session_id, second_import_session_id)
 
         # clean up created files
         shutil.rmtree(given_output_directory)

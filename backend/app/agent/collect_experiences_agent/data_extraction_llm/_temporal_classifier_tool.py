@@ -289,8 +289,7 @@ _SYSTEM_INSTRUCTIONS = """
             - work_type_classification_reasoning: A detailed, step-by-step explanation of how the information collected 
                         until now, is evaluated based on the instructions of 'work_type', to classify the type of work of the experience.
                         Formatted as a JSON string.
-            - work_type: type of work of the experience, 'FORMAL_SECTOR_WAGED_EMPLOYMENT', 
-                         'FORMAL_SECTOR_UNPAID_TRAINEE_WORK', 'SELF_EMPLOYMENT', 'UNSEEN_UNPAID' or 'None'. 
+            - work_type: type of work of the experience, 'FORMAL_SECTOR_UNPAID_TRAINEE_WORK', 'UNSEEN_UNPAID' or 'None'. 
                          Other values are not permitted.
             - dates_mentioned: The experience dates mentioned in the conversation. 
                                Empty string "" If you could not find any.

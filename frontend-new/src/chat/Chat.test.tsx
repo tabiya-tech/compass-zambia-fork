@@ -1752,7 +1752,7 @@ describe("Chat", () => {
           experience_title: "Experience 1",
           company: "Company 1",
           location: "Location 1",
-          work_type: WorkType.SELF_EMPLOYMENT,
+          work_type: WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
           top_skills: [],
         },
       ];

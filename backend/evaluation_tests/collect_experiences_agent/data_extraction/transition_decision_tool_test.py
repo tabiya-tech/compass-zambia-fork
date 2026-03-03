@@ -72,8 +72,8 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 work_type=None
             )
         ],
-        exploring_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-        unexplored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT],
+        exploring_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+        unexplored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
         explored_types=[],
         expected_transition_decision=TransitionDecision.CONTINUE
     ),
@@ -95,11 +95,11 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2020",
                 end_date="2022",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             )
         ],
-        exploring_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-        unexplored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT],
+        exploring_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+        unexplored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
         explored_types=[],
         expected_transition_decision=TransitionDecision.CONTINUE
     ),
@@ -121,11 +121,11 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2020",
                 end_date="2022",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             )
         ],
-        exploring_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-        unexplored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT],
+        exploring_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+        unexplored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
         explored_types=[],
         expected_transition_decision=TransitionDecision.END_WORKTYPE
     ),
@@ -147,14 +147,14 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2020",
                 end_date="2022",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             )
         ],
         exploring_type=None,
         unexplored_types=[],
         explored_types=[
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-            WorkType.SELF_EMPLOYMENT,
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+            WorkType.UNSEEN_UNPAID,
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
             WorkType.UNSEEN_UNPAID
         ],
@@ -178,14 +178,14 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2020",
                 end_date="2022",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             )
         ],
         exploring_type=None,
         unexplored_types=[],
         explored_types=[
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-            WorkType.SELF_EMPLOYMENT,
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+            WorkType.UNSEEN_UNPAID,
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
             WorkType.UNSEEN_UNPAID
         ],
@@ -208,7 +208,7 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2020",
                 end_date="2022",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             ),
             CollectedData(
                 index=1,
@@ -219,11 +219,11 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2022",
                 end_date="2024",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             )
         ],
-        exploring_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-        unexplored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT],
+        exploring_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+        unexplored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
         explored_types=[],
         expected_transition_decision=TransitionDecision.CONTINUE
     ),
@@ -243,11 +243,11 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2020",
                 end_date="2022",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             )
         ],
-        exploring_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-        unexplored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT],
+        exploring_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+        unexplored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
         explored_types=[],
         expected_transition_decision=TransitionDecision.CONTINUE
     ),
@@ -270,12 +270,12 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2014",
                 end_date="2015",
                 paid_work=True,
-                work_type=WorkType.SELF_EMPLOYMENT.name
+                work_type=WorkType.UNSEEN_UNPAID.name
             )
         ],
-        exploring_type=WorkType.SELF_EMPLOYMENT,
-        unexplored_types=[WorkType.SELF_EMPLOYMENT, WorkType.UNSEEN_UNPAID],
-        explored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT],
+        exploring_type=WorkType.UNSEEN_UNPAID,
+        unexplored_types=[WorkType.UNSEEN_UNPAID, WorkType.UNSEEN_UNPAID],
+        explored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK],
         expected_transition_decision=TransitionDecision.CONTINUE
     ),
     TransitionDecisionToolTestCase(
@@ -304,8 +304,8 @@ test_cases: list[TransitionDecisionToolTestCase] = [
         exploring_type=WorkType.UNSEEN_UNPAID,
         unexplored_types=[WorkType.UNSEEN_UNPAID],
         explored_types=[
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-            WorkType.SELF_EMPLOYMENT,
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+            WorkType.UNSEEN_UNPAID,
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
         ],
         expected_transition_decision=TransitionDecision.END_WORKTYPE
@@ -329,12 +329,12 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2014",
                 end_date="2015",
                 paid_work=True,
-                work_type=WorkType.SELF_EMPLOYMENT.name
+                work_type=WorkType.UNSEEN_UNPAID.name
             )
         ],
-        exploring_type=WorkType.SELF_EMPLOYMENT,
-        unexplored_types=[WorkType.SELF_EMPLOYMENT, WorkType.UNSEEN_UNPAID],
-        explored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT],
+        exploring_type=WorkType.UNSEEN_UNPAID,
+        unexplored_types=[WorkType.UNSEEN_UNPAID, WorkType.UNSEEN_UNPAID],
+        explored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK],
         expected_transition_decision=TransitionDecision.END_WORKTYPE
     ),
     TransitionDecisionToolTestCase(
@@ -356,11 +356,11 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2016",
                 end_date="2016",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             )
         ],
-        exploring_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-        unexplored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkType.SELF_EMPLOYMENT],
+        exploring_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+        unexplored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID],
         explored_types=[],
         expected_transition_decision=TransitionDecision.END_WORKTYPE
     ),
@@ -382,12 +382,12 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2014",
                 end_date="2015",
                 paid_work=True,
-                work_type=WorkType.SELF_EMPLOYMENT.name
+                work_type=WorkType.UNSEEN_UNPAID.name
             )
         ],
-        exploring_type=WorkType.SELF_EMPLOYMENT,
-        unexplored_types=[WorkType.SELF_EMPLOYMENT, WorkType.UNSEEN_UNPAID],
-        explored_types=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT],
+        exploring_type=WorkType.UNSEEN_UNPAID,
+        unexplored_types=[WorkType.UNSEEN_UNPAID, WorkType.UNSEEN_UNPAID],
+        explored_types=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK],
         expected_transition_decision=TransitionDecision.END_WORKTYPE
     ),
     TransitionDecisionToolTestCase(
@@ -408,7 +408,7 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2016",
                 end_date="2016",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             ),
             CollectedData(
                 index=1,
@@ -419,7 +419,7 @@ test_cases: list[TransitionDecisionToolTestCase] = [
                 start_date="2014",
                 end_date="2015",
                 paid_work=True,
-                work_type=WorkType.SELF_EMPLOYMENT.name
+                work_type=WorkType.UNSEEN_UNPAID.name
             ),
             CollectedData(
                 index=2,
@@ -436,8 +436,8 @@ test_cases: list[TransitionDecisionToolTestCase] = [
         exploring_type=None,
         unexplored_types=[],
         explored_types=[
-            WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-            WorkType.SELF_EMPLOYMENT,
+            WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
+            WorkType.UNSEEN_UNPAID,
             WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
             WorkType.UNSEEN_UNPAID
         ],

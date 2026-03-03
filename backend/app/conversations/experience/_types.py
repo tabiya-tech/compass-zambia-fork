@@ -261,7 +261,7 @@ class UpdateExperienceRequest(BaseModel):
         description="The type of work. "
                     "If omitted, not updated. If null, cleared. "
                     "If an invalid value is provided, null will be saved.",
-        examples=[WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name],
+        examples=[WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name],
         max_length=max(len(e.name) for e in WorkType),
         json_schema_extra={"enum": [e.name for e in WorkType] + [None]}
     )

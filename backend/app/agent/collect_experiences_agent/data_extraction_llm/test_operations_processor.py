@@ -33,7 +33,7 @@ def _create_collected_data(
         start_date=start_date,
         end_date=end_date,
         paid_work=paid_work,
-        work_type=work_type or WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+        work_type=work_type or WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
     )
 
 
@@ -59,7 +59,7 @@ def create_experience_data(
         start_date=start_date,
         end_date=end_date,
         paid_work=paid_work,
-        work_type=work_type or WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name,
+        work_type=work_type or WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name,
         data_operation=data_operation,
         data_extraction_references="",
         dates_mentioned="",
@@ -100,7 +100,7 @@ class TestExperienceDataProcessor:
                 start_date="2020",
                 end_date="2022",
                 paid_work=True,
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             )
         ]
 
@@ -127,7 +127,7 @@ class TestExperienceDataProcessor:
         assert experience.start_date == "2020"
         assert experience.end_date == "2022"
         assert experience.paid_work is True
-        assert experience.work_type == WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT.name
+        assert experience.work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
         assert experience.defined_at_turn_number == 2
 
         # AND should log the addition
@@ -153,7 +153,7 @@ class TestExperienceDataProcessor:
                 experience_title="Freelance Designer",
                 company="Self",
                 location="Johannesburg",
-                work_type=WorkType.SELF_EMPLOYMENT.name
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
             ),
             create_experience_data(
                 data_operation="ADD",

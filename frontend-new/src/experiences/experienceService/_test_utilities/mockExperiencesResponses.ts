@@ -13,7 +13,7 @@ export const mockExperiences: Experience[] = [
     experience_title: "Project Manager",
     company: "Business Inc",
     location: "New York, NY",
-    work_type: WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
+    work_type: WorkType.UNSEEN_UNPAID,
     top_skills: [
       {
         UUID: "2512652c-49ba-4751-b654-8fc525ce98ca",
@@ -63,12 +63,7 @@ export const mockExperiences: Experience[] = [
   },
 ];
 
-const allWorkTypes = [
-  WorkType.SELF_EMPLOYMENT,
-  WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-  WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
-  WorkType.UNSEEN_UNPAID,
-];
+const allWorkTypes = [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WorkType.UNSEEN_UNPAID];
 
 const skillsLabels = [
   "work in an organised manner",

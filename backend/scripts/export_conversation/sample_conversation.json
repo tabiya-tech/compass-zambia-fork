@@ -26,7 +26,7 @@
             "start": "2020/01",
             "end": "2023/08"
           },
-          "work_type": "FORMAL_SECTOR_WAGED_EMPLOYMENT",
+          "work_type": "FORMAL_SECTOR_UNPAID_TRAINEE_WORK",
           "responsibilities": {
             "responsibilities": [
               "I am done"
@@ -131,12 +131,12 @@
         "start_date": "2020/01",
         "end_date": "2023/08",
         "paid_work": true,
-        "work_type": "FORMAL_SECTOR_WAGED_EMPLOYMENT"
+        "work_type": "FORMAL_SECTOR_UNPAID_TRAINEE_WORK"
       }
     ],
     "unexplored_types": [],
     "explored_types": [
-      "FORMAL_SECTOR_WAGED_EMPLOYMENT"
+      "FORMAL_SECTOR_UNPAID_TRAINEE_WORK"
     ],
     "first_time_visit": false
   },

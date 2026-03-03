@@ -16,10 +16,8 @@ from common_libs.test_utilities import get_random_session_id
 logger = logging.getLogger(__name__)
 
 all_work_types = [
-    WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
-    WorkType.SELF_EMPLOYMENT,
     WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
-    WorkType.UNSEEN_UNPAID
+    WorkType.UNSEEN_UNPAID,
 ]
 
 
@@ -65,10 +63,8 @@ class TestConversationPhase:
 
     @pytest.mark.parametrize("explored_work_types, expected_percentage", [
         (0, COLLECT_EXPERIENCES_PERCENTAGE),
-        (1, COLLECT_EXPERIENCES_PERCENTAGE + 9),  # (1/4) * (40 - 5)
-        (2, COLLECT_EXPERIENCES_PERCENTAGE + 17),  # (2/4) * (40 - 5)
-        (3, COLLECT_EXPERIENCES_PERCENTAGE + 26),  # (3/4) * (40 - 5)
-        (4, DIVE_IN_EXPERIENCES_PERCENTAGE)
+        (1, 22),  # round((1/2) * (40 - 5) + 5)
+        (2, DIVE_IN_EXPERIENCES_PERCENTAGE),
     ])
     def test_n_explored_work_types(self, explored_work_types: int, expected_percentage: int):
         # GIVEN a random session id

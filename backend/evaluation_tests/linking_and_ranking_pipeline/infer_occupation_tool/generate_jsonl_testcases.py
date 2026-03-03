@@ -38,7 +38,7 @@ class PartialSpecification(BaseModel):
 list_of_given_partial_specs: list[PartialSpecification] = [
     PartialSpecification(
         given_code="7512.1",
-        given_work_type=WorkType.SELF_EMPLOYMENT,
+        given_work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
         given_company="Baker's Delight",
         given_country_of_interest=Country.UNSPECIFIED,
         expected_occupations_found_codes=["7512.1"]
