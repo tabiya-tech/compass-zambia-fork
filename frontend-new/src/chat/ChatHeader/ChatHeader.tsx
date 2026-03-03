@@ -17,7 +17,7 @@ import { PersistentStorageService } from "src/app/PersistentStorageService/Persi
 import { useSentryFeedbackForm } from "src/feedback/hooks/useSentryFeedbackForm";
 
 export type ChatHeaderProps = {
-  startNewConversation: () => void;
+  notifyOnLogout: () => void;
   experiencesExplored: number;
   exploredExperiencesNotification: boolean;
   setExploredExperiencesNotification: React.Dispatch<SetStateAction<boolean>>;
@@ -38,12 +38,11 @@ export const DATA_TEST_ID = {
 };
 
 export const MENU_ITEM_ID = {
-  START_NEW_CONVERSATION: `start-new-conversation-${uniqueId}`,
   VIEW_EXPERIENCES: `view-experiences-${uniqueId}`,
 };
 
 const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
-  startNewConversation: _startNewConversation, // kept for when start-conversation menu is re-enabled (see commented code below)
+  notifyOnLogout,
   experiencesExplored,
   exploredExperiencesNotification,
   setExploredExperiencesNotification,

@@ -31,7 +31,7 @@ import InactiveBackdrop from "src/theme/Backdrop/InactiveBackdrop";
 import ConfirmModalDialog from "src/theme/confirmModalDialog/ConfirmModalDialog";
 import { ChatError, MetricsError } from "src/error/commonErrors";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
-import { issueNewSession } from "./issueNewSession";
+import { ensureSessionForUser } from "./ensureSession";
 import { ChatProvider } from "src/chat/ChatContext";
 import { lazyWithPreload } from "src/utils/preloadableComponent/PreloadableComponent";
 import ChatProgressBar from "./chatProgressbar/ChatProgressBar";
@@ -122,7 +122,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [showBackdrop, setShowBackdrop] = useState(showInactiveSessionAlert);
   const [lastActivityTime, setLastActivityTime] = React.useState<number>(Date.now());
-  const [newConversationDialog, setNewConversationDialog] = React.useState<boolean>(false);
   const [showRefreshConfirmDialog, setShowRefreshConfirmDialog] = React.useState<boolean>(false);
   const [exploredExperiencesNotification, setExploredExperiencesNotification] = useState<boolean>(false);
   const allowRefreshRef = useRef<boolean>(false);
@@ -727,7 +726,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
 
       try {
         if (!sessionId) {
-          sessionId = await issueNewSession(userId);
+          sessionId = await ensureSessionForUser(userId);
           if (sessionId) {
             // Clear the messages if a new session is issued
             //  and add a typing message as the previous one will be removed
@@ -735,8 +734,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
             // AND clear the current phase
             setCurrentPhase(defaultCurrentPhase);
           } else {
-            // NOTE: We are not logging here because issueNewSession
-            //       already logs the error and returns null in the case
             return false;
           }
         }
@@ -834,21 +831,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
   };
-
-  const handleConfirmNewConversation = useCallback(async () => {
-    setNewConversationDialog(false);
-    setExploredExperiencesNotification(false);
-    if (await initializeChat(currentUserId, null)) {
-      enqueueSnackbar(t("chat.chat.notifications.startConversationSuccess"), { variant: "success" });
-    } else {
-      // Add a message to the chat saying that something went wrong
-      setMessages([generateSomethingWentWrongMessage()]);
-      // Set the conversation as completed to prevent the user from sending any messages
-      setConversationCompleted(true);
-      // Notify the user that the chat failed to start
-      enqueueSnackbar(t("chat.chat.notifications.startConversationFailed"), { variant: "error" });
-    }
-  }, [enqueueSnackbar, initializeChat, currentUserId, t]);
 
   /**
    * --- UseEffects ---
@@ -1054,7 +1036,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
             </Box>
             <Box sx={{ flexShrink: 0 }}>
               <ChatHeader
-                startNewConversation={() => setNewConversationDialog(true)}
+                notifyOnLogout={handleLogout}
                 experiencesExplored={exploredExperiencesCount.length}
                 exploredExperiencesNotification={exploredExperiencesNotification}
                 setExploredExperiencesNotification={setExploredExperiencesNotification}
@@ -1091,25 +1073,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
           conversationConductedAt={conversationConductedAt}
           onExperiencesUpdated={fetchExperiences}
         />
-        {newConversationDialog && (
-          <ConfirmModalDialog
-            isOpen={newConversationDialog}
-            title={t("chat.chat.startNewConversationDialog.title")}
-            content={
-              <>
-                {t("chat.chat.startNewConversationDialog.content")}
-                <br />
-                <br />
-                {t("chat.chat.startNewConversationDialog.confirmation")}
-              </>
-            }
-            onCancel={() => setNewConversationDialog(false)}
-            onConfirm={handleConfirmNewConversation}
-            onDismiss={() => setNewConversationDialog(false)}
-            cancelButtonText={t("common.buttons.cancel")}
-            confirmButtonText={t("common.buttons.confirm")}
-          />
-        )}
         {showRefreshConfirmDialog && (
           <ConfirmModalDialog
             isOpen={showRefreshConfirmDialog}

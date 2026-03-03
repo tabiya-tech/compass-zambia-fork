@@ -82,11 +82,11 @@ describe("ChatHeader", () => {
     ["exploredExperiencesNotification not shown", false],
   ])("should render the Chat Header with %s", (desc, givenExploredExperiencesNotification) => {
     // GIVEN a ChatHeader component
-    const givenStartNewConversation = jest.fn();
+    const givenNotifyOnLogout = jest.fn();
     const givenNumberOfExploredExperiences = 1;
     const givenChatHeader = (
       <ChatHeader
-        startNewConversation={givenStartNewConversation}
+        notifyOnLogout={givenNotifyOnLogout}
         experiencesExplored={givenNumberOfExploredExperiences}
         exploredExperiencesNotification={givenExploredExperiencesNotification}
         setExploredExperiencesNotification={jest.fn()}
@@ -162,7 +162,7 @@ describe("ChatHeader", () => {
       const metricsSpy = jest.spyOn(MetricsService.getInstance(), "sendMetricsEvent").mockReturnValue();
       const givenChatHeader = (
         <ChatHeader
-          startNewConversation={jest.fn()}
+          notifyOnLogout={jest.fn()}
           experiencesExplored={0}
           exploredExperiencesNotification={true}
           setExploredExperiencesNotification={jest.fn()}
@@ -216,7 +216,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       const givenChatHeader = (
         <ChatHeader
-          startNewConversation={jest.fn()}
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={givenExploredExperiencesNotification}
           setExploredExperiencesNotification={jest.fn()}
@@ -244,7 +244,7 @@ describe("ChatHeader", () => {
       const setExploredExperiencesNotification = jest.fn();
       const givenChatHeader = (
         <ChatHeader
-          startNewConversation={jest.fn()}
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={givenExploredExperiencesNotification}
           setExploredExperiencesNotification={setExploredExperiencesNotification}
@@ -287,10 +287,9 @@ describe("ChatHeader", () => {
       async (_description, browserIsOnline) => {
         mockBrowserIsOnLine(browserIsOnline);
         // GIVEN a ChatHeader component
-        const givenStartNewConversation = jest.fn();
         const givenChatHeader = (
           <ChatHeader
-            startNewConversation={givenStartNewConversation}
+            notifyOnLogout={givenNotifyOnLogout}
             experiencesExplored={0}
             exploredExperiencesNotification={false}
             setExploredExperiencesNotification={jest.fn()}
@@ -337,7 +336,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
-          startNewConversation={jest.fn()}
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
@@ -368,7 +367,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
-          startNewConversation={jest.fn()}
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
@@ -454,7 +453,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
-          startNewConversation={jest.fn()}
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
@@ -487,7 +486,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
-          startNewConversation={jest.fn()}
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
