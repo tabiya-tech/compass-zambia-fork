@@ -34,8 +34,6 @@ import { ChatError, MetricsError } from "src/error/commonErrors";
 import AuthenticationServiceFactory from "src/auth/services/Authentication.service.factory";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
 import { ensureSessionForUser } from "./ensureSession";
-import { issueNewSession } from "./issueNewSession";
-import { getNewSessionEnabled } from "src/envService";
 import { ChatProvider } from "src/chat/ChatContext";
 import { lazyWithPreload } from "src/utils/preloadableComponent/PreloadableComponent";
 import ChatProgressBar from "./chatProgressbar/ChatProgressBar";
@@ -126,10 +124,8 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const [showBackdrop, setShowBackdrop] = useState(showInactiveSessionAlert);
   const [lastActivityTime, setLastActivityTime] = React.useState<number>(Date.now());
   const [showRefreshConfirmDialog, setShowRefreshConfirmDialog] = React.useState<boolean>(false);
-  const [newConversationDialog, setNewConversationDialog] = React.useState<boolean>(false);
   const [exploredExperiencesNotification, setExploredExperiencesNotification] = useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = React.useState<boolean>(false);
-  const newSessionEnabled = getNewSessionEnabled();
   const allowRefreshRef = useRef<boolean>(false);
   const networkInfoSentRef = useRef<boolean>(false);
   const [activeSessionId, setActiveSessionId] = useState<number | null>(
@@ -773,11 +769,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
 
       try {
         if (!sessionId) {
-          if (newSessionEnabled) {
-            sessionId = await issueNewSession(userId);
-          } else {
-            sessionId = await ensureSessionForUser(userId);
-          }
+          sessionId = await ensureSessionForUser(userId);
           if (sessionId) {
             // Clear the messages if a new session is issued
             //  and add a typing message as the previous one will be removed
@@ -881,32 +873,8 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
         setAiIsTyping(false);
       }
     },
-    [addMessageToChat, setAiIsTyping, showSkillsRanking, sendMessage, newSessionEnabled]
+    [addMessageToChat, setAiIsTyping, showSkillsRanking, sendMessage]
   );
-
-  const handleConfirmNewConversation = useCallback(async () => {
-    setNewConversationDialog(false);
-    setExploredExperiencesNotification(false);
-    if (await initializeChat(currentUserId, null)) {
-      enqueueSnackbar(t("chat.chat.notifications.startConversationSuccess"), { variant: "success" });
-    } else {
-      // Add a message to the chat saying that something went wrong
-      setMessages([generateSomethingWentWrongMessage()]);
-      // Set the conversation as completed to prevent the user from sending any messages
-      setConversationCompleted(true);
-      // Notify the user that the chat failed to start
-      enqueueSnackbar(t("chat.chat.notifications.startConversationFailed"), { variant: "error" });
-    }
-  }, [
-    enqueueSnackbar,
-    initializeChat,
-    currentUserId,
-    t,
-    setMessages,
-    setConversationCompleted,
-    setNewConversationDialog,
-    setExploredExperiencesNotification,
-  ]);
 
   // Resets the text field for the next message
   // Optimistically adds the user's message to the messages list
@@ -927,7 +895,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
     },
     [sendMessage, activeSessionId]
   );
-  // Keep the ref current so sendMessage/initializeChat can use it without a circular dep
   handleBWSSubmitRef.current = handleBWSSubmit;
 
   /**
@@ -1143,7 +1110,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
             <Box sx={{ flexShrink: 0 }}>
               <ChatHeader
                 notifyOnLogout={handleLogout}
-                startNewConversation={newSessionEnabled ? () => setNewConversationDialog(true) : undefined}
                 experiencesExplored={exploredExperiencesCount.length}
                 exploredExperiencesNotification={exploredExperiencesNotification}
                 setExploredExperiencesNotification={setExploredExperiencesNotification}
@@ -1180,63 +1146,26 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
           conversationConductedAt={conversationConductedAt}
           onExperiencesUpdated={fetchExperiences}
         />
-        {newSessionEnabled && newConversationDialog && (
+        {showRefreshConfirmDialog && (
           <ConfirmModalDialog
-            isOpen={newConversationDialog}
-            title={t("chat.chat.startNewConversationDialog.title")}
+            isOpen={showRefreshConfirmDialog}
+            title={t("chat.chat.refreshConfirmationDialog.title")}
             content={
               <>
-                {t("chat.chat.startNewConversationDialog.content")}
+                {t("chat.chat.refreshConfirmationDialog.content")}
                 <br />
                 <br />
-                {t("chat.chat.startNewConversationDialog.confirmation")}
+                {t("chat.chat.refreshConfirmationDialog.question")}
               </>
             }
-            onCancel={() => setNewConversationDialog(false)}
-            onConfirm={handleConfirmNewConversation}
-            onDismiss={() => setNewConversationDialog(false)}
-            cancelButtonText={t("common.buttons.cancel")}
-            confirmButtonText={t("common.buttons.confirm")}
+            onCancel={handleCancelRefresh}
+            onConfirm={handleConfirmRefresh}
+            onDismiss={handleCancelRefresh}
+            cancelButtonText={t("chat.chat.refreshConfirmationDialog.waitButton")}
+            confirmButtonText={t("chat.chat.refreshConfirmationDialog.refreshButton")}
           />
-          {newSessionEnabled && newConversationDialog && (
-            <ConfirmModalDialog
-              isOpen={newConversationDialog}
-              title={t("chat.chat.startNewConversationDialog.title")}
-              content={
-                <>
-                  {t("chat.chat.startNewConversationDialog.content")}
-                  <br />
-                  <br />
-                  {t("chat.chat.startNewConversationDialog.confirmation")}
-                </>
-              }
-              onCancel={() => setNewConversationDialog(false)}
-              onConfirm={handleConfirmNewConversation}
-              onDismiss={() => setNewConversationDialog(false)}
-              cancelButtonText={t("common.buttons.cancel")}
-              confirmButtonText={t("common.buttons.confirm")}
-            />
-          )}
-          {showRefreshConfirmDialog && (
-            <ConfirmModalDialog
-              isOpen={showRefreshConfirmDialog}
-              title={t("chat.chat.refreshConfirmationDialog.title")}
-              content={
-                <>
-                  {t("chat.chat.refreshConfirmationDialog.content")}
-                  <br />
-                  <br />
-                  {t("chat.chat.refreshConfirmationDialog.question")}
-                </>
-              }
-              onCancel={handleCancelRefresh}
-              onConfirm={handleConfirmRefresh}
-              onDismiss={handleCancelRefresh}
-              cancelButtonText={t("chat.chat.refreshConfirmationDialog.waitButton")}
-              confirmButtonText={t("chat.chat.refreshConfirmationDialog.refreshButton")}
-            />
-          )}
-        </ChatProvider>
+        )}
+      </ChatProvider>
     </Suspense>
   );
 };
