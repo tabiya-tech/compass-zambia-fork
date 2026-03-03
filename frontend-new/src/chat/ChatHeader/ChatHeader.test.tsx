@@ -343,7 +343,44 @@ describe("ChatHeader", () => {
       const experiencesButton = screen.getByTestId(DATA_TEST_ID.CHAT_HEADER_BUTTON_EXPERIENCES);
       fireEvent.click(experiencesButton);
 
-      // THEN expect notifyOnExperiencesDrawerOpen to be called
+      // THEN expect handleOpenExperiencesDrawer to be called
+      expect(givenNotifyOnExperiencesDrawerOpen).toHaveBeenCalled();
+    });
+
+    test("should call handleOpenExperiencesDrawer and send metrics when view experiences button is clicked", async () => {
+      // GIVEN a ChatHeader component
+      const givenNotifyOnExperiencesDrawerOpen = jest.fn();
+      const mockUser = { id: "foo123", name: "Foo", email: "foo@bar" };
+      jest.spyOn(AuthenticationStateService.getInstance(), "getUser").mockReturnValue(mockUser);
+      const metricsSpy = jest.spyOn(MetricsService.getInstance(), "sendMetricsEvent").mockReturnValue();
+      const givenChatHeader = (
+        <ChatHeader
+          notifyOnLogout={jest.fn()}
+          experiencesExplored={0}
+          exploredExperiencesNotification={true}
+          setExploredExperiencesNotification={jest.fn()}
+          conversationCompleted={false}
+          progressPercentage={0}
+          timeUntilNotification={null}
+          conversationPhase={ConversationPhase.INTRO}
+          collectedExperiences={1}
+        />
+      );
+      render(
+        <ChatProvider
+          handleOpenExperiencesDrawer={givenNotifyOnExperiencesDrawerOpen}
+          removeMessageFromChat={jest.fn()}
+          addMessageToChat={jest.fn()}
+        >
+          {givenChatHeader}
+        </ChatProvider>
+      );
+
+      // WHEN the view experiences button is clicked
+      const viewExperiencesButton = screen.getByTestId(DATA_TEST_ID.CHAT_HEADER_BUTTON_EXPERIENCES);
+      fireEvent.click(viewExperiencesButton);
+
+      // THEN expect handleOpenExperiencesDrawer to be called
       expect(givenNotifyOnExperiencesDrawerOpen).toHaveBeenCalled();
       // AND the metrics event to be sent
       expect(metricsSpy).toHaveBeenCalledWith(

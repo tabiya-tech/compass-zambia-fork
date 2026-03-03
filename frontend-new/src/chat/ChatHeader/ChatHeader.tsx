@@ -24,12 +24,11 @@ import MetricsService from "src/metrics/metricsService";
 import { EventType } from "src/metrics/types";
 import { ConversationPhase } from "src/chat/chatProgressbar/types";
 import LanguageContextMenu from "src/i18n/languageContextMenu/LanguageContextMenu";
-import { getProductName, getNewSessionEnabled } from "src/envService";
+import { getProductName } from "src/envService";
 import { getAppIconUrl } from "src/envService";
 
 export type ChatHeaderProps = {
   notifyOnLogout: () => void;
-  startNewConversation?: () => void;
   experiencesExplored: number;
   exploredExperiencesNotification: boolean;
   setExploredExperiencesNotification: React.Dispatch<SetStateAction<boolean>>;
@@ -56,7 +55,6 @@ export const DATA_TEST_ID = {
 
 export const MENU_ITEM_ID = {
   SETTINGS_SELECTOR: `settings-selector-${uniqueId}`,
-  START_NEW_CONVERSATION: `start-new-conversation-${uniqueId}`,
   LOGOUT_BUTTON: `logout-button-${uniqueId}`,
   REPORT_BUG_BUTTON: `report-bug-button-${uniqueId}`,
   REGISTER: `register-${uniqueId}`,
@@ -64,7 +62,6 @@ export const MENU_ITEM_ID = {
 
 const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
   notifyOnLogout,
-  startNewConversation,
   experiencesExplored,
   exploredExperiencesNotification,
   setExploredExperiencesNotification,
@@ -252,19 +249,8 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
     t,
   ]);
 
-  const newSessionEnabled = getNewSessionEnabled();
   const contextMenuItems: MenuItemConfig[] = useMemo(
     () => [
-      ...(newSessionEnabled && startNewConversation
-        ? [
-            {
-              id: MENU_ITEM_ID.START_NEW_CONVERSATION,
-              text: t("common.buttons.startNewConversation").toLowerCase(),
-              disabled: !isOnline,
-              action: startNewConversation,
-            },
-          ]
-        : []),
       ...(sentryEnabled
         ? [
             {
@@ -302,7 +288,7 @@ const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
         action: handleLogout,
       },
     ],
-    [isAnonymous, isOnline, sentryEnabled, handleLogout, t, feedbackFormLabels, newSessionEnabled, startNewConversation]
+    [isAnonymous, isOnline, sentryEnabled, handleLogout, t, feedbackFormLabels]
   );
 
   const productName = getProductName();
