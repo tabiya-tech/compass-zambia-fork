@@ -11,8 +11,6 @@ import { PersistentStorageService } from "src/app/PersistentStorageService/Persi
 import { groupExperiencesByWorkType } from "src/experiences/report/util";
 import { sortSkillsByOrderIndex } from "src/experiences/experiencesDrawer/util";
 import { ReportContent } from "src/experiences/report/reportContent";
-import StoreIcon from "@mui/icons-material/Store";
-import WorkIcon from "@mui/icons-material/Work";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import SchoolIcon from "@mui/icons-material/School";
 import QuizIcon from "@mui/icons-material/Quiz";
@@ -428,22 +426,6 @@ const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
               {/* EXPERIENCES */}
               {!isLoading && (
                 <Box display="flex" flexDirection="column" gap={isSmallMobile ? 10 : 6}>
-                  <ExperienceCategory
-                    icon={<StoreIcon />}
-                    title={ReportContent.SELF_EMPLOYMENT_TITLE}
-                    experiences={groupedExperiences.selfEmploymentExperiences}
-                    onEditExperience={handleEditExperience}
-                    onDeleteExperience={handleDeleteExperience}
-                    onRestoreToOriginalExperience={handleRequestRestoreToOriginalExperience}
-                  />
-                  <ExperienceCategory
-                    icon={<WorkIcon />}
-                    title={ReportContent.SALARY_WORK_TITLE}
-                    experiences={groupedExperiences.salaryWorkExperiences}
-                    onEditExperience={handleEditExperience}
-                    onDeleteExperience={handleDeleteExperience}
-                    onRestoreToOriginalExperience={handleRequestRestoreToOriginalExperience}
-                  />
                   <ExperienceCategory
                     icon={<VolunteerActivismIcon />}
                     title={ReportContent.UNPAID_WORK_TITLE}

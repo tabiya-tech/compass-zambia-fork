@@ -176,7 +176,7 @@ class TestExperienceRoutes:
                     company="Foo Company",
                     location="Foo Location",
                     timeline=Timeline(start="2020-01-01", end="2021-01-01"),
-                    work_type=WorkType.SELF_EMPLOYMENT,
+                    work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
                     top_skills=[
                         SkillEntity(
                             id="",
@@ -361,7 +361,7 @@ class TestExperienceRoutes:
                 company="company",
                 location="location",
                 timeline=Timeline(start="2020", end="2021"),
-                work_type=WorkType.SELF_EMPLOYMENT,
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
                 top_skills=[],
                 remaining_skills=[],
                 summary="summary",
@@ -609,7 +609,7 @@ class TestExperienceRoutes:
                 company="Unedited Company",
                 location="Unedited Location",
                 timeline=Timeline(start="2020", end="2021"),
-                work_type=WorkType.SELF_EMPLOYMENT,
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
                 top_skills=[],
                 summary="Unedited summary",
             ), DiveInPhase.PROCESSED)

@@ -287,6 +287,7 @@ describe("ChatHeader", () => {
       async (_description, browserIsOnline) => {
         mockBrowserIsOnLine(browserIsOnline);
         // GIVEN a ChatHeader component
+        const givenNotifyOnLogout = jest.fn();
         const givenChatHeader = (
           <ChatHeader
             notifyOnLogout={givenNotifyOnLogout}

@@ -368,14 +368,8 @@ def _get_country_of_user_segment(country_of_user: Country) -> str:
 
 
 def _get_question_c(work_type: WorkType) -> str:
-    """
-    Get the question for the specific work type
-    """
-    if work_type == WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT:
-        return t("messages", "exploreSkills.question.formalWaged")
-    elif work_type == WorkType.SELF_EMPLOYMENT:
-        return t("messages", "exploreSkills.question.selfEmployment")
+    if work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
+        return t("messages", "exploreSkills.question.unpaidTrainee")
     elif work_type == WorkType.UNSEEN_UNPAID:
         return t("messages", "exploreSkills.question.unseenUnpaid")
-    else:
-        return ""
+    return ""

@@ -58,8 +58,7 @@
   "exploreSkills": {
     "finalMessage": "Asante kwa kushiriki maelezo haya! Nina taarifa zote ninazohitaji.",
     "question": {
-      "formalWaged": "Unafikiri ni nini muhimu unapofanya kazi katika kampuni kama hiyo?",
-      "selfEmployment": "Unafikiri ni nini muhimu unapokuwa bosi wako mwenyewe?",
+      "unpaidTrainee": "Unafikiri ni nini muhimu unapofanya kazi kama mfunzwa asiyelipwa?",
       "unseenUnpaid": "Unafikiri ni nini muhimu zaidi unaposaidia jamii au kutunza wengine?"
     }
   }

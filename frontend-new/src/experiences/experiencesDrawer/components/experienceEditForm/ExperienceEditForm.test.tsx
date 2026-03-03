@@ -169,14 +169,15 @@ describe("ExperienceEditForm", () => {
     const notifyOnUnsavedChange = jest.fn();
     const notifyOnSave = jest.fn();
     // AND the ExperienceService is mocked to return the first mock experience
+    const experienceWithUnpaidWork = { ...mockExperiences[0], work_type: WorkType.UNSEEN_UNPAID };
     const mockUpdateExperience = {
-      ...mockExperiences[0],
-      work_type: WorkType.SELF_EMPLOYMENT,
+      ...experienceWithUnpaidWork,
+      work_type: WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
     };
     jest.spyOn(ExperienceService.getInstance(), "updateExperience").mockResolvedValueOnce(mockUpdateExperience);
     const givenExperienceEditForm = (
       <ExperienceEditForm
-        experience={{ ...mockExperiences[0] }}
+        experience={experienceWithUnpaidWork}
         notifyOnSave={notifyOnSave}
         notifyOnCancel={jest.fn()}
         notifyOnUnsavedChange={notifyOnUnsavedChange}
@@ -193,18 +194,18 @@ describe("ExperienceEditForm", () => {
     expect(ContextMenu).toHaveBeenCalledWith(
       expect.objectContaining({
         open: true,
-        items: expect.arrayContaining([expect.objectContaining({ id: WorkType.SELF_EMPLOYMENT })]),
+        items: expect.arrayContaining([expect.objectContaining({ id: WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK })]),
       }),
       expect.anything()
     );
 
-    // WHEN a menu item is clicked (Self Employment)
-    const selfEmploymentItem = screen.getByTestId(WorkType.SELF_EMPLOYMENT);
-    await userEvent.click(selfEmploymentItem);
+    // WHEN a menu item is clicked (Trainee Work)
+    const traineeWorkItem = screen.getByTestId(WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK);
+    await userEvent.click(traineeWorkItem);
 
     // THEN the work type text should be updated
     const workTypeElement = screen.getByTestId(DATA_TEST_ID.FORM_WORK_TYPE);
-    expect(workTypeElement).toHaveTextContent(/self-employment/i);
+    expect(workTypeElement).toHaveTextContent(/trainee/i);
     // AND notifyOnUnsavedChange should have been called
     expect(notifyOnUnsavedChange).toHaveBeenCalledWith(true);
 
@@ -215,7 +216,7 @@ describe("ExperienceEditForm", () => {
     // THEN the notifyOnSave should have been called with updated experience
     expect(notifyOnSave).toHaveBeenCalled();
     const savedExperience = notifyOnSave.mock.calls[0][0];
-    expect(savedExperience.work_type).toBe(WorkType.SELF_EMPLOYMENT);
+    expect(savedExperience.work_type).toBe(WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK);
     // AND no errors or warning to have occurred
     expect(console.error).not.toHaveBeenCalled();
     expect(console.warn).not.toHaveBeenCalled();
