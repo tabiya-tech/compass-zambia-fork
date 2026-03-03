@@ -248,7 +248,7 @@ class TestDB6Integration:
                 company="TechCorp",
                 location="Nairobi",
                 timeline=Timeline(start="2020", end="2022"),
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             ),
             ExperienceEntity(
                 uuid="exp-2",
@@ -256,7 +256,7 @@ class TestDB6Integration:
                 company="Self",
                 location="Mombasa",
                 timeline=Timeline(start="2022", end="2023"),
-                work_type=WorkType.SELF_EMPLOYMENT
+                work_type=WorkType.UNSEEN_UNPAID
             )
         ]
 
@@ -375,7 +375,7 @@ class TestAgentDB6Integration:
             ExperienceEntity(
                 uuid="exp-1",
                 experience_title="Developer",
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             )
         ]
         state = PreferenceElicitationAgentState(
@@ -404,7 +404,7 @@ class TestAgentDB6Integration:
             ExperienceEntity(
                 uuid="exp-db6",
                 experience_title="DB6 Experience",
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             )
         ]
         profile = YouthProfile(
@@ -420,7 +420,7 @@ class TestAgentDB6Integration:
             ExperienceEntity(
                 uuid="exp-snapshot",
                 experience_title="Snapshot Experience",
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             )
         ]
         state = PreferenceElicitationAgentState(
@@ -458,7 +458,7 @@ class TestAgentDB6Integration:
             ExperienceEntity(
                 uuid="exp-snapshot",
                 experience_title="Snapshot Experience",
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             )
         ]
         state = PreferenceElicitationAgentState(
@@ -488,7 +488,7 @@ class TestAgentDB6Integration:
             ExperienceEntity(
                 uuid="exp-snapshot",
                 experience_title="Snapshot Experience",
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             )
         ]
         state = PreferenceElicitationAgentState(
@@ -528,7 +528,7 @@ class TestAgentDB6Integration:
             ExperienceEntity(
                 uuid="exp-snapshot",
                 experience_title="Snapshot Experience",
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             )
         ]
         state = PreferenceElicitationAgentState(
@@ -679,7 +679,7 @@ class TestStateDB6Fields:
             ExperienceEntity(
                 uuid="exp-1",
                 experience_title="Developer",
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             )
         ]
 
@@ -713,7 +713,7 @@ class TestStateDB6Fields:
                 {
                     "uuid": "exp-1",
                     "experience_title": "Developer",
-                    "work_type": "FORMAL_SECTOR_WAGED_EMPLOYMENT"
+                    "work_type": "FORMAL_SECTOR_UNPAID_TRAINEE_WORK"
                 }
             ],
             "use_db6_for_fresh_data": True
@@ -764,7 +764,7 @@ class TestExperienceIntegration:
                     start="2022-06",
                     end="2023-12"
                 ),
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
                 responsibilities=ResponsibilitiesData(
                     responsibilities=["Taking orders", "Operating cash register"]
                 ),
@@ -782,7 +782,7 @@ class TestExperienceIntegration:
                     start="2021-03",
                     end="2022-05"
                 ),
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT,
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
                 responsibilities=ResponsibilitiesData(
                     responsibilities=["Customer service", "Inventory management"]
                 ),
@@ -909,7 +909,7 @@ class TestPersonalizedVignettes:
                 company="TechCorp Kenya",
                 location="Nairobi",
                 timeline=Timeline(start="2022-01", end="2024-11"),
-                work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+                work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
             )
         ]
 

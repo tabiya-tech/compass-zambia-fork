@@ -141,7 +141,7 @@ exports[`Report should render Report correctly 1`] = `
               x="0"
               y="0"
             >
-              Salary Work
+              Unpaid Work
             </text>
           </view>
           <view

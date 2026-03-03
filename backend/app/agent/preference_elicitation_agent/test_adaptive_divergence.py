@@ -30,7 +30,7 @@ def create_experiences():
             experience_title="Contract Software Developer",
             company="Tabiya Organization",
             timeline=Timeline(start="11/2025", end="Present"),
-            work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+            work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
         )
     ]
 

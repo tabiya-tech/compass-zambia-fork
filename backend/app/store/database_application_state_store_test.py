@@ -220,8 +220,8 @@ def generate_collected_data(index) -> CollectedData:
 def update_collect_experience_state(application_state: ApplicationState):
     # Set the collect experience state to a new state with a different conversation history
     application_state.collect_experience_state.collected_data = [generate_collected_data(i) for i in range(5)]
-    application_state.collect_experience_state.unexplored_types = [WorkType.SELF_EMPLOYMENT, WorkType.UNSEEN_UNPAID]
-    application_state.collect_experience_state.explored_types = [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT]
+    application_state.collect_experience_state.unexplored_types = [WorkType.UNSEEN_UNPAID]
+    application_state.collect_experience_state.explored_types = [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK]
     application_state.collect_experience_state.first_time_visit = random.choice([True, False])  # nosec B311 # random is used for testing purposes
 
 

@@ -593,7 +593,7 @@ class TestExperienceChangedEvent:
         # GIVEN a session id and user id
         given_session_id = get_random_session_id()
         given_user_id = get_random_user_id()
-        given_work_type = WorkType.SELF_EMPLOYMENT.name
+        given_work_type = WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
         given_edited_fields = ["foo", "bar"]
 
         # WHEN creating an instance of the event
@@ -630,7 +630,7 @@ class TestExperienceChangedEvent:
         # GIVEN all required fields
         given_user_id = get_random_user_id()
         given_session_id = get_random_session_id()
-        given_work_type = WorkType.SELF_EMPLOYMENT.name
+        given_work_type = WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
         given_edited_fields = ["foo", "bar"]
 
         # AND an extra field
@@ -661,7 +661,7 @@ class TestSkillChangedEvent:
         given_session_id = get_random_session_id()
         given_user_id = get_random_user_id()
         given_uuids = [get_random_printable_string(8) for _ in range(3)]
-        given_work_type = WorkType.SELF_EMPLOYMENT.name
+        given_work_type = WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK.name
 
         # WHEN creating an instance of the event
         actual_event = SkillChangedEvent(

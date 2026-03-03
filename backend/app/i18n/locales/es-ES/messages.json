@@ -58,8 +58,7 @@
   "exploreSkills": {
     "finalMessage": "¡Gracias por compartir estos detalles! Tengo toda la información que necesito.",
     "question": {
-      "formalWaged": "¿Qué creés que es importante al trabajar en una empresa así?",
-      "selfEmployment": "¿Qué creés que es importante cuando sos tu propio jefe?",
+      "unpaidTrainee": "¿Qué creés que es importante al trabajar como aprendiz no remunerado?",
       "unseenUnpaid": "¿Qué creés que es más importante al ayudar en la comunidad o cuidar a otras personas?"
     }
   }

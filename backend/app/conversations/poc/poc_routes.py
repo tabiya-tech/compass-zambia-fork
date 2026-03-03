@@ -312,7 +312,7 @@ def add_poc_route_endpoints(poc_router: APIRouter, auth: Authentication):
             if len(state.explore_experiences_director_state.experiences_state) == 0:
                 experience_entity = ExperienceEntity(experience_title="Baker",
                                                      company="Baker's and Sons",
-                                                     work_type=WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT)
+                                                     work_type=WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK)
                 from app.agent.explore_experiences_agent_director import ExperienceState
                 from app.agent.explore_experiences_agent_director import DiveInPhase
                 state.explore_experiences_director_state.current_experience_uuid = experience_entity.uuid
