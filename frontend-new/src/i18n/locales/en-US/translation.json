@@ -163,7 +163,7 @@
     "chatMessage": {
       "typingChatMessage": {
         "typing": "Typing",
-        "thinking": "Finding skills related to this experience"
+        "thinking": "Please wait, I'm thinking"
       },
       "conversationConclusionFooter": {
         "youCanNow": "You can now",
