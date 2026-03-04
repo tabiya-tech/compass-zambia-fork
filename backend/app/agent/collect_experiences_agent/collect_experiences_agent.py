@@ -7,7 +7,7 @@ from app.agent.agent import Agent
 from app.agent.agent_types import AgentInput, AgentOutput
 from app.agent.agent_types import AgentType
 from app.agent.collect_experiences_agent._conversation_llm import _ConversationLLM, ConversationLLMAgentOutput, \
-    _get_experience_type, fill_incomplete_fields_as_declined
+    fill_incomplete_fields_as_declined
 from app.agent.persona_detector import PersonaType
 from app.agent.collect_experiences_agent._dataextraction_llm import _DataExtractionLLM
 from app.agent.collect_experiences_agent._transition_decision_tool import TransitionDecisionTool, TransitionDecision
@@ -19,7 +19,6 @@ from app.agent.linking_and_ranking_pipeline import ExperiencePipelineConfig
 from app.agent.linking_and_ranking_pipeline.infer_occupation_tool import InferOccupationTool
 from app.conversation_memory.conversation_memory_types import ConversationContext
 from app.countries import Country
-from app.i18n.translation_service import t
 from app.vector_search.esco_entities import OccupationSkillEntity
 from app.vector_search.vector_search_dependencies import SearchServices
 
@@ -306,26 +305,12 @@ class CollectExperiencesAgent(Agent):
                 self._state.collected_data,
                 reasoning_text
             )
-# exit if no unexplored types left
-            if not did_update and not self._state.unexplored_types:
+            if not self._state.unexplored_types:
                 conversation_llm_output.finished = True
                 self.logger.info(
                     "Transition decision: END_WORKTYPE with no unexplored types - treating as END_CONVERSATION"
                 )
                 return conversation_llm_output
-
-            next_exploring_type = self._state.unexplored_types[0] if self._state.unexplored_types else None
-            if next_exploring_type is not None:
-                transition_text = t(
-                    'messages', 'collectExperiences.askAboutType',
-                    experience_type=_get_experience_type(next_exploring_type)
-                )
-            else:
-                transition_text = t('messages', 'collectExperiences.recapPrompt')
-
-            conversation_llm_output.message_for_user = (
-                f"{conversation_llm_output.message_for_user}\n\n{transition_text}"
-            )
 
         elif transition_decision == TransitionDecision.END_CONVERSATION:
             conversation_llm_output.finished = True
