@@ -28,7 +28,6 @@ import { getProductName } from "src/envService";
 import { getAppIconUrl } from "src/envService";
 
 export type ChatHeaderProps = {
-  notifyOnLogout: () => void;
   experiencesExplored: number;
   exploredExperiencesNotification: boolean;
   setExploredExperiencesNotification: React.Dispatch<SetStateAction<boolean>>;
@@ -61,7 +60,6 @@ export const MENU_ITEM_ID = {
 };
 
 const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
-  notifyOnLogout,
   experiencesExplored,
   exploredExperiencesNotification,
   setExploredExperiencesNotification,

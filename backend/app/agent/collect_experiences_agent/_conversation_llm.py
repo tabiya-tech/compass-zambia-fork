@@ -506,7 +506,9 @@ class _ConversationLLM:
                     
                     Add new line to separate explanation from the question.
                     
-                    {question_to_ask}.  
+                    {question_to_ask}.
+                    
+                Do NOT mention paid work, paid jobs, formal employment, or self-employment. We only collect unpaid experiences.
                 """)
         return replace_placeholders_with_indent(first_time_generative_prompt,
                                                 country_of_user_segment=_get_country_of_user_segment(country_of_user),
