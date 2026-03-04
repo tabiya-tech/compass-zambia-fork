@@ -1,5 +1,6 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState, startTransition } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import ChatService from "src/chat/ChatService/ChatService";
 import ChatList from "src/chat/chatList/ChatList";
 import { IChatMessage } from "src/chat/Chat.types";
@@ -109,6 +110,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
 }) => {
   const theme = useTheme();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [messages, setMessages] = useState<IChatMessage<any>[]>([]);
@@ -1019,13 +1021,28 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
               paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.sm),
               paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.md),
               paddingX: theme.spacing(theme.tabiyaSpacing.md),
-              display: "flex",
-              alignItems: "center",
               width: { xs: "100%", md: "60%" },
               margin: { xs: "0", md: "0 auto" },
-              gap: theme.spacing(theme.tabiyaSpacing.sm),
             }}
           >
+            <Box mb={theme.spacing(theme.tabiyaSpacing.sm)}>
+              <BackButton
+                onClick={() => {
+                  startTransition(() => {
+                    navigate(routerPaths.ROOT);
+                  });
+                }}
+                labelKey="knowledgeHub.backToDashboard"
+                dataTestId="chat-back-button"
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: theme.spacing(theme.tabiyaSpacing.sm),
+              }}
+            >
             <Box sx={{ flex: 1 }}>
               <ChatProgressBar
                 percentage={currentPhase.percentage}
@@ -1036,7 +1053,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
             </Box>
             <Box sx={{ flexShrink: 0 }}>
               <ChatHeader
-                notifyOnLogout={handleLogout}
                 experiencesExplored={exploredExperiencesCount.length}
                 exploredExperiencesNotification={exploredExperiencesNotification}
                 setExploredExperiencesNotification={setExploredExperiencesNotification}
@@ -1047,6 +1063,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
                 collectedExperiences={experiences?.length}
               />
             </Box>
+          </Box>
           </Box>
           <Box sx={{ flex: 1, overflowY: "auto", paddingX: theme.spacing(theme.tabiyaSpacing.lg) }}>
             <ChatList messages={messages} />

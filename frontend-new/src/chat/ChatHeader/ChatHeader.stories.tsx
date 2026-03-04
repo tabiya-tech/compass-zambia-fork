@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PersistentStorageService } from "src/app/PersistentStorageService/PersistentStorageService";
 import ChatHeader from "src/chat/ChatHeader/ChatHeader";
+import { ConversationPhase } from "src/chat/chatProgressbar/types";
 import { mockExperiences } from "src/experiences/experienceService/_test_utilities/mockExperiencesResponses";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
 
@@ -8,9 +9,13 @@ const meta: Meta<typeof ChatHeader> = {
   title: "Chat/ChatHeader",
   component: ChatHeader,
   tags: ["autodocs"],
+  args: {
+    setExploredExperiencesNotification: () => {},
+    conversationPhase: ConversationPhase.INTRO,
+    collectedExperiences: 0,
+  },
   argTypes: {
     setExploredExperiencesNotification: { action: "setExploredExperiencesNotification" },
-    startNewConversation: { action: "startNewConversation" },
   },
   decorators: [
     (Story) => {
