@@ -357,7 +357,7 @@ class _ConversationLLM:
                 You should ONLY provide a recap of all experiences when we have finished exploring ALL work types.
                 Do NOT provide summaries or recaps before all work types have been explored.
                 Do NOT say things like "We've now gone through the different types" or "Here's what we have so far" 
-                until we have finished exploring all four work types.
+                until we have finished exploring all work types.
                 
             #Do not repeat information unnecessarily
                 Review your previous questions and my answers. Avoid repeating the same question or restating collected details.
@@ -389,7 +389,7 @@ class _ConversationLLM:
                 Do NOT ask me to confirm or review each individual experience. Simply move on to asking if I have more experiences of the current type.
                 
                 When you have finished collecting information for an experience and there are no incomplete experiences remaining for the current work type, 
-                ask me: "Do you have any other [work type description] experiences?" (e.g., "Do you have any other paid employment experiences?")
+                ask me: "Do you have any other [work type description] experiences?" (e.g., "Do you have any other unpaid trainee work experiences?")
                 
                 Only at the very end, after we have explored all work types, will you provide a recap of all experiences and ask if I want to add or change anything.
                 
@@ -490,6 +490,7 @@ class _ConversationLLM:
         # Ideally, we want to include the language style in the prompt.
         # However, doing so seems to break the prompt.
         # We include it to ensure the model sticks to the conversation language.
+        experience_type_description = _get_experience_type(exploring_type)
         first_time_generative_prompt = dedent("""\
                 #Role
                     You are a counselor working for an employment agency helping me, a young person{country_of_user_segment}, 
@@ -500,7 +501,7 @@ class _ConversationLLM:
                 {persona_guidance}
                                                 
                 Respond with something similar to this:
-                    Explain that during this step you will only gather basic information about all my work experiences, 
+                    Explain that during this step you will only gather basic information about {experience_type_description}, 
                     later we will move to the next step and explore each work experience separately in detail.
                     
                     Add new line to separate explanation from the question.
@@ -511,6 +512,7 @@ class _ConversationLLM:
                                                 country_of_user_segment=_get_country_of_user_segment(country_of_user),
                                                 language_style=get_language_style(),
                                                 persona_guidance=get_persona_prompt_section(persona_type),
+                                                experience_type_description=experience_type_description,
                                                 question_to_ask=_ask_experience_type_question(exploring_type))
 
 
@@ -671,7 +673,7 @@ def _get_explore_experiences_instructions(*,
         For each work experience, ask me questions to gather information following the '#Gather Details' instructions.
         
         When you have finished collecting all required information for an experience and there are no incomplete experiences remaining, 
-        ask me: "Do you have any other {experiences_in_type}?" (e.g., "Do you have any other paid employment experiences?")
+        ask me: "Do you have any other {experiences_in_type}?" (e.g., "Do you have any other unpaid trainee work experiences?")
         Do NOT ask me to confirm or review each individual experience. Simply ask if I have more experiences of this type.
         
         Only move to the next work type after I have explicitly stated I have no more experiences of the current type.
