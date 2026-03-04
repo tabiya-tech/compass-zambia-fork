@@ -10,35 +10,8 @@ exports[`Chat render tests should render the Chat component with all its childre
     data-testid="page-header-container-b2e4c1a8-3f5d-4e6a-9c7b-1d2e3f4a5b6c"
   />
   <div
-    class="MuiBox-root css-1msgsfq"
+    class="MuiBox-root css-1u5054q"
   >
-    <div
-      class="MuiBox-root css-1bbgnb7"
-    >
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-lnkyqh-MuiButtonBase-root-MuiButton-root"
-        data-testid="chat-back-button"
-        tabindex="0"
-        type="button"
-      >
-        <span
-          class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium css-1sh91j5-MuiButton-startIcon"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-fnq9fx-MuiSvgIcon-root"
-            data-testid="ArrowBackIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"
-            />
-          </svg>
-        </span>
-        Back to Dashboard
-      </button>
-    </div>
     <div
       class="MuiBox-root css-1elaak3"
     >
@@ -49,7 +22,7 @@ exports[`Chat render tests should render the Chat component with all its childre
           data-testid="chat-progress-bar-container-2a76494f-351d-409d-ba58-e1b2cfaf2a53"
         >
           COLLECT_EXPERIENCES
-           -
+           - 
           50
           %
         </div>

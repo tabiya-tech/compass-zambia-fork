@@ -1,7 +1,5 @@
 import React, { useCallback, useContext, useMemo, useState, startTransition } from "react";
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CustomLink from "src/theme/CustomLink/CustomLink";
 import type { Theme } from "@mui/material/styles";
 import { NavLink, useNavigate } from "react-router-dom";
 import { routerPaths } from "src/app/routerPaths";
@@ -27,6 +25,7 @@ import { Backdrop } from "src/theme/Backdrop/Backdrop";
 import { useSentryFeedbackForm } from "src/feedback/hooks/useSentryFeedbackForm";
 import { parseEnvSupportedLocales } from "src/i18n/languageContextMenu/parseEnvSupportedLocales";
 import { LocalesLabels } from "src/i18n/constants";
+import BackButton from "src/knowledgeHub/components/BackButton";
 
 const uniqueId = "b2e4c1a8-3f5d-4e6a-9c7b-1d2e3f4a5b6c";
 
@@ -425,29 +424,17 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
             boxSizing: "border-box",
           }}
         >
-          <CustomLink
-            onClick={() => {
-              startTransition(() => {
-                onBackClick();
-              });
-            }}
-            data-testid={DATA_TEST_ID.PAGE_HEADER_BACK_LINK}
-            sx={{
-              display: "inline-flex",
-              alignItems: "flex-start",
-              gap: 0.5,
-              fontSize: "0.85rem",
-              color: theme.palette.secondary.dark,
-              textDecoration: "none",
-              "&:hover": {
-                color: theme.palette.secondary.light,
-                textDecoration: "underline",
-              },
-            }}
-          >
-            <ArrowBackIcon sx={{ fontSize: "1rem" }} />
-            {t(backLinkLabel as TranslationKey)}
-          </CustomLink>
+          <Box mb={theme.spacing(theme.tabiyaSpacing.sm)}>
+            <BackButton
+              onClick={() => {
+                startTransition(() => {
+                  navigate(routerPaths.ROOT);
+                });
+              }}
+              labelKey="knowledgeHub.backToDashboard"
+              dataTestId="chat-back-button"
+            />
+          </Box>
         </Box>
       )}
     </>
