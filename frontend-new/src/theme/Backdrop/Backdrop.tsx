@@ -3,7 +3,7 @@ import { Backdrop as OriginalBackdrop, CircularProgress, Typography, useTheme } 
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import React from "react";
-import { Sloth } from "src/theme/Sloth/Sloth";
+import { Bushbaby } from "src/theme/Bushbaby/Bushbaby";
 
 interface IBackdropProps {
   isShown: boolean;
@@ -30,7 +30,7 @@ export const Backdrop = (props: Readonly<IBackdropProps>) => {
       data-testid={DATA_TEST_ID.BACKDROP_CONTAINER}
       open={props.isShown}
     >
-      <Sloth width={"64px"}>
+      <Bushbaby width={"96px"}>
         <Paper
           elevation={props.transparent ? 0 : 24}
           sx={{
@@ -73,7 +73,7 @@ export const Backdrop = (props: Readonly<IBackdropProps>) => {
             </Grid>
           </Grid>
         </Paper>
-      </Sloth>
+      </Bushbaby>
     </OriginalBackdrop>
   );
 };
