@@ -9,7 +9,9 @@ import { PersistentStorageService } from "src/app/PersistentStorageService/Persi
 import { useSentryFeedbackForm } from "src/feedback/hooks/useSentryFeedbackForm";
 
 export type ChatHeaderProps = {
-  setExploredExperiencesNotification?: React.Dispatch<SetStateAction<boolean>>;
+  experiencesExplored: number;
+  exploredExperiencesNotification: boolean;
+  setExploredExperiencesNotification: React.Dispatch<SetStateAction<boolean>>;
   conversationCompleted: boolean;
   timeUntilNotification: number | null;
   progressPercentage: number;
@@ -22,6 +24,9 @@ export const DATA_TEST_ID = {
 };
 
 const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
+  experiencesExplored,
+  exploredExperiencesNotification,
+  setExploredExperiencesNotification,
   conversationCompleted,
   timeUntilNotification,
   progressPercentage,
