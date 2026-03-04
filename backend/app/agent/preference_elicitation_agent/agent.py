@@ -1282,7 +1282,7 @@ Keep it conversational, not interrogative.
 
         {summary}
 
-        This will help me suggest opportunities that are a good fit for you. Does this sound about right?"""
+        Thank you for sharing your preferences with me."""
 
         response = ConversationResponse(
         reasoning="Wrapping up preference elicitation with summary",
