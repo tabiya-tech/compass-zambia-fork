@@ -121,7 +121,7 @@
     "chatMessage": {
       "typingChatMessage": {
         "typing": "Escribiendo",
-        "thinking": "La IA está pensando, por favor esperá",
+        "thinking": "Por favor espera, estoy pensando",
         "thinkingPreferenceElicitation": "Pensando en tu respuesta…"
       },
       "bwsTaskMessage": {

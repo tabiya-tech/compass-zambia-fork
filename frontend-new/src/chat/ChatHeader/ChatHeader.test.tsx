@@ -128,11 +128,9 @@ describe("ChatHeader", () => {
     const appName = "foobar";
     jest.spyOn(EnvServiceModule, "getProductName").mockReturnValue(appName);
     // GIVEN a ChatHeader component
-    const givenNotifyOnLogout = jest.fn();
     const givenNumberOfExploredExperiences = 1;
     const givenChatHeader = (
       <ChatHeader
-        notifyOnLogout={givenNotifyOnLogout}
         experiencesExplored={givenNumberOfExploredExperiences}
         exploredExperiencesNotification={givenExploredExperiencesNotification}
         setExploredExperiencesNotification={jest.fn()}
@@ -355,7 +353,6 @@ describe("ChatHeader", () => {
       const metricsSpy = jest.spyOn(MetricsService.getInstance(), "sendMetricsEvent").mockReturnValue();
       const givenChatHeader = (
         <ChatHeader
-          notifyOnLogout={jest.fn()}
           experiencesExplored={0}
           exploredExperiencesNotification={true}
           setExploredExperiencesNotification={jest.fn()}
@@ -409,7 +406,6 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       const givenChatHeader = (
         <ChatHeader
-          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={givenExploredExperiencesNotification}
           setExploredExperiencesNotification={jest.fn()}
@@ -444,7 +440,6 @@ describe("ChatHeader", () => {
       // AND the component is rendered
       const givenChatHeader = (
         <ChatHeader
-          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={givenExploredExperiencesNotification}
           setExploredExperiencesNotification={jest.fn()}
@@ -581,10 +576,8 @@ describe("ChatHeader", () => {
       async (_description, browserIsOnline) => {
         mockBrowserIsOnLine(browserIsOnline);
         // GIVEN a ChatHeader component
-        const givenNotifyOnLogout = jest.fn();
         const givenChatHeader = (
           <ChatHeader
-            notifyOnLogout={givenNotifyOnLogout}
             experiencesExplored={0}
             exploredExperiencesNotification={false}
             setExploredExperiencesNotification={jest.fn()}
@@ -891,7 +884,6 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
-          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
@@ -922,7 +914,6 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
-          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
@@ -954,6 +945,48 @@ describe("ChatHeader", () => {
       expect(console.error).not.toHaveBeenCalled();
     });
 
+    test("should mark feedback notification as seen when reminder link opens feedback form", async () => {
+      // GIVEN mock user
+      const mockUser = { id: "123", name: "Foo Bar", email: "foo@bar.baz" };
+      jest.spyOn(AuthenticationStateService.getInstance(), "getUser").mockReturnValue(mockUser);
+      // AND sentry feedback form available
+      (Sentry.isInitialized as jest.Mock).mockReturnValue(true);
+      const appendToDom = jest.fn();
+      const open = jest.fn();
+      const createForm = jest.fn().mockResolvedValue({ appendToDom, open });
+      (Sentry.getFeedback as jest.Mock).mockReturnValue({ createForm });
+      const setSeenSpy = jest.spyOn(PersistentStorageService, "setSeenFeedbackNotification").mockImplementation();
+
+      // WHEN the feedback reminder is shown immediately
+      renderWithChatProvider(
+        <ChatHeader
+          notifyOnLogout={jest.fn()}
+          experiencesExplored={1}
+          exploredExperiencesNotification={false}
+          setExploredExperiencesNotification={jest.fn()}
+          conversationCompleted={false}
+          progressPercentage={50}
+          timeUntilNotification={0}
+          conversationPhase={ConversationPhase.INTRO}
+          collectedExperiences={1}
+        />
+      );
+      jest.advanceTimersByTime(0);
+
+      // AND the reminder link is clicked
+      const [snackbarContent] = (useSnackbar().enqueueSnackbar as jest.Mock).mock.calls[0];
+      render(snackbarContent);
+      fireEvent.click(screen.getByTestId(DATA_TEST_ID.CHAT_HEADER_FEEDBACK_LINK));
+
+      // THEN the feedback form opens and the reminder is marked as seen
+      await waitFor(() => {
+        expect(createForm).toHaveBeenCalledTimes(1);
+      });
+      expect(appendToDom).toHaveBeenCalledTimes(1);
+      expect(open).toHaveBeenCalledTimes(1);
+      expect(setSeenSpy).toHaveBeenCalledWith(mockUser.id);
+    });
+
     test("should not show feedback notification if conversation progress is > 66%", () => {
       // GIVEN mock user
       const mockUser = { id: "123", name: "", email: "" };
@@ -966,7 +999,6 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
-          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
@@ -999,7 +1031,6 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
-          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
