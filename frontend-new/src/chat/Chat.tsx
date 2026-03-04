@@ -1043,27 +1043,27 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
                 gap: theme.spacing(theme.tabiyaSpacing.sm),
               }}
             >
-            <Box sx={{ flex: 1 }}>
-              <ChatProgressBar
-                percentage={currentPhase.percentage}
-                phase={currentPhase.phase}
-                current={currentPhase.current}
-                total={currentPhase.total}
-              />
+              <Box sx={{ flex: 1 }}>
+                <ChatProgressBar
+                  percentage={currentPhase.percentage}
+                  phase={currentPhase.phase}
+                  current={currentPhase.current}
+                  total={currentPhase.total}
+                />
+              </Box>
+              <Box sx={{ flexShrink: 0 }}>
+                <ChatHeader
+                  experiencesExplored={exploredExperiencesCount.length}
+                  exploredExperiencesNotification={exploredExperiencesNotification}
+                  setExploredExperiencesNotification={setExploredExperiencesNotification}
+                  conversationCompleted={conversationCompleted}
+                  timeUntilNotification={timeUntilFeedbackNotification}
+                  progressPercentage={currentPhase.percentage}
+                  conversationPhase={currentPhase.phase}
+                  collectedExperiences={experiences?.length}
+                />
+              </Box>
             </Box>
-            <Box sx={{ flexShrink: 0 }}>
-              <ChatHeader
-                experiencesExplored={exploredExperiencesCount.length}
-                exploredExperiencesNotification={exploredExperiencesNotification}
-                setExploredExperiencesNotification={setExploredExperiencesNotification}
-                conversationCompleted={conversationCompleted}
-                timeUntilNotification={timeUntilFeedbackNotification}
-                progressPercentage={currentPhase.percentage}
-                conversationPhase={currentPhase.phase}
-                collectedExperiences={experiences?.length}
-              />
-            </Box>
-          </Box>
           </Box>
           <Box sx={{ flex: 1, overflowY: "auto", paddingX: theme.spacing(theme.tabiyaSpacing.lg) }}>
             <ChatList messages={messages} />
