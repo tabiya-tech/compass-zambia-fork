@@ -11,7 +11,6 @@ const meta: Meta<typeof ChatHeader> = {
     conversationCompleted: false,
     progressPercentage: 0,
     timeUntilNotification: null,
-    startNewConversation: { action: "startNewConversation" },
   },
   decorators: [
     (Story) => {
