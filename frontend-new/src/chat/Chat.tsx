@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState, startTransition } from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import ChatService from "src/chat/ChatService/ChatService";
@@ -17,8 +17,6 @@ import {
 } from "./util";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import { Box, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { routerPaths } from "src/app/routerPaths";
 import ChatHeader from "./ChatHeader/ChatHeader";
 import ChatMessageField from "./ChatMessageField/ChatMessageField";
 import PageHeader from "src/home/components/PageHeader/PageHeader";
@@ -54,6 +52,7 @@ import {
 import { getCvUploadErrorMessageFromErrorCode } from "./CVUploadErrorHandling";
 import type { UploadStatus } from "./Chat.types";
 import { nanoid } from "nanoid";
+import { routerPaths } from "src/app/routerPaths";
 
 export const INACTIVITY_TIMEOUT = 3 * 60 * 1000; // in milliseconds
 // Set the interval to check every TIMEOUT/3,
@@ -110,7 +109,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
 }) => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [messages, setMessages] = useState<IChatMessage<any>[]>([]);
@@ -1025,17 +1023,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
               margin: { xs: "0", md: "0 auto" },
             }}
           >
-            <Box mb={theme.spacing(theme.tabiyaSpacing.sm)}>
-              <BackButton
-                onClick={() => {
-                  startTransition(() => {
-                    navigate(routerPaths.ROOT);
-                  });
-                }}
-                labelKey="knowledgeHub.backToDashboard"
-                dataTestId="chat-back-button"
-              />
-            </Box>
             <Box
               sx={{
                 display: "flex",
