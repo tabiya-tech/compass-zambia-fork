@@ -1493,7 +1493,7 @@ Keep it short (1-3 sentences), conversational, and easy to answer.
 
         {summary}
 
-        This will help me suggest opportunities that are a good fit for you. Does this sound about right?"""
+        Thank you for sharing your preferences with me."""
 
         response = ConversationResponse(
         reasoning="Wrapping up preference elicitation with summary",
