@@ -166,14 +166,18 @@ class LLMAgentDirector(AbstractAgentDirector):
                 and agent_output.finished):
             return ConversationPhase.COUNSELING
 
-        # In the consulting phase, Explore Experiences or Preference Elicitation agents can end the phase.
-        # Matching and recommendation are detached; conversation flow ends at preference elicitation.
         if (current_phase == ConversationPhase.COUNSELING
                 and agent_output.finished
-                and agent_output.agent_type in (
-                    AgentType.EXPLORE_EXPERIENCES_AGENT,
-                    AgentType.PREFERENCE_ELICITATION_AGENT,
-                )):
+                and agent_output.agent_type == AgentType.EXPLORE_EXPERIENCES_AGENT):
+            self._state.counseling_sub_phase = CounselingSubPhase.PREFERENCE_ELICITATION
+            self._logger.info(
+                "ExploreExperiencesAgent finished, advancing to PREFERENCE_ELICITATION sub-phase"
+            )
+            return ConversationPhase.COUNSELING
+
+        if (current_phase == ConversationPhase.COUNSELING
+                and agent_output.finished
+                and agent_output.agent_type == AgentType.PREFERENCE_ELICITATION_AGENT):
             return ConversationPhase.CHECKOUT
 
         if (current_phase == ConversationPhase.CHECKOUT
@@ -254,7 +258,7 @@ class LLMAgentDirector(AbstractAgentDirector):
                     self._state.skip_to_phase = None
                     self._logger.info("Step-skip: target agent finished, clearing skip_to_phase")
 
-                # Update the conversation phase
+                # Update the conversation phase (and counseling sub-phase when applicable)
                 new_phase = self._get_new_phase(agent_output)
                 self._logger.debug("Transitioned phase from %s --to-> %s", self._state.current_phase, new_phase)
 
@@ -263,9 +267,13 @@ class LLMAgentDirector(AbstractAgentDirector):
                     self._state.current_phase = new_phase
                     phase_ctx_var.set(new_phase.value if new_phase else ":none:")
 
+                if (agent_output.finished
+                        and agent_output.agent_type == AgentType.EXPLORE_EXPERIENCES_AGENT
+                        and self._state.counseling_sub_phase == CounselingSubPhase.PREFERENCE_ELICITATION):
+                    transitioned_to_new_phase = True
+                    user_input = AgentInput(message="", is_artificial=True)
+                elif transitioned_to_new_phase:
                     if get_application_config().inline_phase_transition:
-                        # Inline transition: skip the (silence) loop re-invocation.
-                        # The next user message will be routed deterministically via sub-phase.
                         transitioned_to_new_phase = False
                     else:
                         user_input = AgentInput(
