@@ -276,13 +276,18 @@ class ExploreExperiencesAgentDirector(Agent):
             # then we are done
             _next_experience = _pick_next_experience_to_process(state.experiences_state)
             if not _next_experience:
-                return AgentOutput(
+                transition_message = AgentOutput(
                     message_for_user=t("messages", "exploreExperiences.transitionToPreferences"),
                     finished=True,
                     agent_type=self._agent_type,
                     agent_response_time_in_sec=0,
                     llm_stats=[]
                 )
+                await self._conversation_manager.update_history(
+                    AgentInput(message="", is_artificial=True),
+                    transition_message,
+                )
+                return transition_message
 
             # Otherwise, we have more experiences to process
             return await self._dive_into_experiences(user_input=user_input, context=context, state=state)
