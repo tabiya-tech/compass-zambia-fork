@@ -37,6 +37,13 @@ const LazyLoadedCareerExplorer = lazyWithPreload(
   () => import("src/careerExplorer/pages/CareerExplorerPage/CareerExplorerPage")
 );
 
+const LazyLoadedCareerReadinessList = lazyWithPreload(
+  () => import("src/careerReadiness/pages/CareerReadinessList/CareerReadinessList")
+);
+const LazyLoadedCareerReadinessModule = lazyWithPreload(
+  () => import("src/careerReadiness/pages/CareerReadinessModule/CareerReadinessModule")
+);
+
 // Wrap the createHashRouter function with Sentry to capture errors that occur during router initialization
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV6(createHashRouter);
 
@@ -59,6 +66,8 @@ const ProtectedRouteKeys = {
   KNOWLEDGE_HUB: "KNOWLEDGE_HUB",
   KNOWLEDGE_HUB_DOCUMENT: "KNOWLEDGE_HUB_DOCUMENT",
   CAREER_EXPLORER: "CAREER_EXPLORER",
+  CAREER_READINESS: "CAREER_READINESS",
+  CAREER_READINESS_MODULE: "CAREER_READINESS_MODULE",
 };
 
 const NotFound: React.FC = () => {
@@ -347,6 +356,22 @@ const App = () => {
       element: (
         <ProtectedRoute key={ProtectedRouteKeys.CAREER_EXPLORER}>
           <LazyLoadedCareerExplorer />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routerPaths.CAREER_READINESS,
+      element: (
+        <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS}>
+          <LazyLoadedCareerReadinessList />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routerPaths.CAREER_READINESS_MODULE,
+      element: (
+        <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS_MODULE}>
+          <LazyLoadedCareerReadinessModule />
         </ProtectedRoute>
       ),
     },

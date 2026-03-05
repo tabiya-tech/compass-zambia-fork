@@ -25,9 +25,9 @@ const DEFAULT_MODULES: Module[] = [
   },
   {
     id: "job_readiness",
-    labelKey: "home.modules.jobReadiness",
-    descriptionKey: "home.modules.jobReadinessDesc",
-    route: routerPaths.SKILLS_INTERESTS,
+    labelKey: "home.modules.careerReadinessCard",
+    descriptionKey: "home.modules.careerReadinessCardDesc",
+    route: routerPaths.CAREER_READINESS,
   },
   {
     id: "career_explorer",

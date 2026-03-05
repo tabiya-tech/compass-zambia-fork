@@ -12,4 +12,6 @@ export const routerPaths = {
   KNOWLEDGE_HUB: "/knowledge-hub",
   KNOWLEDGE_HUB_DOCUMENT: "/knowledge-hub/:documentId",
   SKILLS_INTERESTS: "/skills-interests",
+  CAREER_READINESS: "/career-readiness",
+  CAREER_READINESS_MODULE: "/career-readiness/:moduleId",
 };
