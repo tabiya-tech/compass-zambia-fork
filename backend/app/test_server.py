@@ -26,6 +26,7 @@ class TestServer:
                              in_memory_taxonomy_database: Awaitable[AsyncIOMotorDatabase],
                              in_memory_application_database: Awaitable[AsyncIOMotorDatabase],
                              in_memory_metrics_database: Awaitable[AsyncIOMotorDatabase],
+                             in_memory_career_explorer_database: Awaitable[AsyncIOMotorDatabase],
                              mocker: pytest_mock.MockFixture,
                              setup_env: None
                              ):
@@ -62,6 +63,9 @@ class TestServer:
 
         _in_mem_metrics_db = mocker.patch('app.server_dependencies.db_dependencies._get_metrics_db')
         _in_mem_metrics_db.return_value = await in_memory_metrics_database
+
+        _in_mem_career_explorer_db = mocker.patch('app.server_dependencies.db_dependencies._get_career_explorer_db')
+        _in_mem_career_explorer_db.return_value = await in_memory_career_explorer_database
 
         # Use httpx and AsyncClient to test the application asynchronously. This ensures the application
         # is fully started and properly shut down, as recommended for async tests in:

@@ -1,0 +1,100 @@
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Box, useTheme } from "@mui/material";
+import ChatList from "src/chat/chatList/ChatList";
+import ChatMessageField from "src/chat/ChatMessageField/ChatMessageField";
+import { generateSomethingWentWrongMessage, generateUserMessage } from "src/chat/util";
+import type { IChatMessage } from "src/chat/Chat.types";
+import type { TranslationKey } from "src/react-i18next";
+import CareerExplorerService from "src/careerExplorer/services/CareerExplorerService";
+import { generateCareerExplorerTypingMessage } from "src/careerExplorer/components/CareerExplorerTypingMessage/CareerExplorerTypingMessage";
+import { mapCareerExplorerMessagesToChatMessages } from "src/careerExplorer/utils/mapCareerExplorerMessagesToChatMessages";
+import type { CareerExplorerMessage } from "src/careerExplorer/types";
+
+export interface CareerExplorerChatProps {
+  initialMessages: CareerExplorerMessage[];
+  placeholderKey: TranslationKey;
+}
+
+const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({ initialMessages, placeholderKey }) => {
+  const theme = useTheme();
+  const [messages, setMessages] = useState<IChatMessage<any>[]>(() =>
+    mapCareerExplorerMessagesToChatMessages(initialMessages)
+  );
+  const [aiIsTyping, setAiIsTyping] = useState(false);
+  const [chatFinished, setChatFinished] = useState(false);
+
+  const typingMessage = useMemo(() => generateCareerExplorerTypingMessage(), []);
+
+  const displayMessages = useMemo(() => {
+    if (aiIsTyping) {
+      return [...messages, typingMessage];
+    }
+    return messages;
+  }, [messages, aiIsTyping, typingMessage]);
+
+  useEffect(() => {
+    setMessages(mapCareerExplorerMessagesToChatMessages(initialMessages));
+  }, [initialMessages]);
+
+  const handleSend = useCallback(async (userMessage: string) => {
+    const optimisticUserMessage = generateUserMessage(
+      userMessage,
+      new Date().toISOString(),
+      `optimistic-${Date.now()}`
+    );
+    setMessages((prev) => [...prev, optimisticUserMessage]);
+    setAiIsTyping(true);
+    try {
+      const res = await CareerExplorerService.getInstance().sendMessage(userMessage);
+      setMessages(mapCareerExplorerMessagesToChatMessages(res.messages));
+      setChatFinished(res.finished);
+    } catch (e) {
+      console.error("Failed to send message", e);
+      setMessages((prev) => [...prev, generateSomethingWentWrongMessage()]);
+    } finally {
+      setAiIsTyping(false);
+    }
+  }, []);
+
+  return (
+    <Box
+      role="region"
+      aria-label="Career Explorer"
+      sx={{
+        flex: 1,
+        minHeight: 0,
+        display: "flex",
+        flexDirection: "column",
+      }}
+      data-testid="career-explorer-chat"
+    >
+      <Box
+        sx={{
+          flex: 1,
+          overflowY: "auto",
+          paddingX: theme.spacing(theme.tabiyaSpacing.lg),
+          paddingTop: theme.spacing(theme.tabiyaSpacing.sm),
+        }}
+      >
+        <ChatList messages={displayMessages} />
+      </Box>
+      <Box
+        sx={{
+          flexShrink: 0,
+          padding: theme.tabiyaSpacing.lg,
+          paddingTop: theme.tabiyaSpacing.xs,
+        }}
+      >
+        <ChatMessageField
+          handleSend={handleSend}
+          aiIsTyping={aiIsTyping}
+          isChatFinished={chatFinished}
+          placeholderKey={placeholderKey}
+          showCvUpload={false}
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export default CareerExplorerChat;

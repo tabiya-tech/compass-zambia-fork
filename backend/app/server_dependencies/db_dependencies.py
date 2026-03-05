@@ -73,6 +73,13 @@ def _get_taxonomy_db(mongodb_uri: str, db_name: str) -> AsyncIOMotorDatabase:
     ).get_database(db_name)
 
 
+def _get_career_explorer_db(mongodb_uri: str, db_name: str) -> AsyncIOMotorDatabase:
+    return AsyncIOMotorClient(
+        mongodb_uri,
+        tlsAllowInvalidCertificates=True
+    ).get_database(db_name)
+
+
 def _get_metrics_db(mongodb_uri: str, db_name: str) -> AsyncIOMotorDatabase:
     """
     Decouples the database creation from the database provider.
@@ -100,6 +107,7 @@ class CompassDBProvider:
     _taxonomy_mongo_db: Optional[AsyncIOMotorDatabase] = None
     _userdata_mongo_db: Optional[AsyncIOMotorDatabase] = None
     _metrics_mongo_db: Optional[AsyncIOMotorDatabase] = None
+    _career_explorer_mongo_db: Optional[AsyncIOMotorDatabase] = None
     _lock = asyncio.Lock()
     _logger = logging.getLogger(__qualname__)
 
@@ -260,6 +268,18 @@ class CompassDBProvider:
             raise e
 
     @staticmethod
+    async def initialize_career_explorer_mongo_db(career_explorer_db: AsyncIOMotorDatabase, logger: logging.Logger):
+        try:
+            logger.info("Initializing indexes for the Career Explorer database")
+            await career_explorer_db.get_collection(Collections.CAREER_EXPLORER_CONVERSATIONS).create_index([
+                ("user_id", 1)
+            ], unique=True)
+            logger.info("Finished creating indexes for the Career Explorer database")
+        except Exception as e:
+            logger.exception(e)
+            raise e
+
+    @staticmethod
     async def initialize_metrics_mongo_db(metrics_db: AsyncIOMotorDatabase, logger: logging.Logger):
         """ Initialize the MongoDB database."""
         try:
@@ -337,6 +357,23 @@ class CompassDBProvider:
         return cls._taxonomy_mongo_db
 
     @classmethod
+    async def get_career_explorer_db(cls) -> AsyncIOMotorDatabase:
+        if cls._career_explorer_mongo_db is None:
+            async with cls._lock:
+                if cls._career_explorer_mongo_db is None:
+                    cls._logger.info("Connecting to Career Explorer MongoDB")
+                    cls._career_explorer_mongo_db = _get_career_explorer_db(
+                        cls._get_settings().career_explorer_mongodb_uri,
+                        cls._get_settings().career_explorer_database_name,
+                    )
+                    cls._logger.info("Connected to Career Explorer MongoDB database: %s",
+                                     await _get_database_connection_info(cls._career_explorer_mongo_db))
+                    if not await check_mongo_health(cls._career_explorer_mongo_db.client):
+                        raise RuntimeError("MongoDB health check failed for Career Explorer database")
+                    cls._logger.info("Successfully pinged Career Explorer MongoDB")
+        return cls._career_explorer_mongo_db
+
+    @classmethod
     async def get_metrics_db(cls) -> AsyncIOMotorDatabase:
         if cls._metrics_mongo_db is None:  # Check if the database instance has been created
             async with cls._lock:  # Ensure that only one coroutine is creating and initializing the database instance
@@ -363,5 +400,6 @@ class CompassDBProvider:
         CompassDBProvider._taxonomy_mongo_db = None
         CompassDBProvider._userdata_mongo_db = None
         CompassDBProvider._metrics_mongo_db = None
+        CompassDBProvider._career_explorer_mongo_db = None
 
         CompassDBProvider._logger.info("Cleared cached database instances")

@@ -142,6 +142,15 @@ async def in_memory_application_database(in_memory_mongo_server) -> AsyncIOMotor
 
 
 @pytest.fixture(scope='function')
+async def in_memory_career_explorer_database(in_memory_mongo_server) -> AsyncIOMotorDatabase:
+    career_explorer_db = AsyncIOMotorClient(in_memory_mongo_server.connection_string,
+                                           tlsAllowInvalidCertificates=True).get_database(random_db_name())
+    await CompassDBProvider.initialize_career_explorer_mongo_db(career_explorer_db, logger=logging.getLogger(__name__))
+    logging.info(f"Created career explorer database: {career_explorer_db.name}")
+    return career_explorer_db
+
+
+@pytest.fixture(scope='function')
 async def in_memory_metrics_database(in_memory_mongo_server) -> AsyncIOMotorDatabase:
     """
     Fixture to create an in-memory metrics database.

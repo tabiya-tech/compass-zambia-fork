@@ -15,6 +15,7 @@ from app.jobs import add_jobs_routes
 from app.job_preferences import add_job_preferences_routes
 from app.career_path import add_career_path_routes
 from app.career_readiness import add_career_readiness_routes
+from app.career_explorer import add_career_explorer_routes
 from app.metrics.routes.routes import add_metrics_routes
 from app.sentry_init import init_sentry, set_sentry_contexts
 from app.server_dependencies.db_dependencies import CompassDBProvider
@@ -155,6 +156,10 @@ if not os.getenv('USERDATA_MONGODB_URI'):
     raise ValueError("Mandatory USERDATA_MONGODB_URI env variable is not set!")
 if not os.getenv("USERDATA_DATABASE_NAME"):
     raise ValueError("Mandatory USERDATA_DATABASE_NAME environment variable is not set")
+if not os.getenv('CAREER_EXPLORER_MONGODB_URI'):
+    raise ValueError("Mandatory CAREER_EXPLORER_MONGODB_URI env variable is not set!")
+if not os.getenv("CAREER_EXPLORER_DATABASE_NAME"):
+    raise ValueError("Mandatory CAREER_EXPLORER_DATABASE_NAME environment variable is not set")
 if not os.getenv('TAXONOMY_MODEL_ID'):
     raise ValueError("Mandatory TAXONOMY_MODEL_ID env variable is not set!")
 if not os.getenv("EMBEDDINGS_SERVICE_NAME"):
@@ -271,6 +276,7 @@ async def lifespan(_app: FastAPI):
     taxonomy_db = await CompassDBProvider.get_taxonomy_db()
     userdata_db = await CompassDBProvider.get_userdata_db()
     metrics_db = await CompassDBProvider.get_metrics_db()
+    career_explorer_db = await CompassDBProvider.get_career_explorer_db()
 
     app_cfg = get_application_config()
     # Initialize the MongoDB databases
@@ -279,6 +285,7 @@ async def lifespan(_app: FastAPI):
         CompassDBProvider.initialize_application_mongo_db(application_db, logger),
         CompassDBProvider.initialize_userdata_mongo_db(userdata_db, logger),
         CompassDBProvider.initialize_metrics_mongo_db(metrics_db, logger),
+        CompassDBProvider.initialize_career_explorer_mongo_db(career_explorer_db, logger),
         validate_taxonomy_model(taxonomy_db=taxonomy_db,
                                 taxonomy_model_id=app_cfg.taxonomy_model_id,
                                 embeddings_service_name=app_cfg.embeddings_service_name,
@@ -307,6 +314,7 @@ async def lifespan(_app: FastAPI):
     application_db.client.close()
     userdata_db.client.close()
     metrics_db.client.close()
+    career_explorer_db.client.close()
 
     logger.info("Shutting down completed.")
     # noinspection PyUnresolvedReferences
@@ -407,6 +415,7 @@ add_career_path_routes(app)
 # Add the career readiness routes
 ############################################
 add_career_readiness_routes(app, auth)
+add_career_explorer_routes(app, auth)
 
 ############################################
 # Add routes relevant for esco search

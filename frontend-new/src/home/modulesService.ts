@@ -33,7 +33,7 @@ const DEFAULT_MODULES: Module[] = [
     id: "career_explorer",
     labelKey: "home.modules.careerExplorer",
     descriptionKey: "home.modules.careerExplorerDesc",
-    route: routerPaths.SKILLS_INTERESTS,
+    route: routerPaths.CAREER_EXPLORER,
   },
   {
     id: "knowledge_hub",
