@@ -45,3 +45,13 @@ class MongoDbSettings(BaseSettings):
     """
     The name of the taxonomy database
     """
+
+    career_explorer_mongodb_uri: str = ""
+    """
+    The URI of the Career Explorer MongoDB instance.
+    """
+
+    career_explorer_database_name: str = ""
+    """
+    The name of the Career Explorer database (conversations + sector chunks).
+    """

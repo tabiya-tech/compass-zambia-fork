@@ -107,6 +107,8 @@ def setup_env_vars(*, env_vars: dict[str, str] = None):
         'METRICS_DATABASE_NAME': "foo",
         'USERDATA_MONGODB_URI': "foo",
         'USERDATA_DATABASE_NAME': "foo",
+        'CAREER_EXPLORER_MONGODB_URI': "foo",
+        'CAREER_EXPLORER_DATABASE_NAME': "foo",
         'TAXONOMY_MODEL_ID': str(ObjectId()),
         'GOOGLE_APPLICATION_CREDENTIALS': "foo",
         'VERTEX_API_REGION': "foo",

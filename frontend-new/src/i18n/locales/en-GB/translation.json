@@ -783,9 +783,9 @@
     "modules": {
       "skillsDiscovery": "My Skills & Interests",
       "skillsDiscoverySubtitle": "Uncover your skills and interests",
-      "careerDiscovery": "Career Explorer",
+      "careerDiscovery": "Career Pathways",
       "jobReadiness": "Career Readiness",
-      "careerExplorer": "Job Matching & Analytics",
+      "careerExplorer": "Career Explorer",
       "knowledgeHub": "Knowledge Hub",
       "skillsDiscoveryDesc": "Chat with {{appName}} to uncover your skills and interests — from your studies, work, and everyday life.",
       "careerDiscoveryDesc": "Explore career pathways in Energy, Mining, Agriculture and more — with salary data and qualification routes.",
@@ -803,6 +803,11 @@
       "contact": "Contact",
       "collaboration": "{{appName}} is a collaboration between the World Bank Group and Tabiya."
     }
+  },
+  "careerExplorer": {
+    "title": "Career Explorer",
+    "placeholder": "Ask about a sector...",
+    "send": "Send"
   },
   "knowledgeHub": {
     "backToDashboard": "Back to Dashboard",

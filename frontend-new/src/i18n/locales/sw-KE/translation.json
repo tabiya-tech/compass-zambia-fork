@@ -770,6 +770,11 @@
     "next": "Inayofuata",
     "previous": "Iliyotangulia"
   },
+  "careerExplorer": {
+    "title": "Kuchunguza Kazi",
+    "placeholder": "Uliza kuhusu sekta...",
+    "send": "Tuma"
+  },
   "home": {
     "dashboard": "Kituo Chako cha Kazi",
     "backToDashboard": "Rudi kwenye dashibodi",
@@ -783,9 +788,9 @@
     "modules": {
       "skillsDiscovery": "Ujuzi na Mapendeleo Yangu",
       "skillsDiscoverySubtitle": "Gundua ujuzi na mapendeleo yako",
-      "careerDiscovery": "Kuchunguza Kazi",
+      "careerDiscovery": "Njia za Kazi",
       "jobReadiness": "Kujiandaa kwa Kazi",
-      "careerExplorer": "Kulinganisha Kazi na Uchambuzi",
+      "careerExplorer": "Kuchunguza Kazi",
       "knowledgeHub": "Kituo cha Maarifa",
       "skillsDiscoveryDesc": "Zungumza na {{appName}} ili kugundua ujuzi na mapendeleo yako — kutoka masomo yako, kazi, na maisha ya kila siku.",
       "careerDiscoveryDesc": "Chunguza njia za kazi katika Nishati, Madini, Kilimo na zaidi — na data ya mishahara na njia za sifa.",
