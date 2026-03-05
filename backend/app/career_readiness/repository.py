@@ -6,10 +6,13 @@ from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from pymongo.errors import DuplicateKeyError
 
+from app.career_readiness.errors import ConversationAlreadyExistsError
 from app.career_readiness.types import (
     CareerReadinessConversationDocument,
     CareerReadinessMessage,
+    ConversationMode,
 )
 from app.server_dependencies.database_collections import Collections
 
@@ -43,6 +46,26 @@ class ICareerReadinessConversationRepository(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    async def update_covered_topics(self, conversation_id: str, topics: list[str]) -> None:
+        """Update the list of covered topics for a conversation."""
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def update_quiz_delivered(self, conversation_id: str, delivered: bool) -> None:
+        """Update whether the quiz has been delivered to the user."""
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def update_quiz_passed(self, conversation_id: str, passed: bool) -> None:
+        """Update whether the user passed the quiz."""
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def update_conversation_mode(self, conversation_id: str, mode: ConversationMode) -> None:
+        """Update the conversation mode (INSTRUCTION or SUPPORT)."""
+        raise NotImplementedError()
+
+    @abstractmethod
     async def delete_by_conversation_id(self, conversation_id: str) -> bool:
         """Delete a conversation. Returns True if deleted, False if not found."""
         raise NotImplementedError()
@@ -56,7 +79,10 @@ class CareerReadinessConversationRepository(ICareerReadinessConversationReposito
         self._logger = logging.getLogger(CareerReadinessConversationRepository.__name__)
 
     async def create(self, document: CareerReadinessConversationDocument) -> None:
-        await self._collection.insert_one(document.model_dump())
+        try:
+            await self._collection.insert_one(document.model_dump())
+        except DuplicateKeyError as e:
+            raise ConversationAlreadyExistsError(document.module_id, document.user_id) from e
 
     async def find_by_conversation_id(self, conversation_id: str) -> CareerReadinessConversationDocument | None:
         result = await self._collection.find_one(
@@ -89,6 +115,34 @@ class CareerReadinessConversationRepository(ICareerReadinessConversationReposito
                 "$push": {"messages": message.model_dump()},
                 "$set": {"updated_at": now},
             },
+        )
+
+    async def update_covered_topics(self, conversation_id: str, topics: list[str]) -> None:
+        now = datetime.now(timezone.utc).isoformat()
+        await self._collection.update_one(
+            {"conversation_id": {"$eq": conversation_id}},
+            {"$set": {"covered_topics": topics, "updated_at": now}},
+        )
+
+    async def update_quiz_delivered(self, conversation_id: str, delivered: bool) -> None:
+        now = datetime.now(timezone.utc).isoformat()
+        await self._collection.update_one(
+            {"conversation_id": {"$eq": conversation_id}},
+            {"$set": {"quiz_delivered": delivered, "updated_at": now}},
+        )
+
+    async def update_quiz_passed(self, conversation_id: str, passed: bool) -> None:
+        now = datetime.now(timezone.utc).isoformat()
+        await self._collection.update_one(
+            {"conversation_id": {"$eq": conversation_id}},
+            {"$set": {"quiz_passed": passed, "updated_at": now}},
+        )
+
+    async def update_conversation_mode(self, conversation_id: str, mode: ConversationMode) -> None:
+        now = datetime.now(timezone.utc).isoformat()
+        await self._collection.update_one(
+            {"conversation_id": {"$eq": conversation_id}},
+            {"$set": {"conversation_mode": mode.value, "updated_at": now}},
         )
 
     async def delete_by_conversation_id(self, conversation_id: str) -> bool:

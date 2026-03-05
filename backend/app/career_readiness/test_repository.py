@@ -7,11 +7,13 @@ from typing import Awaitable
 import pytest
 from bson import ObjectId
 
+from app.career_readiness.errors import ConversationAlreadyExistsError
 from app.career_readiness.repository import CareerReadinessConversationRepository
 from app.career_readiness.types import (
     CareerReadinessConversationDocument,
     CareerReadinessMessage,
     CareerReadinessMessageSender,
+    ConversationMode,
 )
 
 
@@ -68,6 +70,24 @@ class TestCreate:
         assert actual_result.module_id == given_conversation.module_id
         assert actual_result.user_id == given_conversation.user_id
         assert len(actual_result.messages) == 1
+
+
+    @pytest.mark.asyncio
+    async def test_raises_already_exists_on_duplicate_user_module(self,
+                                                                   get_repository: Awaitable[CareerReadinessConversationRepository]):
+        # GIVEN a repository with an existing conversation for a user and module
+        repo = await get_repository
+        given_user_id = "user_abc"
+        given_module_id = "cv-development"
+        given_first = _make_conversation(user_id=given_user_id, module_id=given_module_id)
+        await repo.create(given_first)
+
+        # WHEN a second conversation is created for the same user and module
+        given_duplicate = _make_conversation(user_id=given_user_id, module_id=given_module_id)
+
+        # THEN ConversationAlreadyExistsError is raised
+        with pytest.raises(ConversationAlreadyExistsError):
+            await repo.create(given_duplicate)
 
 
 class TestFindByConversationId:
@@ -243,3 +263,112 @@ class TestDeleteByConversationId:
         assert actual_result is True
         # AND the conversation can no longer be found
         assert await repo.find_by_conversation_id(given_conversation.conversation_id) is None
+
+
+class TestUpdateCoveredTopics:
+    """Tests for updating covered topics on a conversation."""
+
+    @pytest.mark.asyncio
+    async def test_updates_covered_topics(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
+        # GIVEN a repository with a conversation
+        repo = await get_repository
+        given_conversation = _make_conversation()
+        await repo.create(given_conversation)
+
+        # WHEN covered topics are updated
+        given_topics = ["Topic A", "Topic B"]
+        await repo.update_covered_topics(given_conversation.conversation_id, given_topics)
+
+        # THEN the conversation has the updated topics
+        actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_result is not None
+        assert actual_result.covered_topics == given_topics
+
+    @pytest.mark.asyncio
+    async def test_updates_updated_at_timestamp(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
+        # GIVEN a repository with a conversation
+        repo = await get_repository
+        given_conversation = _make_conversation()
+        given_original_updated_at = given_conversation.updated_at
+        await repo.create(given_conversation)
+
+        # WHEN covered topics are updated
+        await repo.update_covered_topics(given_conversation.conversation_id, ["Topic A"])
+
+        # THEN the updated_at timestamp is changed
+        actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_result is not None
+        assert actual_result.updated_at >= given_original_updated_at
+
+
+class TestUpdateQuizDelivered:
+    """Tests for updating the quiz_delivered flag."""
+
+    @pytest.mark.asyncio
+    async def test_sets_quiz_delivered_to_true(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
+        # GIVEN a repository with a conversation where quiz is not yet delivered
+        repo = await get_repository
+        given_conversation = _make_conversation()
+        await repo.create(given_conversation)
+
+        # WHEN quiz_delivered is set to True
+        await repo.update_quiz_delivered(given_conversation.conversation_id, True)
+
+        # THEN the conversation has quiz_delivered = True
+        actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_result is not None
+        assert actual_result.quiz_delivered is True
+
+    @pytest.mark.asyncio
+    async def test_resets_quiz_delivered_to_false(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
+        # GIVEN a repository with a conversation where quiz was delivered
+        repo = await get_repository
+        given_conversation = _make_conversation()
+        await repo.create(given_conversation)
+        await repo.update_quiz_delivered(given_conversation.conversation_id, True)
+
+        # WHEN quiz_delivered is reset to False
+        await repo.update_quiz_delivered(given_conversation.conversation_id, False)
+
+        # THEN the conversation has quiz_delivered = False
+        actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_result is not None
+        assert actual_result.quiz_delivered is False
+
+
+class TestUpdateQuizPassed:
+    """Tests for updating the quiz_passed flag."""
+
+    @pytest.mark.asyncio
+    async def test_sets_quiz_passed_to_true(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
+        # GIVEN a repository with a conversation
+        repo = await get_repository
+        given_conversation = _make_conversation()
+        await repo.create(given_conversation)
+
+        # WHEN quiz_passed is set to True
+        await repo.update_quiz_passed(given_conversation.conversation_id, True)
+
+        # THEN the conversation has quiz_passed = True
+        actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_result is not None
+        assert actual_result.quiz_passed is True
+
+
+class TestUpdateConversationMode:
+    """Tests for updating the conversation mode."""
+
+    @pytest.mark.asyncio
+    async def test_updates_to_support_mode(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
+        # GIVEN a repository with a conversation in INSTRUCTION mode
+        repo = await get_repository
+        given_conversation = _make_conversation()
+        await repo.create(given_conversation)
+
+        # WHEN the conversation mode is updated to SUPPORT
+        await repo.update_conversation_mode(given_conversation.conversation_id, ConversationMode.SUPPORT)
+
+        # THEN the conversation has mode = SUPPORT
+        actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_result is not None
+        assert actual_result.conversation_mode == ConversationMode.SUPPORT
