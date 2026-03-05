@@ -16,6 +16,7 @@ from app.career_readiness.errors import (
     ConversationAlreadyExistsError,
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
+    ModuleNotUnlockedError,
 )
 from app.career_readiness.routes import add_career_readiness_routes, get_career_readiness_service
 from app.career_readiness.service import ICareerReadinessService
@@ -200,6 +201,20 @@ class TestCreateConversation:
 
         # THEN 404 is returned
         assert response.status_code == HTTPStatus.NOT_FOUND
+
+    def test_returns_403_when_module_not_unlocked(self, client_with_mocks: TestClientWithMocks,
+                                                   mocker: pytest_mock.MockerFixture):
+        client, mock_service, _ = client_with_mocks
+
+        # GIVEN the service raises ModuleNotUnlockedError
+        mocker.patch.object(mock_service, "create_conversation",
+                            side_effect=ModuleNotUnlockedError("interview-preparation"))
+
+        # WHEN a conversation is created for a locked module
+        response = client.post("/career-readiness/modules/interview-preparation/conversations")
+
+        # THEN 403 FORBIDDEN is returned
+        assert response.status_code == HTTPStatus.FORBIDDEN
 
     def test_returns_409_when_already_exists(self, client_with_mocks: TestClientWithMocks,
                                               mocker: pytest_mock.MockerFixture):

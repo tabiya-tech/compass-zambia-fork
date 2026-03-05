@@ -6,24 +6,48 @@ from datetime import datetime, timezone
 import pytest
 from bson import ObjectId
 
-from app.agent.agent_types import AgentOutput, AgentType, LLMStats
-from app.career_readiness.agent import CareerReadinessAgent
+from app.agent.agent_types import AgentOutput, AgentType
+from app.career_readiness.agent import CareerReadinessAgentOutput
 from app.career_readiness.errors import (
     ConversationAccessDeniedError,
     ConversationAlreadyExistsError,
     ConversationModuleMismatchError,
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
+    ModuleNotUnlockedError,
 )
-from app.career_readiness.module_loader import ModuleConfig, ModuleRegistry
+from app.career_readiness.module_loader import ModuleConfig, ModuleRegistry, QuizConfig, QuizQuestion
 from app.career_readiness.repository import ICareerReadinessConversationRepository
-from app.career_readiness.service import CareerReadinessService, _build_conversation_context
+from app.career_readiness.service import (
+    CareerReadinessService,
+    _build_conversation_context,
+    _derive_module_statuses,
+    _format_quiz_message,
+    _parse_quiz_answers,
+    _evaluate_quiz,
+)
 from app.career_readiness.types import (
     CareerReadinessConversationDocument,
     CareerReadinessMessage,
     CareerReadinessMessageSender,
+    ConversationMode,
     ModuleStatus,
 )
+
+
+# ---------------------------------------------------------------------------
+# Quiz helpers
+# ---------------------------------------------------------------------------
+
+def _make_quiz_questions() -> list[QuizQuestion]:
+    return [
+        QuizQuestion(question="Q1?", options=["A. Opt1", "B. Opt2", "C. Opt3", "D. Opt4"], correct_answer="A"),
+        QuizQuestion(question="Q2?", options=["A. Opt1", "B. Opt2", "C. Opt3", "D. Opt4"], correct_answer="B"),
+    ]
+
+
+def _make_quiz_config() -> QuizConfig:
+    return QuizConfig(pass_threshold=0.5, questions=_make_quiz_questions())
 
 
 # ---------------------------------------------------------------------------
@@ -34,6 +58,8 @@ def _make_module_config(
     module_id: str = "cv-development",
     title: str = "CV Development",
     sort_order: int = 1,
+    topics: list[str] | None = None,
+    quiz: QuizConfig | None = None,
 ) -> ModuleConfig:
     return ModuleConfig(
         id=module_id,
@@ -43,6 +69,8 @@ def _make_module_config(
         sort_order=sort_order,
         input_placeholder="Ask about CVs...",
         content="# CV Content\nWrite your CV.",
+        topics=topics or ["Topic A", "Topic B"],
+        quiz=quiz or _make_quiz_config(),
     )
 
 
@@ -62,6 +90,10 @@ def _make_conversation(
     user_id: str = "test_user",
     module_id: str = "cv-development",
     messages: list[CareerReadinessMessage] | None = None,
+    conversation_mode: ConversationMode = ConversationMode.INSTRUCTION,
+    covered_topics: list[str] | None = None,
+    quiz_delivered: bool = False,
+    quiz_passed: bool = False,
 ) -> CareerReadinessConversationDocument:
     now = datetime.now(timezone.utc)
     return CareerReadinessConversationDocument(
@@ -69,6 +101,10 @@ def _make_conversation(
         module_id=module_id,
         user_id=user_id,
         messages=messages or [_make_message()],
+        conversation_mode=conversation_mode,
+        covered_topics=covered_topics or [],
+        quiz_delivered=quiz_delivered,
+        quiz_passed=quiz_passed,
         created_at=now,
         updated_at=now,
     )
@@ -101,6 +137,30 @@ class MockRepository(ICareerReadinessConversationRepository):
             conv.messages.append(message)
             conv.updated_at = datetime.now(timezone.utc)
 
+    async def update_covered_topics(self, conversation_id: str, topics: list[str]) -> None:
+        conv = self._conversations.get(conversation_id)
+        if conv:
+            conv.covered_topics = topics
+            conv.updated_at = datetime.now(timezone.utc)
+
+    async def update_quiz_delivered(self, conversation_id: str, delivered: bool) -> None:
+        conv = self._conversations.get(conversation_id)
+        if conv:
+            conv.quiz_delivered = delivered
+            conv.updated_at = datetime.now(timezone.utc)
+
+    async def update_quiz_passed(self, conversation_id: str, passed: bool) -> None:
+        conv = self._conversations.get(conversation_id)
+        if conv:
+            conv.quiz_passed = passed
+            conv.updated_at = datetime.now(timezone.utc)
+
+    async def update_conversation_mode(self, conversation_id: str, mode: ConversationMode) -> None:
+        conv = self._conversations.get(conversation_id)
+        if conv:
+            conv.conversation_mode = mode
+            conv.updated_at = datetime.now(timezone.utc)
+
     async def delete_by_conversation_id(self, conversation_id: str) -> bool:
         if conversation_id in self._conversations:
             del self._conversations[conversation_id]
@@ -118,8 +178,12 @@ class MockModuleRegistry(ModuleRegistry):
             self._modules[m.id] = m
 
 
-def _make_mock_agent_output(message: str = "Agent response", finished: bool = False) -> AgentOutput:
-    return AgentOutput(
+def _make_mock_agent_output(
+    message: str = "Agent response",
+    finished: bool = False,
+    topics_covered: list[str] | None = None,
+) -> CareerReadinessAgentOutput:
+    agent_output = AgentOutput(
         message_id=str(ObjectId()),
         message_for_user=message,
         finished=finished,
@@ -128,27 +192,38 @@ def _make_mock_agent_output(message: str = "Agent response", finished: bool = Fa
         llm_stats=[],
         sent_at=datetime.now(timezone.utc),
     )
+    return CareerReadinessAgentOutput(
+        agent_output=agent_output,
+        topics_covered=topics_covered or [],
+    )
 
 
 class MockCareerReadinessAgent:
     """Mock agent that returns canned responses without calling an LLM."""
 
-    def __init__(self, intro_message: str = "Welcome!", response_message: str = "Agent response"):
+    def __init__(self, intro_message: str = "Welcome!", response_message: str = "Agent response",
+                 topics_covered: list[str] | None = None, finished: bool = False):
         self._intro_message = intro_message
         self._response_message = response_message
+        self._topics_covered = topics_covered or []
+        self._finished = finished
 
     async def generate_intro_message(self, context):
         return _make_mock_agent_output(message=self._intro_message)
 
     async def execute(self, user_input, context):
-        return _make_mock_agent_output(message=self._response_message)
+        return _make_mock_agent_output(
+            message=self._response_message,
+            finished=self._finished,
+            topics_covered=self._topics_covered,
+        )
 
 
 def _make_mock_agent_factory(agent: MockCareerReadinessAgent | None = None):
-    """Factory that returns a mock agent."""
+    """Factory that returns a mock agent regardless of mode."""
     mock_agent = agent or MockCareerReadinessAgent()
 
-    def factory(module_config):
+    def factory(module_config, mode):
         return mock_agent
 
     return factory
@@ -168,15 +243,186 @@ def _make_service(
 
 
 # ---------------------------------------------------------------------------
-# Tests
+# Tests — Pure functions
+# ---------------------------------------------------------------------------
+
+class TestDeriveModuleStatuses:
+    """Tests for the _derive_module_statuses function."""
+
+    def test_first_module_unlocked_when_no_conversations(self):
+        # GIVEN three modules and no conversations
+        given_modules = [
+            _make_module_config(module_id="m1", sort_order=1),
+            _make_module_config(module_id="m2", sort_order=2),
+            _make_module_config(module_id="m3", sort_order=3),
+        ]
+
+        # WHEN statuses are derived
+        actual_statuses = _derive_module_statuses(given_modules, [])
+
+        # THEN the first module is UNLOCKED and the rest are NOT_STARTED
+        assert actual_statuses["m1"] == ModuleStatus.UNLOCKED
+        assert actual_statuses["m2"] == ModuleStatus.NOT_STARTED
+        assert actual_statuses["m3"] == ModuleStatus.NOT_STARTED
+
+    def test_second_module_unlocked_when_first_completed(self):
+        # GIVEN three modules and the first one completed
+        given_modules = [
+            _make_module_config(module_id="m1", sort_order=1),
+            _make_module_config(module_id="m2", sort_order=2),
+            _make_module_config(module_id="m3", sort_order=3),
+        ]
+        given_conversations = [
+            _make_conversation(module_id="m1", quiz_passed=True),
+        ]
+
+        # WHEN statuses are derived
+        actual_statuses = _derive_module_statuses(given_modules, given_conversations)
+
+        # THEN the first is COMPLETED, second is UNLOCKED, third is NOT_STARTED
+        assert actual_statuses["m1"] == ModuleStatus.COMPLETED
+        assert actual_statuses["m2"] == ModuleStatus.UNLOCKED
+        assert actual_statuses["m3"] == ModuleStatus.NOT_STARTED
+
+    def test_chain_completion_unlocks_next(self):
+        # GIVEN three modules with first two completed
+        given_modules = [
+            _make_module_config(module_id="m1", sort_order=1),
+            _make_module_config(module_id="m2", sort_order=2),
+            _make_module_config(module_id="m3", sort_order=3),
+        ]
+        given_conversations = [
+            _make_conversation(module_id="m1", quiz_passed=True),
+            _make_conversation(module_id="m2", quiz_passed=True),
+        ]
+
+        # WHEN statuses are derived
+        actual_statuses = _derive_module_statuses(given_modules, given_conversations)
+
+        # THEN third module is UNLOCKED
+        assert actual_statuses["m1"] == ModuleStatus.COMPLETED
+        assert actual_statuses["m2"] == ModuleStatus.COMPLETED
+        assert actual_statuses["m3"] == ModuleStatus.UNLOCKED
+
+    def test_in_progress_module_blocks_next(self):
+        # GIVEN first module in progress (has conversation but quiz not passed)
+        given_modules = [
+            _make_module_config(module_id="m1", sort_order=1),
+            _make_module_config(module_id="m2", sort_order=2),
+        ]
+        given_conversations = [
+            _make_conversation(module_id="m1", quiz_passed=False),
+        ]
+
+        # WHEN statuses are derived
+        actual_statuses = _derive_module_statuses(given_modules, given_conversations)
+
+        # THEN first is IN_PROGRESS, second is NOT_STARTED
+        assert actual_statuses["m1"] == ModuleStatus.IN_PROGRESS
+        assert actual_statuses["m2"] == ModuleStatus.NOT_STARTED
+
+
+class TestFormatQuizMessage:
+    """Tests for the quiz message formatter."""
+
+    def test_formats_quiz_with_numbered_questions(self):
+        # GIVEN a quiz config
+        given_quiz = _make_quiz_config()
+
+        # WHEN the quiz message is formatted
+        actual_message = _format_quiz_message(given_quiz)
+
+        # THEN it contains numbered questions and options
+        assert "1. Q1?" in actual_message
+        assert "2. Q2?" in actual_message
+        assert "A. Opt1" in actual_message
+
+
+class TestParseQuizAnswers:
+    """Tests for the quiz answer parser."""
+
+    def test_parses_numbered_format(self):
+        # GIVEN answers in "1.B, 2.A" format
+        given_input = "1.B, 2.A, 3.C"
+
+        # WHEN parsed
+        actual_answers = _parse_quiz_answers(given_input)
+
+        # THEN correct answers are extracted
+        assert actual_answers == {1: "B", 2: "A", 3: "C"}
+
+    def test_parses_sequential_letters(self):
+        # GIVEN answers as sequential letters
+        given_input = "B, A, C"
+
+        # WHEN parsed
+        actual_answers = _parse_quiz_answers(given_input)
+
+        # THEN answers are numbered sequentially
+        assert actual_answers == {1: "B", 2: "A", 3: "C"}
+
+    def test_normalizes_lowercase(self):
+        # GIVEN lowercase answers
+        given_input = "1.b, 2.a"
+
+        # WHEN parsed
+        actual_answers = _parse_quiz_answers(given_input)
+
+        # THEN answers are uppercase
+        assert actual_answers == {1: "B", 2: "A"}
+
+
+class TestEvaluateQuiz:
+    """Tests for the quiz evaluator."""
+
+    def test_all_correct(self):
+        # GIVEN a quiz and all correct answers
+        given_quiz = _make_quiz_config()
+        given_answers = {1: "A", 2: "B"}
+
+        # WHEN evaluated
+        actual_score, actual_total, actual_results = _evaluate_quiz(given_quiz, given_answers)
+
+        # THEN all are correct
+        assert actual_score == 2
+        assert actual_total == 2
+        assert actual_results == [True, True]
+
+    def test_partial_correct(self):
+        # GIVEN a quiz with one wrong answer
+        given_quiz = _make_quiz_config()
+        given_answers = {1: "A", 2: "C"}
+
+        # WHEN evaluated
+        actual_score, _, _ = _evaluate_quiz(given_quiz, given_answers)
+
+        # THEN score is 1
+        assert actual_score == 1
+
+    def test_missing_answers_counted_as_wrong(self):
+        # GIVEN a quiz with no answers provided
+        given_quiz = _make_quiz_config()
+        given_answers: dict[int, str] = {}
+
+        # WHEN evaluated
+        actual_score, actual_total, _ = _evaluate_quiz(given_quiz, given_answers)
+
+        # THEN score is 0
+        assert actual_score == 0
+        assert actual_total == 2
+
+
+# ---------------------------------------------------------------------------
+# Tests — Service methods
 # ---------------------------------------------------------------------------
 
 class TestBuildConversationContext:
     """Tests for the _build_conversation_context helper."""
 
-    def test_builds_context_from_message_pairs(self):
-        # GIVEN a list of messages with intro + user/agent pairs
+    def test_builds_context_from_silence_intro_and_user_agent_pair(self):
+        # GIVEN messages with silence+intro pair followed by user+agent pair
         given_messages = [
+            _make_message(sender=CareerReadinessMessageSender.USER, message="(silence)"),
             _make_message(sender=CareerReadinessMessageSender.AGENT, message="Welcome!"),
             _make_message(sender=CareerReadinessMessageSender.USER, message="Help me"),
             _make_message(sender=CareerReadinessMessageSender.AGENT, message="Sure!"),
@@ -185,26 +431,32 @@ class TestBuildConversationContext:
         # WHEN the context is built
         actual_context = _build_conversation_context(given_messages)
 
-        # THEN there is one conversation turn (user+agent pair)
-        assert len(actual_context.history.turns) == 1
-        assert actual_context.history.turns[0].input.message == "Help me"
-        assert actual_context.history.turns[0].output.message_for_user == "Sure!"
+        # THEN there are two conversation turns (silence+intro and user+agent)
+        assert len(actual_context.history.turns) == 2
+        assert actual_context.history.turns[0].input.message == "(silence)"
+        assert actual_context.history.turns[0].output.message_for_user == "Welcome!"
+        assert actual_context.history.turns[1].input.message == "Help me"
+        assert actual_context.history.turns[1].output.message_for_user == "Sure!"
 
-    def test_builds_empty_context_from_intro_only(self):
-        # GIVEN only an intro message
+    def test_builds_context_from_silence_intro_only(self):
+        # GIVEN only a silence+intro pair
         given_messages = [
+            _make_message(sender=CareerReadinessMessageSender.USER, message="(silence)"),
             _make_message(sender=CareerReadinessMessageSender.AGENT, message="Welcome!"),
         ]
 
         # WHEN the context is built
         actual_context = _build_conversation_context(given_messages)
 
-        # THEN the context has no turns
-        assert len(actual_context.history.turns) == 0
+        # THEN there is one turn (the intro)
+        assert len(actual_context.history.turns) == 1
+        assert actual_context.history.turns[0].input.message == "(silence)"
+        assert actual_context.history.turns[0].output.message_for_user == "Welcome!"
 
     def test_builds_context_with_multiple_pairs(self):
-        # GIVEN a conversation with multiple exchanges
+        # GIVEN a conversation with silence+intro and multiple exchanges
         given_messages = [
+            _make_message(sender=CareerReadinessMessageSender.USER, message="(silence)"),
             _make_message(sender=CareerReadinessMessageSender.AGENT, message="Welcome!"),
             _make_message(sender=CareerReadinessMessageSender.USER, message="Q1"),
             _make_message(sender=CareerReadinessMessageSender.AGENT, message="A1"),
@@ -215,30 +467,28 @@ class TestBuildConversationContext:
         # WHEN the context is built
         actual_context = _build_conversation_context(given_messages)
 
-        # THEN there are two conversation turns
-        assert len(actual_context.history.turns) == 2
-        assert actual_context.history.turns[0].input.message == "Q1"
-        assert actual_context.history.turns[1].input.message == "Q2"
+        # THEN there are three conversation turns
+        assert len(actual_context.history.turns) == 3
 
 
 class TestListModules:
-    """Tests for listing modules with user progress."""
+    """Tests for listing modules with sequential unlock status."""
 
     @pytest.mark.asyncio
-    async def test_returns_all_modules_with_not_started_status(self):
+    async def test_first_module_unlocked_rest_not_started(self):
         # GIVEN a service with two modules and no conversations
         given_modules = [
-            _make_module_config(module_id="cv-development", sort_order=1),
-            _make_module_config(module_id="interview-prep", title="Interview Prep", sort_order=2),
+            _make_module_config(module_id="m1", sort_order=1),
+            _make_module_config(module_id="m2", title="Module 2", sort_order=2),
         ]
         service, _ = _make_service(modules=given_modules)
 
-        # WHEN modules are listed for a user
+        # WHEN modules are listed
         actual_result = await service.list_modules("user_abc")
 
-        # THEN all modules are returned with NOT_STARTED status
-        assert len(actual_result.modules) == 2
-        assert all(m.status == ModuleStatus.NOT_STARTED for m in actual_result.modules)
+        # THEN first is UNLOCKED, second is NOT_STARTED
+        assert actual_result.modules[0].status == ModuleStatus.UNLOCKED
+        assert actual_result.modules[1].status == ModuleStatus.NOT_STARTED
 
     @pytest.mark.asyncio
     async def test_returns_in_progress_when_conversation_exists(self):
@@ -252,8 +502,25 @@ class TestListModules:
         actual_result = await service.list_modules("user_abc")
 
         # THEN the module with a conversation has IN_PROGRESS status
-        assert len(actual_result.modules) == 1
         assert actual_result.modules[0].status == ModuleStatus.IN_PROGRESS
+
+    @pytest.mark.asyncio
+    async def test_completed_module_unlocks_next(self):
+        # GIVEN first module completed
+        given_modules = [
+            _make_module_config(module_id="m1", sort_order=1),
+            _make_module_config(module_id="m2", title="Module 2", sort_order=2),
+        ]
+        service, repo = _make_service(modules=given_modules)
+        given_conversation = _make_conversation(user_id="user_abc", module_id="m1", quiz_passed=True)
+        await repo.create(given_conversation)
+
+        # WHEN modules are listed
+        actual_result = await service.list_modules("user_abc")
+
+        # THEN first is COMPLETED, second is UNLOCKED
+        assert actual_result.modules[0].status == ModuleStatus.COMPLETED
+        assert actual_result.modules[1].status == ModuleStatus.UNLOCKED
 
 
 class TestGetModule:
@@ -268,10 +535,9 @@ class TestGetModule:
         # WHEN the module is retrieved
         actual_result = await service.get_module("user_abc", "cv-development")
 
-        # THEN the module detail is returned
+        # THEN the module detail is returned with UNLOCKED status
         assert actual_result.id == "cv-development"
-        assert actual_result.title == "CV Development"
-        assert actual_result.active_conversation_id is None
+        assert actual_result.status == ModuleStatus.UNLOCKED
 
     @pytest.mark.asyncio
     async def test_returns_active_conversation_id(self):
@@ -312,11 +578,17 @@ class TestCreateConversation:
         # WHEN a conversation is created
         actual_result = await service.create_conversation("user_abc", "cv-development")
 
-        # THEN a conversation response is returned with the intro message
+        # THEN a conversation response is returned with the intro message (silence filtered out)
         assert actual_result.module_id == "cv-development"
         assert len(actual_result.messages) == 1
         assert actual_result.messages[0].message == "Welcome to CV Development!"
-        assert actual_result.messages[0].sender == CareerReadinessMessageSender.AGENT
+        assert actual_result.conversation_mode == ConversationMode.INSTRUCTION
+        # AND the DB stores both the silence and intro messages
+        actual_doc = await repo.find_by_conversation_id(actual_result.conversation_id)
+        assert actual_doc is not None
+        assert len(actual_doc.messages) == 2
+        assert actual_doc.messages[0].message == "(silence)"
+        assert actual_doc.messages[1].message == "Welcome to CV Development!"
 
     @pytest.mark.asyncio
     async def test_raises_already_exists_when_duplicate(self):
@@ -341,30 +613,200 @@ class TestCreateConversation:
         with pytest.raises(CareerReadinessModuleNotFoundError):
             await service.create_conversation("user_abc", "nonexistent")
 
+    @pytest.mark.asyncio
+    async def test_raises_not_unlocked_for_locked_module(self):
+        # GIVEN two modules where the second is locked (first not completed)
+        given_modules = [
+            _make_module_config(module_id="m1", sort_order=1),
+            _make_module_config(module_id="m2", title="Module 2", sort_order=2),
+        ]
+        service, _ = _make_service(modules=given_modules)
+
+        # WHEN a conversation is created for the locked second module
+        # THEN ModuleNotUnlockedError is raised
+        with pytest.raises(ModuleNotUnlockedError):
+            await service.create_conversation("user_abc", "m2")
+
 
 class TestSendMessage:
-    """Tests for sending a message in a conversation."""
+    """Tests for sending messages with mode dispatch."""
 
     @pytest.mark.asyncio
-    async def test_sends_message_and_returns_response(self):
-        # GIVEN a service with a conversation
+    async def test_instruction_mode_normal_response(self):
+        # GIVEN a service with a conversation in instruction mode
         given_module = _make_module_config()
-        given_agent = MockCareerReadinessAgent(response_message="Here is CV advice.")
+        given_agent = MockCareerReadinessAgent(
+            response_message="Let's discuss Topic A.",
+            topics_covered=["Topic A"],
+        )
         service, repo = _make_service(modules=[given_module], agent=given_agent)
         given_conversation = _make_conversation(user_id="user_abc", module_id="cv-development")
         await repo.create(given_conversation)
 
         # WHEN a message is sent
         actual_result = await service.send_message(
-            "user_abc", "cv-development", given_conversation.conversation_id, "How do I write a CV?",
+            "user_abc", "cv-development", given_conversation.conversation_id, "Tell me about Topic A",
         )
 
         # THEN the response includes the user message and agent response
-        assert len(actual_result.messages) == 3  # intro + user + agent
-        assert actual_result.messages[1].message == "How do I write a CV?"
-        assert actual_result.messages[1].sender == CareerReadinessMessageSender.USER
-        assert actual_result.messages[2].message == "Here is CV advice."
-        assert actual_result.messages[2].sender == CareerReadinessMessageSender.AGENT
+        assert actual_result.messages[-1].message == "Let's discuss Topic A."
+        # AND topics are accumulated in the conversation
+        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_conv is not None
+        assert "Topic A" in actual_conv.covered_topics
+
+    @pytest.mark.asyncio
+    async def test_instruction_mode_triggers_quiz_when_all_topics_covered_and_finished(self):
+        # GIVEN a conversation where all topics are already covered except the agent says finished this turn
+        given_module = _make_module_config(topics=["Topic A", "Topic B"])
+        given_agent = MockCareerReadinessAgent(
+            response_message="Great, we've covered everything!",
+            topics_covered=["Topic B"],
+            finished=True,
+        )
+        service, repo = _make_service(modules=[given_module], agent=given_agent)
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            covered_topics=["Topic A"],
+        )
+        await repo.create(given_conversation)
+
+        # WHEN a message is sent
+        actual_result = await service.send_message(
+            "user_abc", "cv-development", given_conversation.conversation_id, "I understand now",
+        )
+
+        # THEN the quiz is delivered (last message contains quiz content)
+        assert "quiz" in actual_result.messages[-1].message.lower()
+        # AND quiz_delivered is set on the conversation
+        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_conv is not None
+        assert actual_conv.quiz_delivered is True
+
+    @pytest.mark.asyncio
+    async def test_quiz_submission_pass(self):
+        # GIVEN a conversation with quiz delivered (2 questions, threshold 0.5)
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=True,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the user submits correct answers
+        actual_result = await service.send_message(
+            "user_abc", "cv-development", given_conversation.conversation_id, "1.A, 2.B",
+        )
+
+        # THEN the quiz is passed
+        assert actual_result.quiz_passed is True
+        assert actual_result.module_completed is True
+        assert actual_result.conversation_mode == ConversationMode.SUPPORT
+        # AND the conversation state is updated
+        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_conv is not None
+        assert actual_conv.quiz_passed is True
+        assert actual_conv.conversation_mode == ConversationMode.SUPPORT
+
+    @pytest.mark.asyncio
+    async def test_quiz_submission_fail(self):
+        # GIVEN a conversation with quiz delivered (2 questions, threshold 0.5)
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=True,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the user submits all wrong answers
+        actual_result = await service.send_message(
+            "user_abc", "cv-development", given_conversation.conversation_id, "1.C, 2.C",
+        )
+
+        # THEN the quiz is not passed
+        assert actual_result.quiz_passed is False
+        assert actual_result.module_completed is False
+        assert actual_result.conversation_mode == ConversationMode.INSTRUCTION
+        # AND quiz_delivered is reset for retry
+        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_conv is not None
+        assert actual_conv.quiz_delivered is False
+
+    @pytest.mark.asyncio
+    async def test_quiz_fail_feedback_shows_correct_threshold_count(self):
+        # GIVEN a module with 3 questions and 0.7 threshold (ceil(0.7*3) = 3, not int(0.7*3) = 2)
+        given_questions = [
+            QuizQuestion(question="Q1?", options=["A. X", "B. Y", "C. Z", "D. W"], correct_answer="A"),
+            QuizQuestion(question="Q2?", options=["A. X", "B. Y", "C. Z", "D. W"], correct_answer="B"),
+            QuizQuestion(question="Q3?", options=["A. X", "B. Y", "C. Z", "D. W"], correct_answer="C"),
+        ]
+        given_quiz = QuizConfig(pass_threshold=0.7, questions=given_questions)
+        given_module = _make_module_config(quiz=given_quiz)
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=True,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the user submits 2/3 correct answers (which fails since 2/3 = 0.66 < 0.7)
+        actual_result = await service.send_message(
+            "user_abc", "cv-development", given_conversation.conversation_id, "1.A, 2.B, 3.D",
+        )
+
+        # THEN the feedback message says "at least 3" (not "at least 2")
+        actual_feedback = actual_result.messages[-1].message
+        assert "at least 3" in actual_feedback
+        assert actual_result.quiz_passed is False
+
+    @pytest.mark.asyncio
+    async def test_quiz_non_answer_falls_through_to_instruction(self):
+        # GIVEN a conversation with quiz delivered
+        given_module = _make_module_config()
+        given_agent = MockCareerReadinessAgent(response_message="Let me help you with that.")
+        service, repo = _make_service(modules=[given_module], agent=given_agent)
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=True,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the user sends a non-answer message
+        actual_result = await service.send_message(
+            "user_abc", "cv-development", given_conversation.conversation_id, "mmm what is this?",
+        )
+
+        # THEN the message is handled by the instruction agent instead of being scored
+        assert actual_result.messages[-1].message == "Let me help you with that."
+        # AND quiz_delivered is NOT reset
+        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_conv is not None
+        assert actual_conv.quiz_delivered is True
+
+    @pytest.mark.asyncio
+    async def test_support_mode_message(self):
+        # GIVEN a completed conversation in support mode
+        given_module = _make_module_config()
+        given_agent = MockCareerReadinessAgent(response_message="Here's more info on that topic.")
+        service, repo = _make_service(modules=[given_module], agent=given_agent)
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            conversation_mode=ConversationMode.SUPPORT,
+            quiz_passed=True,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN a message is sent in support mode
+        actual_result = await service.send_message(
+            "user_abc", "cv-development", given_conversation.conversation_id, "Can you explain more?",
+        )
+
+        # THEN the agent responds normally
+        assert actual_result.messages[-1].message == "Here's more info on that topic."
+        assert actual_result.conversation_mode == ConversationMode.SUPPORT
+        assert actual_result.quiz_passed is True
 
     @pytest.mark.asyncio
     async def test_raises_conversation_not_found(self):
@@ -445,6 +887,44 @@ class TestGetConversationHistory:
         # THEN ConversationNotFoundError is raised
         with pytest.raises(ConversationNotFoundError):
             await service.get_conversation_history("user_abc", "cv-development", "nonexistent")
+
+    @pytest.mark.asyncio
+    async def test_returns_quiz_passed_false_when_quiz_delivered_but_not_passed(self):
+        # GIVEN a conversation where the quiz was delivered but not yet passed
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=True, quiz_passed=False,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the history is requested
+        actual_result = await service.get_conversation_history(
+            "user_abc", "cv-development", given_conversation.conversation_id,
+        )
+
+        # THEN quiz_passed is False (not None)
+        assert actual_result.quiz_passed is False
+
+    @pytest.mark.asyncio
+    async def test_returns_quiz_passed_none_when_quiz_not_delivered(self):
+        # GIVEN a conversation where the quiz has not been delivered
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=False, quiz_passed=False,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the history is requested
+        actual_result = await service.get_conversation_history(
+            "user_abc", "cv-development", given_conversation.conversation_id,
+        )
+
+        # THEN quiz_passed is None (quiz never attempted)
+        assert actual_result.quiz_passed is None
 
     @pytest.mark.asyncio
     async def test_raises_access_denied_for_wrong_user(self):
