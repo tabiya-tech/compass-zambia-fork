@@ -31,6 +31,8 @@ export interface ChatMessageFieldProps {
   currentPhase?: ConversationPhase;
   prefillMessage?: string | null; // optional prefill content for the input field
   cvUploadError?: string | null; // CV upload error message from polling process
+  placeholderKey?: TranslationKey; // optional override for default placeholder
+  showCvUpload?: boolean; // when false, hides the plus button and CV upload menu (default true)
 }
 
 const uniqueId = "2a76494f-351d-409d-ba58-e1b2cfaf2a53";
@@ -130,6 +132,7 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
   const [menuView, setMenuView] = useState<"main" | "cvList">("main");
 
   const isCvUploadEnabled = getCvUploadEnabled().toLowerCase() === "true";
+  const showCvUpload = props.showCvUpload !== false;
 
   // Show the dot badge whenever in COLLECT_EXPERIENCES and not yet seen
   useEffect(() => {
@@ -424,7 +427,6 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
     return theme.palette.text.secondary;
   }, [message, theme.palette.error.main, theme.palette.warning.main, theme.palette.text.secondary]);
 
-  // Placeholder text based on the chat status
   const placeHolder = useMemo(() => {
     if (props.isChatFinished) {
       return t(PLACEHOLDER_TEXTS.CHAT_FINISHED);
@@ -438,8 +440,8 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
     if (!isOnline) {
       return t(PLACEHOLDER_TEXTS.OFFLINE);
     }
-    return t(PLACEHOLDER_TEXTS.DEFAULT);
-  }, [props.aiIsTyping, props.isChatFinished, props.isUploadingCv, isOnline, t]);
+    return props.placeholderKey ? t(props.placeholderKey) : t(PLACEHOLDER_TEXTS.DEFAULT);
+  }, [props.aiIsTyping, props.isChatFinished, props.isUploadingCv, props.placeholderKey, isOnline, t]);
 
   // Check if the send button should be disabled
   const sendIsDisabled = useCallback(() => {
@@ -547,7 +549,7 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
             startAdornment: (
               <InputAdornment position="start">
                 <AnimatePresence initial={false}>
-                  {message.trim().length === 0 && !inputIsDisabled() && isCvUploadEnabled && (
+                  {message.trim().length === 0 && !inputIsDisabled() && isCvUploadEnabled && showCvUpload && (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}

@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import argparse
 from typing import Dict, Any, Set, Optional
 from collections import defaultdict
 from app.i18n.types import Locale
