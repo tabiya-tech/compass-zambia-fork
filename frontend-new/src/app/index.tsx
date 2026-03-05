@@ -33,6 +33,9 @@ const LazyLoadedChat = lazyWithPreload(() => import("src/chat/Chat"));
 
 const LazyLoadedKnowledgeHubDocument = lazyWithPreload(() => import("src/knowledgeHub/pages/KnowledgeHubDocument"));
 const LazyLoadedKnowledgeHubList = lazyWithPreload(() => import("src/knowledgeHub/pages/KnowledgeHubList"));
+const LazyLoadedCareerExplorer = lazyWithPreload(
+  () => import("src/careerExplorer/pages/CareerExplorerPage/CareerExplorerPage")
+);
 
 // Wrap the createHashRouter function with Sentry to capture errors that occur during router initialization
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV6(createHashRouter);
@@ -55,6 +58,7 @@ const ProtectedRouteKeys = {
   SENSITIVE_DATA: "SENSITIVE_DATA",
   KNOWLEDGE_HUB: "KNOWLEDGE_HUB",
   KNOWLEDGE_HUB_DOCUMENT: "KNOWLEDGE_HUB_DOCUMENT",
+  CAREER_EXPLORER: "CAREER_EXPLORER",
 };
 
 const NotFound: React.FC = () => {
@@ -335,6 +339,14 @@ const App = () => {
       element: (
         <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB_DOCUMENT}>
           <LazyLoadedKnowledgeHubDocument />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routerPaths.CAREER_EXPLORER,
+      element: (
+        <ProtectedRoute key={ProtectedRouteKeys.CAREER_EXPLORER}>
+          <LazyLoadedCareerExplorer />
         </ProtectedRoute>
       ),
     },

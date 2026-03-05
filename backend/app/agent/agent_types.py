@@ -20,6 +20,7 @@ class AgentType(Enum):
     FAREWELL_AGENT = "FarewellAgent"
     QNA_AGENT = "QnaAgent"
     CAREER_READINESS_AGENT = "CareerReadinessAgent"
+    CAREER_EXPLORER_AGENT = "CareerExplorerAgent"
 
 
 class AgentInput(BaseModel):
