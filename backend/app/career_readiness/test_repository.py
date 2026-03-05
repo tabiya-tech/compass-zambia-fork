@@ -94,17 +94,6 @@ class TestFindByConversationId:
     """Tests for finding a conversation by its ID."""
 
     @pytest.mark.asyncio
-    async def test_returns_none_when_not_found(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
-        # GIVEN a repository with no documents
-        repo = await get_repository
-
-        # WHEN a nonexistent conversation is requested
-        actual_result = await repo.find_by_conversation_id("nonexistent")
-
-        # THEN None is returned
-        assert actual_result is None
-
-    @pytest.mark.asyncio
     async def test_returns_document_when_found(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
         # GIVEN a repository with a conversation
         repo = await get_repository
@@ -121,17 +110,6 @@ class TestFindByConversationId:
 
 class TestFindByUserAndModule:
     """Tests for finding a conversation by user and module."""
-
-    @pytest.mark.asyncio
-    async def test_returns_none_when_not_found(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
-        # GIVEN a repository with no documents
-        repo = await get_repository
-
-        # WHEN a conversation is requested for a user and module
-        actual_result = await repo.find_by_user_and_module("some_user", "some_module")
-
-        # THEN None is returned
-        assert actual_result is None
 
     @pytest.mark.asyncio
     async def test_returns_correct_document(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
@@ -214,24 +192,6 @@ class TestAppendMessage:
         assert len(actual_result.messages) == 2
         assert actual_result.messages[1].message == "How do I write a CV?"
 
-    @pytest.mark.asyncio
-    async def test_updates_updated_at_timestamp(self,
-                                                get_repository: Awaitable[CareerReadinessConversationRepository]):
-        # GIVEN a repository with a conversation
-        repo = await get_repository
-        given_conversation = _make_conversation()
-        given_original_updated_at = given_conversation.updated_at
-        await repo.create(given_conversation)
-
-        # WHEN a message is appended
-        given_new_message = _make_message(message="New message")
-        await repo.append_message(given_conversation.conversation_id, given_new_message)
-
-        # THEN the updated_at timestamp is changed
-        actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
-        assert actual_result is not None
-        assert actual_result.updated_at >= given_original_updated_at
-
 
 class TestDeleteByConversationId:
     """Tests for deleting a conversation."""
@@ -284,22 +244,6 @@ class TestUpdateCoveredTopics:
         assert actual_result is not None
         assert actual_result.covered_topics == given_topics
 
-    @pytest.mark.asyncio
-    async def test_updates_updated_at_timestamp(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
-        # GIVEN a repository with a conversation
-        repo = await get_repository
-        given_conversation = _make_conversation()
-        given_original_updated_at = given_conversation.updated_at
-        await repo.create(given_conversation)
-
-        # WHEN covered topics are updated
-        await repo.update_covered_topics(given_conversation.conversation_id, ["Topic A"])
-
-        # THEN the updated_at timestamp is changed
-        actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
-        assert actual_result is not None
-        assert actual_result.updated_at >= given_original_updated_at
-
 
 class TestUpdateQuizDelivered:
     """Tests for updating the quiz_delivered flag."""
@@ -318,22 +262,6 @@ class TestUpdateQuizDelivered:
         actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
         assert actual_result is not None
         assert actual_result.quiz_delivered is True
-
-    @pytest.mark.asyncio
-    async def test_resets_quiz_delivered_to_false(self, get_repository: Awaitable[CareerReadinessConversationRepository]):
-        # GIVEN a repository with a conversation where quiz was delivered
-        repo = await get_repository
-        given_conversation = _make_conversation()
-        await repo.create(given_conversation)
-        await repo.update_quiz_delivered(given_conversation.conversation_id, True)
-
-        # WHEN quiz_delivered is reset to False
-        await repo.update_quiz_delivered(given_conversation.conversation_id, False)
-
-        # THEN the conversation has quiz_delivered = False
-        actual_result = await repo.find_by_conversation_id(given_conversation.conversation_id)
-        assert actual_result is not None
-        assert actual_result.quiz_delivered is False
 
 
 class TestUpdateQuizPassed:

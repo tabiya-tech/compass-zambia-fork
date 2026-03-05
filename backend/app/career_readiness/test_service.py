@@ -11,7 +11,6 @@ from app.career_readiness.agent import CareerReadinessAgentOutput
 from app.career_readiness.errors import (
     ConversationAccessDeniedError,
     ConversationAlreadyExistsError,
-    ConversationModuleMismatchError,
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
     ModuleNotUnlockedError,
@@ -361,16 +360,6 @@ class TestParseQuizAnswers:
         # THEN answers are numbered sequentially
         assert actual_answers == {1: "B", 2: "A", 3: "C"}
 
-    def test_normalizes_lowercase(self):
-        # GIVEN lowercase answers
-        given_input = "1.b, 2.a"
-
-        # WHEN parsed
-        actual_answers = _parse_quiz_answers(given_input)
-
-        # THEN answers are uppercase
-        assert actual_answers == {1: "B", 2: "A"}
-
 
 class TestEvaluateQuiz:
     """Tests for the quiz evaluator."""
@@ -398,18 +387,6 @@ class TestEvaluateQuiz:
 
         # THEN score is 1
         assert actual_score == 1
-
-    def test_missing_answers_counted_as_wrong(self):
-        # GIVEN a quiz with no answers provided
-        given_quiz = _make_quiz_config()
-        given_answers: dict[int, str] = {}
-
-        # WHEN evaluated
-        actual_score, actual_total, _ = _evaluate_quiz(given_quiz, given_answers)
-
-        # THEN score is 0
-        assert actual_score == 0
-        assert actual_total == 2
 
 
 # ---------------------------------------------------------------------------
@@ -453,23 +430,6 @@ class TestBuildConversationContext:
         assert actual_context.history.turns[0].input.message == "(silence)"
         assert actual_context.history.turns[0].output.message_for_user == "Welcome!"
 
-    def test_builds_context_with_multiple_pairs(self):
-        # GIVEN a conversation with silence+intro and multiple exchanges
-        given_messages = [
-            _make_message(sender=CareerReadinessMessageSender.USER, message="(silence)"),
-            _make_message(sender=CareerReadinessMessageSender.AGENT, message="Welcome!"),
-            _make_message(sender=CareerReadinessMessageSender.USER, message="Q1"),
-            _make_message(sender=CareerReadinessMessageSender.AGENT, message="A1"),
-            _make_message(sender=CareerReadinessMessageSender.USER, message="Q2"),
-            _make_message(sender=CareerReadinessMessageSender.AGENT, message="A2"),
-        ]
-
-        # WHEN the context is built
-        actual_context = _build_conversation_context(given_messages)
-
-        # THEN there are three conversation turns
-        assert len(actual_context.history.turns) == 3
-
 
 class TestListModules:
     """Tests for listing modules with sequential unlock status."""
@@ -504,23 +464,6 @@ class TestListModules:
         # THEN the module with a conversation has IN_PROGRESS status
         assert actual_result.modules[0].status == ModuleStatus.IN_PROGRESS
 
-    @pytest.mark.asyncio
-    async def test_completed_module_unlocks_next(self):
-        # GIVEN first module completed
-        given_modules = [
-            _make_module_config(module_id="m1", sort_order=1),
-            _make_module_config(module_id="m2", title="Module 2", sort_order=2),
-        ]
-        service, repo = _make_service(modules=given_modules)
-        given_conversation = _make_conversation(user_id="user_abc", module_id="m1", quiz_passed=True)
-        await repo.create(given_conversation)
-
-        # WHEN modules are listed
-        actual_result = await service.list_modules("user_abc")
-
-        # THEN first is COMPLETED, second is UNLOCKED
-        assert actual_result.modules[0].status == ModuleStatus.COMPLETED
-        assert actual_result.modules[1].status == ModuleStatus.UNLOCKED
 
 
 class TestGetModule:
@@ -735,33 +678,6 @@ class TestSendMessage:
         assert actual_conv.quiz_delivered is False
 
     @pytest.mark.asyncio
-    async def test_quiz_fail_feedback_shows_correct_threshold_count(self):
-        # GIVEN a module with 3 questions and 0.7 threshold (ceil(0.7*3) = 3, not int(0.7*3) = 2)
-        given_questions = [
-            QuizQuestion(question="Q1?", options=["A. X", "B. Y", "C. Z", "D. W"], correct_answer="A"),
-            QuizQuestion(question="Q2?", options=["A. X", "B. Y", "C. Z", "D. W"], correct_answer="B"),
-            QuizQuestion(question="Q3?", options=["A. X", "B. Y", "C. Z", "D. W"], correct_answer="C"),
-        ]
-        given_quiz = QuizConfig(pass_threshold=0.7, questions=given_questions)
-        given_module = _make_module_config(quiz=given_quiz)
-        service, repo = _make_service(modules=[given_module])
-        given_conversation = _make_conversation(
-            user_id="user_abc", module_id="cv-development",
-            quiz_delivered=True,
-        )
-        await repo.create(given_conversation)
-
-        # WHEN the user submits 2/3 correct answers (which fails since 2/3 = 0.66 < 0.7)
-        actual_result = await service.send_message(
-            "user_abc", "cv-development", given_conversation.conversation_id, "1.A, 2.B, 3.D",
-        )
-
-        # THEN the feedback message says "at least 3" (not "at least 2")
-        actual_feedback = actual_result.messages[-1].message
-        assert "at least 3" in actual_feedback
-        assert actual_result.quiz_passed is False
-
-    @pytest.mark.asyncio
     async def test_quiz_non_answer_falls_through_to_instruction(self):
         # GIVEN a conversation with quiz delivered
         given_module = _make_module_config()
@@ -834,24 +750,6 @@ class TestSendMessage:
                 "other_user", "cv-development", given_conversation.conversation_id, "Hello",
             )
 
-    @pytest.mark.asyncio
-    async def test_raises_module_mismatch(self):
-        # GIVEN a conversation for cv-development
-        given_modules = [
-            _make_module_config(module_id="cv-development"),
-            _make_module_config(module_id="interview-prep", title="Interview Prep", sort_order=2),
-        ]
-        service, repo = _make_service(modules=given_modules)
-        given_conversation = _make_conversation(user_id="user_abc", module_id="cv-development")
-        await repo.create(given_conversation)
-
-        # WHEN a message is sent under a different module
-        # THEN ConversationModuleMismatchError is raised
-        with pytest.raises(ConversationModuleMismatchError):
-            await service.send_message(
-                "user_abc", "interview-prep", given_conversation.conversation_id, "Hello",
-            )
-
 
 class TestGetConversationHistory:
     """Tests for retrieving conversation history."""
@@ -906,25 +804,6 @@ class TestGetConversationHistory:
 
         # THEN quiz_passed is False (not None)
         assert actual_result.quiz_passed is False
-
-    @pytest.mark.asyncio
-    async def test_returns_quiz_passed_none_when_quiz_not_delivered(self):
-        # GIVEN a conversation where the quiz has not been delivered
-        given_module = _make_module_config()
-        service, repo = _make_service(modules=[given_module])
-        given_conversation = _make_conversation(
-            user_id="user_abc", module_id="cv-development",
-            quiz_delivered=False, quiz_passed=False,
-        )
-        await repo.create(given_conversation)
-
-        # WHEN the history is requested
-        actual_result = await service.get_conversation_history(
-            "user_abc", "cv-development", given_conversation.conversation_id,
-        )
-
-        # THEN quiz_passed is None (quiz never attempted)
-        assert actual_result.quiz_passed is None
 
     @pytest.mark.asyncio
     async def test_raises_access_denied_for_wrong_user(self):

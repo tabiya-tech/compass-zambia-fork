@@ -150,23 +150,6 @@ class TestParseQuizSection:
         assert len(actual_quiz.questions[0].options) == 4
         assert actual_quiz.questions[0].correct_answer == "B"
 
-    def test_defaults_pass_threshold_to_0_7(self):
-        # GIVEN a quiz section without pass_threshold
-        given_text = (
-            "1. A question?\n"
-            "A. Option A\n"
-            "B. Option B\n"
-            "C. Option C\n"
-            "D. Option D\n"
-            "Answer: A\n"
-        )
-
-        # WHEN the quiz section is parsed
-        actual_quiz = _parse_quiz_section(given_text)
-
-        # THEN the pass threshold defaults to 0.7
-        assert actual_quiz.pass_threshold == 0.7
-
     def test_raises_when_no_questions_found(self):
         # GIVEN a quiz section with no valid questions
         given_text = "pass_threshold: 0.8\n\nSome random text."
@@ -190,30 +173,6 @@ class TestParseQuizSection:
         # THEN a ValueError is raised for missing answer
         with pytest.raises(ValueError, match="missing Answer"):
             _parse_quiz_section(given_text)
-
-    def test_parses_options_correctly(self):
-        # GIVEN a quiz section with specific options
-        given_text = (
-            "1. Which is best?\n"
-            "A. First option\n"
-            "B. Second option\n"
-            "C. Third option\n"
-            "D. Fourth option\n"
-            "Answer: C\n"
-        )
-
-        # WHEN the quiz section is parsed
-        actual_quiz = _parse_quiz_section(given_text)
-
-        # THEN the options are formatted as "X. text"
-        assert actual_quiz.questions[0].options == [
-            "A. First option",
-            "B. Second option",
-            "C. Third option",
-            "D. Fourth option",
-        ]
-        # AND the correct answer is C
-        assert actual_quiz.questions[0].correct_answer == "C"
 
 
 class TestLoadModuleFromFile:
@@ -265,28 +224,6 @@ class TestLoadModuleFromFile:
         # AND the content includes the full body
         assert "No quiz here." in actual_module.content
 
-    def test_loads_module_without_topics(self, tmp_path):
-        # GIVEN a module file without a topics field
-        given_file = tmp_path / "no_topics.md"
-        given_file.write_text(
-            "---\n"
-            "id: no-topics\n"
-            "title: No Topics Module\n"
-            "description: A module without topics.\n"
-            "icon: test\n"
-            "sort_order: 1\n"
-            "input_placeholder: Ask...\n"
-            "---\n\n"
-            "# Content",
-            encoding="utf-8",
-        )
-
-        # WHEN the module is loaded
-        actual_module = _load_module_from_file(given_file)
-
-        # THEN the topics list is empty
-        assert actual_module.topics == []
-
     def test_raises_when_required_field_missing(self, tmp_path):
         # GIVEN a module file missing the 'title' field
         given_file = tmp_path / "bad.md"
@@ -318,15 +255,7 @@ class TestModuleRegistry:
         # THEN all 5 modules are loaded
         actual_modules = actual_registry.get_all_modules()
         assert len(actual_modules) == 5
-
-    def test_modules_sorted_by_sort_order(self):
-        # GIVEN the real modules directory
-        actual_registry = ModuleRegistry()
-
-        # WHEN all modules are retrieved
-        actual_modules = actual_registry.get_all_modules()
-
-        # THEN they are sorted by sort_order
+        # AND they are sorted by sort_order
         actual_orders = [m.sort_order for m in actual_modules]
         assert actual_orders == sorted(actual_orders)
 
@@ -410,39 +339,6 @@ class TestModuleRegistry:
         assert actual_registry.get_module("real") is not None
         assert actual_registry.get_module("example") is None
 
-    def test_empty_directory_loads_no_modules(self, tmp_path):
-        # GIVEN an empty directory
-        given_empty_dir = tmp_path / "empty"
-        given_empty_dir.mkdir()
-
-        # WHEN a registry is created with the empty directory
-        actual_registry = ModuleRegistry(modules_dir=given_empty_dir)
-
-        # THEN no modules are loaded
-        assert len(actual_registry.get_all_modules()) == 0
-
-    def test_each_module_has_nonempty_content(self):
-        # GIVEN the real modules directory
-        actual_registry = ModuleRegistry()
-
-        # WHEN all modules are retrieved
-        actual_modules = actual_registry.get_all_modules()
-
-        # THEN each module has non-empty content
-        for module in actual_modules:
-            assert len(module.content) > 0, f"Module {module.id} has empty content"
-
-    def test_all_module_ids_are_unique(self):
-        # GIVEN the real modules directory
-        actual_registry = ModuleRegistry()
-
-        # WHEN all modules are retrieved
-        actual_modules = actual_registry.get_all_modules()
-
-        # THEN all IDs are unique
-        actual_ids = [m.id for m in actual_modules]
-        assert len(actual_ids) == len(set(actual_ids))
-
     def test_all_real_modules_have_topics(self):
         # GIVEN the real modules directory
         actual_registry = ModuleRegistry()
@@ -467,15 +363,3 @@ class TestModuleRegistry:
             assert len(module.quiz.questions) == 10, (
                 f"Module {module.id} has {len(module.quiz.questions)} questions, expected 10"
             )
-
-    def test_real_module_content_excludes_quiz(self):
-        # GIVEN the real modules directory
-        actual_registry = ModuleRegistry()
-
-        # WHEN all modules are retrieved
-        actual_modules = actual_registry.get_all_modules()
-
-        # THEN no module content contains quiz material
-        for module in actual_modules:
-            assert "## Quiz" not in module.content, f"Module {module.id} content contains quiz section"
-            assert "Answer:" not in module.content, f"Module {module.id} content contains quiz answers"

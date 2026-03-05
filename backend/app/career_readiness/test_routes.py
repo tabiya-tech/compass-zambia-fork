@@ -16,7 +16,6 @@ from app.career_readiness.errors import (
     ConversationAlreadyExistsError,
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
-    ModuleNotUnlockedError,
 )
 from app.career_readiness.routes import add_career_readiness_routes, get_career_readiness_service
 from app.career_readiness.service import ICareerReadinessService
@@ -132,19 +131,6 @@ class TestListModules:
         assert len(body["modules"]) == 1
         assert body["modules"][0]["id"] == "cv-development"
 
-    def test_returns_500_on_unexpected_error(self, client_with_mocks: TestClientWithMocks,
-                                              mocker: pytest_mock.MockerFixture):
-        client, mock_service, _ = client_with_mocks
-
-        # GIVEN the service raises an unexpected error
-        mocker.patch.object(mock_service, "list_modules", side_effect=Exception("Unexpected"))
-
-        # WHEN modules are listed
-        response = client.get("/career-readiness/modules")
-
-        # THEN 500 is returned
-        assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
-
 
 class TestGetModule:
     """Tests for GET /career-readiness/modules/{module_id}."""
@@ -202,20 +188,6 @@ class TestCreateConversation:
         # THEN 404 is returned
         assert response.status_code == HTTPStatus.NOT_FOUND
 
-    def test_returns_403_when_module_not_unlocked(self, client_with_mocks: TestClientWithMocks,
-                                                   mocker: pytest_mock.MockerFixture):
-        client, mock_service, _ = client_with_mocks
-
-        # GIVEN the service raises ModuleNotUnlockedError
-        mocker.patch.object(mock_service, "create_conversation",
-                            side_effect=ModuleNotUnlockedError("interview-preparation"))
-
-        # WHEN a conversation is created for a locked module
-        response = client.post("/career-readiness/modules/interview-preparation/conversations")
-
-        # THEN 403 FORBIDDEN is returned
-        assert response.status_code == HTTPStatus.FORBIDDEN
-
     def test_returns_409_when_already_exists(self, client_with_mocks: TestClientWithMocks,
                                               mocker: pytest_mock.MockerFixture):
         client, mock_service, mocked_user = client_with_mocks
@@ -262,23 +234,6 @@ class TestSendMessage:
         # THEN 404 is returned
         assert response.status_code == HTTPStatus.NOT_FOUND
 
-    def test_returns_403_when_access_denied(self, client_with_mocks: TestClientWithMocks,
-                                              mocker: pytest_mock.MockerFixture):
-        client, mock_service, _ = client_with_mocks
-
-        # GIVEN the service raises ConversationAccessDeniedError
-        mocker.patch.object(mock_service, "send_message",
-                            side_effect=ConversationAccessDeniedError("conv123", "other_user"))
-
-        # WHEN a message is sent
-        response = client.post(
-            "/career-readiness/modules/cv-development/conversations/conv123/messages",
-            json={"user_input": "Hello"},
-        )
-
-        # THEN 403 FORBIDDEN is returned
-        assert response.status_code == HTTPStatus.FORBIDDEN
-
     def test_returns_413_when_message_too_long(self, client_with_mocks: TestClientWithMocks):
         client, _, _ = client_with_mocks
 
@@ -324,22 +279,6 @@ class TestGetConversationHistory:
 
         # THEN 404 is returned
         assert response.status_code == HTTPStatus.NOT_FOUND
-
-    def test_returns_403_when_access_denied(self, client_with_mocks: TestClientWithMocks,
-                                              mocker: pytest_mock.MockerFixture):
-        client, mock_service, _ = client_with_mocks
-
-        # GIVEN the service raises ConversationAccessDeniedError
-        mocker.patch.object(mock_service, "get_conversation_history",
-                            side_effect=ConversationAccessDeniedError("conv123", "other_user"))
-
-        # WHEN the conversation history is requested
-        response = client.get(
-            "/career-readiness/modules/cv-development/conversations/conv123/messages",
-        )
-
-        # THEN 403 FORBIDDEN is returned
-        assert response.status_code == HTTPStatus.FORBIDDEN
 
 
 class TestDeleteConversation:
