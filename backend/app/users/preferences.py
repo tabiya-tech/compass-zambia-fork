@@ -15,6 +15,8 @@ from app.metrics.types import UserAccountCreatedEvent
 from app.server_dependencies.db_dependencies import CompassDBProvider
 from app.users.auth import Authentication, UserInfo, SignInProvider
 from app.users.get_user_preferences_repository import get_user_preferences_repository
+from app.users.plain_personal_data.routes import get_plain_personal_data_service
+from app.users.plain_personal_data.service import IPlainPersonalDataService
 from app.users.repositories import UserPreferenceRepository
 from app.users.sensitive_personal_data.routes import get_sensitive_personal_data_service
 from app.users.sensitive_personal_data.service import ISensitivePersonalDataService
@@ -33,6 +35,7 @@ async def _get_user_preferences(
         repository: UserPreferenceRepository,
         user_feedback_service: UserFeedbackService,
         sensitive_personal_data_service: ISensitivePersonalDataService,
+        plain_personal_data_service: IPlainPersonalDataService,
         user_id: str,
         authed_user: UserInfo) -> UsersPreferencesResponse:
     try:
@@ -58,14 +61,15 @@ async def _get_user_preferences(
             )
 
         # Fetch feedback sessions together with if they have sensitive personal data
-        answered_questions, has_sensitive_personal_data = await asyncio.gather(
+        answered_questions, has_sensitive_personal_data, plain_personal_data = await asyncio.gather(
             user_feedback_service.get_answered_questions(user_id),
-            sensitive_personal_data_service.exists_by_user_id(user_id)
+            sensitive_personal_data_service.exists_by_user_id(user_id),
+            plain_personal_data_service.get(user_id)
         )
 
         return UsersPreferencesResponse(
             **user_preferences.model_dump(),
-            has_sensitive_personal_data=has_sensitive_personal_data,
+            has_sensitive_personal_data=has_sensitive_personal_data or plain_personal_data is not None,
             user_feedback_answered_questions=answered_questions
         )
     except Exception as e:
@@ -159,6 +163,7 @@ async def _update_user_preferences(
         repository: UserPreferenceRepository,
         user_feedback_service: UserFeedbackService,
         sensitive_personal_data_service: ISensitivePersonalDataService,
+        plain_personal_data_service: IPlainPersonalDataService,
         preferences: UserPreferencesUpdateRequest,
         authed_user: UserInfo) -> UsersPreferencesResponse | None:
     """
@@ -188,7 +193,7 @@ async def _update_user_preferences(
                 detail="accepted terms and conditions can't be updated once accepted"
             )
 
-        updated_user_preferences, sessions_with_feedback, has_sensitive_personal_data = await asyncio.gather(
+        updated_user_preferences, sessions_with_feedback, has_sensitive_personal_data, plain_personal_data = await asyncio.gather(
             repository.update_user_preference(preferences.user_id, UserPreferencesRepositoryUpdateRequest(
                 language=preferences.language,
                 client_id=preferences.client_id,
@@ -196,12 +201,13 @@ async def _update_user_preferences(
                 experiments=preferences.experiments
             )),
             user_feedback_service.get_answered_questions(preferences.user_id),
-            sensitive_personal_data_service.exists_by_user_id(preferences.user_id)
+            sensitive_personal_data_service.exists_by_user_id(preferences.user_id),
+            plain_personal_data_service.get(preferences.user_id)
         )
 
         return UsersPreferencesResponse(
             **updated_user_preferences.model_dump(),
-            has_sensitive_personal_data=has_sensitive_personal_data,
+            has_sensitive_personal_data=has_sensitive_personal_data or plain_personal_data is not None,
             user_feedback_answered_questions=sessions_with_feedback
         )
 
@@ -260,6 +266,7 @@ def add_user_preference_routes(users_router: APIRouter, auth: Authentication):
             user_preference_repository: UserPreferenceRepository = Depends(get_user_preferences_repository),
             sensitive_personal_data_service: ISensitivePersonalDataService = Depends(
                 get_sensitive_personal_data_service),
+            plain_personal_data_service: IPlainPersonalDataService = Depends(get_plain_personal_data_service),
             user_feedback_service: UserFeedbackService = Depends(_get_user_feedback_service)
     ) -> UsersPreferencesResponse:
         # set the user id context variable.
@@ -269,6 +276,7 @@ def add_user_preference_routes(users_router: APIRouter, auth: Authentication):
             user_preference_repository,
             user_feedback_service,
             sensitive_personal_data_service,
+            plain_personal_data_service,
             user_id,
             user_info
         )
@@ -311,6 +319,7 @@ def add_user_preference_routes(users_router: APIRouter, auth: Authentication):
             user_preference_repository: UserPreferenceRepository = Depends(get_user_preferences_repository),
             sensitive_personal_data_service: ISensitivePersonalDataService = Depends(
                 get_sensitive_personal_data_service),
+            plain_personal_data_service: IPlainPersonalDataService = Depends(get_plain_personal_data_service),
             user_feedback_service: UserFeedbackService = Depends(_get_user_feedback_service)
     ) -> UsersPreferencesResponse:
         # set the user id context variable.
@@ -320,6 +329,7 @@ def add_user_preference_routes(users_router: APIRouter, auth: Authentication):
             user_preference_repository,
             user_feedback_service,
             sensitive_personal_data_service,
+            plain_personal_data_service,
             request,
             user_info
         )
