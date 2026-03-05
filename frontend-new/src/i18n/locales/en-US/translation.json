@@ -778,6 +778,18 @@
     "next": "Next",
     "previous": "Previous"
   },
+  "careerReadiness": {
+    "backToModules": "Back to all modules",
+    "emptyList": "No modules available at the moment.",
+    "introduction": "Work through each module at your own pace. Each one is an AI-guided conversation focused on a specific skill area. Pick up where you left off, or start a new module.",
+    "pageTitle": "Career Readiness",
+    "pageDescription": "Build the skills employers look for beyond your technical training",
+    "listError": "Unable to load modules. Please try again.",
+    "statusDone": "Done",
+    "statusInProgress": "In Progress",
+    "statusNotStarted": "Not started",
+    "moduleNotFound": "Module not found."
+  },
   "home": {
     "dashboard": "Your Career Hub",
     "backToDashboard": "Back to dashboard",
@@ -791,18 +803,17 @@
     "modules": {
       "skillsDiscovery": "My Skills & Interests",
       "skillsDiscoverySubtitle": "Uncover your skills and interests",
-      "careerDiscovery": "Career Pathways",
-      "jobReadiness": "Career Readiness",
-      "careerExplorer": "Career Explorer",
+      "careerDiscovery": "Career Explorer",
+      "careerReadinessCard": "Career Readiness",
+      "careerExplorer": "Job Matching & Analytics",
       "knowledgeHub": "Knowledge Hub",
       "skillsDiscoveryDesc": "Chat with {{appName}} to uncover your skills and interests — from your studies, work, and everyday life.",
       "careerDiscoveryDesc": "Explore career pathways in Energy, Mining, Agriculture and more — with salary data and qualification routes.",
-      "jobReadinessDesc": "Build essential workplace skills through guided AI modules — from CV writing to interview practice.",
+      "careerReadinessCardDesc": "Build job readiness through guided AI modules — from professional identity and CV development to interview prep and workplace skills.",
       "careerExplorerDesc": "See how your skills match to real job openings and explore labour market insights across Zambia.",
       "knowledgeHubDesc": "Explore sector profiles, salary benchmarks, and TEVET qualification pathways all in one place.",
       "continue": "Continue",
-      "completed": "Completed",
-      "comingSoon": "Coming Soon"
+      "completed": "Completed"
     },
     "footer": {
       "privacyPolicy": "Privacy Policy",

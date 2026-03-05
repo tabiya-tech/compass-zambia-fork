@@ -33,6 +33,7 @@ export interface ChatMessageFieldProps {
   cvUploadError?: string | null; // CV upload error message from polling process
   placeholderKey?: TranslationKey; // optional override for default placeholder
   showCvUpload?: boolean; // when false, hides the plus button and CV upload menu (default true)
+  customPlaceholder?: string | null; // optional custom placeholder to override default placeholder
 }
 
 const uniqueId = "2a76494f-351d-409d-ba58-e1b2cfaf2a53";
@@ -440,8 +441,14 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
     if (!isOnline) {
       return t(PLACEHOLDER_TEXTS.OFFLINE);
     }
-    return props.placeholderKey ? t(props.placeholderKey) : t(PLACEHOLDER_TEXTS.DEFAULT);
-  }, [props.aiIsTyping, props.isChatFinished, props.isUploadingCv, props.placeholderKey, isOnline, t]);
+    if (props.placeholderKey) {
+      return t(props.placeholderKey);
+    }
+    if (props.customPlaceholder?.trim()) {
+      return props.customPlaceholder.trim();
+    }
+    return t(PLACEHOLDER_TEXTS.DEFAULT);
+  }, [props.aiIsTyping, props.isChatFinished, props.isUploadingCv, props.customPlaceholder, props.placeholderKey, isOnline, t]);
 
   // Check if the send button should be disabled
   const sendIsDisabled = useCallback(() => {

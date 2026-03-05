@@ -783,6 +783,18 @@
     "placeholder": "Uliza kuhusu sekta...",
     "send": "Tuma"
   },
+  "careerReadiness": {
+    "backToModules": "Rudi kwenye moduli zote",
+    "emptyList": "Hakuna moduli inayopatikana kwa sasa.",
+    "introduction": "Fanya kazi kila moduli kwa kasi yako. Kila moduli ni mazungumzo yanayoongozwa na AI yanayolenga eneo maalum la ujuzi. Endelea ulipoacha au anza moduli mpya.",
+    "pageTitle": "Kujiandaa kwa Kazi",
+    "pageDescription": "Jenga ujuzi unaotafutwa na waajiri zaidi ya mafunzo yako ya kiufundi",
+    "listError": "Imeshindwa kupakia moduli. Tafadhali jaribu tena.",
+    "statusDone": "Imekamilika",
+    "statusInProgress": "Inaendelea",
+    "statusNotStarted": "Haijaanza",
+    "moduleNotFound": "Moduli haijapatikana."
+  },
   "home": {
     "dashboard": "Kituo Chako cha Kazi",
     "backToDashboard": "Rudi kwenye dashibodi",
@@ -796,18 +808,17 @@
     "modules": {
       "skillsDiscovery": "Ujuzi na Mapendeleo Yangu",
       "skillsDiscoverySubtitle": "Gundua ujuzi na mapendeleo yako",
-      "careerDiscovery": "Njia za Kazi",
-      "jobReadiness": "Kujiandaa kwa Kazi",
-      "careerExplorer": "Kuchunguza Kazi",
+      "careerDiscovery": "Kuchunguza Kazi",
+      "careerReadinessCard": "Kujiandaa kwa Kazi",
+      "careerExplorer": "Kulinganisha Kazi na Uchambuzi",
       "knowledgeHub": "Kituo cha Maarifa",
       "skillsDiscoveryDesc": "Zungumza na {{appName}} ili kugundua ujuzi na mapendeleo yako — kutoka masomo yako, kazi, na maisha ya kila siku.",
       "careerDiscoveryDesc": "Chunguza njia za kazi katika Nishati, Madini, Kilimo na zaidi — na data ya mishahara na njia za sifa.",
-      "jobReadinessDesc": "Jenga ujuzi muhimu wa kazi kupitia moduli zinazoongozwa na AI — kutoka kuandika CV hadi mazoezi ya mahojiano.",
+      "careerReadinessCardDesc": "Jenga ujuzi wa kazi kupitia moduli zinazoongozwa na AI — kutoka utambulisho wa kazi na maendeleo ya CV hadi maandalizi ya mahojiano na ujuzi wa mahali pa kazi.",
       "careerExplorerDesc": "Angalia jinsi ujuzi wako unavyolingana na nafasi za kazi halisi na chunguza maarifa ya soko la ajira nchini Zambia.",
       "knowledgeHubDesc": "Chunguza wasifu wa sekta, viwango vya mishahara, na njia za sifa za TEVET mahali pamoja.",
       "continue": "Endelea",
-      "completed": "Imekamilika",
-      "comingSoon": "Inakuja Hivi Karibuni"
+      "completed": "Imekamilika"
     },
     "footer": {
       "privacyPolicy": "Sera ya Faragha",
