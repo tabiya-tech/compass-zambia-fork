@@ -783,6 +783,18 @@
     "placeholder": "Pregunta sobre un sector...",
     "send": "Enviar"
   },
+  "careerReadiness": {
+    "backToModules": "Volver a todos los módulos",
+    "emptyList": "No hay módulos disponibles en este momento.",
+    "introduction": "Trabaja cada módulo a tu ritmo. Cada uno es una conversación guiada por IA centrada en un área de habilidades concreta. Retoma donde lo dejaste o empieza un módulo nuevo.",
+    "pageTitle": "Preparación profesional",
+    "pageDescription": "Desarrolla las habilidades que buscan los empleadores más allá de tu formación técnica",
+    "listError": "No se pudieron cargar los módulos. Inténtalo de nuevo.",
+    "statusDone": "Hecho",
+    "statusInProgress": "En progreso",
+    "statusNotStarted": "No iniciado",
+    "moduleNotFound": "Módulo no encontrado."
+  },
   "home": {
     "dashboard": "Tu Centro de Carrera",
     "backToDashboard": "Volver al panel",
@@ -796,18 +808,17 @@
     "modules": {
       "skillsDiscovery": "Mis habilidades e intereses",
       "skillsDiscoverySubtitle": "Descubre tus habilidades e intereses",
-      "careerDiscovery": "Rutas profesionales",
-      "jobReadiness": "Preparación profesional",
-      "careerExplorer": "Explorador de carreras",
+      "careerDiscovery": "Explorador de carreras",
+      "careerReadinessCard": "Preparación profesional",
+      "careerExplorer": "Búsqueda y análisis de empleo",
       "knowledgeHub": "Centro de conocimiento",
       "skillsDiscoveryDesc": "Chatea con {{appName}} para descubrir tus habilidades e intereses — desde tus estudios, trabajo y vida cotidiana.",
       "careerDiscoveryDesc": "Explora caminos profesionales en Energía, Minería, Agricultura y más — con datos salariales y rutas de cualificación.",
-      "jobReadinessDesc": "Desarrolla habilidades esenciales para el trabajo a través de módulos guiados por IA — desde redacción de CV hasta práctica de entrevistas.",
+      "careerReadinessCardDesc": "Desarrolla la preparación profesional con módulos guiados por IA — desde identidad profesional y desarrollo de CV hasta preparación de entrevistas y habilidades laborales.",
       "careerExplorerDesc": "Comprueba cómo tus habilidades coinciden con ofertas de trabajo reales y explora información del mercado laboral.",
       "knowledgeHubDesc": "Explora perfiles sectoriales, referencias salariales y rutas de cualificación en un solo lugar.",
       "continue": "Continuar",
-      "completed": "Completado",
-      "comingSoon": "Próximamente"
+      "completed": "Completado"
     },
     "footer": {
       "privacyPolicy": "Política de Privacidad",

@@ -775,6 +775,18 @@
     "placeholder": "Funsani za gawo...",
     "send": "Tumizani"
   },
+  "careerReadiness": {
+    "backToModules": "Bwererani ku ma module onse",
+    "emptyList": "Palibe ma module omwe alipo pano.",
+    "introduction": "Gwirani ntchito module iliyonse mokwanira. Iliyonse ndi mabwenzi otsogoleredwa ndi AI omwe amasokoneza gawo lina la luso. Pitirizani kuchokera kumalo omwe mwanaika kapena yambani module yatsopano.",
+    "pageTitle": "Kukonzekera Ntchito",
+    "pageDescription": "Pangani luso omwe olemba ntchito akufuna kuposa maphunziro anu aukadaulo",
+    "listError": "Sitingathe kutsitsa ma module. Chonde yesani kachiwiri.",
+    "statusDone": "Zatha",
+    "statusInProgress": "Ikupitilira",
+    "statusNotStarted": "Sinayambe",
+    "moduleNotFound": "Module sipinapezeke."
+  },
   "home": {
     "dashboard": "Malo Anu a Ntchito",
     "backToDashboard": "Bwererani ku dashibodi",
@@ -788,18 +800,17 @@
     "modules": {
       "skillsDiscovery": "Luso ndi Zomwe Ndimakonda",
       "skillsDiscoverySubtitle": "Pezani luso lanu ndi zomwe mumakonda",
-      "careerDiscovery": "Njira za Ntchito",
-      "jobReadiness": "Kukonzekera Ntchito",
-      "careerExplorer": "Kufufuza Ntchito",
+      "careerDiscovery": "Kufufuza Ntchito",
+      "careerReadinessCard": "Kukonzekera Ntchito",
+      "careerExplorer": "Kufananiza Ntchito ndi Kusanthula",
       "knowledgeHub": "Malo Ophunzirira",
       "skillsDiscoveryDesc": "Lankhulani ndi {{appName}} kuti mupeze luso lanu ndi zomwe mumakonda — kuchokera ku maphunziro anu, ntchito, ndi moyo wa tsiku ndi tsiku.",
       "careerDiscoveryDesc": "Fufuzani njira za ntchito mu Mphamvu, Migodi, Ulimi ndi zina — ndi chidziwitso cha malipiro ndi njira zoyenera.",
-      "jobReadinessDesc": "Phunzirani luso lofunikira la ntchito kudzera mu ma module otsogoleredwa ndi AI — kuyambira kulemba CV mpaka kuchita mafunso oyeserera.",
+      "careerReadinessCardDesc": "Phunzirani luso la ntchito kudzera mu ma module otsogoleredwa ndi AI — kuyambira kudziwika bwino ndi kukonza CV mpaka kukonzekera mafunso ndi luso la ntchito.",
       "careerExplorerDesc": "Onani momwe luso lanu limafanana ndi maudindo a ntchito enieni ndikufufuza chidziwitso cha msika wa ntchito ku Zambia.",
       "knowledgeHubDesc": "Fufuzani mbiri ya magawo, malipiro, ndi njira za maphunziro a TEVET pamalo amodzi.",
       "continue": "Pitirizani",
-      "completed": "Zatha",
-      "comingSoon": "Zikubwera posachedwa"
+      "completed": "Zatha"
     },
     "footer": {
       "privacyPolicy": "Ndondomeko ya Chinsinsi",
