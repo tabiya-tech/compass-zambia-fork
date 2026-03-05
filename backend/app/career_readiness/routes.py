@@ -15,6 +15,7 @@ from app.career_readiness.errors import (
     ConversationAlreadyExistsError,
     ConversationModuleMismatchError,
     ConversationNotFoundError,
+    ModuleNotUnlockedError,
 )
 from app.career_readiness.module_loader import get_module_registry
 from app.career_readiness.repository import CareerReadinessConversationRepository
@@ -108,6 +109,7 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
         response_model=CareerReadinessConversationResponse,
         responses={
             HTTPStatus.NOT_FOUND: {"model": HTTPErrorResponse},
+            HTTPStatus.FORBIDDEN: {"model": HTTPErrorResponse},
             HTTPStatus.CONFLICT: {"model": HTTPErrorResponse},
             HTTPStatus.INTERNAL_SERVER_ERROR: {"model": HTTPErrorResponse},
         },
@@ -122,6 +124,8 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
             return await service.create_conversation(user_info.user_id, module_id)
         except CareerReadinessModuleNotFoundError as exc:
             raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Module not found: {module_id}") from exc
+        except ModuleNotUnlockedError as exc:
+            raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail=str(exc)) from exc
         except ConversationAlreadyExistsError as exc:
             raise HTTPException(status_code=HTTPStatus.CONFLICT,
                                 detail=f"A conversation already exists for module {module_id}") from exc

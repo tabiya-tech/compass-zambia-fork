@@ -6,8 +6,14 @@ from pydantic import BaseModel, Field, field_serializer, field_validator
 
 class ModuleStatus(str, Enum):
     NOT_STARTED = "NOT_STARTED"
+    UNLOCKED = "UNLOCKED"
     IN_PROGRESS = "IN_PROGRESS"
     COMPLETED = "COMPLETED"
+
+
+class ConversationMode(str, Enum):
+    INSTRUCTION = "INSTRUCTION"
+    SUPPORT = "SUPPORT"
 
 
 class CareerReadinessMessageSender(str, Enum):
@@ -149,6 +155,15 @@ class CareerReadinessConversationResponse(BaseModel):
     module_completed: bool = False
     """Whether the module has been completed through this conversation"""
 
+    quiz_passed: bool | None = None
+    """Whether the user passed the module quiz. None = not attempted."""
+
+    covered_topics: list[str] = []
+    """Topics that have been covered so far in this conversation."""
+
+    conversation_mode: ConversationMode | None = None
+    """The current conversation mode (INSTRUCTION or SUPPORT)."""
+
     class Config:
         extra = "forbid"
 
@@ -182,6 +197,18 @@ class CareerReadinessConversationDocument(BaseModel):
     messages: list[CareerReadinessMessage] = Field(default_factory=list)
     """The messages in the conversation"""
 
+    conversation_mode: ConversationMode = ConversationMode.INSTRUCTION
+    """The current conversation mode (INSTRUCTION during teaching, SUPPORT after quiz pass)"""
+
+    covered_topics: list[str] = Field(default_factory=list)
+    """Topics the agent has covered so far in the conversation"""
+
+    quiz_delivered: bool = False
+    """Whether the quiz has been presented to the user"""
+
+    quiz_passed: bool = False
+    """Whether the user passed the module quiz"""
+
     created_at: datetime
     """When the conversation was created"""
 
@@ -211,6 +238,10 @@ class CareerReadinessConversationDocument(BaseModel):
             module_id=str(_dict["module_id"]),
             user_id=str(_dict["user_id"]),
             messages=[CareerReadinessMessage(**msg) for msg in _dict.get("messages", [])],
+            conversation_mode=ConversationMode(_dict.get("conversation_mode", ConversationMode.INSTRUCTION)),
+            covered_topics=_dict.get("covered_topics", []),
+            quiz_delivered=_dict.get("quiz_delivered", False),
+            quiz_passed=_dict.get("quiz_passed", False),
             created_at=_dict["created_at"],
             updated_at=_dict["updated_at"],
         )
