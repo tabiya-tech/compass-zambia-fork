@@ -43,3 +43,17 @@ class ModuleNotUnlockedError(Exception):
 
     def __init__(self, module_id: str):
         super().__init__(f"Module {module_id} is not yet unlocked")
+
+
+class QuizNotAvailableError(Exception):
+    """Raised when the quiz is not available for this conversation."""
+
+    def __init__(self, conversation_id: str):
+        super().__init__(f"Quiz is not available for conversation {conversation_id}")
+
+
+class QuizAlreadyPassedError(Exception):
+    """Raised when quiz was already passed."""
+
+    def __init__(self, conversation_id: str):
+        super().__init__(f"Quiz already passed for conversation {conversation_id}")
