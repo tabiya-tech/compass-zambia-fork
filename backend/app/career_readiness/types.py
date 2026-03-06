@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from enum import Enum
 
-from pydantic import BaseModel, Field, field_serializer, field_validator
+from pydantic import BaseModel, Field, field_serializer, field_validator, model_validator
 
 
 class ModuleStatus(str, Enum):
@@ -163,6 +163,80 @@ class CareerReadinessConversationResponse(BaseModel):
 
     conversation_mode: ConversationMode | None = None
     """The current conversation mode (INSTRUCTION or SUPPORT)."""
+
+    quiz_available: bool = False
+    """Whether the quiz is available for this conversation (quiz delivered but not yet passed)."""
+
+    class Config:
+        extra = "forbid"
+
+
+class QuizQuestionResponse(BaseModel):
+    """A quiz question for the frontend (excludes correct_answer)."""
+
+    question: str
+    options: list[str]
+
+    class Config:
+        extra = "forbid"
+
+
+class QuizResponse(BaseModel):
+    """Response for GET .../quiz — the quiz questions."""
+
+    questions: list[QuizQuestionResponse]
+
+    class Config:
+        extra = "forbid"
+
+
+class QuizSubmissionInput(BaseModel):
+    """Input for POST .../quiz — structured quiz answers."""
+
+    answers: dict[int, str] = Field(
+        json_schema_extra={
+            "example": {"1": "B", "2": "A", "3": "C"},
+        },
+    )
+    """question_number (1-indexed) → answer letter (A-D)"""
+
+    class Config:
+        extra = "forbid"
+
+    @model_validator(mode="after")
+    def _validate_answers(self) -> "QuizSubmissionInput":
+        valid_letters = {"A", "B", "C", "D"}
+        normalized: dict[int, str] = {}
+        for key, value in self.answers.items():
+            upper = value.upper()
+            if upper not in valid_letters:
+                raise ValueError(f"Invalid answer '{value}' for question {key}. Must be A-D.")
+            normalized[key] = upper
+        self.answers = normalized
+        return self
+
+
+class QuizQuestionResult(BaseModel):
+    """Per-question result (no correct answer exposed)."""
+
+    question_index: int
+    """1-indexed question number"""
+
+    is_correct: bool
+
+    class Config:
+        extra = "forbid"
+
+
+class QuizSubmissionResponse(BaseModel):
+    """Response for POST .../quiz — evaluation results."""
+
+    score: int
+    total: int
+    passed: bool
+    question_results: list[QuizQuestionResult]
+    module_completed: bool
+    conversation_mode: ConversationMode
 
     class Config:
         extra = "forbid"

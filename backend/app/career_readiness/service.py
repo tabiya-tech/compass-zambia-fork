@@ -6,7 +6,6 @@ the career readiness business logic.
 """
 import logging
 import math
-import re
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from typing import Callable
@@ -22,6 +21,8 @@ from app.career_readiness.errors import (
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
     ModuleNotUnlockedError,
+    QuizAlreadyPassedError,
+    QuizNotAvailableError,
 )
 from app.career_readiness.module_loader import ModuleConfig, ModuleRegistry, QuizConfig
 from app.career_readiness.repository import ICareerReadinessConversationRepository
@@ -35,6 +36,10 @@ from app.career_readiness.types import (
     ModuleListResponse,
     ModuleStatus,
     ModuleSummary,
+    QuizQuestionResponse,
+    QuizQuestionResult,
+    QuizResponse,
+    QuizSubmissionResponse,
 )
 from app.conversation_memory.conversation_memory_types import (
     ConversationContext,
@@ -80,6 +85,18 @@ class ICareerReadinessService(ABC):
     async def get_conversation_history(self, user_id: str, module_id: str,
                                        conversation_id: str) -> CareerReadinessConversationResponse:
         """Retrieve the full message history for a conversation."""
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def get_quiz(self, user_id: str, module_id: str,
+                       conversation_id: str) -> QuizResponse:
+        """Get quiz questions for the active quiz."""
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def submit_quiz(self, user_id: str, module_id: str,
+                          conversation_id: str, answers: dict[int, str]) -> QuizSubmissionResponse:
+        """Submit quiz answers for evaluation."""
         raise NotImplementedError()
 
     @abstractmethod
@@ -182,45 +199,6 @@ def _build_conversation_context(messages: list[CareerReadinessMessage]) -> Conve
 
     history = ConversationHistory(turns=turns)
     return ConversationContext(all_history=history, history=history)
-
-
-def _format_quiz_message(quiz: QuizConfig) -> str:
-    """Format quiz questions into a chat message for the user."""
-    lines = [
-        "Great work! You've covered all the topics. Now let's check your understanding with a quick quiz.",
-        "",
-        "Please answer each question by typing the letter of your answer (e.g., '1.B, 2.A, 3.C, ...').",
-        "",
-    ]
-    for i, q in enumerate(quiz.questions, 1):
-        lines.append(f"{i}. {q.question}")
-        for option in q.options:
-            lines.append(f"   {option}")
-        lines.append("")
-    return "\n".join(lines)
-
-
-def _parse_quiz_answers(user_input: str) -> dict[int, str]:
-    """
-    Parse quiz answers from user input.
-
-    Supports formats like: "1.B, 2.A, 3.C" or "1. B 2. A 3. C" or "B, A, C"
-    Returns dict of question_number (1-indexed) -> answer letter (uppercase).
-    """
-    answers: dict[int, str] = {}
-    # Try numbered format: "1.B" or "1. B"
-    numbered = re.findall(r"(\d+)\.\s*([A-Da-d])", user_input)
-    if numbered:
-        for num_str, letter in numbered:
-            answers[int(num_str)] = letter.upper()
-    else:
-        # Try sequential letters: "B, A, C, D" or "B A C D"
-        # Only match standalone letters (not embedded in words) and require at least 2
-        letters = re.findall(r"\b([A-Da-d])\b", user_input)
-        if len(letters) >= 2:
-            for i, letter in enumerate(letters, 1):
-                answers[i] = letter.upper()
-    return answers
 
 
 def _evaluate_quiz(quiz: QuizConfig, answers: dict[int, str]) -> tuple[int, int, list[bool]]:
@@ -381,13 +359,9 @@ class CareerReadinessService(ICareerReadinessService):
         conversation = await self._get_conversation_or_raise(conversation_id)
         self._validate_access(conversation, user_id, module_id)
 
-        # Three-mode dispatch
-        if conversation.quiz_delivered and not conversation.quiz_passed:
-            return await self._handle_quiz_submission(module, conversation, user_input)
-        elif conversation.conversation_mode == ConversationMode.SUPPORT:
+        if conversation.conversation_mode == ConversationMode.SUPPORT:
             return await self._handle_support_message(module, conversation, user_input)
-        else:
-            return await self._handle_instruction_message(module, conversation, user_input)
+        return await self._handle_instruction_message(module, conversation, user_input)
 
     async def _handle_instruction_message(
         self, module: ModuleConfig,
@@ -431,12 +405,21 @@ class CareerReadinessService(ICareerReadinessService):
         response_messages = all_messages + [agent_message]
 
         # Check if all topics are covered AND agent says finished → deliver quiz
+        quiz_available = conversation.quiz_delivered and not conversation.quiz_passed
         all_topics_covered = set(module.topics).issubset(new_covered) if module.topics else True
-        if all_topics_covered and agent_output.finished and module.quiz is not None:
-            quiz_msg = self._build_and_persist_quiz_message(module.quiz)
-            await self._repository.append_message(conversation.conversation_id, quiz_msg)
+        if (all_topics_covered and agent_output.finished
+                and module.quiz is not None and not conversation.quiz_delivered):
+            marker_message = CareerReadinessMessage(
+                message_id=str(ObjectId()),
+                message="Great work! You've covered the key topics. "
+                        "It's time for a short quiz to check your understanding.",
+                sender=CareerReadinessMessageSender.AGENT,
+                sent_at=datetime.now(timezone.utc),
+            )
+            await self._repository.append_message(conversation.conversation_id, marker_message)
             await self._repository.update_quiz_delivered(conversation.conversation_id, True)
-            response_messages.append(quiz_msg)
+            response_messages.append(marker_message)
+            quiz_available = True
 
         return CareerReadinessConversationResponse(
             conversation_id=conversation.conversation_id,
@@ -444,71 +427,7 @@ class CareerReadinessService(ICareerReadinessService):
             messages=_filter_silence(response_messages),
             covered_topics=covered_topics_list,
             conversation_mode=ConversationMode.INSTRUCTION,
-        )
-
-    async def _handle_quiz_submission(
-        self, module: ModuleConfig,
-        conversation: CareerReadinessConversationDocument,
-        user_input: str,
-    ) -> CareerReadinessConversationResponse:
-        """Evaluate quiz answers deterministically and update state."""
-        if module.quiz is None:
-            raise ValueError(f"Module {module.id} has no quiz but quiz_delivered is True")
-
-        # If the input doesn't contain valid quiz answers, handle as a conversational message.
-        # TODO: Quiz interaction (re-showing questions, asking about specific questions, navigating
-        #  back to the quiz after asking for help) would be best handled by the frontend with a
-        #  dedicated quiz UI component rather than through chat messages. For now, we fall through
-        #  to instruction mode which loses quiz context.
-        answers = _parse_quiz_answers(user_input)
-        if not answers:
-            return await self._handle_instruction_message(module, conversation, user_input)
-
-        existing_messages = list(conversation.messages)
-
-        # Persist user answer message
-        now = datetime.now(timezone.utc)
-        user_message = CareerReadinessMessage(
-            message_id=str(ObjectId()),
-            message=user_input,
-            sender=CareerReadinessMessageSender.USER,
-            sent_at=now,
-        )
-        await self._repository.append_message(conversation.conversation_id, user_message)
-        score, total, _ = _evaluate_quiz(module.quiz, answers)
-        passed = (score / total) >= module.quiz.pass_threshold if total > 0 else False
-
-        if passed:
-            feedback = (f"You scored {score}/{total}. Congratulations, you passed! "
-                        "You can now continue to ask me any follow-up questions about this topic.")
-            await self._repository.update_quiz_passed(conversation.conversation_id, True)
-            await self._repository.update_conversation_mode(
-                conversation.conversation_id, ConversationMode.SUPPORT)
-            result_mode = ConversationMode.SUPPORT
-        else:
-            threshold_count = math.ceil(module.quiz.pass_threshold * total)
-            feedback = (f"You scored {score}/{total}. You need at least {threshold_count} "
-                        "correct answers to pass. Let's review the topics and try again.")
-            await self._repository.update_quiz_delivered(conversation.conversation_id, False)
-            result_mode = ConversationMode.INSTRUCTION
-
-        feedback_message = CareerReadinessMessage(
-            message_id=str(ObjectId()),
-            message=feedback,
-            sender=CareerReadinessMessageSender.AGENT,
-            sent_at=datetime.now(timezone.utc),
-        )
-        await self._repository.append_message(conversation.conversation_id, feedback_message)
-
-        response_messages = existing_messages + [user_message, feedback_message]
-        return CareerReadinessConversationResponse(
-            conversation_id=conversation.conversation_id,
-            module_id=conversation.module_id,
-            messages=_filter_silence(response_messages),
-            covered_topics=conversation.covered_topics,
-            quiz_passed=passed,
-            conversation_mode=result_mode,
-            module_completed=passed,
+            quiz_available=quiz_available,
         )
 
     async def _handle_support_message(
@@ -552,16 +471,6 @@ class CareerReadinessService(ICareerReadinessService):
             conversation_mode=ConversationMode.SUPPORT,
         )
 
-    @staticmethod
-    def _build_and_persist_quiz_message(quiz: QuizConfig) -> CareerReadinessMessage:
-        """Format quiz into a CareerReadinessMessage (caller persists it)."""
-        return CareerReadinessMessage(
-            message_id=str(ObjectId()),
-            message=_format_quiz_message(quiz),
-            sender=CareerReadinessMessageSender.AGENT,
-            sent_at=datetime.now(timezone.utc),
-        )
-
     async def get_conversation_history(self, user_id: str, module_id: str,
                                        conversation_id: str) -> CareerReadinessConversationResponse:
         self._get_module_or_raise(module_id)
@@ -575,6 +484,84 @@ class CareerReadinessService(ICareerReadinessService):
             covered_topics=conversation.covered_topics,
             conversation_mode=conversation.conversation_mode,
             quiz_passed=conversation.quiz_passed if conversation.quiz_delivered else None,
+            quiz_available=conversation.quiz_delivered and not conversation.quiz_passed,
+        )
+
+    async def get_quiz(self, user_id: str, module_id: str,
+                       conversation_id: str) -> QuizResponse:
+        module = self._get_module_or_raise(module_id)
+        conversation = await self._get_conversation_or_raise(conversation_id)
+        self._validate_access(conversation, user_id, module_id)
+
+        if conversation.quiz_passed:
+            raise QuizAlreadyPassedError(conversation_id)
+        if not conversation.quiz_delivered or module.quiz is None:
+            raise QuizNotAvailableError(conversation_id)
+
+        return QuizResponse(questions=[
+            QuizQuestionResponse(question=q.question, options=q.options)
+            for q in module.quiz.questions
+        ])
+
+    async def submit_quiz(self, user_id: str, module_id: str,
+                          conversation_id: str, answers: dict[int, str]) -> QuizSubmissionResponse:
+        module = self._get_module_or_raise(module_id)
+        conversation = await self._get_conversation_or_raise(conversation_id)
+        self._validate_access(conversation, user_id, module_id)
+
+        if not conversation.quiz_delivered or module.quiz is None:
+            raise QuizNotAvailableError(conversation_id)
+        if conversation.quiz_passed:
+            raise QuizAlreadyPassedError(conversation_id)
+
+        # Persist user answer message for audit trail
+        now = datetime.now(timezone.utc)
+        answer_text = "Quiz answers: " + ", ".join(f"{k}.{v}" for k, v in sorted(answers.items()))
+        user_message = CareerReadinessMessage(
+            message_id=str(ObjectId()),
+            message=answer_text,
+            sender=CareerReadinessMessageSender.USER,
+            sent_at=now,
+        )
+        await self._repository.append_message(conversation.conversation_id, user_message)
+
+        score, total, results = _evaluate_quiz(module.quiz, answers)
+        passed = (score / total) >= module.quiz.pass_threshold if total > 0 else False
+
+        question_results = [
+            QuizQuestionResult(question_index=i + 1, is_correct=correct)
+            for i, correct in enumerate(results)
+        ]
+
+        if passed:
+            feedback = (f"You scored {score}/{total}. Congratulations, you passed! "
+                        "You can now continue to ask me any follow-up questions about this topic.")
+            await self._repository.update_quiz_passed(conversation.conversation_id, True)
+            await self._repository.update_conversation_mode(
+                conversation.conversation_id, ConversationMode.SUPPORT)
+            result_mode = ConversationMode.SUPPORT
+        else:
+            threshold_count = math.ceil(module.quiz.pass_threshold * total)
+            feedback = (f"You scored {score}/{total}. You need at least {threshold_count} "
+                        "correct answers to pass. Let's review the topics and try again.")
+            await self._repository.update_quiz_delivered(conversation.conversation_id, False)
+            result_mode = ConversationMode.INSTRUCTION
+
+        feedback_message = CareerReadinessMessage(
+            message_id=str(ObjectId()),
+            message=feedback,
+            sender=CareerReadinessMessageSender.AGENT,
+            sent_at=datetime.now(timezone.utc),
+        )
+        await self._repository.append_message(conversation.conversation_id, feedback_message)
+
+        return QuizSubmissionResponse(
+            score=score,
+            total=total,
+            passed=passed,
+            question_results=question_results,
+            module_completed=passed,
+            conversation_mode=result_mode,
         )
 
     async def delete_conversation(self, user_id: str, module_id: str, conversation_id: str) -> None:

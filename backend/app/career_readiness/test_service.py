@@ -14,6 +14,8 @@ from app.career_readiness.errors import (
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
     ModuleNotUnlockedError,
+    QuizAlreadyPassedError,
+    QuizNotAvailableError,
 )
 from app.career_readiness.module_loader import ModuleConfig, ModuleRegistry, QuizConfig, QuizQuestion
 from app.career_readiness.repository import ICareerReadinessConversationRepository
@@ -21,8 +23,6 @@ from app.career_readiness.service import (
     CareerReadinessService,
     _build_conversation_context,
     _derive_module_statuses,
-    _format_quiz_message,
-    _parse_quiz_answers,
     _evaluate_quiz,
 )
 from app.career_readiness.types import (
@@ -321,46 +321,6 @@ class TestDeriveModuleStatuses:
         assert actual_statuses["m2"] == ModuleStatus.NOT_STARTED
 
 
-class TestFormatQuizMessage:
-    """Tests for the quiz message formatter."""
-
-    def test_formats_quiz_with_numbered_questions(self):
-        # GIVEN a quiz config
-        given_quiz = _make_quiz_config()
-
-        # WHEN the quiz message is formatted
-        actual_message = _format_quiz_message(given_quiz)
-
-        # THEN it contains numbered questions and options
-        assert "1. Q1?" in actual_message
-        assert "2. Q2?" in actual_message
-        assert "A. Opt1" in actual_message
-
-
-class TestParseQuizAnswers:
-    """Tests for the quiz answer parser."""
-
-    def test_parses_numbered_format(self):
-        # GIVEN answers in "1.B, 2.A" format
-        given_input = "1.B, 2.A, 3.C"
-
-        # WHEN parsed
-        actual_answers = _parse_quiz_answers(given_input)
-
-        # THEN correct answers are extracted
-        assert actual_answers == {1: "B", 2: "A", 3: "C"}
-
-    def test_parses_sequential_letters(self):
-        # GIVEN answers as sequential letters
-        given_input = "B, A, C"
-
-        # WHEN parsed
-        actual_answers = _parse_quiz_answers(given_input)
-
-        # THEN answers are numbered sequentially
-        assert actual_answers == {1: "B", 2: "A", 3: "C"}
-
-
 class TestEvaluateQuiz:
     """Tests for the quiz evaluator."""
 
@@ -383,10 +343,25 @@ class TestEvaluateQuiz:
         given_answers = {1: "A", 2: "C"}
 
         # WHEN evaluated
-        actual_score, _, _ = _evaluate_quiz(given_quiz, given_answers)
+        actual_score, actual_total, actual_results = _evaluate_quiz(given_quiz, given_answers)
 
-        # THEN score is 1
+        # THEN score is 1 out of 2
         assert actual_score == 1
+        assert actual_total == 2
+        assert actual_results == [True, False]
+
+    def test_missing_answers_counted_as_wrong(self):
+        # GIVEN a quiz with only one answer provided (question 2 missing)
+        given_quiz = _make_quiz_config()
+        given_answers = {1: "A"}
+
+        # WHEN evaluated
+        actual_score, actual_total, actual_results = _evaluate_quiz(given_quiz, given_answers)
+
+        # THEN the missing answer is counted as wrong
+        assert actual_score == 1
+        assert actual_total == 2
+        assert actual_results == [True, False]
 
 
 # ---------------------------------------------------------------------------
@@ -619,7 +594,9 @@ class TestSendMessage:
             "user_abc", "cv-development", given_conversation.conversation_id, "I understand now",
         )
 
-        # THEN the quiz is delivered (last message contains quiz content)
+        # THEN quiz_available is True in the response
+        assert actual_result.quiz_available is True
+        # AND the last message is a marker indicating quiz is ready
         assert "quiz" in actual_result.messages[-1].message.lower()
         # AND quiz_delivered is set on the conversation
         actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
@@ -627,59 +604,8 @@ class TestSendMessage:
         assert actual_conv.quiz_delivered is True
 
     @pytest.mark.asyncio
-    async def test_quiz_submission_pass(self):
-        # GIVEN a conversation with quiz delivered (2 questions, threshold 0.5)
-        given_module = _make_module_config()
-        service, repo = _make_service(modules=[given_module])
-        given_conversation = _make_conversation(
-            user_id="user_abc", module_id="cv-development",
-            quiz_delivered=True,
-        )
-        await repo.create(given_conversation)
-
-        # WHEN the user submits correct answers
-        actual_result = await service.send_message(
-            "user_abc", "cv-development", given_conversation.conversation_id, "1.A, 2.B",
-        )
-
-        # THEN the quiz is passed
-        assert actual_result.quiz_passed is True
-        assert actual_result.module_completed is True
-        assert actual_result.conversation_mode == ConversationMode.SUPPORT
-        # AND the conversation state is updated
-        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
-        assert actual_conv is not None
-        assert actual_conv.quiz_passed is True
-        assert actual_conv.conversation_mode == ConversationMode.SUPPORT
-
-    @pytest.mark.asyncio
-    async def test_quiz_submission_fail(self):
-        # GIVEN a conversation with quiz delivered (2 questions, threshold 0.5)
-        given_module = _make_module_config()
-        service, repo = _make_service(modules=[given_module])
-        given_conversation = _make_conversation(
-            user_id="user_abc", module_id="cv-development",
-            quiz_delivered=True,
-        )
-        await repo.create(given_conversation)
-
-        # WHEN the user submits all wrong answers
-        actual_result = await service.send_message(
-            "user_abc", "cv-development", given_conversation.conversation_id, "1.C, 2.C",
-        )
-
-        # THEN the quiz is not passed
-        assert actual_result.quiz_passed is False
-        assert actual_result.module_completed is False
-        assert actual_result.conversation_mode == ConversationMode.INSTRUCTION
-        # AND quiz_delivered is reset for retry
-        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
-        assert actual_conv is not None
-        assert actual_conv.quiz_delivered is False
-
-    @pytest.mark.asyncio
-    async def test_quiz_non_answer_falls_through_to_instruction(self):
-        # GIVEN a conversation with quiz delivered
+    async def test_chat_during_active_quiz_sets_quiz_available(self):
+        # GIVEN a conversation with quiz delivered but not passed
         given_module = _make_module_config()
         given_agent = MockCareerReadinessAgent(response_message="Let me help you with that.")
         service, repo = _make_service(modules=[given_module], agent=given_agent)
@@ -689,17 +615,15 @@ class TestSendMessage:
         )
         await repo.create(given_conversation)
 
-        # WHEN the user sends a non-answer message
+        # WHEN the user sends a chat message while quiz is active
         actual_result = await service.send_message(
-            "user_abc", "cv-development", given_conversation.conversation_id, "mmm what is this?",
+            "user_abc", "cv-development", given_conversation.conversation_id, "Can you explain more?",
         )
 
-        # THEN the message is handled by the instruction agent instead of being scored
+        # THEN the response includes quiz_available=True
+        assert actual_result.quiz_available is True
+        # AND the agent still responds normally
         assert actual_result.messages[-1].message == "Let me help you with that."
-        # AND quiz_delivered is NOT reset
-        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
-        assert actual_conv is not None
-        assert actual_conv.quiz_delivered is True
 
     @pytest.mark.asyncio
     async def test_support_mode_message(self):
@@ -804,6 +728,36 @@ class TestGetConversationHistory:
 
         # THEN quiz_passed is False (not None)
         assert actual_result.quiz_passed is False
+        # AND quiz_available is True
+        assert actual_result.quiz_available is True
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        "quiz_delivered, quiz_passed, expected_quiz_available",
+        [
+            (True, False, True),
+            (False, False, False),
+            (True, True, False),
+        ],
+        ids=["delivered-not-passed", "not-delivered", "already-passed"],
+    )
+    async def test_quiz_available_reflects_quiz_state(self, quiz_delivered, quiz_passed, expected_quiz_available):
+        # GIVEN a conversation with given quiz state
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=quiz_delivered, quiz_passed=quiz_passed,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the history is requested
+        actual_result = await service.get_conversation_history(
+            "user_abc", "cv-development", given_conversation.conversation_id,
+        )
+
+        # THEN quiz_available matches the expected value
+        assert actual_result.quiz_available is expected_quiz_available
 
     @pytest.mark.asyncio
     async def test_raises_access_denied_for_wrong_user(self):
@@ -863,4 +817,153 @@ class TestDeleteConversation:
         with pytest.raises(ConversationAccessDeniedError):
             await service.delete_conversation(
                 "other_user", "cv-development", given_conversation.conversation_id,
+            )
+
+
+class TestGetQuiz:
+    """Tests for retrieving quiz questions."""
+
+    @pytest.mark.asyncio
+    async def test_returns_questions_without_correct_answers(self):
+        # GIVEN a conversation with quiz delivered
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=True,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the quiz is requested
+        actual_result = await service.get_quiz(
+            "user_abc", "cv-development", given_conversation.conversation_id,
+        )
+
+        # THEN questions are returned with options
+        assert len(actual_result.questions) == 2
+        assert actual_result.questions[0].question == "Q1?"
+        assert actual_result.questions[0].options == ["A. Opt1", "B. Opt2", "C. Opt3", "D. Opt4"]
+        # AND no correct_answer field is exposed
+        assert not hasattr(actual_result.questions[0], "correct_answer")
+
+    @pytest.mark.asyncio
+    async def test_raises_not_available_when_quiz_not_delivered(self):
+        # GIVEN a conversation where the quiz has not been delivered
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=False, quiz_passed=False,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the quiz is requested
+        # THEN QuizNotAvailableError is raised
+        with pytest.raises(QuizNotAvailableError):
+            await service.get_quiz(
+                "user_abc", "cv-development", given_conversation.conversation_id,
+            )
+
+    @pytest.mark.asyncio
+    async def test_raises_already_passed_when_quiz_completed(self):
+        # GIVEN a conversation where the quiz was already passed
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=True, quiz_passed=True,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN the quiz is requested
+        # THEN QuizAlreadyPassedError is raised
+        with pytest.raises(QuizAlreadyPassedError):
+            await service.get_quiz(
+                "user_abc", "cv-development", given_conversation.conversation_id,
+            )
+
+
+class TestSubmitQuiz:
+    """Tests for submitting quiz answers."""
+
+    @pytest.mark.asyncio
+    async def test_pass_transitions_to_support(self):
+        # GIVEN a conversation with quiz delivered (2 questions, threshold 0.5)
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=True,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN correct answers are submitted
+        actual_result = await service.submit_quiz(
+            "user_abc", "cv-development", given_conversation.conversation_id, {1: "A", 2: "B"},
+        )
+
+        # THEN the quiz is passed
+        assert actual_result.passed is True
+        assert actual_result.score == 2
+        assert actual_result.total == 2
+        assert actual_result.module_completed is True
+        assert actual_result.conversation_mode == ConversationMode.SUPPORT
+        # AND per-question results are correct
+        assert all(r.is_correct for r in actual_result.question_results)
+        # AND the conversation state is updated
+        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_conv is not None
+        assert actual_conv.quiz_passed is True
+        assert actual_conv.conversation_mode == ConversationMode.SUPPORT
+
+    @pytest.mark.asyncio
+    async def test_fail_resets_quiz_for_retry(self):
+        # GIVEN a conversation with quiz delivered (2 questions, threshold 0.5)
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=True,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN all wrong answers are submitted
+        actual_result = await service.submit_quiz(
+            "user_abc", "cv-development", given_conversation.conversation_id, {1: "C", 2: "C"},
+        )
+
+        # THEN the quiz is not passed
+        assert actual_result.passed is False
+        assert actual_result.score == 0
+        assert actual_result.module_completed is False
+        assert actual_result.conversation_mode == ConversationMode.INSTRUCTION
+        # AND quiz_delivered is reset for retry
+        actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
+        assert actual_conv is not None
+        assert actual_conv.quiz_delivered is False
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        "quiz_delivered, quiz_passed, expected_error",
+        [
+            (False, False, QuizNotAvailableError),
+            (True, True, QuizAlreadyPassedError),
+        ],
+        ids=["not-delivered", "already-passed"],
+    )
+    async def test_raises_not_available_when_quiz_not_active(self, quiz_delivered, quiz_passed, expected_error):
+        # GIVEN a conversation where the quiz is not active
+        given_module = _make_module_config()
+        service, repo = _make_service(modules=[given_module])
+        given_conversation = _make_conversation(
+            user_id="user_abc", module_id="cv-development",
+            quiz_delivered=quiz_delivered, quiz_passed=quiz_passed,
+        )
+        await repo.create(given_conversation)
+
+        # WHEN answers are submitted
+        # THEN the expected error is raised
+        with pytest.raises(expected_error):
+            await service.submit_quiz(
+                "user_abc", "cv-development", given_conversation.conversation_id, {1: "A", 2: "B"},
             )
