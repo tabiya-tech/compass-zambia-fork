@@ -850,7 +850,9 @@
       "continue": "Endelea",
       "completed": "Imekamilika",
       "soon": "Hivi Karibuni",
-      "comingSoon": "Inakuja Hivi Karibuni"
+      "comingSoon": "Inakuja Hivi Karibuni",
+      "askMeAnything": "Niulize Chochote",
+      "askMeAnythingDesc": "Uliza swali lolote kuhusu jukwaa na utaongozwa mahali sahihi."
     },
     "footer": {
       "privacyPolicy": "Sera ya Faragha",
@@ -866,5 +868,11 @@
     "documentNotFound": "Waraka haujapatikana",
     "introduction": "Hizi ni sekta za kipaumbele za Zambia kwa wanaomaliza TEVET. Kila wasifu unakupa muhtasari wa jinsi tasnia inavyoonekana, nafasi zilizopo, na unachoweza kutarajia kupata. Chunguza sekta zinazokuvutia ili kufanya maamuzi sahihi zaidi kuhusu njia yako ya kazi.",
     "noDocumentsAvailable": "Bado hakuna waraka zinazopatikana."
+  },
+  "askMeAnything": {
+    "pageTitle": "Niulize Chochote",
+    "pageDescription": "Nipo hapa kukusaidia kuelekea sehemu sahihi ya jukwaa",
+    "inputPlaceholder": "Niulize chochote kuhusu jukwaa...",
+    "loadError": "Imeshindwa kuanza mazungumzo. Tafadhali jaribu tena."
   }
 }

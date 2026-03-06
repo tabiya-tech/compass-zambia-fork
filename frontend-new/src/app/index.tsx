@@ -46,6 +46,8 @@ const LazyLoadedCareerReadinessModule = lazyWithPreload(
 
 const LazyLoadedProfile = lazyWithPreload(() => import("src/profile/ProfileContainer"));
 
+const LazyLoadedAMAPage = lazyWithPreload(() => import("src/askMeAnything/pages/AMAPage/AMAPage"));
+
 // Wrap the createHashRouter function with Sentry to capture errors that occur during router initialization
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV6(createHashRouter);
 
@@ -71,6 +73,7 @@ const ProtectedRouteKeys = {
   CAREER_EXPLORER: "CAREER_EXPLORER",
   CAREER_READINESS: "CAREER_READINESS",
   CAREER_READINESS_MODULE: "CAREER_READINESS_MODULE",
+  ASK_ME_ANYTHING: "ASK_ME_ANYTHING",
 };
 
 const NotFound: React.FC = () => {
@@ -383,6 +386,14 @@ const App = () => {
       element: (
         <ProtectedRoute key={ProtectedRouteKeys.PROFILE}>
           <LazyLoadedProfile />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routerPaths.ASK_ME_ANYTHING,
+      element: (
+        <ProtectedRoute key={ProtectedRouteKeys.ASK_ME_ANYTHING}>
+          <LazyLoadedAMAPage />
         </ProtectedRoute>
       ),
     },

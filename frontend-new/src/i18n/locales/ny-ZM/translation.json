@@ -850,7 +850,9 @@
       "continue": "Pitirizani",
       "completed": "Zatha",
       "soon": "Posachedwa",
-      "comingSoon": "Zikubwera posachedwa"
+      "comingSoon": "Zikubwera posachedwa",
+      "askMeAnything": "Ndifunse Chilichonse",
+      "askMeAnythingDesc": "Funsa mafunso aliwonse okhudza nsanja ndipo tidzakupangira njira yoyenera."
     },
     "footer": {
       "privacyPolicy": "Ndondomeko ya Chinsinsi",
@@ -866,5 +868,11 @@
     "documentNotFound": "Chikalata sichinapezeke",
     "introduction": "Awa ndi magawo ofunikira a Zambia kwa omaliza maphunziro a TEVET. Mbiri iliyonse ikukupatsani chiwonetsero cha momwe makampaniwo akuwonekera, ntchito zomwe zilipo, ndi zomwe mungayembekezere kupeza. Fufuzani magawo omwe amakusangalatsani kuti mupange zisankho zanzeru pa njira yanu ya ntchito.",
     "noDocumentsAvailable": "Palibe zikalata zomwe zilipo pakadali pano."
+  },
+  "askMeAnything": {
+    "pageTitle": "Ndifunse Chilichonse",
+    "pageDescription": "Ndipo pano kukuthandizani kuyenda mu nsanja",
+    "inputPlaceholder": "Ndifunse chilichonse pabodza...",
+    "loadError": "Sitinathe kuyambitsa mkangano. Chonde yesanso."
   }
 }

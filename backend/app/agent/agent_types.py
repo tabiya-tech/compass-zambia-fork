@@ -21,6 +21,7 @@ class AgentType(Enum):
     QNA_AGENT = "QnaAgent"
     CAREER_READINESS_AGENT = "CareerReadinessAgent"
     CAREER_EXPLORER_AGENT = "CareerExplorerAgent"
+    ASK_ME_ANYTHING_AGENT = "AskMeAnythingAgent"
 
 
 class AgentInput(BaseModel):
