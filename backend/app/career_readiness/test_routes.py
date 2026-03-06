@@ -16,6 +16,8 @@ from app.career_readiness.errors import (
     ConversationAlreadyExistsError,
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
+    QuizAlreadyPassedError,
+    QuizNotAvailableError,
 )
 from app.career_readiness.routes import add_career_readiness_routes, get_career_readiness_service
 from app.career_readiness.service import ICareerReadinessService
@@ -23,10 +25,15 @@ from app.career_readiness.types import (
     CareerReadinessConversationResponse,
     CareerReadinessMessage,
     CareerReadinessMessageSender,
+    ConversationMode,
     ModuleDetail,
     ModuleListResponse,
     ModuleStatus,
     ModuleSummary,
+    QuizQuestionResponse,
+    QuizQuestionResult,
+    QuizResponse,
+    QuizSubmissionResponse,
 )
 from app.conversations.constants import MAX_MESSAGE_LENGTH
 from app.users.auth import UserInfo
@@ -100,6 +107,21 @@ def client_with_mocks() -> TestClientWithMocks:
         async def get_conversation_history(self, user_id: str, module_id: str,
                                            conversation_id: str) -> CareerReadinessConversationResponse:
             return _make_conversation_response(conversation_id=conversation_id, module_id=module_id)
+
+        async def get_quiz(self, user_id: str, module_id: str,
+                           conversation_id: str) -> QuizResponse:
+            return QuizResponse(questions=[
+                QuizQuestionResponse(question="Q1?", options=["A. Opt1", "B. Opt2"]),
+            ])
+
+        async def submit_quiz(self, user_id: str, module_id: str,
+                              conversation_id: str, answers: dict[int, str]) -> QuizSubmissionResponse:
+            return QuizSubmissionResponse(
+                score=1, total=1, passed=True,
+                question_results=[QuizQuestionResult(question_index=1, is_correct=True)],
+                module_completed=True,
+                conversation_mode=ConversationMode.SUPPORT,
+            )
 
         async def delete_conversation(self, user_id: str, module_id: str, conversation_id: str) -> None:
             return None
@@ -326,3 +348,125 @@ class TestDeleteConversation:
 
         # THEN 403 FORBIDDEN is returned
         assert response.status_code == HTTPStatus.FORBIDDEN
+
+
+class TestGetQuiz:
+    """Tests for GET /career-readiness/modules/{module_id}/conversations/{conversation_id}/quiz."""
+
+    def test_returns_200_with_questions_and_no_correct_answer(self, client_with_mocks: TestClientWithMocks):
+        client, _, _ = client_with_mocks
+
+        # WHEN the quiz is requested
+        response = client.get(
+            "/career-readiness/modules/cv-development/conversations/conv123/quiz",
+        )
+
+        # THEN 200 OK is returned with quiz questions
+        assert response.status_code == HTTPStatus.OK
+        body = response.json()
+        assert len(body["questions"]) == 1
+        assert body["questions"][0]["question"] == "Q1?"
+        # AND correct_answer is not present in the response
+        assert "correct_answer" not in body["questions"][0]
+
+    def test_returns_403_when_access_denied(self, client_with_mocks: TestClientWithMocks,
+                                             mocker: pytest_mock.MockerFixture):
+        client, mock_service, _ = client_with_mocks
+
+        # GIVEN the service raises ConversationAccessDeniedError
+        mocker.patch.object(mock_service, "get_quiz",
+                            side_effect=ConversationAccessDeniedError("conv123", "other_user"))
+
+        # WHEN the quiz is requested
+        response = client.get(
+            "/career-readiness/modules/cv-development/conversations/conv123/quiz",
+        )
+
+        # THEN 403 FORBIDDEN is returned
+        assert response.status_code == HTTPStatus.FORBIDDEN
+
+    def test_returns_409_when_not_available(self, client_with_mocks: TestClientWithMocks,
+                                            mocker: pytest_mock.MockerFixture):
+        client, mock_service, _ = client_with_mocks
+
+        # GIVEN the service raises QuizNotAvailableError
+        mocker.patch.object(mock_service, "get_quiz",
+                            side_effect=QuizNotAvailableError("conv123"))
+
+        # WHEN the quiz is requested
+        response = client.get(
+            "/career-readiness/modules/cv-development/conversations/conv123/quiz",
+        )
+
+        # THEN 409 CONFLICT is returned
+        assert response.status_code == HTTPStatus.CONFLICT
+
+
+class TestSubmitQuiz:
+    """Tests for POST /career-readiness/modules/{module_id}/conversations/{conversation_id}/quiz."""
+
+    def test_returns_200_on_success(self, client_with_mocks: TestClientWithMocks):
+        client, _, _ = client_with_mocks
+
+        # WHEN quiz answers are submitted
+        response = client.post(
+            "/career-readiness/modules/cv-development/conversations/conv123/quiz",
+            json={"answers": {"1": "A"}},
+        )
+
+        # THEN 200 OK is returned with results
+        assert response.status_code == HTTPStatus.OK
+        body = response.json()
+        assert body["passed"] is True
+        assert body["score"] == 1
+
+    def test_returns_403_when_access_denied(self, client_with_mocks: TestClientWithMocks,
+                                             mocker: pytest_mock.MockerFixture):
+        client, mock_service, _ = client_with_mocks
+
+        # GIVEN the service raises ConversationAccessDeniedError
+        mocker.patch.object(mock_service, "submit_quiz",
+                            side_effect=ConversationAccessDeniedError("conv123", "other_user"))
+
+        # WHEN quiz answers are submitted
+        response = client.post(
+            "/career-readiness/modules/cv-development/conversations/conv123/quiz",
+            json={"answers": {"1": "A"}},
+        )
+
+        # THEN 403 FORBIDDEN is returned
+        assert response.status_code == HTTPStatus.FORBIDDEN
+
+    def test_returns_409_when_not_available(self, client_with_mocks: TestClientWithMocks,
+                                            mocker: pytest_mock.MockerFixture):
+        client, mock_service, _ = client_with_mocks
+
+        # GIVEN the service raises QuizNotAvailableError
+        mocker.patch.object(mock_service, "submit_quiz",
+                            side_effect=QuizNotAvailableError("conv123"))
+
+        # WHEN quiz answers are submitted
+        response = client.post(
+            "/career-readiness/modules/cv-development/conversations/conv123/quiz",
+            json={"answers": {"1": "A"}},
+        )
+
+        # THEN 409 CONFLICT is returned
+        assert response.status_code == HTTPStatus.CONFLICT
+
+    def test_returns_409_when_already_passed(self, client_with_mocks: TestClientWithMocks,
+                                              mocker: pytest_mock.MockerFixture):
+        client, mock_service, _ = client_with_mocks
+
+        # GIVEN the service raises QuizAlreadyPassedError
+        mocker.patch.object(mock_service, "submit_quiz",
+                            side_effect=QuizAlreadyPassedError("conv123"))
+
+        # WHEN quiz answers are submitted
+        response = client.post(
+            "/career-readiness/modules/cv-development/conversations/conv123/quiz",
+            json={"answers": {"1": "A"}},
+        )
+
+        # THEN 409 CONFLICT is returned
+        assert response.status_code == HTTPStatus.CONFLICT
