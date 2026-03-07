@@ -1,0 +1,250 @@
+import "src/_test_utilities/consoleMock";
+import "src/_test_utilities/envServiceMock";
+
+import React from "react";
+import { render, screen } from "src/_test_utilities/test-utils";
+import { Profile, DATA_TEST_ID, ProfileProps } from "./Profile";
+
+// Mock all sub-components
+jest.mock("./components/SecurityCard/SecurityCard", () => ({
+  SecurityCard: jest.fn(({ email, isLoading }) => (
+    <div data-testid="security-card">
+      SecurityCard: {email || "null"}, {isLoading ? "loading" : "loaded"}
+    </div>
+  )),
+}));
+
+jest.mock("./components/PreferencesCard/PreferencesCard", () => ({
+  PreferencesCard: jest.fn(({ language, isLoading }) => (
+    <div data-testid="preferences-card">
+      PreferencesCard: {language || "null"}, {isLoading ? "loading" : "loaded"}
+    </div>
+  )),
+}));
+
+jest.mock("./components/ProfileCard/ProfileCard", () => ({
+  ProfileCard: jest.fn(({ name, location, school, program, year, isLoading }) => (
+    <div data-testid="profile-card">
+      ProfileCard: {name || "null"}, {location || "null"}, {school || "null"}, {program || "null"}, {year || "null"},{" "}
+      {isLoading ? "loading" : "loaded"}
+    </div>
+  )),
+}));
+
+jest.mock("./components/ModuleProgressCard/ModuleProgressCard", () => ({
+  ModuleProgressCard: jest.fn(({ modules }) => (
+    <div data-testid="module-progress-card">ModuleProgressCard: {modules.length} modules</div>
+  )),
+}));
+
+jest.mock("./components/SkillsDiscoveredCard/SkillsDiscoveredCard", () => ({
+  SkillsDiscoveredCard: jest.fn(({ skills, isLoading }) => (
+    <div data-testid="skills-discovered-card">
+      SkillsDiscoveredCard: {skills.length} skills, {isLoading ? "loading" : "loaded"}
+    </div>
+  )),
+}));
+
+// Import mocked components for assertions
+import { SecurityCard } from "./components/SecurityCard/SecurityCard";
+import { PreferencesCard } from "./components/PreferencesCard/PreferencesCard";
+import { ProfileCard } from "./components/ProfileCard/ProfileCard";
+import { ModuleProgressCard } from "./components/ModuleProgressCard/ModuleProgressCard";
+import { SkillsDiscoveredCard } from "./components/SkillsDiscoveredCard/SkillsDiscoveredCard";
+
+// Helper function to create default props
+const getDefaultProps = (overrides?: Partial<ProfileProps>): ProfileProps => ({
+  email: null,
+  language: null,
+  termsAcceptedDate: null,
+  name: null,
+  location: null,
+  school: null,
+  program: null,
+  year: null,
+  skills: [],
+  modules: [],
+  isLoadingSecurity: false,
+  isLoadingPreferences: false,
+  isLoadingProfile: false,
+  isLoadingSkills: false,
+  ...overrides,
+});
+
+describe("Profile Component", () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+  });
+
+  describe("Rendering", () => {
+    test("should render all profile sections with correct props", () => {
+      // GIVEN complete profile data
+      const givenProps = getDefaultProps({
+        name: "John Doe",
+        email: "john.doe@example.com",
+        termsAcceptedDate: new Date("2024-01-15"),
+        language: "en",
+        location: "Lusaka",
+        school: "University of Zambia",
+        program: "Computer Science",
+        year: "2024",
+        skills: [],
+        modules: [
+          { id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: 100 },
+          { id: "career_discovery", labelKey: "home.modules.careerDiscovery", progress: 50 },
+        ],
+      });
+
+      // WHEN the Profile component is rendered
+      render(<Profile {...givenProps} />);
+
+      // THEN the profile content container is in the document
+      const contentContainer = screen.getByTestId(DATA_TEST_ID.PROFILE_CONTENT);
+      expect(contentContainer).toBeInTheDocument();
+
+      // AND ProfileCard is called with correct props
+      expect(ProfileCard).toHaveBeenCalledWith(
+        {
+          name: "John Doe",
+          location: "Lusaka",
+          school: "University of Zambia",
+          program: "Computer Science",
+          year: "2024",
+          isLoading: false,
+        },
+        expect.anything()
+      );
+
+      // AND ModuleProgressCard is called with correct props
+      expect(ModuleProgressCard).toHaveBeenCalledWith(
+        {
+          modules: [
+            { id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: 100 },
+            { id: "career_discovery", labelKey: "home.modules.careerDiscovery", progress: 50 },
+          ],
+        },
+        expect.anything()
+      );
+
+      // AND SkillsDiscoveredCard is called with correct props
+      expect(SkillsDiscoveredCard).toHaveBeenCalledWith(
+        {
+          skills: [],
+          isLoading: false,
+        },
+        expect.anything()
+      );
+
+      // AND SecurityCard is called with correct props
+      expect(SecurityCard).toHaveBeenCalledWith(
+        {
+          email: "john.doe@example.com",
+          isLoading: false,
+        },
+        expect.anything()
+      );
+
+      // AND PreferencesCard is called with correct props
+      expect(PreferencesCard).toHaveBeenCalledWith(
+        {
+          language: "en",
+          acceptedTcDate: new Date("2024-01-15"),
+          isLoading: false,
+        },
+        expect.anything()
+      );
+
+      // AND the content should match the snapshot
+      expect(contentContainer).toMatchSnapshot();
+    });
+
+    test("should render with null data showing 'Not available'", () => {
+      // GIVEN profile data with all null values
+      const givenProps = getDefaultProps();
+
+      // WHEN the Profile component is rendered
+      render(<Profile {...givenProps} />);
+
+      // THEN the profile content is rendered
+      const contentContainer = screen.getByTestId(DATA_TEST_ID.PROFILE_CONTENT);
+      expect(contentContainer).toBeInTheDocument();
+
+      // AND ProfileCard is called with null values
+      expect(ProfileCard).toHaveBeenCalledWith(
+        {
+          name: null,
+          location: null,
+          school: null,
+          program: null,
+          year: null,
+          isLoading: false,
+        },
+        expect.anything()
+      );
+
+      // AND SecurityCard is called with null email
+      expect(SecurityCard).toHaveBeenCalledWith(
+        {
+          email: null,
+          isLoading: false,
+        },
+        expect.anything()
+      );
+
+      // AND PreferencesCard is called with null values
+      expect(PreferencesCard).toHaveBeenCalledWith(
+        {
+          language: null,
+          acceptedTcDate: null,
+          isLoading: false,
+        },
+        expect.anything()
+      );
+
+      // AND the content should match the snapshot
+      expect(contentContainer).toMatchSnapshot();
+    });
+
+    test("should render correctly with partial data", () => {
+      // GIVEN profile data with some fields populated
+      const givenProps = getDefaultProps({
+        name: "John Doe",
+        email: "john@example.com",
+        // Other fields remain null
+      });
+
+      // WHEN the Profile component is rendered
+      render(<Profile {...givenProps} />);
+
+      // THEN the component renders successfully
+      const contentContainer = screen.getByTestId(DATA_TEST_ID.PROFILE_CONTENT);
+      expect(contentContainer).toBeInTheDocument();
+
+      // AND ProfileCard is called with partial data
+      expect(ProfileCard).toHaveBeenCalledWith(
+        {
+          name: "John Doe",
+          location: null,
+          school: null,
+          program: null,
+          year: null,
+          isLoading: false,
+        },
+        expect.anything()
+      );
+
+      // AND SecurityCard is called with email
+      expect(SecurityCard).toHaveBeenCalledWith(
+        {
+          email: "john@example.com",
+          isLoading: false,
+        },
+        expect.anything()
+      );
+
+      // AND the content should match the snapshot
+      expect(contentContainer).toMatchSnapshot();
+    });
+  });
+});

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { startTransition } from "react";
 import { Box, LinearProgress, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
 
   // Clamp progress between 0 and 100
   const clampedProgress = 40;
+
+  const navigateToProfile = () => {
+    startTransition(() => {
+      navigate(routerPaths.PROFILE);
+    });
+  };
 
   return (
     <Box
@@ -57,7 +63,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
           {t("home.profileStrength", { progress: clampedProgress })}
         </Typography>
         <CustomLink
-          onClick={() => navigate(routerPaths.SETTINGS)}
+          onClick={navigateToProfile}
           sx={{
             ...theme.typography.body2,
             color: theme.palette.secondary.dark,

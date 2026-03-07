@@ -44,6 +44,8 @@ const LazyLoadedCareerReadinessModule = lazyWithPreload(
   () => import("src/careerReadiness/pages/CareerReadinessModule/CareerReadinessModule")
 );
 
+const LazyLoadedProfile = lazyWithPreload(() => import("src/profile/ProfileContainer"));
+
 // Wrap the createHashRouter function with Sentry to capture errors that occur during router initialization
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV6(createHashRouter);
 
@@ -61,6 +63,7 @@ const ProtectedRouteKeys = {
   REGISTER: "REGISTER",
   LOGIN: "LOGIN",
   VERIFY_EMAIL: "VERIFY_EMAIL",
+  PROFILE: "PROFILE",
   CONSENT: "CONSENT",
   SENSITIVE_DATA: "SENSITIVE_DATA",
   KNOWLEDGE_HUB: "KNOWLEDGE_HUB",
@@ -372,6 +375,14 @@ const App = () => {
       element: (
         <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS_MODULE}>
           <LazyLoadedCareerReadinessModule />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routerPaths.PROFILE,
+      element: (
+        <ProtectedRoute key={ProtectedRouteKeys.PROFILE}>
+          <LazyLoadedProfile />
         </ProtectedRoute>
       ),
     },

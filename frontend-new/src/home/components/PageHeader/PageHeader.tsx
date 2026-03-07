@@ -114,16 +114,20 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
     setShowConversionDialog(true);
   }, []);
 
+  const navigateToProfile = useCallback(() => {
+    startTransition(() => {
+      setAnchorEl(null);
+      navigate(routerPaths.PROFILE);
+    });
+  }, [navigate]);
+
   const contextMenuItems: MenuItemConfig[] = useMemo(
     () => [
       {
         id: MENU_ITEM_ID.VIEW_PROFILE,
         text: t("chat.chatHeader.viewMyProfile").toLowerCase(),
         disabled: false,
-        action: () => {
-          setAnchorEl(null);
-          navigate(routerPaths.SETTINGS);
-        },
+        action: navigateToProfile,
       },
       ...(sentryEnabled
         ? [
@@ -154,7 +158,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
         },
       },
     ],
-    [t, sentryEnabled, isOnline, handleReportBug, isAnonymous, handleRegister, handleLogout, navigate]
+    [t, sentryEnabled, isOnline, handleReportBug, isAnonymous, handleRegister, handleLogout, navigateToProfile]
   );
 
   const supportedLocales = useMemo(() => parseEnvSupportedLocales(), []);
@@ -180,10 +184,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
         id: MENU_ITEM_ID.VIEW_PROFILE,
         text: t("chat.chatHeader.viewMyProfile").toLowerCase(),
         disabled: false,
-        action: () => {
-          setAnchorEl(null);
-          navigate(routerPaths.SETTINGS);
-        },
+        action: navigateToProfile,
       },
       {
         id: MENU_ITEM_ID.MOBILE_LANGUAGE,
@@ -224,7 +225,17 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
         },
       },
     ];
-  }, [t, anchorEl, sentryEnabled, isOnline, handleReportBug, isAnonymous, handleRegister, handleLogout, navigate]);
+  }, [
+    t,
+    navigateToProfile,
+    sentryEnabled,
+    isOnline,
+    handleReportBug,
+    isAnonymous,
+    handleRegister,
+    anchorEl,
+    handleLogout,
+  ]);
 
   return (
     <>
