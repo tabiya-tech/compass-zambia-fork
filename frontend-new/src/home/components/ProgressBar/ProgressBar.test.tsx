@@ -52,6 +52,6 @@ describe("ProgressBar", () => {
     await userEvent.click(screen.getByTestId(DATA_TEST_ID.PROGRESS_BAR_SEE_PROFILE_LINK));
 
     // THEN navigate is called with the settings route
-    expect(mockNavigate).toHaveBeenCalledWith(routerPaths.SETTINGS);
+    expect(mockNavigate).toHaveBeenCalledWith(routerPaths.PROFILE);
   });
 });

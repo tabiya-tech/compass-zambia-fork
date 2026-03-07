@@ -2,6 +2,7 @@ export const routerPaths = {
   ROOT: "/",
   LANDING: "/landing",
   SETTINGS: "/settings",
+  PROFILE: "/profile",
   REGISTER: "/register",
   LOGIN: "/login",
   FORGOT_PASSWORD: "/reset",
