@@ -5,6 +5,7 @@ Orchestrates the module registry, repository, and agent to implement
 the career readiness business logic.
 """
 import logging
+import math
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from typing import Callable
@@ -12,31 +13,48 @@ from typing import Callable
 from bson import ObjectId
 
 from app.agent.agent_types import AgentInput, AgentOutput
-from app.career_readiness.agent import CareerReadinessAgent
+from app.career_readiness.agent import CareerReadinessAgent, CareerReadinessAgentOutput
 from app.career_readiness.errors import (
     ConversationAccessDeniedError,
     ConversationAlreadyExistsError,
     ConversationModuleMismatchError,
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
+    ModuleNotUnlockedError,
+    QuizAlreadyPassedError,
+    QuizNotAvailableError,
 )
-from app.career_readiness.module_loader import ModuleConfig, ModuleRegistry
+from app.career_readiness.module_loader import ModuleConfig, ModuleRegistry, QuizConfig
 from app.career_readiness.repository import ICareerReadinessConversationRepository
 from app.career_readiness.types import (
     CareerReadinessConversationDocument,
     CareerReadinessConversationResponse,
     CareerReadinessMessage,
     CareerReadinessMessageSender,
+    ConversationMode,
     ModuleDetail,
     ModuleListResponse,
     ModuleStatus,
     ModuleSummary,
+    QuizQuestionResponse,
+    QuizQuestionResult,
+    QuizResponse,
+    QuizSubmissionResponse,
 )
 from app.conversation_memory.conversation_memory_types import (
     ConversationContext,
     ConversationHistory,
     ConversationTurn,
 )
+
+
+SILENCE_MESSAGE = "(silence)"
+"""Synthetic user message stored alongside the agent intro, matching the core Compass pattern."""
+
+
+def _filter_silence(messages: list[CareerReadinessMessage]) -> list[CareerReadinessMessage]:
+    """Filter out synthetic silence messages before returning to the frontend."""
+    return [m for m in messages if m.message != SILENCE_MESSAGE]
 
 
 class ICareerReadinessService(ABC):
@@ -70,24 +88,70 @@ class ICareerReadinessService(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    async def get_quiz(self, user_id: str, module_id: str,
+                       conversation_id: str) -> QuizResponse:
+        """Get quiz questions for the active quiz."""
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def submit_quiz(self, user_id: str, module_id: str,
+                          conversation_id: str, answers: dict[int, str]) -> QuizSubmissionResponse:
+        """Submit quiz answers for evaluation."""
+        raise NotImplementedError()
+
+    @abstractmethod
     async def delete_conversation(self, user_id: str, module_id: str, conversation_id: str) -> None:
         """Delete a conversation."""
         raise NotImplementedError()
 
 
-def _default_agent_factory(module_config: ModuleConfig) -> CareerReadinessAgent:
+def _default_agent_factory(module_config: ModuleConfig, mode: ConversationMode) -> CareerReadinessAgent:
     """Default factory that creates a real CareerReadinessAgent."""
     return CareerReadinessAgent(
         module_title=module_config.title,
         module_content=module_config.content,
+        mode=mode,
+        topics=module_config.topics,
     )
 
 
-def _derive_status(conversation: CareerReadinessConversationDocument | None) -> ModuleStatus:
-    """Derive the module status from the conversation state."""
-    if conversation is None:
-        return ModuleStatus.NOT_STARTED
-    return ModuleStatus.IN_PROGRESS
+def _derive_module_statuses(
+    all_modules: list[ModuleConfig],
+    user_conversations: list[CareerReadinessConversationDocument],
+) -> dict[str, ModuleStatus]:
+    """
+    Derive the status of all modules based on sequential unlock logic.
+
+    Rules:
+    - First module is always UNLOCKED (if no conversation exists)
+    - Subsequent modules unlock when the previous module is COMPLETED (quiz passed)
+    - A module with a conversation is IN_PROGRESS (unless quiz passed → COMPLETED)
+    - Only one module can be UNLOCKED at a time (the next eligible one)
+    """
+    conv_by_module = {c.module_id: c for c in user_conversations}
+    sorted_modules = sorted(all_modules, key=lambda m: m.sort_order)
+
+    statuses: dict[str, ModuleStatus] = {}
+    previous_completed = True  # First module is always unlocked
+
+    for module in sorted_modules:
+        conversation = conv_by_module.get(module.id)
+
+        if conversation is not None:
+            if conversation.quiz_passed:
+                statuses[module.id] = ModuleStatus.COMPLETED
+                previous_completed = True
+            else:
+                statuses[module.id] = ModuleStatus.IN_PROGRESS
+                previous_completed = False
+        elif previous_completed:
+            statuses[module.id] = ModuleStatus.UNLOCKED
+            previous_completed = False
+        else:
+            statuses[module.id] = ModuleStatus.NOT_STARTED
+            previous_completed = False
+
+    return statuses
 
 
 def _build_conversation_context(messages: list[CareerReadinessMessage]) -> ConversationContext:
@@ -137,6 +201,23 @@ def _build_conversation_context(messages: list[CareerReadinessMessage]) -> Conve
     return ConversationContext(all_history=history, history=history)
 
 
+def _evaluate_quiz(quiz: QuizConfig, answers: dict[int, str]) -> tuple[int, int, list[bool]]:
+    """
+    Evaluate quiz answers deterministically.
+    Returns (score, total, list_of_correct_booleans).
+    """
+    total = len(quiz.questions)
+    results = []
+    score = 0
+    for i, question in enumerate(quiz.questions, 1):
+        user_answer = answers.get(i, "")
+        correct = user_answer == question.correct_answer
+        results.append(correct)
+        if correct:
+            score += 1
+    return score, total, results
+
+
 class CareerReadinessService(ICareerReadinessService):
     """Implementation of the career readiness service."""
 
@@ -144,7 +225,7 @@ class CareerReadinessService(ICareerReadinessService):
         self,
         repository: ICareerReadinessConversationRepository,
         module_registry: ModuleRegistry,
-        agent_factory: Callable[[ModuleConfig], CareerReadinessAgent] | None = None,
+        agent_factory: Callable[[ModuleConfig, ConversationMode], CareerReadinessAgent] | None = None,
     ):
         self._repository = repository
         self._module_registry = module_registry
@@ -176,19 +257,16 @@ class CareerReadinessService(ICareerReadinessService):
     async def list_modules(self, user_id: str) -> ModuleListResponse:
         all_modules = self._module_registry.get_all_modules()
         user_conversations = await self._repository.find_all_by_user(user_id)
-
-        # Build a lookup from module_id to conversation
-        conv_by_module = {conv.module_id: conv for conv in user_conversations}
+        statuses = _derive_module_statuses(all_modules, user_conversations)
 
         summaries = []
         for module in all_modules:
-            conversation = conv_by_module.get(module.id)
             summaries.append(ModuleSummary(
                 id=module.id,
                 title=module.title,
                 description=module.description,
                 icon=module.icon,
-                status=_derive_status(conversation),
+                status=statuses.get(module.id, ModuleStatus.NOT_STARTED),
                 sort_order=module.sort_order,
                 input_placeholder=module.input_placeholder,
             ))
@@ -197,14 +275,17 @@ class CareerReadinessService(ICareerReadinessService):
 
     async def get_module(self, user_id: str, module_id: str) -> ModuleDetail:
         module = self._get_module_or_raise(module_id)
-        conversation = await self._repository.find_by_user_and_module(user_id, module_id)
+        all_modules = self._module_registry.get_all_modules()
+        user_conversations = await self._repository.find_all_by_user(user_id)
+        statuses = _derive_module_statuses(all_modules, user_conversations)
+        conversation = next((c for c in user_conversations if c.module_id == module_id), None)
 
         return ModuleDetail(
             id=module.id,
             title=module.title,
             description=module.description,
             icon=module.icon,
-            status=_derive_status(conversation),
+            status=statuses.get(module.id, ModuleStatus.NOT_STARTED),
             sort_order=module.sort_order,
             input_placeholder=module.input_placeholder,
             scope=module.content,
@@ -214,22 +295,38 @@ class CareerReadinessService(ICareerReadinessService):
     async def create_conversation(self, user_id: str, module_id: str) -> CareerReadinessConversationResponse:
         module = self._get_module_or_raise(module_id)
 
+        # Check sequential unlock
+        all_modules = self._module_registry.get_all_modules()
+        user_conversations = await self._repository.find_all_by_user(user_id)
+        statuses = _derive_module_statuses(all_modules, user_conversations)
+        module_status = statuses.get(module_id, ModuleStatus.NOT_STARTED)
+
+        if module_status == ModuleStatus.NOT_STARTED:
+            raise ModuleNotUnlockedError(module_id)
+
         # Check for existing conversation
-        existing = await self._repository.find_by_user_and_module(user_id, module_id)
+        existing = next((c for c in user_conversations if c.module_id == module_id), None)
         if existing is not None:
             raise ConversationAlreadyExistsError(module_id, user_id)
 
-        # Create agent and generate intro message
-        agent = self._agent_factory(module)
+        # Create agent in instruction mode and generate intro
+        agent = self._agent_factory(module, ConversationMode.INSTRUCTION)
         empty_context = ConversationContext(
             all_history=ConversationHistory(),
             history=ConversationHistory(),
         )
-        intro_output = await agent.generate_intro_message(empty_context)
+        intro_result = await agent.generate_intro_message(empty_context)
+        intro_output = intro_result.agent_output
 
-        # Build conversation document
+        # Build conversation document with synthetic silence + intro (matches core Compass pattern)
         now = datetime.now(timezone.utc)
         conversation_id = str(ObjectId())
+        silence_message = CareerReadinessMessage(
+            message_id=str(ObjectId()),
+            message=SILENCE_MESSAGE,
+            sender=CareerReadinessMessageSender.USER,
+            sent_at=now,
+        )
         intro_message = CareerReadinessMessage(
             message_id=intro_output.message_id or str(ObjectId()),
             message=intro_output.message_for_user,
@@ -241,7 +338,8 @@ class CareerReadinessService(ICareerReadinessService):
             conversation_id=conversation_id,
             module_id=module_id,
             user_id=user_id,
-            messages=[intro_message],
+            messages=[silence_message, intro_message],
+            conversation_mode=ConversationMode.INSTRUCTION,
             created_at=now,
             updated_at=now,
         )
@@ -250,7 +348,9 @@ class CareerReadinessService(ICareerReadinessService):
         return CareerReadinessConversationResponse(
             conversation_id=conversation_id,
             module_id=module_id,
-            messages=[intro_message],
+            messages=_filter_silence([intro_message]),
+            covered_topics=[],
+            conversation_mode=ConversationMode.INSTRUCTION,
         )
 
     async def send_message(self, user_id: str, module_id: str,
@@ -259,10 +359,19 @@ class CareerReadinessService(ICareerReadinessService):
         conversation = await self._get_conversation_or_raise(conversation_id)
         self._validate_access(conversation, user_id, module_id)
 
-        # Snapshot existing messages before any mutation
+        if conversation.conversation_mode == ConversationMode.SUPPORT:
+            return await self._handle_support_message(module, conversation, user_input)
+        return await self._handle_instruction_message(module, conversation, user_input)
+
+    async def _handle_instruction_message(
+        self, module: ModuleConfig,
+        conversation: CareerReadinessConversationDocument,
+        user_input: str,
+    ) -> CareerReadinessConversationResponse:
+        """Handle a message in instruction mode with topic tracking and quiz trigger."""
         existing_messages = list(conversation.messages)
 
-        # Build user message
+        # Build and persist user message
         now = datetime.now(timezone.utc)
         user_message = CareerReadinessMessage(
             message_id=str(ObjectId()),
@@ -270,37 +379,96 @@ class CareerReadinessService(ICareerReadinessService):
             sender=CareerReadinessMessageSender.USER,
             sent_at=now,
         )
+        await self._repository.append_message(conversation.conversation_id, user_message)
 
-        # Persist user message before calling the LLM (crash-safety)
-        await self._repository.append_message(conversation_id, user_message)
-
-        # Build context from in-memory state (existing messages + new user message)
+        # Build context and call agent
         all_messages = existing_messages + [user_message]
         context = _build_conversation_context(all_messages)
+        agent = self._agent_factory(module, ConversationMode.INSTRUCTION)
+        agent_input = AgentInput(message=user_input, sent_at=now)
+        agent_result: CareerReadinessAgentOutput = await agent.execute(agent_input, context)
 
-        # Get agent response
-        agent = self._agent_factory(module)
-        agent_input = AgentInput(
-            message=user_input,
-            sent_at=now,
-        )
-        agent_output = await agent.execute(agent_input, context)
+        # Accumulate covered topics
+        new_covered = set(conversation.covered_topics) | set(agent_result.topics_covered)
+        covered_topics_list = sorted(new_covered)
+        await self._repository.update_covered_topics(conversation.conversation_id, covered_topics_list)
 
         # Build and persist agent response
+        agent_output = agent_result.agent_output
         agent_message = CareerReadinessMessage(
             message_id=agent_output.message_id or str(ObjectId()),
             message=agent_output.message_for_user,
             sender=CareerReadinessMessageSender.AGENT,
             sent_at=agent_output.sent_at,
         )
-        await self._repository.append_message(conversation_id, agent_message)
+        await self._repository.append_message(conversation.conversation_id, agent_message)
+        response_messages = all_messages + [agent_message]
 
-        # Build response from in-memory state (no re-read needed)
+        # Check if all topics are covered AND agent says finished → deliver quiz
+        quiz_available = conversation.quiz_delivered and not conversation.quiz_passed
+        all_topics_covered = set(module.topics).issubset(new_covered) if module.topics else True
+        if (all_topics_covered and agent_output.finished
+                and module.quiz is not None and not conversation.quiz_delivered):
+            marker_message = CareerReadinessMessage(
+                message_id=str(ObjectId()),
+                message="Great work! You've covered the key topics. "
+                        "It's time for a short quiz to check your understanding.",
+                sender=CareerReadinessMessageSender.AGENT,
+                sent_at=datetime.now(timezone.utc),
+            )
+            await self._repository.append_message(conversation.conversation_id, marker_message)
+            await self._repository.update_quiz_delivered(conversation.conversation_id, True)
+            response_messages.append(marker_message)
+            quiz_available = True
+
         return CareerReadinessConversationResponse(
-            conversation_id=conversation_id,
-            module_id=module_id,
-            messages=all_messages + [agent_message],
-            module_completed=agent_output.finished,
+            conversation_id=conversation.conversation_id,
+            module_id=conversation.module_id,
+            messages=_filter_silence(response_messages),
+            covered_topics=covered_topics_list,
+            conversation_mode=ConversationMode.INSTRUCTION,
+            quiz_available=quiz_available,
+        )
+
+    async def _handle_support_message(
+        self, module: ModuleConfig,
+        conversation: CareerReadinessConversationDocument,
+        user_input: str,
+    ) -> CareerReadinessConversationResponse:
+        """Handle a message in support mode (post-quiz follow-up Q&A)."""
+        existing_messages = list(conversation.messages)
+
+        now = datetime.now(timezone.utc)
+        user_message = CareerReadinessMessage(
+            message_id=str(ObjectId()),
+            message=user_input,
+            sender=CareerReadinessMessageSender.USER,
+            sent_at=now,
+        )
+        await self._repository.append_message(conversation.conversation_id, user_message)
+
+        all_messages = existing_messages + [user_message]
+        context = _build_conversation_context(all_messages)
+        agent = self._agent_factory(module, ConversationMode.SUPPORT)
+        agent_input = AgentInput(message=user_input, sent_at=now)
+        agent_result: CareerReadinessAgentOutput = await agent.execute(agent_input, context)
+        agent_output = agent_result.agent_output
+
+        agent_message = CareerReadinessMessage(
+            message_id=agent_output.message_id or str(ObjectId()),
+            message=agent_output.message_for_user,
+            sender=CareerReadinessMessageSender.AGENT,
+            sent_at=agent_output.sent_at,
+        )
+        await self._repository.append_message(conversation.conversation_id, agent_message)
+
+        return CareerReadinessConversationResponse(
+            conversation_id=conversation.conversation_id,
+            module_id=conversation.module_id,
+            messages=_filter_silence(all_messages + [agent_message]),
+            covered_topics=conversation.covered_topics,
+            quiz_passed=True,
+            conversation_mode=ConversationMode.SUPPORT,
         )
 
     async def get_conversation_history(self, user_id: str, module_id: str,
@@ -312,7 +480,88 @@ class CareerReadinessService(ICareerReadinessService):
         return CareerReadinessConversationResponse(
             conversation_id=conversation.conversation_id,
             module_id=conversation.module_id,
-            messages=conversation.messages,
+            messages=_filter_silence(list(conversation.messages)),
+            covered_topics=conversation.covered_topics,
+            conversation_mode=conversation.conversation_mode,
+            quiz_passed=conversation.quiz_passed if conversation.quiz_delivered else None,
+            quiz_available=conversation.quiz_delivered and not conversation.quiz_passed,
+        )
+
+    async def get_quiz(self, user_id: str, module_id: str,
+                       conversation_id: str) -> QuizResponse:
+        module = self._get_module_or_raise(module_id)
+        conversation = await self._get_conversation_or_raise(conversation_id)
+        self._validate_access(conversation, user_id, module_id)
+
+        if conversation.quiz_passed:
+            raise QuizAlreadyPassedError(conversation_id)
+        if not conversation.quiz_delivered or module.quiz is None:
+            raise QuizNotAvailableError(conversation_id)
+
+        return QuizResponse(questions=[
+            QuizQuestionResponse(question=q.question, options=q.options)
+            for q in module.quiz.questions
+        ])
+
+    async def submit_quiz(self, user_id: str, module_id: str,
+                          conversation_id: str, answers: dict[int, str]) -> QuizSubmissionResponse:
+        module = self._get_module_or_raise(module_id)
+        conversation = await self._get_conversation_or_raise(conversation_id)
+        self._validate_access(conversation, user_id, module_id)
+
+        if not conversation.quiz_delivered or module.quiz is None:
+            raise QuizNotAvailableError(conversation_id)
+        if conversation.quiz_passed:
+            raise QuizAlreadyPassedError(conversation_id)
+
+        # Persist user answer message for audit trail
+        now = datetime.now(timezone.utc)
+        answer_text = "Quiz answers: " + ", ".join(f"{k}.{v}" for k, v in sorted(answers.items()))
+        user_message = CareerReadinessMessage(
+            message_id=str(ObjectId()),
+            message=answer_text,
+            sender=CareerReadinessMessageSender.USER,
+            sent_at=now,
+        )
+        await self._repository.append_message(conversation.conversation_id, user_message)
+
+        score, total, results = _evaluate_quiz(module.quiz, answers)
+        passed = (score / total) >= module.quiz.pass_threshold if total > 0 else False
+
+        question_results = [
+            QuizQuestionResult(question_index=i + 1, is_correct=correct)
+            for i, correct in enumerate(results)
+        ]
+
+        if passed:
+            feedback = (f"You scored {score}/{total}. Congratulations, you passed! "
+                        "You can now continue to ask me any follow-up questions about this topic.")
+            await self._repository.update_quiz_passed(conversation.conversation_id, True)
+            await self._repository.update_conversation_mode(
+                conversation.conversation_id, ConversationMode.SUPPORT)
+            result_mode = ConversationMode.SUPPORT
+        else:
+            threshold_count = math.ceil(module.quiz.pass_threshold * total)
+            feedback = (f"You scored {score}/{total}. You need at least {threshold_count} "
+                        "correct answers to pass. Let's review the topics and try again.")
+            await self._repository.update_quiz_delivered(conversation.conversation_id, False)
+            result_mode = ConversationMode.INSTRUCTION
+
+        feedback_message = CareerReadinessMessage(
+            message_id=str(ObjectId()),
+            message=feedback,
+            sender=CareerReadinessMessageSender.AGENT,
+            sent_at=datetime.now(timezone.utc),
+        )
+        await self._repository.append_message(conversation.conversation_id, feedback_message)
+
+        return QuizSubmissionResponse(
+            score=score,
+            total=total,
+            passed=passed,
+            question_results=question_results,
+            module_completed=passed,
+            conversation_mode=result_mode,
         )
 
     async def delete_conversation(self, user_id: str, module_id: str, conversation_id: str) -> None:

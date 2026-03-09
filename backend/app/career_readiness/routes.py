@@ -6,7 +6,7 @@ import logging
 from http import HTTPStatus
 from typing import Annotated, Optional
 
-from fastapi import FastAPI, APIRouter, Depends, HTTPException, Path
+from fastapi import Body, FastAPI, APIRouter, Depends, HTTPException, Path
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from app.career_readiness.errors import (
@@ -15,6 +15,9 @@ from app.career_readiness.errors import (
     ConversationAlreadyExistsError,
     ConversationModuleMismatchError,
     ConversationNotFoundError,
+    ModuleNotUnlockedError,
+    QuizAlreadyPassedError,
+    QuizNotAvailableError,
 )
 from app.career_readiness.module_loader import get_module_registry
 from app.career_readiness.repository import CareerReadinessConversationRepository
@@ -24,6 +27,9 @@ from app.career_readiness.types import (
     ModuleDetail,
     CareerReadinessConversationResponse,
     CareerReadinessConversationInput,
+    QuizResponse,
+    QuizSubmissionInput,
+    QuizSubmissionResponse,
 )
 from app.constants.errors import HTTPErrorResponse
 from app.conversations.constants import MAX_MESSAGE_LENGTH
@@ -77,7 +83,7 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
         try:
             return await service.list_modules(user_info.user_id)
         except Exception as e:
-            logger.exception("Error listing modules: %s", e)
+            logger.exception(e)
             raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.get(
@@ -99,7 +105,7 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
         except CareerReadinessModuleNotFoundError as exc:
             raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Module not found: {module_id}") from exc
         except Exception as e:
-            logger.exception("Error getting module: %s", e)
+            logger.exception(e)
             raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.post(
@@ -108,6 +114,7 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
         response_model=CareerReadinessConversationResponse,
         responses={
             HTTPStatus.NOT_FOUND: {"model": HTTPErrorResponse},
+            HTTPStatus.FORBIDDEN: {"model": HTTPErrorResponse},
             HTTPStatus.CONFLICT: {"model": HTTPErrorResponse},
             HTTPStatus.INTERNAL_SERVER_ERROR: {"model": HTTPErrorResponse},
         },
@@ -122,11 +129,13 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
             return await service.create_conversation(user_info.user_id, module_id)
         except CareerReadinessModuleNotFoundError as exc:
             raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Module not found: {module_id}") from exc
+        except ModuleNotUnlockedError as exc:
+            raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail=str(exc)) from exc
         except ConversationAlreadyExistsError as exc:
             raise HTTPException(status_code=HTTPStatus.CONFLICT,
                                 detail=f"A conversation already exists for module {module_id}") from exc
         except Exception as e:
-            logger.exception("Error creating conversation: %s", e)
+            logger.exception(e)
             raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.post(
@@ -159,7 +168,7 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
         except ConversationAccessDeniedError as exc:
             raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Access denied") from exc
         except Exception as e:
-            logger.exception("Error sending message: %s", e)
+            logger.exception(e)
             raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.get(
@@ -185,7 +194,7 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
         except ConversationAccessDeniedError as exc:
             raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Access denied") from exc
         except Exception as e:
-            logger.exception("Error getting conversation history: %s", e)
+            logger.exception(e)
             raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     @router.delete(
@@ -211,7 +220,74 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
         except ConversationAccessDeniedError as exc:
             raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Access denied") from exc
         except Exception as e:
-            logger.exception("Error deleting conversation: %s", e)
+            logger.exception(e)
+            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
+
+    @router.get(
+        path="/modules/{module_id}/conversations/{conversation_id}/quiz",
+        response_model=QuizResponse,
+        responses={
+            HTTPStatus.NOT_FOUND: {"model": HTTPErrorResponse},
+            HTTPStatus.FORBIDDEN: {"model": HTTPErrorResponse},
+            HTTPStatus.CONFLICT: {"model": HTTPErrorResponse},
+            HTTPStatus.INTERNAL_SERVER_ERROR: {"model": HTTPErrorResponse},
+        },
+        description="Get quiz questions for the active quiz.",
+    )
+    async def _get_quiz(
+        module_id: Annotated[str, Path(description="The module identifier slug.", examples=["cv-resume-creation"])],
+        conversation_id: Annotated[str, Path(description="The conversation identifier.", examples=["conv_abc123"])],
+        user_info: UserInfo = Depends(authentication.get_user_info()),
+        service: ICareerReadinessService = Depends(get_career_readiness_service),
+    ):
+        try:
+            return await service.get_quiz(user_info.user_id, module_id, conversation_id)
+        except (CareerReadinessModuleNotFoundError, ConversationNotFoundError, ConversationModuleMismatchError) as exc:
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Conversation not found") from exc
+        except ConversationAccessDeniedError as exc:
+            raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Access denied") from exc
+        except (QuizNotAvailableError, QuizAlreadyPassedError) as exc:
+            raise HTTPException(status_code=HTTPStatus.CONFLICT, detail="Quiz is not available") from exc
+        except Exception as e:
+            logger.exception(e)
+            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
+
+    @router.post(
+        path="/modules/{module_id}/conversations/{conversation_id}/quiz",
+        status_code=HTTPStatus.OK,
+        response_model=QuizSubmissionResponse,
+        responses={
+            HTTPStatus.NOT_FOUND: {"model": HTTPErrorResponse},
+            HTTPStatus.FORBIDDEN: {"model": HTTPErrorResponse},
+            HTTPStatus.CONFLICT: {"model": HTTPErrorResponse},
+            HTTPStatus.INTERNAL_SERVER_ERROR: {"model": HTTPErrorResponse},
+        },
+        description="Submit quiz answers for evaluation.",
+    )
+    async def _submit_quiz(
+        module_id: Annotated[str, Path(description="The module identifier slug.", examples=["cv-resume-creation"])],
+        conversation_id: Annotated[str, Path(description="The conversation identifier.", examples=["conv_abc123"])],
+        body: Annotated[QuizSubmissionInput, Body(
+            openapi_examples={
+                "three_questions": {
+                    "summary": "Answers for a 3-question quiz",
+                    "value": {"answers": {"1": "B", "2": "A", "3": "C"}},
+                },
+            },
+        )],
+        user_info: UserInfo = Depends(authentication.get_user_info()),
+        service: ICareerReadinessService = Depends(get_career_readiness_service),
+    ):
+        try:
+            return await service.submit_quiz(user_info.user_id, module_id, conversation_id, body.answers)
+        except (CareerReadinessModuleNotFoundError, ConversationNotFoundError, ConversationModuleMismatchError) as exc:
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Conversation not found") from exc
+        except ConversationAccessDeniedError as exc:
+            raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Access denied") from exc
+        except (QuizNotAvailableError, QuizAlreadyPassedError) as exc:
+            raise HTTPException(status_code=HTTPStatus.CONFLICT, detail="Quiz is not available") from exc
+        except Exception as e:
+            logger.exception(e)
             raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="Unexpected error") from e
 
     app.include_router(router)
