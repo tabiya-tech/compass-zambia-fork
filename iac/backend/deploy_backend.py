@@ -30,6 +30,8 @@ class BackendServiceConfig:
     metrics_database_name: str
     userdata_mongodb_uri: str
     userdata_database_name: str
+    career_explorer_mongodb_uri: str
+    career_explorer_database_name: str
     vertex_api_region: str
     embeddings_service_name: str
     embeddings_model_name: str
@@ -60,6 +62,7 @@ class BackendServiceConfig:
     matching_service_url: Optional[str]
     matching_service_api_key: Optional[str]
     inline_phase_transition: Optional[str]
+    career_explorer_sectors: Optional[str]
 
 
 """
@@ -363,6 +366,12 @@ def _deploy_cloud_run_service(
                             name="USERDATA_DATABASE_NAME",
                             value=backend_service_cfg.userdata_database_name),
                         gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
+                            name="CAREER_EXPLORER_MONGODB_URI",
+                            value=backend_service_cfg.career_explorer_mongodb_uri),
+                        gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
+                            name="CAREER_EXPLORER_DATABASE_NAME",
+                            value=backend_service_cfg.career_explorer_database_name),
+                        gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
                             name="VERTEX_API_REGION",
                             value=backend_service_cfg.vertex_api_region),
                         gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
@@ -432,6 +441,9 @@ def _deploy_cloud_run_service(
                         gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
                             name="COMPASS_INLINE_PHASE_TRANSITION",
                             value=backend_service_cfg.inline_phase_transition),
+                        gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
+                            name="CAREER_EXPLORER_SECTORS",
+                            value=backend_service_cfg.career_explorer_sectors),
                         # Add more environment variables here
                     ],
                 )
