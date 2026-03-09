@@ -53,6 +53,8 @@ def main():
         metrics_database_name=getenv("METRICS_DATABASE_NAME"),
         userdata_database_name=getenv("USERDATA_DATABASE_NAME"),
         userdata_mongodb_uri=getenv("USERDATA_MONGODB_URI", True),
+        career_explorer_mongodb_uri=getenv("CAREER_EXPLORER_MONGODB_URI", True),
+        career_explorer_database_name=getenv("CAREER_EXPLORER_DATABASE_NAME"),
         vertex_api_region=getenv("VERTEX_API_REGION", True),
         embeddings_service_name=getenv("EMBEDDINGS_SERVICE_NAME"),
         embeddings_model_name=getenv("EMBEDDINGS_MODEL_NAME"),
@@ -93,6 +95,9 @@ def main():
 
         # Phase transition behavior (optional)
         inline_phase_transition=getenv("COMPASS_INLINE_PHASE_TRANSITION", False, False),
+
+        # Career Explorer sectors configuration (optional)
+        career_explorer_sectors=getenv("CAREER_EXPLORER_SECTORS", False, False),
     )
 
     # version of the artifacts to deploy

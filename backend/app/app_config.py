@@ -109,6 +109,13 @@ class ApplicationConfig(BaseModel):
     Corresponds to the COMPASS_INLINE_PHASE_TRANSITION environment variable.
     """
 
+    career_explorer_sectors: list[dict[str, str]] = Field(default_factory=list)
+    """
+    Configuration for Career Explorer priority sectors.
+    Each sector dict should have: name (display name), description (brief description), file (markdown filename).
+    Example: [{"name": "Agriculture", "description": "Commercial farming, agriprocessing", "file": "agriculture.md"}]
+    """
+
     @model_validator(mode='after')
     def check_cv_upload_configurations(self) -> "ApplicationConfig":
         # Check that the CV upload configurations are valid.

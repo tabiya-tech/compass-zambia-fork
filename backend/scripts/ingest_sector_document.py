@@ -23,6 +23,7 @@ Environment:
 """
 import argparse
 import asyncio
+import json
 import logging
 import os
 import re
@@ -42,6 +43,14 @@ CHUNK_OVERLAP = 50
 INDEX_NAME = "sector_chunks_embedding_index"
 EMBEDDING_KEY = "embedding"
 MARKDOWN_EXTENSIONS = {".md"}
+
+DEFAULT_SECTORS_CONFIG = [
+    {"name": "Agriculture", "description": "Commercial farming, agriprocessing", "file": "agriculture.md"},
+    {"name": "Energy", "description": "Power generation, solar, renewables", "file": "energy.md"},
+    {"name": "Mining", "description": "Copper, gold, gemstones", "file": "mining.md"},
+    {"name": "Hospitality", "description": "Hotels, tourism, safari lodges", "file": "hospitality.md"},
+    {"name": "Water", "description": "Treatment, supply, sanitation", "file": "water.md"},
+]
 
 
 def load_document_text(file_path: Path) -> str:
@@ -193,13 +202,21 @@ async def main():
 
     if args.ingest_all:
         base_path = Path(__file__).parent.parent.parent / "frontend-new" / "src" / "knowledgeHub" / "documents"
-        sector_files = {
-            "Agriculture": base_path / "agriculture.md",
-            "Energy": base_path / "energy.md",
-            "Mining": base_path / "mining.md",
-            "Hospitality": base_path / "hospitality.md",
-            "Water": base_path / "water.md",
-        }
+        sectors_config_json = os.getenv("CAREER_EXPLORER_SECTORS", "[]")
+        try:
+            sectors_config = json.loads(sectors_config_json)
+        except json.JSONDecodeError:
+            logger.warning("Invalid CAREER_EXPLORER_SECTORS JSON, falling back to default sectors")
+            sectors_config = DEFAULT_SECTORS_CONFIG
+        
+        sector_files = {}
+        for sector in sectors_config:
+            sector_name = sector.get("name")
+            sector_file = sector.get("file")
+            if sector_name and sector_file:
+                sector_files[sector_name] = base_path / sector_file
+            else:
+                logger.warning("Skipping invalid sector config entry: %s", sector)
         
         if args.clear_first and args.hot_run:
             deleted = await collection.delete_many({})
