@@ -120,3 +120,148 @@ export const LoadingHistory: Story = {
     initialConversationId: "conv-1",
   },
 };
+
+const completedHistory: CareerReadinessConversationResponse = {
+  conversation_id: "conv-completed",
+  module_id: "professional-identity",
+  module_completed: true,
+  quiz_passed: true,
+  conversation_mode: "SUPPORT",
+  covered_topics: ["Professional identity", "Transferable skills"],
+  messages: [
+    {
+      message_id: "m1",
+      message:
+        "Welcome! In this module we'll explore your professional identity and skills. How would you describe yourself in a work context?",
+      sent_at: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+      sender: "AGENT",
+    },
+    {
+      message_id: "m2",
+      message: "I have experience in teamwork and problem-solving.",
+      sent_at: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
+      sender: "USER",
+    },
+    {
+      message_id: "m3",
+      message:
+        "Well done! You've passed the quiz for this module. The next module is now unlocked. You can continue to ask me follow-up questions here.",
+      sent_at: new Date(Date.now() - 1 * 60 * 1000).toISOString(),
+      sender: "AGENT",
+    },
+  ],
+};
+
+/** Simulates backend having just delivered the quiz (quiz_available true); chat will fetch quiz and show quiz UI. */
+const historyWithQuizAvailable: CareerReadinessConversationResponse = {
+  conversation_id: "conv-quiz-delivered",
+  module_id: "professional-identity",
+  module_completed: false,
+  quiz_available: true,
+  messages: [
+    {
+      message_id: "m1",
+      message:
+        "Welcome! In this module we'll explore your professional identity and skills. How would you describe yourself in a work context?",
+      sent_at: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+      sender: "AGENT",
+    },
+    {
+      message_id: "m2",
+      message: "I have experience in teamwork and problem-solving.",
+      sent_at: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
+      sender: "USER",
+    },
+    {
+      message_id: "m3",
+      message: "Great work! You've covered the key topics. It's time for a short quiz to check your understanding.",
+      sent_at: new Date(Date.now() - 1 * 60 * 1000).toISOString(),
+      sender: "AGENT",
+    },
+  ],
+};
+
+const mockQuizQuestions = [
+  {
+    question: "What best describes your professional identity?",
+    options: [
+      "A. Your job title alone",
+      "B. Your unique combination of values, skills, experiences, and aspirations",
+      "C. The company you work for",
+      "D. Your salary and benefits",
+    ],
+  },
+  {
+    question: "Which of the following is a technical skill?",
+    options: ["A. Teamwork", "B. Leadership", "C. Data analysis", "D. Time management"],
+  },
+];
+
+export const QuizDelivered: Story = {
+  args: {
+    ...defaultArgs,
+    initialConversationId: "conv-quiz-delivered",
+  },
+  decorators: [
+    (Story) => {
+      const mockService = CareerReadinessService.getInstance() as any;
+      mockService.getConversationHistory = async () => historyWithQuizAvailable;
+      mockService.getQuiz = async () => ({ questions: mockQuizQuestions });
+      mockService.sendMessage = async () => historyWithQuizAvailable;
+      mockService.submitQuiz = async () => ({
+        score: 2,
+        total: 2,
+        passed: true,
+        question_results: [
+          { question_index: 1, is_correct: true },
+          { question_index: 2, is_correct: true },
+        ],
+        module_completed: true,
+        conversation_mode: "SUPPORT",
+      });
+      return <Story />;
+    },
+  ],
+};
+
+export const ModuleCompleted: Story = {
+  args: {
+    ...defaultArgs,
+    initialConversationId: "conv-completed",
+  },
+  decorators: [
+    (Story) => {
+      const mockService = CareerReadinessService.getInstance() as any;
+      mockService.getConversationHistory = async () => completedHistory;
+      mockService.sendMessage = async () => completedHistory;
+      return <Story />;
+    },
+  ],
+};
+
+/** Quiz is shown; submit returns failed so user sees "Your answers" + feedback and quiz with result card + Retry. */
+export const QuizFailedThenRetry: Story = {
+  args: {
+    ...defaultArgs,
+    initialConversationId: "conv-quiz-delivered",
+  },
+  decorators: [
+    (Story) => {
+      const mockService = CareerReadinessService.getInstance() as any;
+      mockService.getConversationHistory = async () => historyWithQuizAvailable;
+      mockService.getQuiz = async () => ({ questions: mockQuizQuestions });
+      mockService.sendMessage = async () => historyWithQuizAvailable;
+      mockService.submitQuiz = async () => ({
+        score: 0,
+        total: 2,
+        passed: false,
+        question_results: [
+          { question_index: 1, is_correct: false },
+          { question_index: 2, is_correct: false },
+        ],
+        module_completed: false,
+      });
+      return <Story />;
+    },
+  ],
+};

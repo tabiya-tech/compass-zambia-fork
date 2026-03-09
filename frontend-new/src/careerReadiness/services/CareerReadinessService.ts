@@ -1,4 +1,4 @@
-import { getRestAPIErrorFactory } from "src/error/restAPIError/RestAPIError";
+import { getRestAPIErrorFactory, type RestAPIErrorFactory } from "src/error/restAPIError/RestAPIError";
 import { StatusCodes } from "http-status-codes";
 import ErrorConstants from "src/error/restAPIError/RestAPIError.constants";
 import { customFetch } from "src/utils/customFetch/customFetch";
@@ -8,9 +8,22 @@ import type {
   ModuleDetail,
   CareerReadinessConversationResponse,
   CareerReadinessConversationInput,
+  QuizResponse,
+  QuizSubmissionResponse,
 } from "src/careerReadiness/types";
 
 const SERVICE_NAME = "CareerReadinessService";
+
+function parseJson<T>(responseBody: string, errorFactory: RestAPIErrorFactory): T {
+  try {
+    return JSON.parse(responseBody) as T;
+  } catch (e: unknown) {
+    throw errorFactory(0, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Response did not contain valid JSON", {
+      responseBody,
+      error: e,
+    });
+  }
+}
 
 export default class CareerReadinessService {
   private static instance: CareerReadinessService;
@@ -40,16 +53,7 @@ export default class CareerReadinessService {
       expectedContentType: "application/json",
     });
     const body = await response.text();
-    try {
-      return JSON.parse(body) as ModuleListResponse;
-    } catch (e: unknown) {
-      throw errorFactory(
-        response.status,
-        ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY,
-        "Response did not contain valid JSON",
-        { responseBody: body, error: e }
-      );
-    }
+    return parseJson<ModuleListResponse>(body, errorFactory);
   }
 
   async getModule(moduleId: string): Promise<ModuleDetail> {
@@ -65,16 +69,7 @@ export default class CareerReadinessService {
       expectedContentType: "application/json",
     });
     const body = await response.text();
-    try {
-      return JSON.parse(body) as ModuleDetail;
-    } catch (e: unknown) {
-      throw errorFactory(
-        response.status,
-        ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY,
-        "Response did not contain valid JSON",
-        { responseBody: body, error: e }
-      );
-    }
+    return parseJson<ModuleDetail>(body, errorFactory);
   }
 
   async createConversation(moduleId: string): Promise<CareerReadinessConversationResponse> {
@@ -90,16 +85,7 @@ export default class CareerReadinessService {
       expectedContentType: "application/json",
     });
     const body = await response.text();
-    try {
-      return JSON.parse(body) as CareerReadinessConversationResponse;
-    } catch (e: unknown) {
-      throw errorFactory(
-        response.status,
-        ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY,
-        "Response did not contain valid JSON",
-        { responseBody: body, error: e }
-      );
-    }
+    return parseJson<CareerReadinessConversationResponse>(body, errorFactory);
   }
 
   async getConversationHistory(moduleId: string, conversationId: string): Promise<CareerReadinessConversationResponse> {
@@ -115,16 +101,7 @@ export default class CareerReadinessService {
       expectedContentType: "application/json",
     });
     const body = await response.text();
-    try {
-      return JSON.parse(body) as CareerReadinessConversationResponse;
-    } catch (e: unknown) {
-      throw errorFactory(
-        response.status,
-        ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY,
-        "Response did not contain valid JSON",
-        { responseBody: body, error: e }
-      );
-    }
+    return parseJson<CareerReadinessConversationResponse>(body, errorFactory);
   }
 
   async sendMessage(
@@ -146,15 +123,43 @@ export default class CareerReadinessService {
       expectedContentType: "application/json",
     });
     const responseBody = await response.text();
-    try {
-      return JSON.parse(responseBody) as CareerReadinessConversationResponse;
-    } catch (e: unknown) {
-      throw errorFactory(
-        response.status,
-        ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY,
-        "Response did not contain valid JSON",
-        { responseBody, error: e }
-      );
-    }
+    return parseJson<CareerReadinessConversationResponse>(responseBody, errorFactory);
+  }
+
+  async getQuiz(moduleId: string, conversationId: string): Promise<QuizResponse> {
+    const url = `${this.baseUrl}/modules/${encodeURIComponent(moduleId)}/conversations/${encodeURIComponent(conversationId)}/quiz`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "getQuiz", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "getQuiz",
+      failureMessage: `Failed to get quiz for module ${moduleId}`,
+      expectedContentType: "application/json",
+    });
+    const body = await response.text();
+    return parseJson<QuizResponse>(body, errorFactory);
+  }
+
+  async submitQuiz(
+    moduleId: string,
+    conversationId: string,
+    answers: Record<string, string>
+  ): Promise<QuizSubmissionResponse> {
+    const url = `${this.baseUrl}/modules/${encodeURIComponent(moduleId)}/conversations/${encodeURIComponent(conversationId)}/quiz`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "submitQuiz", "POST", url);
+    const response = await customFetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers }),
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "submitQuiz",
+      failureMessage: `Failed to submit quiz for module ${moduleId}`,
+      expectedContentType: "application/json",
+    });
+    const body = await response.text();
+    return parseJson<QuizSubmissionResponse>(body, errorFactory);
   }
 }

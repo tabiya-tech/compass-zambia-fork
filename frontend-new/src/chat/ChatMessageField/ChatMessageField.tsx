@@ -26,6 +26,7 @@ export interface ChatMessageFieldProps {
   handleSend: (message: string) => void;
   aiIsTyping: boolean;
   isChatFinished: boolean;
+  isInputDisabled?: boolean;
   isUploadingCv?: boolean;
   onUploadCv?: (file: File) => Promise<string[]>; // returns array of experience lines
   currentPhase?: ConversationPhase;
@@ -179,10 +180,10 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
 
   // Use effect bring the focus back to the input field when after a message from the AI is received
   useEffect(() => {
-    if (inputRef.current && !props.aiIsTyping) {
+    if (inputRef.current && !props.aiIsTyping && !props.isInputDisabled) {
       inputRef.current.focus();
     }
-  }, [props.aiIsTyping, inputRef]);
+  }, [props.aiIsTyping, props.isInputDisabled, inputRef]);
 
   // Handle change in the input field and validate the message
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -448,24 +449,33 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
       return props.customPlaceholder.trim();
     }
     return t(PLACEHOLDER_TEXTS.DEFAULT);
-  }, [props.aiIsTyping, props.isChatFinished, props.isUploadingCv, props.customPlaceholder, props.placeholderKey, isOnline, t]);
+  }, [
+    props.aiIsTyping,
+    props.isChatFinished,
+    props.isUploadingCv,
+    props.customPlaceholder,
+    props.placeholderKey,
+    isOnline,
+    t,
+  ]);
 
   // Check if the send button should be disabled
   const sendIsDisabled = useCallback(() => {
     return (
       props.isChatFinished ||
       props.aiIsTyping ||
+      props.isInputDisabled ||
       props.isUploadingCv ||
       !isOnline ||
       message.trim().length === 0 ||
       message.trim().length > CHAT_MESSAGE_MAX_LENGTH // Only disable the send button when over the limit
     );
-  }, [props.isChatFinished, props.aiIsTyping, props.isUploadingCv, isOnline, message]);
+  }, [props.isChatFinished, props.aiIsTyping, props.isInputDisabled, props.isUploadingCv, isOnline, message]);
 
   // Check if the input field should be disabled
   const inputIsDisabled = useCallback(() => {
-    return props.isChatFinished || props.aiIsTyping || props.isUploadingCv || !isOnline;
-  }, [props.isChatFinished, props.aiIsTyping, props.isUploadingCv, isOnline]);
+    return props.isChatFinished || props.aiIsTyping || props.isInputDisabled || props.isUploadingCv || !isOnline;
+  }, [props.isChatFinished, props.aiIsTyping, props.isInputDisabled, props.isUploadingCv, isOnline]);
 
   const contextMenuItems: MenuItemConfig[] =
     menuView === "main"
