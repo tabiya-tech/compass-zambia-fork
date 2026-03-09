@@ -544,7 +544,6 @@ class CareerReadinessService(ICareerReadinessService):
             threshold_count = math.ceil(module.quiz.pass_threshold * total)
             feedback = (f"You scored {score}/{total}. You need at least {threshold_count} "
                         "correct answers to pass. Let's review the topics and try again.")
-            await self._repository.update_quiz_delivered(conversation.conversation_id, False)
             result_mode = ConversationMode.INSTRUCTION
 
         feedback_message = CareerReadinessMessage(

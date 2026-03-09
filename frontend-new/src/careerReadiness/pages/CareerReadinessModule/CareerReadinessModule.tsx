@@ -28,6 +28,10 @@ const CareerReadinessModule: React.FC = () => {
 
   const handleBackToModules = () => navigate(routerPaths.CAREER_READINESS);
 
+  const handleModuleCompleted = useCallback(() => {
+    enqueueSnackbar(t("careerReadiness.moduleComplete"), { variant: "success" });
+  }, [t, enqueueSnackbar]);
+
   const loadModuleAndConversation = useCallback(async () => {
     if (!moduleId) {
       navigate(routerPaths.CAREER_READINESS);
@@ -95,6 +99,7 @@ const CareerReadinessModule: React.FC = () => {
             moduleTitle={moduleDetail?.title ?? ""}
             initialConversationId={conversationId}
             inputPlaceholder={moduleDetail?.input_placeholder ?? ""}
+            onModuleCompleted={handleModuleCompleted}
           />
         )}
       </Box>

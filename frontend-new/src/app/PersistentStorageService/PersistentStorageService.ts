@@ -1,6 +1,7 @@
 import { Invitation } from "src/auth/services/invitationsService/invitations.types";
 import { StoredPersonalInfo } from "src/sensitiveData/types";
 import { FeedbackItem } from "src/feedback/overallFeedback/overallFeedbackService/OverallFeedback.service.types";
+import type { PersistedCareerReadinessQuizResult, QuizQuestionResponse } from "src/careerReadiness/types";
 
 const PERSISTENT_STORAGE_VERSION = "0.0.1";
 export const TOKEN_KEY = `token_${PERSISTENT_STORAGE_VERSION}`;
@@ -19,12 +20,56 @@ export const FEEDBACK_NOTIFICATION_KEY = `feedback_notification_${PERSISTENT_STO
 
 export const CLIENT_ID_KEY = `client_id_${PERSISTENT_STORAGE_VERSION}`;
 
+export const CAREER_READINESS_QUIZ_DATA_KEY = `career_readiness_quiz_data_${PERSISTENT_STORAGE_VERSION}`;
+
+export const CAREER_READINESS_QUIZ_RESULT_KEY = `career_readiness_quiz_result_${PERSISTENT_STORAGE_VERSION}`;
+
+interface PersistedCareerReadinessQuizData {
+  questions?: QuizQuestionResponse[];
+  answers?: Record<string, string>;
+}
+
+export interface CareerReadinessQuizData {
+  questions?: QuizQuestionResponse[];
+  answers?: Record<number, string>;
+}
+
 /**
  * This class is used to store the tokens in the session storage.
  *   eg: refresh token
  */
 export class PersistentStorageService {
   static readonly storage = localStorage;
+
+  private static getCareerReadinessQuizStorageKey(baseKey: string, moduleId: string, conversationId: string): string {
+    return `${baseKey}_${moduleId}_${conversationId}`;
+  }
+
+  private static getCareerReadinessQuizDataRaw(
+    moduleId: string,
+    conversationId: string
+  ): PersistedCareerReadinessQuizData | null {
+    const item = this.storage.getItem(
+      this.getCareerReadinessQuizStorageKey(CAREER_READINESS_QUIZ_DATA_KEY, moduleId, conversationId)
+    );
+    if (!item) return null;
+    try {
+      return JSON.parse(item) as PersistedCareerReadinessQuizData;
+    } catch {
+      return null;
+    }
+  }
+
+  private static setCareerReadinessQuizDataRaw(
+    moduleId: string,
+    conversationId: string,
+    data: PersistedCareerReadinessQuizData
+  ): void {
+    this.storage.setItem(
+      this.getCareerReadinessQuizStorageKey(CAREER_READINESS_QUIZ_DATA_KEY, moduleId, conversationId),
+      JSON.stringify(data)
+    );
+  }
 
   /**
    * Returns the token from the storage
@@ -231,5 +276,72 @@ export class PersistentStorageService {
    */
   static setClientID(clientId: string): void {
     this.storage.setItem(CLIENT_ID_KEY, clientId);
+  }
+
+  static getCareerReadinessQuizData(moduleId: string, conversationId: string): CareerReadinessQuizData | null {
+    const raw = this.getCareerReadinessQuizDataRaw(moduleId, conversationId);
+    if (!raw) return null;
+
+    const answers = raw.answers
+      ? (Object.fromEntries(
+          Object.entries(raw.answers)
+            .map(([k, v]) => [Number(k), v] as const)
+            .filter(([k, v]) => !Number.isNaN(k) && typeof v === "string")
+        ) as Record<number, string>)
+      : undefined;
+
+    return {
+      questions: Array.isArray(raw.questions) && raw.questions.length > 0 ? raw.questions : undefined,
+      answers: answers && Object.keys(answers).length > 0 ? answers : undefined,
+    };
+  }
+
+  static setCareerReadinessQuizData(moduleId: string, conversationId: string, data: CareerReadinessQuizData): void {
+    const answers = data.answers
+      ? Object.fromEntries(Object.entries(data.answers).map(([k, v]) => [String(k), v]))
+      : undefined;
+
+    this.setCareerReadinessQuizDataRaw(moduleId, conversationId, {
+      questions: data.questions,
+      answers,
+    });
+  }
+
+  static clearCareerReadinessQuizData(moduleId: string, conversationId: string): void {
+    this.storage.removeItem(
+      this.getCareerReadinessQuizStorageKey(CAREER_READINESS_QUIZ_DATA_KEY, moduleId, conversationId)
+    );
+  }
+
+  static getCareerReadinessQuizResult(
+    moduleId: string,
+    conversationId: string
+  ): PersistedCareerReadinessQuizResult | null {
+    const item = this.storage.getItem(
+      this.getCareerReadinessQuizStorageKey(CAREER_READINESS_QUIZ_RESULT_KEY, moduleId, conversationId)
+    );
+    if (!item) return null;
+    try {
+      return JSON.parse(item) as PersistedCareerReadinessQuizResult;
+    } catch {
+      return null;
+    }
+  }
+
+  static setCareerReadinessQuizResult(
+    moduleId: string,
+    conversationId: string,
+    result: PersistedCareerReadinessQuizResult
+  ): void {
+    this.storage.setItem(
+      this.getCareerReadinessQuizStorageKey(CAREER_READINESS_QUIZ_RESULT_KEY, moduleId, conversationId),
+      JSON.stringify(result)
+    );
+  }
+
+  static clearCareerReadinessQuizResult(moduleId: string, conversationId: string): void {
+    this.storage.removeItem(
+      this.getCareerReadinessQuizStorageKey(CAREER_READINESS_QUIZ_RESULT_KEY, moduleId, conversationId)
+    );
   }
 }
