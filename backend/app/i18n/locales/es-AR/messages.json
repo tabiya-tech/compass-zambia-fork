@@ -43,6 +43,10 @@
     "allAgentsDone": "¡Conversación finalizada, todos los agentes terminaron!",
     "forcefullyEnded": "La conversación se terminó de forma forzada"
   },
+  "careerExplorer": {
+    "welcomeMessage": "¡Bienvenido al Explorador de Carreras! Según las prioridades de desarrollo de Zambia, hay {sector_count} sectores clave donde los graduados de TEVET tienen alta demanda:\n\n{sectors_list}\n\n¿Qué sector te interesa más?",
+    "errorRetry": "Estoy teniendo problemas ahora. ¿Podés intentar de nuevo?"
+  },
   "experience": {
     "until": "hasta {end_date}",
     "noTitleProvidedYet": "Sin título aún",

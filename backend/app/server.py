@@ -240,6 +240,7 @@ application_config = ApplicationConfig(
     matching_service_url=os.getenv("MATCHING_SERVICE_URL"),
     matching_service_api_key=os.getenv("MATCHING_SERVICE_API_KEY"),
     inline_phase_transition=os.getenv("COMPASS_INLINE_PHASE_TRANSITION", "").lower() in ("1", "true"),
+    career_explorer_sectors=json.loads(os.getenv("CAREER_EXPLORER_SECTORS", "[]")),
 )
 
 set_application_config(application_config)
