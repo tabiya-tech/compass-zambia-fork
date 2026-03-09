@@ -14,7 +14,7 @@ from app.career_explorer.types import (
     CareerExplorerMessage,
     CareerExplorerMessageSender,
 )
-from app.agent.career_explorer_agent.agent import WELCOME_MESSAGE
+from app.agent.career_explorer_agent.agent import _get_welcome_message
 from app.career_explorer.context_builder import build_windowed_context
 
 class CareerExplorerService:
@@ -38,7 +38,7 @@ class CareerExplorerService:
         now = datetime.now(timezone.utc)
         intro = CareerExplorerMessage(
             message_id=str(ObjectId()),
-            message=WELCOME_MESSAGE,
+            message=_get_welcome_message(),
             sent_at=now,
             sender=CareerExplorerMessageSender.AGENT,
         )
