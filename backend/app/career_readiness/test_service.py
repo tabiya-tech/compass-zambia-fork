@@ -917,7 +917,7 @@ class TestSubmitQuiz:
         assert actual_conv.conversation_mode == ConversationMode.SUPPORT
 
     @pytest.mark.asyncio
-    async def test_fail_resets_quiz_for_retry(self):
+    async def test_fail_keeps_quiz_available_for_retry(self):
         # GIVEN a conversation with quiz delivered (2 questions, threshold 0.5)
         given_module = _make_module_config()
         service, repo = _make_service(modules=[given_module])
@@ -937,10 +937,10 @@ class TestSubmitQuiz:
         assert actual_result.score == 0
         assert actual_result.module_completed is False
         assert actual_result.conversation_mode == ConversationMode.INSTRUCTION
-        # AND quiz_delivered is reset for retry
+        # AND quiz_delivered stays active for retry
         actual_conv = await repo.find_by_conversation_id(given_conversation.conversation_id)
         assert actual_conv is not None
-        assert actual_conv.quiz_delivered is False
+        assert actual_conv.quiz_delivered is True
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(

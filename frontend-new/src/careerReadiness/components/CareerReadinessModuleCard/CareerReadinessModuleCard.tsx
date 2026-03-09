@@ -14,6 +14,7 @@ import PeopleOutlined from "@mui/icons-material/PeopleOutlined";
 import HelpOutlineOutlined from "@mui/icons-material/HelpOutlineOutlined";
 import CheckCircleOutlined from "@mui/icons-material/CheckCircleOutlined";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
+import LockOutlined from "@mui/icons-material/LockOutlined";
 
 const uniqueId = "a7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d";
 
@@ -40,17 +41,20 @@ export const getModuleIcon = (iconId: string): React.ReactNode => {
 const STATUS_ICONS = {
   done: <CheckCircleOutlined sx={{ fontSize: 16 }} />,
   in_progress: <AutorenewIcon sx={{ fontSize: 16 }} />,
+  locked: <LockOutlined sx={{ fontSize: 16 }} />,
 };
 
 const getStatusLabel = (status: ModuleStatusDisplay, t: (key: TranslationKey) => string): string => {
   if (status === "done") return t("careerReadiness.statusDone");
   if (status === "in_progress") return t("careerReadiness.statusInProgress");
-  return t("careerReadiness.statusNotStarted");
+  if (status === "locked") return t("careerReadiness.statusLocked");
+  return t("careerReadiness.statusUnlocked");
 };
 
 const getStatusIcon = (status: ModuleStatusDisplay): React.ReactNode => {
   if (status === "done") return STATUS_ICONS.done;
   if (status === "in_progress") return STATUS_ICONS.in_progress;
+  if (status === "locked") return STATUS_ICONS.locked;
   return null;
 };
 
@@ -84,7 +88,18 @@ const useStatusStyles = (status: ModuleStatusDisplay) => {
     };
   }
 
-  // not_started
+  if (status === "locked") {
+    return {
+      borderColor: theme.palette.grey[300],
+      iconBg: theme.palette.grey[200],
+      iconColor: theme.palette.text.disabled,
+      statusColor: theme.palette.text.disabled,
+      hoverBorderColor: theme.palette.grey[300],
+      hoverBg: "transparent",
+    };
+  }
+
+  // unlocked (available, not started)
   return {
     borderColor: theme.palette.grey[200],
     iconBg: theme.palette.grey[200],
@@ -95,13 +110,15 @@ const useStatusStyles = (status: ModuleStatusDisplay) => {
   };
 };
 
-const CareerReadinessModuleCard: React.FC<CareerReadinessModuleCardProps> = ({ module, status = "not_started" }) => {
+const CareerReadinessModuleCard: React.FC<CareerReadinessModuleCardProps> = ({ module, status = "unlocked" }) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const styles = useStatusStyles(status);
+  const isLocked = status === "locked";
 
   const handleClick = () => {
+    if (isLocked) return;
     startTransition(() => {
       navigate(`${routerPaths.CAREER_READINESS}/${module.id}`);
     });
@@ -112,6 +129,80 @@ const CareerReadinessModuleCard: React.FC<CareerReadinessModuleCardProps> = ({ m
   const statusLabel = getStatusLabel(status, t);
   const statusIcon = getStatusIcon(status);
 
+  const cardContent = (
+    <>
+      <Box
+        sx={{
+          flexShrink: 0,
+          borderRadius: theme.rounding(theme.tabiyaRounding.sm),
+          backgroundColor: styles.iconBg,
+          color: styles.iconColor,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: theme.fixedSpacing(theme.tabiyaSpacing.sm),
+        }}
+        data-testid={DATA_TEST_ID.MODULE_CARD_ICON}
+      >
+        {icon}
+      </Box>
+
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: theme.fixedSpacing(theme.tabiyaSpacing.sm),
+            mb: theme.tabiyaSpacing.xs,
+          }}
+        >
+          <Typography
+            variant="body1"
+            color="text.primary"
+            fontWeight="bold"
+            data-testid={DATA_TEST_ID.MODULE_CARD_TITLE}
+            sx={{ lineHeight: 1.3, minWidth: 0, ...(isLocked && { color: "text.disabled" }) }}
+          >
+            {module.title}
+          </Typography>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              flexShrink: 0,
+              color: styles.statusColor,
+            }}
+            data-testid={DATA_TEST_ID.MODULE_CARD_STATUS}
+          >
+            {statusIcon}
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                color: styles.statusColor,
+                whiteSpace: "nowrap",
+                fontSize: "0.75rem",
+              }}
+            >
+              {statusLabel}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          data-testid={DATA_TEST_ID.MODULE_CARD_DESCRIPTION}
+          sx={isLocked ? { color: "text.disabled" } : undefined}
+        >
+          {module.description}
+        </Typography>
+      </Box>
+    </>
+  );
+
   return (
     <Card
       sx={{
@@ -119,6 +210,8 @@ const CareerReadinessModuleCard: React.FC<CareerReadinessModuleCardProps> = ({ m
         border: `1px solid ${styles.borderColor}`,
         boxShadow: "none",
         height: "100%",
+        opacity: isLocked ? 0.85 : 1,
+        cursor: isLocked ? "not-allowed" : "pointer",
         "&:hover": {
           borderColor: styles.hoverBorderColor,
           backgroundColor: styles.hoverBg,
@@ -126,84 +219,37 @@ const CareerReadinessModuleCard: React.FC<CareerReadinessModuleCardProps> = ({ m
       }}
       data-testid={DATA_TEST_ID.MODULE_CARD}
     >
-      <CardActionArea
-        onClick={handleClick}
-        disableRipple
-        sx={{
-          padding: theme.fixedSpacing(theme.tabiyaSpacing.md),
-          height: "100%",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
-          gap: theme.fixedSpacing(theme.tabiyaSpacing.md),
-        }}
-      >
+      {isLocked ? (
         <Box
           sx={{
-            flexShrink: 0,
-            borderRadius: theme.rounding(theme.tabiyaRounding.sm),
-            backgroundColor: styles.iconBg,
-            color: styles.iconColor,
+            padding: theme.fixedSpacing(theme.tabiyaSpacing.md),
+            height: "100%",
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: theme.fixedSpacing(theme.tabiyaSpacing.sm),
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            gap: theme.fixedSpacing(theme.tabiyaSpacing.md),
           }}
-          data-testid={DATA_TEST_ID.MODULE_CARD_ICON}
         >
-          {icon}
+          {cardContent}
         </Box>
-
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              gap: theme.fixedSpacing(theme.tabiyaSpacing.sm),
-              mb: theme.tabiyaSpacing.xs,
-            }}
-          >
-            <Typography
-              variant="body1"
-              color="text.primary"
-              fontWeight="bold"
-              data-testid={DATA_TEST_ID.MODULE_CARD_TITLE}
-              sx={{ lineHeight: 1.3, minWidth: 0 }}
-            >
-              {module.title}
-            </Typography>
-
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 0.5,
-                flexShrink: 0,
-                color: styles.statusColor,
-              }}
-              data-testid={DATA_TEST_ID.MODULE_CARD_STATUS}
-            >
-              {statusIcon}
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  color: styles.statusColor,
-                  whiteSpace: "nowrap",
-                  fontSize: "0.75rem",
-                }}
-              >
-                {statusLabel}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Typography variant="body2" color="text.secondary" data-testid={DATA_TEST_ID.MODULE_CARD_DESCRIPTION}>
-            {module.description}
-          </Typography>
-        </Box>
-      </CardActionArea>
+      ) : (
+        <CardActionArea
+          onClick={handleClick}
+          disableRipple
+          sx={{
+            padding: theme.fixedSpacing(theme.tabiyaSpacing.md),
+            height: "100%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            gap: theme.fixedSpacing(theme.tabiyaSpacing.md),
+          }}
+        >
+          {cardContent}
+        </CardActionArea>
+      )}
     </Card>
   );
 };
