@@ -42,7 +42,7 @@ const moduleDetailBase: ModuleDetail = {
   title: "Workplace Readiness",
   description: "Learn workplace communication and expectations.",
   icon: "workplace",
-  status: "NOT_STARTED",
+  status: "UNLOCKED",
   sort_order: 4,
   input_placeholder: "Ask about workplace readiness...",
   scope: "Workplace communication and collaboration",
@@ -83,6 +83,38 @@ const historyResponse: CareerReadinessConversationResponse = {
     {
       message_id: "m3",
       message: "Start with communication, teamwork, and professionalism.",
+      sent_at: getTimestamp(0),
+      sender: "AGENT",
+    },
+  ],
+};
+
+const completedHistoryResponse: CareerReadinessConversationResponse = {
+  conversation_id: "conv-completed",
+  module_id: DEFAULT_MODULE_ID,
+  module_completed: true,
+  messages: [
+    {
+      message_id: "c1",
+      message: "Welcome! Let's explore workplace readiness together.",
+      sent_at: getTimestamp(10),
+      sender: "AGENT",
+    },
+    {
+      message_id: "c2",
+      message: "I'd like to learn about communication.",
+      sent_at: getTimestamp(8),
+      sender: "USER",
+    },
+    {
+      message_id: "c3",
+      message: "Great. Here are a few quiz questions to check your understanding.",
+      sent_at: getTimestamp(5),
+      sender: "AGENT",
+    },
+    {
+      message_id: "c4",
+      message: "Well done! You've passed the quiz for this module. The next module is now unlocked.",
       sent_at: getTimestamp(0),
       sender: "AGENT",
     },
@@ -160,6 +192,23 @@ export const Loading: Story = {
           status: "IN_PROGRESS",
         };
       },
+    }),
+  ],
+};
+
+export const ModuleCompleted: Story = {
+  decorators: [
+    createServiceMock({
+      getModule: async () => ({
+        ...moduleDetailBase,
+        active_conversation_id: "conv-completed",
+        status: "COMPLETED",
+      }),
+      createConversation: async () => {
+        throw new Error("Should not be called");
+      },
+      getConversationHistory: async () => completedHistoryResponse,
+      sendMessage: async () => completedHistoryResponse,
     }),
   ],
 };

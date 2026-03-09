@@ -7,6 +7,7 @@ import { routerPaths } from "src/app/routerPaths";
 import { mapModuleStatusToDisplay } from "src/careerReadiness/types";
 import CareerReadinessModuleCard from "src/careerReadiness/components/CareerReadinessModuleCard/CareerReadinessModuleCard";
 import CareerReadinessModuleCardSkeleton from "src/careerReadiness/components/CareerReadinessModuleCardSkeleton/CareerReadinessModuleCardSkeleton";
+import CareerReadinessProgressBanner from "src/careerReadiness/components/CareerReadinessProgressBanner/CareerReadinessProgressBanner";
 import Footer from "src/home/components/Footer/Footer";
 import CareerReadinessService from "src/careerReadiness/services/CareerReadinessService";
 import type { ModuleSummary } from "src/careerReadiness/types";
@@ -19,6 +20,7 @@ export const DATA_TEST_ID = {
   CAREER_READINESS_LIST_CONTENT: `career-readiness-list-content-${uniqueId}`,
   CAREER_READINESS_LIST_GRID: `career-readiness-list-grid-${uniqueId}`,
   CAREER_READINESS_LIST_EMPTY: `career-readiness-list-empty-${uniqueId}`,
+  CAREER_READINESS_PROGRESS_BANNER: `career-readiness-progress-banner-wrapper-${uniqueId}`,
   CAREER_READINESS_INTRODUCTION: `career-readiness-introduction-${uniqueId}`,
   CAREER_READINESS_LIST_LOADING: `career-readiness-list-loading-${uniqueId}`,
 };
@@ -38,7 +40,8 @@ const CareerReadinessList: React.FC = () => {
     CareerReadinessService.getInstance()
       .listModules()
       .then((res) => {
-        setModules(res.modules);
+        const sorted = [...res.modules].sort((a, b) => a.sort_order - b.sort_order);
+        setModules(sorted);
       })
       .catch((e) => {
         enqueueSnackbar(e?.message ?? t("careerReadiness.listError"), { variant: "error" });
@@ -79,6 +82,12 @@ const CareerReadinessList: React.FC = () => {
         }}
         data-testid={DATA_TEST_ID.CAREER_READINESS_LIST_CONTENT}
       >
+        {!loading && modules.length > 0 && (
+          <Box mb={theme.spacing(theme.tabiyaSpacing.md)} data-testid={DATA_TEST_ID.CAREER_READINESS_PROGRESS_BANNER}>
+            <CareerReadinessProgressBanner modules={modules} />
+          </Box>
+        )}
+
         <Box mb={theme.spacing(theme.tabiyaSpacing.lg)} data-testid={DATA_TEST_ID.CAREER_READINESS_INTRODUCTION}>
           <Typography variant="body1" color="text.secondary">
             {t("careerReadiness.introduction")}

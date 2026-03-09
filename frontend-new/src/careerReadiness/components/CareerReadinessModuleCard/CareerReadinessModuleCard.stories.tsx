@@ -10,7 +10,7 @@ const meta: Meta<typeof CareerReadinessModuleCard> = {
   argTypes: {
     status: {
       control: "select",
-      options: ["not_started", "in_progress", "done"],
+      options: ["locked", "unlocked", "in_progress", "done"],
     },
   },
   decorators: [
@@ -32,15 +32,22 @@ const mockModule: ModuleSummary = {
   description:
     "Learn to build and tailor a professional CV that highlights your skills and experience for different employers.",
   icon: "cv",
-  status: "NOT_STARTED",
+  status: "UNLOCKED",
   sort_order: 1,
   input_placeholder: "Ask about CVs...",
 };
 
-export const NotStarted: Story = {
+export const Locked: Story = {
   args: {
     module: mockModule,
-    status: "not_started" as ModuleStatusDisplay,
+    status: "locked" as ModuleStatusDisplay,
+  },
+};
+
+export const Unlocked: Story = {
+  args: {
+    module: mockModule,
+    status: "unlocked" as ModuleStatusDisplay,
   },
 };
 

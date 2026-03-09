@@ -428,11 +428,11 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
             <BackButton
               onClick={() => {
                 startTransition(() => {
-                  navigate(routerPaths.ROOT);
+                  onBackClick();
                 });
               }}
-              labelKey="knowledgeHub.backToDashboard"
-              dataTestId="chat-back-button"
+              labelKey={backLinkLabel}
+              dataTestId={DATA_TEST_ID.PAGE_HEADER_BACK_LINK}
             />
           </Box>
         </Box>
