@@ -44,7 +44,7 @@
     "forcefullyEnded": "La conversación se terminó de manera forzada"
   },
   "careerExplorer": {
-    "welcomeMessage": "¡Bienvenido al Explorador de Carreras! Según las prioridades de desarrollo de {country}, hay {sector_count} sectores clave donde los graduados de TEVET tienen alta demanda:\n\n{sectors_list}\n\n¿Qué sector te interesa más?",
+    "welcomeMessage": "¡Bienvenido al Explorador de Carreras! Según las prioridades de desarrollo de {country}, hay {sector_count} sectores clave donde los graduados de TEVET tienen alta demanda:\n\n{sectors_list}\n\nAdemás de estos sectores prioritarios, también podemos hablar de cualquier carrera que quieras explorar. ¿Qué sector te interesa más?",
     "errorRetry": "Estoy teniendo problemas ahora. ¿Podrías intentar de nuevo?"
   },
   "experience": {

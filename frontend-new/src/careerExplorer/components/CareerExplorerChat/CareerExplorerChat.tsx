@@ -13,9 +13,14 @@ import type { CareerExplorerMessage } from "src/careerExplorer/types";
 export interface CareerExplorerChatProps {
   initialMessages: CareerExplorerMessage[];
   placeholderKey: TranslationKey;
+  isLoading?: boolean;
 }
 
-const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({ initialMessages, placeholderKey }) => {
+const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
+  initialMessages,
+  placeholderKey,
+  isLoading = false,
+}) => {
   const theme = useTheme();
   const [messages, setMessages] = useState<IChatMessage<any>[]>(() =>
     mapCareerExplorerMessagesToChatMessages(initialMessages)
@@ -26,11 +31,11 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({ initialMessages
   const typingMessage = useMemo(() => generateCareerExplorerTypingMessage(), []);
 
   const displayMessages = useMemo(() => {
-    if (aiIsTyping) {
+    if (aiIsTyping || (isLoading && messages.length === 0)) {
       return [...messages, typingMessage];
     }
     return messages;
-  }, [messages, aiIsTyping, typingMessage]);
+  }, [messages, aiIsTyping, typingMessage, isLoading]);
 
   useEffect(() => {
     setMessages(mapCareerExplorerMessagesToChatMessages(initialMessages));

@@ -3,19 +3,17 @@ from datetime import datetime, timezone
 from typing import Callable
 
 from bson import ObjectId
-from pymongo.errors import DuplicateKeyError
 
 from app.agent.agent_types import AgentInput
-from app.agent.career_explorer_agent.agent import CareerExplorerAgent
+from app.agent.career_explorer_agent.agent import CareerExplorerAgent, _get_welcome_message
+from app.career_explorer.context_builder import build_windowed_context
 from app.career_explorer.repository import ICareerExplorerConversationRepository
 from app.career_explorer.types import (
-    CareerExplorerConversationDocument,
     CareerExplorerConversationResponse,
     CareerExplorerMessage,
     CareerExplorerMessageSender,
 )
-from app.agent.career_explorer_agent.agent import _get_welcome_message
-from app.career_explorer.context_builder import build_windowed_context
+
 
 class CareerExplorerService:
     def __init__(
@@ -28,42 +26,7 @@ class CareerExplorerService:
         self._logger = logging.getLogger(self.__class__.__name__)
 
     async def get_or_create_conversation(self, user_id: str) -> CareerExplorerConversationResponse:
-        existing = await self._repository.find_by_user(user_id)
-        if existing:
-            return CareerExplorerConversationResponse(
-                messages=existing.messages,
-                finished=False,
-            )
-
-        now = datetime.now(timezone.utc)
-        intro = CareerExplorerMessage(
-            message_id=str(ObjectId()),
-            message=_get_welcome_message(),
-            sent_at=now,
-            sender=CareerExplorerMessageSender.AGENT,
-        )
-        doc = CareerExplorerConversationDocument(
-            user_id=user_id,
-            messages=[intro],
-            created_at=now,
-            updated_at=now,
-        )
-        try:
-            await self._repository.create(doc)
-        except DuplicateKeyError:
-            self._logger.debug("Race condition: conversation already exists for user %s, fetching existing", user_id)
-            existing = await self._repository.find_by_user(user_id)
-            if existing:
-                return CareerExplorerConversationResponse(
-                    messages=existing.messages,
-                    finished=False,
-                )
-            raise
-
-        return CareerExplorerConversationResponse(
-            messages=[intro],
-            finished=False,
-        )
+        return await self._repository.get_or_create_conversation(user_id, _get_welcome_message())
 
     async def send_message(self, user_id: str, user_input: str) -> CareerExplorerConversationResponse:
         conv = await self._repository.find_by_user(user_id)
@@ -100,19 +63,18 @@ class CareerExplorerService:
             message=agent_output.message_for_user,
             sent_at=datetime.now(timezone.utc),
             sender=CareerExplorerMessageSender.AGENT,
+            metadata=agent_output.metadata,
         )
         await self._repository.append_message(user_id, agent_msg)
 
-        return CareerExplorerConversationResponse(
-            messages=list(conv.messages) + [user_msg] + [agent_msg],
-            finished=agent_output.finished,
-        )
+        updated_response = await self._repository.find_response_by_user(user_id)
+        if updated_response is None:
+            raise ValueError("Conversation not found after appending message")
+        updated_response.finished = agent_output.finished
+        return updated_response
 
     async def get_conversation(self, user_id: str) -> CareerExplorerConversationResponse:
-        conv = await self._repository.find_by_user(user_id)
-        if conv is None:
+        response = await self._repository.find_response_by_user(user_id)
+        if response is None:
             raise ValueError("Conversation not found")
-        return CareerExplorerConversationResponse(
-            messages=conv.messages,
-            finished=False,
-        )
+        return response

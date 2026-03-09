@@ -15,7 +15,8 @@ from app.jobs import add_jobs_routes
 from app.job_preferences import add_job_preferences_routes
 from app.career_path import add_career_path_routes
 from app.career_readiness import add_career_readiness_routes
-from app.career_explorer import add_career_explorer_routes
+from app.career_explorer.routes import add_career_explorer_routes
+from app.career_explorer.config import parse_career_explorer_config
 from app.metrics.routes.routes import add_metrics_routes
 from app.sentry_init import init_sentry, set_sentry_contexts
 from app.server_dependencies.db_dependencies import CompassDBProvider
@@ -240,7 +241,7 @@ application_config = ApplicationConfig(
     matching_service_url=os.getenv("MATCHING_SERVICE_URL"),
     matching_service_api_key=os.getenv("MATCHING_SERVICE_API_KEY"),
     inline_phase_transition=os.getenv("COMPASS_INLINE_PHASE_TRANSITION", "").lower() in ("1", "true"),
-    career_explorer_sectors=json.loads(os.getenv("CAREER_EXPLORER_SECTORS", "[]")),
+    career_explorer_config=parse_career_explorer_config(os.getenv("CAREER_EXPLORER_CONFIG")),
 )
 
 set_application_config(application_config)

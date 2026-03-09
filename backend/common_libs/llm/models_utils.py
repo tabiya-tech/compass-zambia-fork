@@ -4,7 +4,9 @@ from abc import ABC, abstractmethod
 
 import vertexai
 from dotenv import load_dotenv
+from google.genai.types import GroundingMetadata
 from pydantic import BaseModel
+
 from vertexai.generative_models import HarmCategory, HarmBlockThreshold, SafetySetting
 
 from app.agent.config import AgentsConfig
@@ -187,6 +189,8 @@ class LLMResponse(BaseModel):
     """The number of tokens in the prompt."""
     response_token_count: int
     """The number of tokens in the response."""
+    grounding_metadata: GroundingMetadata | None = None
+    """Grounding metadata from Google Search or other retrieval tools, when present."""
 
 
 class LLM(ABC):

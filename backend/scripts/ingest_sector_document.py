@@ -18,6 +18,7 @@ Usage (all sectors):
 
 Environment:
   CAREER_EXPLORER_MONGODB_URI, CAREER_EXPLORER_DATABASE_NAME - for the database
+  CAREER_EXPLORER_CONFIG - JSON with sectors, country (sectors list used for --ingest-all)
   VERTEX_API_REGION - for embeddings
   EMBEDDINGS_MODEL_NAME - same as app config for consistency
 """
@@ -202,11 +203,15 @@ async def main():
 
     if args.ingest_all:
         base_path = Path(__file__).parent.parent.parent / "frontend-new" / "src" / "knowledgeHub" / "documents"
-        sectors_config_json = os.getenv("CAREER_EXPLORER_SECTORS", "[]")
-        try:
-            sectors_config = json.loads(sectors_config_json)
-        except json.JSONDecodeError:
-            logger.warning("Invalid CAREER_EXPLORER_SECTORS JSON, falling back to default sectors")
+        config_json = os.getenv("CAREER_EXPLORER_CONFIG")
+        if config_json:
+            try:
+                config_data = json.loads(config_json)
+                sectors_config = config_data.get("sectors", DEFAULT_SECTORS_CONFIG)
+            except json.JSONDecodeError:
+                logger.warning("Invalid CAREER_EXPLORER_CONFIG JSON, falling back to default sectors")
+                sectors_config = DEFAULT_SECTORS_CONFIG
+        else:
             sectors_config = DEFAULT_SECTORS_CONFIG
         
         sector_files = {}
