@@ -252,9 +252,9 @@ class TestModuleRegistry:
         # WHEN a registry is created with the default path
         actual_registry = ModuleRegistry()
 
-        # THEN all 5 modules are loaded
+        # THEN all 6 modules are loaded
         actual_modules = actual_registry.get_all_modules()
-        assert len(actual_modules) == 5
+        assert len(actual_modules) == 6
         # AND they are sorted by sort_order
         actual_orders = [m.sort_order for m in actual_modules]
         assert actual_orders == sorted(actual_orders)
