@@ -33,10 +33,12 @@ def _get_welcome_message() -> str:
     config = get_application_config()
     sectors = config.career_explorer_sectors
     sectors_list = _get_sectors_list()
+    country_name = config.default_country_of_user.value
     return t(
         "messages",
         "careerExplorer.welcomeMessage",
-        "Welcome to the Career Explorer! Based on Zambia's development priorities, there are {sector_count} key sectors where TEVET graduates are in high demand:\n\n{sectors_list}\n\nWhich sector interests you most?",
+        "Welcome to the Career Explorer! Based on {country}'s development priorities, there are {sector_count} key sectors where TEVET graduates are in high demand:\n\n{sectors_list}\n\nWhich sector interests you most?",
+        country=country_name,
         sector_count=len(sectors) if sectors else 0,
         sectors_list=sectors_list,
     )
@@ -47,6 +49,7 @@ def _build_base_instructions(retrieved_content: str) -> str:
     sectors = config.career_explorer_sectors
     sector_names = [s["name"] for s in sectors] if sectors else []
     sector_list_str = ", ".join(sector_names) if sector_names else "the priority sectors"
+    country_name = config.default_country_of_user.value
     language_style = get_language_style(with_locale=True)
     finish_instructions = get_conversation_finish_instructions(
         "When the user explicitly indicates they are done or want to exit"
@@ -54,7 +57,7 @@ def _build_base_instructions(retrieved_content: str) -> str:
     return dedent(f"""\
         <system_instructions>
         # Role
-            You are a career exploration counselor helping TEVET graduates in Zambia discover career opportunities
+            You are a career exploration counselor helping TEVET graduates in {country_name} discover career opportunities
             in priority sectors. You start by suggesting topics and wait for the user to choose or ask questions.
 
         {language_style}

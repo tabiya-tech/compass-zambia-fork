@@ -44,7 +44,7 @@
     "forcefullyEnded": "Mazungumzo yameisha kwa nguvu"
   },
   "careerExplorer": {
-    "welcomeMessage": "Karibu kwenye Kuchunguza Kazi! Kulingana na vipaumbele vya maendeleo vya Zambia, kuna sekta {sector_count} muhimu ambazo wahitimu wa TEVET wana mahitaji makubwa:\n\n{sectors_list}\n\nSekta gani inakuvutia zaidi?",
+    "welcomeMessage": "Karibu kwenye Kuchunguza Kazi! Kulingana na vipaumbele vya maendeleo vya {country}, kuna sekta {sector_count} muhimu ambazo wahitimu wa TEVET wana mahitaji makubwa:\n\n{sectors_list}\n\nSekta gani inakuvutia zaidi?",
     "errorRetry": "Nina matatizo kwa sasa. Unaweza kujaribu tena?"
   },
   "experience": {
