@@ -14,6 +14,7 @@ class CareerExplorerMessage(BaseModel):
     message: str
     sent_at: datetime
     sender: CareerExplorerMessageSender
+    metadata: dict | None = None
 
     @field_serializer("sent_at")
     def _serialize_sent_at(self, value: datetime) -> str:

@@ -2,6 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.career_explorer.config import CareerExplorerConfig
 from app.countries import Country
 from app.i18n.language_config import LanguageConfig
 from app.users.cv.constants import DEFAULT_MAX_UPLOADS_PER_USER, DEFAULT_RATE_LIMIT_PER_MINUTE
@@ -109,11 +110,10 @@ class ApplicationConfig(BaseModel):
     Corresponds to the COMPASS_INLINE_PHASE_TRANSITION environment variable.
     """
 
-    career_explorer_sectors: list[dict[str, str]] = Field(default_factory=list)
+    career_explorer_config: CareerExplorerConfig = Field(default_factory=CareerExplorerConfig)
     """
-    Configuration for Career Explorer priority sectors.
-    Each sector dict should have: name (display name), description (brief description), file (markdown filename).
-    Example: [{"name": "Agriculture", "description": "Commercial farming, agriprocessing", "file": "agriculture.md"}]
+    Unified Career Explorer configuration (sectors, country).
+    Loaded from CAREER_EXPLORER_CONFIG JSON env var.
     """
 
     @model_validator(mode='after')
