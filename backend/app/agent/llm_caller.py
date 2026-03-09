@@ -39,7 +39,8 @@ class LLMCaller(Generic[RESPONSE_T]):
     async def call_llm(self, *,
                        llm: GeminiGenerativeLLM,
                        llm_input: LLMInput | str,
-                       logger: logging.Logger
+                       logger: logging.Logger,
+                       output_metadata: dict | None = None,
                        ) -> Tuple[RESPONSE_T | None, list[LLMStats]]:
         """
         Call the LLM to generate a specific response.
@@ -50,6 +51,8 @@ class LLMCaller(Generic[RESPONSE_T]):
         :param llm: The LLM to call
         :param llm_input: The input to the LLM
         :param logger: The logger to log messages.
+        :param output_metadata: Optional mutable dict. If provided, extra metadata from the LLM response (e.g. grounding)
+            is merged into it, e.g. under key "grounding_metadata".
 
         :return: The model response and the statistics of the LLM calls.
         """
@@ -95,7 +98,11 @@ class LLMCaller(Generic[RESPONSE_T]):
             llm_stats = LLMStats(prompt_token_count=llm_response.prompt_token_count,
                                  response_token_count=llm_response.response_token_count,
                                  response_time_in_sec=round(llm_end_time - llm_start_time, 2))
-            
+            if output_metadata is not None:
+                gm = getattr(llm_response, "grounding_metadata", None)
+                if gm is not None:
+                    output_metadata["grounding_metadata"] = gm
+
             # Set LLM duration in context for observability logging
             duration_ms = round((llm_end_time - llm_start_time) * 1000, 2)
             llm_call_duration_ms_ctx_var.set(duration_ms)

@@ -96,8 +96,8 @@ def main():
         # Phase transition behavior (optional)
         inline_phase_transition=getenv("COMPASS_INLINE_PHASE_TRANSITION", False, False),
 
-        # Career Explorer sectors configuration (optional)
-        career_explorer_sectors=getenv("CAREER_EXPLORER_SECTORS", False, False),
+        # Career Explorer unified config (optional JSON: sectors, country)
+        career_explorer_config=getenv("CAREER_EXPLORER_CONFIG", False, False),
     )
 
     # version of the artifacts to deploy

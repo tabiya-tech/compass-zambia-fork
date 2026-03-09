@@ -62,7 +62,7 @@ class BackendServiceConfig:
     matching_service_url: Optional[str]
     matching_service_api_key: Optional[str]
     inline_phase_transition: Optional[str]
-    career_explorer_sectors: Optional[str]
+    career_explorer_config: Optional[str]
 
 
 """
@@ -442,8 +442,8 @@ def _deploy_cloud_run_service(
                             name="COMPASS_INLINE_PHASE_TRANSITION",
                             value=backend_service_cfg.inline_phase_transition),
                         gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
-                            name="CAREER_EXPLORER_SECTORS",
-                            value=backend_service_cfg.career_explorer_sectors),
+                            name="CAREER_EXPLORER_CONFIG",
+                            value=backend_service_cfg.career_explorer_config or "{}"),
                         # Add more environment variables here
                     ],
                 )

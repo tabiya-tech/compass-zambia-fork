@@ -44,7 +44,7 @@
     "forcefullyEnded": "Conversation forcefully ended"
   },
   "careerExplorer": {
-    "welcomeMessage": "Welcome to the Career Explorer! Based on {country}'s development priorities, there are {sector_count} key sectors where TEVET graduates are in high demand:\n\n{sectors_list}\n\nWhich sector interests you most?",
+    "welcomeMessage": "Welcome to the Career Explorer! Based on {country}'s development priorities, there are {sector_count} key sectors where TEVET graduates are in high demand:\n\n{sectors_list}\n\nBesides these priority sectors, we can also discuss any careers you want to explore. Which sector interests you most?",
     "errorRetry": "I'm having trouble right now. Could you try again?"
   },
   "experience": {

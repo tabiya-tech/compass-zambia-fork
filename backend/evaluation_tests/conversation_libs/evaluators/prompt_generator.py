@@ -66,6 +66,24 @@ class PromptGenerator:
                 2. Check if the conversation was in the same language throughout (eg: English, Spanish, French, Swahili, etc)..
                 3. Assign a score of 100 if the conversation was in the same language throughout, or 0 otherwise.
                 """)
+            case EvaluationType.NON_PRIORITY_SECTOR_RESPONSE_QUALITY:
+                return textwrap.dedent("""
+                Evaluation Criteria:
+
+                The EVALUATED_AGENT is a career explorer that answers questions about careers both within and outside
+                priority sectors. For non-priority sectors (e.g. software, IT, healthcare, aeronautical engineering),
+                the agent should use web search to provide substantive, informative career advice.
+
+                Score highly if the EVALUATED_AGENT:
+                - Gives a substantive response with useful career information (roles, pathways, salary context, employers)
+                - Stays on topic and addresses the user's career question
+                - Does not deflect or redirect the user to pick a different sector
+
+                Score low if the EVALUATED_AGENT:
+                - Says it cannot help or redirects to "pick one of our sectors"
+                - Gives a generic error or placeholder response
+                - Provides no useful career-specific information
+                """)
             case _:
                 raise NotImplementedError()
 
@@ -98,6 +116,11 @@ class PromptGenerator:
                 Here are a list of cases where the language deviated.
                 
                 - EVALUATED_AGENT used 'Hello' instead of 'Hola' at message 2.
+                """)
+            case EvaluationType.NON_PRIORITY_SECTOR_RESPONSE_QUALITY:
+                return textwrap.dedent("""
+                The response provides useful career information about the non-priority sector, including roles,
+                pathways, and context, without deflecting to priority sectors.
                 """)
             case _:
                 raise NotImplementedError()

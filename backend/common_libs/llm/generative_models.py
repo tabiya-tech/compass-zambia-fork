@@ -1,7 +1,7 @@
 import logging
-import traceback
 
-from vertexai.generative_models import GenerativeModel, Content, Part, GenerationConfig
+from google.genai.types import GroundingMetadata
+from vertexai.generative_models import GenerativeModel, Content, Part, GenerationConfig, Tool
 from vertexai.language_models import TextGenerationModel
 
 from common_libs.llm.models_utils import LLMConfig, LLMInput, LLMResponse, BasicLLM
@@ -16,14 +16,19 @@ class GeminiGenerativeLLM(BasicLLM):
 
     def __init__(self, *,
                  system_instructions: list[str] | str | None = None,
-                 config: LLMConfig = LLMConfig()):
+                 config: LLMConfig = LLMConfig(),
+                 tools: list[Tool] | None = None):
         super().__init__(config=config)
 
-        self._model = GenerativeModel(model_name=config.language_model_name,
-                                      system_instruction=system_instructions,
-                                      generation_config=GenerationConfig.from_dict(config.generation_config),
-                                      safety_settings=list(config.safety_settings)
-                                      )
+        model_kwargs = dict(
+            model_name=config.language_model_name,
+            system_instruction=system_instructions,
+            generation_config=GenerationConfig.from_dict(config.generation_config),
+            safety_settings=list(config.safety_settings),
+        )
+        if tools:
+            model_kwargs["tools"] = tools
+        self._model = GenerativeModel(**model_kwargs)
         # noinspection PyProtectedMember
         self._resource_name = self._model._prediction_resource_name  # pylint: disable=protected-access
 
@@ -31,9 +36,38 @@ class GeminiGenerativeLLM(BasicLLM):
         contents = llm_input if isinstance(llm_input, str) else [
             Content(role=turn.role, parts=[Part.from_text(turn.content)]) for turn in llm_input.turns]
         response = await self._model.generate_content_async(contents=contents)
-        return LLMResponse(text=response.text,
-                           prompt_token_count=response.usage_metadata.prompt_token_count,
-                           response_token_count=response.usage_metadata.candidates_token_count)
+        grounding_metadata = self._extract_grounding_metadata(response)
+        return LLMResponse(
+            text=response.text,
+            prompt_token_count=response.usage_metadata.prompt_token_count,
+            response_token_count=response.usage_metadata.candidates_token_count,
+            grounding_metadata=grounding_metadata,
+        )
+
+    def _extract_grounding_metadata(self, response) -> GroundingMetadata | None:
+        if not response.candidates:
+            return None
+        candidate = response.candidates[0]
+        gm = getattr(candidate, "grounding_metadata", None)
+        if gm is None:
+            return None
+        
+        raw_dict: dict
+        if isinstance(gm, dict):
+            raw_dict = gm
+        elif hasattr(gm, "to_dict"):
+            raw_dict = gm.to_dict()
+        else:
+            try:
+                from google.protobuf.json_format import MessageToDict
+                raw_dict = MessageToDict(gm._pb) if hasattr(gm, "_pb") else MessageToDict(gm)
+            except Exception:
+                return None
+        
+        try:
+            return GroundingMetadata(**raw_dict)
+        except Exception:
+            return None
 
 
 class PalmTextGenerativeLLM(BasicLLM):
