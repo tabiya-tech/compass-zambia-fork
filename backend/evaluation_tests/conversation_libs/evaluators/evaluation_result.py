@@ -39,6 +39,7 @@ class EvaluationType(Enum):
     SUMMARY_CONSISTENCY = "Summary Consistency"
     SUMMARY_RELEVANCE = "Summary Relevance"
     SINGLE_LANGUAGE = "Single Language"
+    NON_PRIORITY_SECTOR_RESPONSE_QUALITY = "Non-Priority Sector Response Quality"
 
 
 class EvaluationResult(BaseModel):

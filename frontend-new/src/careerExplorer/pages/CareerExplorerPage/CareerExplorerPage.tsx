@@ -37,18 +37,6 @@ const CareerExplorerPage: React.FC = () => {
     void loadOrCreateConversation();
   }, [loadOrCreateConversation]);
 
-  if (loading && messages.length === 0) {
-    return (
-      <Box width="100%" height="100%" display="flex" flexDirection="column" data-testid={DATA_TEST_ID.CONTAINER}>
-        <PageHeader
-          title="careerExplorer.title"
-          backLinkLabel="home.backToDashboard"
-          onBackClick={() => navigate(routerPaths.ROOT)}
-        />
-      </Box>
-    );
-  }
-
   return (
     <Box
       width="100%"
@@ -80,7 +68,11 @@ const CareerExplorerPage: React.FC = () => {
         }}
         data-testid={DATA_TEST_ID.MESSAGE_LIST}
       >
-        <CareerExplorerChat initialMessages={messages} placeholderKey="careerExplorer.placeholder" />
+        <CareerExplorerChat
+          initialMessages={messages}
+          placeholderKey="careerExplorer.placeholder"
+          isLoading={loading}
+        />
       </Box>
     </Box>
   );
