@@ -14,11 +14,10 @@ export interface AMAMessage {
 }
 
 export interface AMAConversationInput {
-  user_input: string;
+  user_input?: string | null;
   history: AMAMessage[];
 }
 
 export interface AMAConversationResponse {
-  conversation_id: string;
   messages: AMAMessage[];
 }

@@ -6,9 +6,18 @@ from enum import Enum
 
 from pydantic import BaseModel, Field, field_serializer, field_validator
 
-from app.ask_me_anything.suggested_action import SuggestedAction
 
-__all__ = ["SuggestedAction"]
+class SuggestedAction(BaseModel):
+    """A navigation action suggested by the AMA agent."""
+
+    label: str
+    """Button text shown to the user, e.g. 'Explore Career Readiness'"""
+
+    route: str
+    """Frontend route to navigate to, e.g. '/career-readiness'"""
+
+    class Config:
+        extra = "forbid"
 
 
 class AMAMessageSender(str, Enum):
@@ -70,8 +79,8 @@ class AMAMessage(BaseModel):
 class AMAConversationInput(BaseModel):
     """Input for sending a message in an AMA conversation."""
 
-    user_input: str
-    """The user's message"""
+    user_input: str | None = None
+    """The user's message (None for initial greeting request)"""
 
     history: list[AMAMessage] = Field(default_factory=list)
     """Full prior conversation history, sent by the client on each request"""
@@ -82,9 +91,6 @@ class AMAConversationInput(BaseModel):
 
 class AMAConversationResponse(BaseModel):
     """Response for an AMA conversation, including all messages."""
-
-    conversation_id: str
-    """Unique identifier for the conversation"""
 
     messages: list[AMAMessage]
     """All messages in the conversation (including the new ones)"""

@@ -105,49 +105,46 @@ class AskMeAnythingService:
         self._agent = agent or AskMeAnythingAgent()
         self._logger = logging.getLogger(AskMeAnythingService.__name__)
 
-    async def start_conversation(self) -> AMAConversationResponse:
-        """
-        Start a new AMA conversation.
-
-        Generates the agent's greeting message and returns a fresh conversation_id.
-        No database writes occur.
-        """
-        empty_context = ConversationContext(
-            all_history=ConversationHistory(),
-            history=ConversationHistory(),
-        )
-        intro_output = await self._agent.generate_intro_message(empty_context)
-
-        conversation_id = str(ObjectId())
-        now = datetime.now(timezone.utc)
-
-        intro_message = AMAMessage(
-            message_id=intro_output.message_id or str(ObjectId()),
-            message=intro_output.message_for_user,
-            sender=AMAMessageSender.AGENT,
-            sent_at=intro_output.sent_at or now,
-            suggested_actions=_extract_suggested_actions(intro_output),
-        )
-
-        return AMAConversationResponse(
-            conversation_id=conversation_id,
-            messages=[intro_message],
-        )
-
     async def send_message(
         self,
-        conversation_id: str,
-        user_input: str,
+        user_input: str | None,
         history: list[AMAMessage],
     ) -> AMAConversationResponse:
         """
         Process a user message and return the updated conversation.
+        
+        If user_input is None or empty and history is empty, returns the agent's greeting.
+        Otherwise processes the user's message and returns the agent's response.
 
-        :param conversation_id: The conversation identifier (used to group messages client-side)
-        :param user_input: The user's latest message
+        :param user_input: The user's latest message (None for initial greeting)
         :param history: Full prior conversation history supplied by the client
-        :return: Updated message list including the new user message and agent response
+        :return: Updated message list including the new user message (if any) and agent response
         """
+        # If no user input and no history, return the initial greeting
+        if not user_input and not history:
+            empty_context = ConversationContext(
+                all_history=ConversationHistory(),
+                history=ConversationHistory(),
+            )
+            intro_output = await self._agent.generate_intro_message(empty_context)
+            now = datetime.now(timezone.utc)
+
+            intro_message = AMAMessage(
+                message_id=intro_output.message_id or str(ObjectId()),
+                message=intro_output.message_for_user,
+                sender=AMAMessageSender.AGENT,
+                sent_at=intro_output.sent_at or now,
+                suggested_actions=_extract_suggested_actions(intro_output),
+            )
+
+            return AMAConversationResponse(
+                messages=[intro_message],
+            )
+
+        # Process user message
+        if not user_input:
+            raise ValueError("user_input is required when history is not empty")
+
         now = datetime.now(timezone.utc)
 
         user_message = AMAMessage(
@@ -172,6 +169,5 @@ class AskMeAnythingService:
         )
 
         return AMAConversationResponse(
-            conversation_id=conversation_id,
             messages=all_messages + [agent_message],
         )

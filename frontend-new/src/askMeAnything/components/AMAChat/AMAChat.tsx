@@ -58,7 +58,6 @@ const AMAChat: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [amaMessages, setAMAMessages] = useState<AMAMessage[]>([]);
-  const [conversationId, setConversationId] = useState<string | null>(null);
   const [aiIsTyping, setAiIsTyping] = useState(true); // true while loading intro
   const [isInitializing, setIsInitializing] = useState(true);
 
@@ -78,15 +77,14 @@ const AMAChat: React.FC = () => {
     return mapped;
   }, [amaMessages, latestAgentMessageId, aiIsTyping, isInitializing, typingMessage]);
 
-  // Start conversation on mount
-  const startConversation = useCallback(async () => {
+  // Get initial greeting on mount
+  const initializeConversation = useCallback(async () => {
     setIsInitializing(true);
     try {
-      const res = await AMAService.getInstance().startConversation();
-      setConversationId(res.conversation_id);
+      const res = await AMAService.getInstance().sendMessage(null, []);
       setAMAMessages(res.messages);
     } catch (e) {
-      console.error("Failed to start AMA conversation", e);
+      console.error("Failed to initialize AMA conversation", e);
       enqueueSnackbar(t("askMeAnything.loadError"), { variant: "error" });
     } finally {
       setIsInitializing(false);
@@ -94,17 +92,15 @@ const AMAChat: React.FC = () => {
     }
   }, [t, enqueueSnackbar]);
 
-  const startConversationRef = useRef(startConversation);
-  startConversationRef.current = startConversation;
+  const initializeConversationRef = useRef(initializeConversation);
+  initializeConversationRef.current = initializeConversation;
 
   useEffect(() => {
-    startConversationRef.current();
+    initializeConversationRef.current();
   }, []);
 
   const handleSend = useCallback(
     async (userMessageText: string) => {
-      if (!conversationId) return;
-
       // Optimistic user message for immediate UI feedback
       const optimisticId = `optimistic-${nanoid()}`;
       const optimisticUserMessage: AMAMessage = {
@@ -120,7 +116,7 @@ const AMAChat: React.FC = () => {
       try {
         // Send current messages (minus the optimistic one) as history
         const history = amaMessages; // state snapshot before optimistic update
-        const res = await AMAService.getInstance().sendMessage(conversationId, userMessageText, history);
+        const res = await AMAService.getInstance().sendMessage(userMessageText, history);
         setAMAMessages(res.messages);
       } catch (e) {
         console.error("Failed to send AMA message", e);
@@ -129,7 +125,7 @@ const AMAChat: React.FC = () => {
         setAiIsTyping(false);
       }
     },
-    [conversationId, amaMessages]
+    [amaMessages]
   );
 
   return (
@@ -164,7 +160,7 @@ const AMAChat: React.FC = () => {
       >
         <ChatMessageField
           handleSend={handleSend}
-          aiIsTyping={aiIsTyping || isInitializing || !conversationId}
+          aiIsTyping={aiIsTyping || isInitializing}
           isChatFinished={false}
           isUploadingCv={false}
           customPlaceholder={t("askMeAnything.inputPlaceholder")}

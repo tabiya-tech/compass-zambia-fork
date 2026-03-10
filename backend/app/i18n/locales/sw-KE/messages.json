@@ -101,6 +101,10 @@
         "name": "Ujasiriamali na Maendeleo ya Biashara",
         "description": "Mfumo unaoongozwa na AI wa kuendeleza mawazo ya ujasiriamali, kuanzisha na kusimamia biashara, na kuwasilisha mawazo."
       },
+      "careerExplorer": {
+        "name": "Kuchunguza Kazi",
+        "description": "Chunguza fursa za kazi katika sekta za kipaumbele na ugundue njia za kufikia kazi mbalimbali."
+      },
       "knowledgeHub": {
         "name": "Kituo cha Maarifa (hifadhidata zote)",
         "description": "Orodha ya hifadhidata zote za Kituo cha Maarifa. Tumia wakati mtumiaji anataka kuvinjari rasilimali kwa ujumla."

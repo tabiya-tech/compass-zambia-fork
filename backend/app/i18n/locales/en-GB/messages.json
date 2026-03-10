@@ -101,6 +101,10 @@
         "name": "Entrepreneurship & Enterprise Development",
         "description": "AI-guided module for developing an entrepreneurial mindset, starting and managing a business, and pitching ideas."
       },
+      "careerExplorer": {
+        "name": "Career Explorer",
+        "description": "Explore career opportunities in priority sectors and discover pathways to different occupations."
+      },
       "knowledgeHub": {
         "name": "Knowledge Hub (all documents)",
         "description": "Lists all Knowledge Hub documents. Use when the user wants to browse resources in general."

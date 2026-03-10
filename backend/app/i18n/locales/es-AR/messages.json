@@ -101,6 +101,10 @@
         "name": "Emprendimiento y Desarrollo Empresarial",
         "description": "Módulo guiado por IA para desarrollar una mentalidad emprendedora, iniciar y gestionar un negocio, y presentar ideas."
       },
+      "careerExplorer": {
+        "name": "Explorador de Carreras",
+        "description": "Explorá oportunidades laborales en sectores prioritarios y descubrí rutas hacia diferentes ocupaciones."
+      },
       "knowledgeHub": {
         "name": "Centro de Conocimiento (todos los documentos)",
         "description": "Lista todos los documentos del Centro de Conocimiento. Usá cuando el usuario quiera navegar recursos en general."

@@ -15,7 +15,7 @@ from app.agent.constants import get_localized_platform_modules
 from app.agent.llm_caller import LLMCaller
 from app.agent.prompt_template.locale_style import get_language_style
 from app.agent.simple_llm_agent.prompt_response_template import get_json_response_instructions
-from app.ask_me_anything.suggested_action import SuggestedAction
+from app.ask_me_anything.types import SuggestedAction
 from app.conversation_memory.conversation_formatter import ConversationHistoryFormatter
 from app.conversation_memory.conversation_memory_types import ConversationContext
 from common_libs.llm.generative_models import GeminiGenerativeLLM

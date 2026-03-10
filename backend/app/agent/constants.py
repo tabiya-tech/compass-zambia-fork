@@ -47,6 +47,11 @@ PLATFORM_MODULES_CONFIG = [
         "description_key": "askMeAnything.platformModules.entrepreneurship.description",
     },
     {
+        "name_key": "askMeAnything.platformModules.careerExplorer.name",
+        "route": "/career-explorer",
+        "description_key": "askMeAnything.platformModules.careerExplorer.description",
+    },
+    {
         "name_key": "askMeAnything.platformModules.knowledgeHub.name",
         "route": "/knowledge-hub",
         "description_key": "askMeAnything.platformModules.knowledgeHub.description",
