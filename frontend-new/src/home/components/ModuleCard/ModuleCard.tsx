@@ -5,12 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { Module } from "src/home/modulesService";
 import { TranslationKey } from "src/react-i18next";
 import AutoAwesomeOutlined from "@mui/icons-material/AutoAwesomeOutlined";
-import ExploreOutlined from "@mui/icons-material/ExploreOutlined";
 import SchoolOutlined from "@mui/icons-material/SchoolOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import MenuBookOutlined from "@mui/icons-material/MenuBookOutlined";
+import ExploreOutlined from "@mui/icons-material/ExploreOutlined";
 import HelpOutlineOutlined from "@mui/icons-material/HelpOutlineOutlined";
 import { getProductName } from "src/envService";
+import { BADGE_STATUS, BadgeStatus } from "src/home/constants";
 
 const uniqueId = "c3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f";
 
@@ -21,19 +22,20 @@ export const DATA_TEST_ID = {
   MODULE_CARD_DESCRIPTION: `module-card-description-${uniqueId}`,
   MODULE_CARD_CONTINUE_CHIP: `module-card-continue-chip-${uniqueId}`,
   MODULE_CARD_COMPLETED_CHIP: `module-card-completed-chip-${uniqueId}`,
+  MODULE_CARD_SOON_CHIP: `module-card-soon-chip-${uniqueId}`,
 };
 
 export interface ModuleCardProps {
   module: Module;
-  badgeStatus?: "continue" | "completed" | null;
+  badgeStatus?: BadgeStatus;
 }
 
 const MODULE_ICONS: Record<string, React.ReactNode> = {
   skills_discovery: <AutoAwesomeOutlined sx={{ fontSize: 40 }} />,
-  career_discovery: <ExploreOutlined sx={{ fontSize: 40 }} />,
   job_readiness: <SchoolOutlined sx={{ fontSize: 40 }} />,
   career_explorer: <SearchOutlined sx={{ fontSize: 40 }} />,
   knowledge_hub: <MenuBookOutlined sx={{ fontSize: 40 }} />,
+  job_matching: <ExploreOutlined sx={{ fontSize: 40 }} />,
 };
 
 const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) => {
@@ -43,12 +45,16 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) =
   const appName = getProductName() || "";
 
   const handleClick = () => {
+    if (module.disabled) {
+      return;
+    }
     startTransition(() => {
       navigate(module.route);
     });
   };
 
   const icon = MODULE_ICONS[module.id] || <HelpOutlineOutlined sx={{ fontSize: 40 }} />;
+  const isDisabled = module.disabled === true;
 
   return (
     <Card
@@ -58,9 +64,12 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) =
         boxShadow: "none",
         height: "100%",
         position: "relative",
+        opacity: isDisabled ? 0.6 : 1,
         "&:hover": {
-          borderColor: theme.palette.primary.main,
-          backgroundColor: `color-mix(in srgb, ${theme.palette.primary.light} 16%, transparent)`,
+          borderColor: isDisabled ? theme.palette.common.black : theme.palette.primary.main,
+          backgroundColor: isDisabled
+            ? "transparent"
+            : `color-mix(in srgb, ${theme.palette.primary.light} 16%, transparent)`,
         },
       }}
       data-testid={DATA_TEST_ID.MODULE_CARD}
@@ -68,6 +77,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) =
       <CardActionArea
         onClick={handleClick}
         disableRipple
+        disabled={isDisabled}
         sx={{
           padding: theme.spacing(theme.tabiyaSpacing.lg),
           height: "100%",
@@ -77,21 +87,38 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) =
           justifyContent: "flex-start",
         }}
       >
-        {/* Badge (Continue or Completed) */}
-        {badgeStatus && module.id === "skills_discovery" && (
+        {/* Badge (Continue, Completed, or Soon) */}
+        {badgeStatus && (
           <Box sx={{ position: "absolute", top: 12, right: 12 }}>
             <Chip
-              label={badgeStatus === "continue" ? t("home.modules.continue") : t("home.modules.completed")}
+              label={
+                badgeStatus === BADGE_STATUS.CONTINUE
+                  ? t("home.modules.continue")
+                  : badgeStatus === BADGE_STATUS.COMPLETED
+                    ? t("home.modules.completed")
+                    : t("home.modules.soon")
+              }
               size="small"
               data-testid={
-                badgeStatus === "continue"
+                badgeStatus === BADGE_STATUS.CONTINUE
                   ? DATA_TEST_ID.MODULE_CARD_CONTINUE_CHIP
-                  : DATA_TEST_ID.MODULE_CARD_COMPLETED_CHIP
+                  : badgeStatus === BADGE_STATUS.COMPLETED
+                    ? DATA_TEST_ID.MODULE_CARD_COMPLETED_CHIP
+                    : DATA_TEST_ID.MODULE_CARD_SOON_CHIP
               }
               sx={{
-                backgroundColor: badgeStatus === "continue" ? theme.palette.primary.main : theme.palette.success.main,
+                backgroundColor:
+                  badgeStatus === BADGE_STATUS.CONTINUE
+                    ? theme.palette.primary.main
+                    : badgeStatus === BADGE_STATUS.COMPLETED
+                      ? theme.palette.success.main
+                      : theme.palette.grey[600],
                 color:
-                  badgeStatus === "continue" ? theme.palette.primary.contrastText : theme.palette.success.contrastText,
+                  badgeStatus === BADGE_STATUS.CONTINUE
+                    ? theme.palette.primary.contrastText
+                    : badgeStatus === BADGE_STATUS.COMPLETED
+                      ? theme.palette.success.contrastText
+                      : theme.palette.common.white,
                 fontWeight: "bold",
                 fontSize: "0.75rem",
               }}
@@ -112,7 +139,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) =
           {/* Icon */}
           <Box
             sx={{
-              color: theme.palette.text.primary,
+              color: isDisabled ? theme.palette.text.disabled : theme.palette.text.primary,
             }}
             data-testid={DATA_TEST_ID.MODULE_CARD_ICON}
           >
@@ -122,7 +149,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) =
           {/* Title */}
           <Typography
             variant="body1"
-            color="text.primary"
+            color={isDisabled ? "text.disabled" : "text.primary"}
             fontWeight="bold"
             data-testid={DATA_TEST_ID.MODULE_CARD_TITLE}
           >
@@ -130,7 +157,11 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) =
           </Typography>
 
           {/* Description */}
-          <Typography variant="body2" color="text.secondary" data-testid={DATA_TEST_ID.MODULE_CARD_DESCRIPTION}>
+          <Typography
+            variant="body2"
+            color={isDisabled ? "text.disabled" : "text.secondary"}
+            data-testid={DATA_TEST_ID.MODULE_CARD_DESCRIPTION}
+          >
             {t(module.descriptionKey as TranslationKey, { appName })}
           </Typography>
         </Box>

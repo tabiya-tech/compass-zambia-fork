@@ -846,17 +846,19 @@
     "modules": {
       "skillsDiscovery": "Ujuzi na Mapendeleo Yangu",
       "skillsDiscoverySubtitle": "Gundua ujuzi na mapendeleo yako",
-      "careerDiscovery": "Kuchunguza Kazi",
-      "careerReadinessCard": "Kujiandaa kwa Kazi",
-      "careerExplorer": "Kulinganisha Kazi na Uchambuzi",
+      "jobReadiness": "Kujiandaa kwa Kazi",
+      "careerExplorer": "Kuchunguza Kazi",
       "knowledgeHub": "Kituo cha Maarifa",
+      "jobMatching": "Kufanana kwa Kazi",
       "skillsDiscoveryDesc": "Zungumza na {{appName}} ili kugundua ujuzi na mapendeleo yako — kutoka masomo yako, kazi, na maisha ya kila siku.",
-      "careerDiscoveryDesc": "Chunguza njia za kazi katika Nishati, Madini, Kilimo na zaidi — na data ya mishahara na njia za sifa.",
-      "careerReadinessCardDesc": "Jenga ujuzi wa kazi kupitia moduli zinazoongozwa na AI — kutoka utambulisho wa kazi na maendeleo ya CV hadi maandalizi ya mahojiano na ujuzi wa mahali pa kazi.",
-      "careerExplorerDesc": "Angalia jinsi ujuzi wako unavyolingana na nafasi za kazi halisi na chunguza maarifa ya soko la ajira nchini Zambia.",
+      "jobReadinessDesc": "Jenga ujuzi muhimu wa kazi kupitia moduli zinazoongozwa na AI — kutoka kuandika CV hadi mazoezi ya mahojiano.",
+      "careerExplorerDesc": "Chunguza njia za kazi katika Nishati, Madini, Kilimo na zaidi — na data ya mishahara na njia za sifa.",
       "knowledgeHubDesc": "Chunguza wasifu wa sekta, viwango vya mishahara, na njia za sifa za TEVET mahali pamoja.",
+      "jobMatchingDesc": "Angalia jinsi ujuzi wako unavyolingana na nafasi za kazi halisi na chunguza maarifa ya soko la ajira nchini Zambia.",
       "continue": "Endelea",
-      "completed": "Imekamilika"
+      "completed": "Imekamilika",
+      "soon": "Hivi Karibuni",
+      "comingSoon": "Inakuja Hivi Karibuni"
     },
     "footer": {
       "privacyPolicy": "Sera ya Faragha",
