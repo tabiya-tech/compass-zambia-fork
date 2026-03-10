@@ -854,6 +854,13 @@
       "askMeAnything": "Ndifunse Chilichonse",
       "askMeAnythingDesc": "Funsa mafunso aliwonse okhudza nsanja ndipo tidzakupangira njira yoyenera."
     },
+    "mascot": {
+      "title": "Wotsogolera",
+      "greetingPlaceholder": "Moni! Ndili pano kukuthandizani kufufuza. Ndifunse chilichonse pabodza.",
+      "loading": "Ndikuganiza...",
+      "askPrompt": "Dinani kuti mutsegule ndi kundifunsa",
+      "toggleAria": "Tsegulani kapena tsekani chat ndi mascot"
+    },
     "footer": {
       "privacyPolicy": "Ndondomeko ya Chinsinsi",
       "termsOfUse": "Malamulo a Ntchito",

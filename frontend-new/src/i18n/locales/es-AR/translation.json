@@ -861,6 +861,13 @@
       "askMeAnything": "Pregúntame Cualquier Cosa",
       "askMeAnythingDesc": "Haz cualquier pregunta sobre la plataforma y te guiaremos al lugar correcto."
     },
+    "mascot": {
+      "title": "Tu Guía",
+      "greetingPlaceholder": "¡Hola! Estoy aquí para ayudarte a explorar. Preguntame cualquier cosa sobre la plataforma.",
+      "loading": "Pensando...",
+      "askPrompt": "Hacé clic para expandir y preguntarme",
+      "toggleAria": "Expandir o contraer chat con la mascota"
+    },
     "footer": {
       "privacyPolicy": "Política de Privacidad",
       "termsOfUse": "Términos de Uso",

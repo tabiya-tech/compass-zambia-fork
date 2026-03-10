@@ -849,6 +849,13 @@
       "askMeAnything": "Ask Me Anything",
       "askMeAnythingDesc": "Ask any question about the platform and get guided to the right place."
     },
+    "mascot": {
+      "title": "Your Guide",
+      "greetingPlaceholder": "Hello! I'm here to help you explore. Ask me anything about the platform.",
+      "loading": "Thinking...",
+      "askPrompt": "Click to expand and ask me a question",
+      "toggleAria": "Expand or collapse chat with mascot"
+    },
     "footer": {
       "privacyPolicy": "Privacy Policy",
       "termsOfUse": "Terms of Use",

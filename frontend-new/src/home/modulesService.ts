@@ -43,12 +43,6 @@ const DEFAULT_MODULES: Module[] = [
     route: routerPaths.SKILLS_INTERESTS,
     disabled: true,
   },
-  {
-    id: "ask_me_anything",
-    labelKey: "home.modules.askMeAnything",
-    descriptionKey: "home.modules.askMeAnythingDesc",
-    route: routerPaths.ASK_ME_ANYTHING,
-  },
 ];
 
 /**

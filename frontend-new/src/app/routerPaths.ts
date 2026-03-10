@@ -15,5 +15,4 @@ export const routerPaths = {
   SKILLS_INTERESTS: "/skills-interests",
   CAREER_READINESS: "/career-readiness",
   CAREER_READINESS_MODULE: "/career-readiness/:moduleId",
-  ASK_ME_ANYTHING: "/ask-me-anything",
 };

@@ -854,6 +854,13 @@
       "askMeAnything": "Niulize Chochote",
       "askMeAnythingDesc": "Uliza swali lolote kuhusu jukwaa na utaongozwa mahali sahihi."
     },
+    "mascot": {
+      "title": "Mwongozo Wako",
+      "greetingPlaceholder": "Habari! Niko hapa kukusaidia kuchunguza. Niulize chochote kuhusu jukwaa.",
+      "loading": "Inafikiri...",
+      "askPrompt": "Bofya kupanua na kuniuliza swali",
+      "toggleAria": "Panua au folda mkutano na mascot"
+    },
     "footer": {
       "privacyPolicy": "Sera ya Faragha",
       "termsOfUse": "Sheria za Matumizi",

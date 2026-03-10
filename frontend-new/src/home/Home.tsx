@@ -10,6 +10,7 @@ import ProgressBar from "src/home/components/ProgressBar/ProgressBar";
 import ModuleCard from "src/home/components/ModuleCard/ModuleCard";
 import PageHeader from "src/home/components/PageHeader/PageHeader";
 import Footer from "src/home/components/Footer/Footer";
+import HomeMascotChat from "src/home/components/HomeMascotChat/HomeMascotChat";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
 import { getProductName } from "src/envService";
 import { BADGE_STATUS } from "src/home/constants";
@@ -66,10 +67,10 @@ const Home: React.FC = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: isMobile ? theme.fixedSpacing(theme.tabiyaSpacing.md) : theme.spacing(theme.tabiyaSpacing.xl),
+            gap: isMobile ? theme.fixedSpacing(theme.tabiyaSpacing.md) : theme.spacing(theme.tabiyaSpacing.lg),
           }}
         >
-          {/* Welcome, Section */}
+          {/* Welcome Section */}
           <Box>
             <Typography
               variant={isMobile ? "h5" : "h4"}
@@ -84,11 +85,27 @@ const Home: React.FC = () => {
             </Typography>
           </Box>
 
-          {/* Progress Section */}
-          <ProgressBar progress={overallProgress} />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", lg: "row" },
+              alignItems: { xs: "stretch", lg: "center" },
+              gap: theme.spacing(theme.tabiyaSpacing.lg),
+            }}
+          >
+            <HomeMascotChat />
+            <Box sx={{ flex: { xs: "none", lg: 1 }, minWidth: 0 }}>
+              <ProgressBar progress={overallProgress} />
+            </Box>
+          </Box>
 
           {/* Modules Section */}
-          <Box>
+          <Box
+            sx={{
+              paddingTop: theme.spacing(theme.tabiyaSpacing.lg),
+              borderTop: `1px solid ${theme.palette.grey[200]}`,
+            }}
+          >
             <Typography
               variant="body1"
               fontWeight="bold"

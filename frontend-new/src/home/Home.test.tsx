@@ -14,7 +14,25 @@ import { DATA_TEST_ID as PROGRESS_BAR_DATA_TEST_ID } from "src/home/components/P
 import { resetAllMethodMocks } from "src/_test_utilities/resetAllMethodMocks";
 import { BadgeStatus } from "src/home/constants";
 
-// Mock useModuleProgress
+jest.mock("src/askMeAnything/services/AMAService", () => ({
+  __esModule: true,
+  default: {
+    getInstance: () => ({
+      sendMessage: jest.fn().mockResolvedValue({
+        messages: [
+          {
+            message_id: "intro-1",
+            message: "Hello! I am your guide. Ask me anything about the platform.",
+            sender: "AGENT",
+            sent_at: new Date().toISOString(),
+            suggested_actions: [],
+          },
+        ],
+      }),
+    }),
+  },
+}));
+
 const mockOverallProgress = 40;
 const mockGetBadgeStatus = jest.fn((_moduleId: string): BadgeStatus => null);
 jest.mock("src/home/hooks/useModuleProgress", () => ({
