@@ -95,11 +95,11 @@
         "isStub": false
       },
       {
-        "id": "career_discovery",
-        "labelKey": "home.modules.careerDiscovery",
-        "descriptionKey": "home.modules.careerDiscoveryDesc",
-        "route": "career-discovery",
-        "isStub": false
+        "id": "career_explorer",
+        "labelKey": "home.modules.careerExplorer",
+        "descriptionKey": "home.modules.careerExplorerDesc",
+        "route": "career-explorer",
+        "isStub": true
       },
       {
         "id": "job_readiness",
@@ -109,17 +109,17 @@
         "isStub": true
       },
       {
-        "id": "career_explorer",
-        "labelKey": "home.modules.careerExplorer",
-        "descriptionKey": "home.modules.careerExplorerDesc",
-        "route": "career-explorer",
-        "isStub": true
-      },
-      {
         "id": "knowledge_hub",
         "labelKey": "home.modules.knowledgeHub",
         "descriptionKey": "home.modules.knowledgeHubDesc",
         "route": "knowledge-hub",
+        "isStub": true
+      },
+      {
+        "id": "job_matching",
+        "labelKey": "home.modules.jobMatching",
+        "descriptionKey": "home.modules.jobMatchingDesc",
+        "route": "job-matching",
         "isStub": true
       }
     ]

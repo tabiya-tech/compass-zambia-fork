@@ -833,17 +833,19 @@
     "modules": {
       "skillsDiscovery": "My Skills & Interests",
       "skillsDiscoverySubtitle": "Uncover your skills and interests",
-      "careerDiscovery": "Career Explorer",
-      "careerReadinessCard": "Career Readiness",
-      "careerExplorer": "Job Matching & Analytics",
+      "jobReadiness": "Career Readiness",
+      "careerExplorer": "Career Explorer",
       "knowledgeHub": "Knowledge Hub",
+      "jobMatching": "Job Matching",
       "skillsDiscoveryDesc": "Chat with {{appName}} to uncover your skills and interests — from your studies, work, and everyday life.",
-      "careerDiscoveryDesc": "Explore career pathways in Energy, Mining, Agriculture and more — with salary data and qualification routes.",
-      "careerReadinessCardDesc": "Build job readiness through guided AI modules — from professional identity and CV development to interview prep and workplace skills.",
-      "careerExplorerDesc": "See how your skills match to real job openings and explore labour market insights across Zambia.",
+      "jobReadinessDesc": "Build essential workplace skills through guided AI modules — from CV writing to interview practice.",
+      "careerExplorerDesc": "Explore career pathways in Energy, Mining, Agriculture and more — with salary data and qualification routes.",
       "knowledgeHubDesc": "Explore sector profiles, salary benchmarks, and TEVET qualification pathways all in one place.",
+      "jobMatchingDesc": "See how your skills match to real job openings and explore labour market insights across Zambia.",
       "continue": "Continue",
-      "completed": "Completed"
+      "completed": "Completed",
+      "soon": "Soon",
+      "comingSoon": "Coming Soon"
     },
     "footer": {
       "privacyPolicy": "Privacy Policy",

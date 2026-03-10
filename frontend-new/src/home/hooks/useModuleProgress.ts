@@ -4,14 +4,9 @@ import ChatService from "src/chat/ChatService/ChatService";
 import { ConversationResponse } from "src/chat/ChatService/ChatService.types";
 import { ConversationPhase } from "src/chat/chatProgressbar/types";
 import { ChatError } from "src/error/commonErrors";
+import { BADGE_STATUS, BadgeStatus } from "src/home/constants";
 
-const MODULE_IDS = [
-  "skills_discovery",
-  "career_discovery",
-  "job_readiness",
-  "career_explorer",
-  "knowledge_hub",
-] as const;
+const MODULE_IDS = ["skills_discovery", "career_explorer", "job_readiness", "knowledge_hub", "job_matching"] as const;
 const TOTAL_MODULE_COUNT = MODULE_IDS.length;
 
 /**
@@ -88,7 +83,7 @@ export const useModuleProgress = () => {
   }, [completedModulesCount]);
 
   // Get badge status for a specific module based on conversation phase
-  const getBadgeStatus = (moduleId: string): "continue" | "completed" | null => {
+  const getBadgeStatus = (moduleId: string): BadgeStatus => {
     // Only show badges for Skills & Interests module
     if (moduleId !== "skills_discovery") {
       return null;
@@ -102,11 +97,11 @@ export const useModuleProgress = () => {
     const phase = chatHistory.current_phase?.phase;
 
     if (phase === ConversationPhase.COLLECT_EXPERIENCES) {
-      return "continue";
+      return BADGE_STATUS.CONTINUE;
     }
 
     if (phase === ConversationPhase.ENDED) {
-      return "completed";
+      return BADGE_STATUS.COMPLETED;
     }
 
     return null;

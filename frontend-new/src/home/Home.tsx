@@ -12,6 +12,7 @@ import PageHeader from "src/home/components/PageHeader/PageHeader";
 import Footer from "src/home/components/Footer/Footer";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
 import { getProductName } from "src/envService";
+import { BADGE_STATUS } from "src/home/constants";
 
 const uniqueId = "f1a2b3c4-5d6e-7f8a-9b0c-1d2e3f4a5b6c";
 
@@ -111,11 +112,15 @@ const Home: React.FC = () => {
               justifyContent="center"
               data-testid={DATA_TEST_ID.HOME_MODULES_GRID}
             >
-              {modules.map((module) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={module.id}>
-                  <ModuleCard module={module} badgeStatus={getBadgeStatus(module.id)} />
-                </Grid>
-              ))}
+              {modules.map((module) => {
+                const progressBadgeStatus = getBadgeStatus(module.id);
+                const badgeStatus = module.disabled ? BADGE_STATUS.SOON : progressBadgeStatus;
+                return (
+                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={module.id}>
+                    <ModuleCard module={module} badgeStatus={badgeStatus} />
+                  </Grid>
+                );
+              })}
             </Grid>
           </Box>
         </Box>
