@@ -33,6 +33,8 @@ const BODY_PART_COLORS: Record<string, (s: BushbabySvgStyle) => string> = {
   "#right-inner-ear": (s) => s.bodyColor,
   "#right-socket": (s) => s.eyeColor,
   "#left-socket": (s) => s.eyeColor,
+  "#eye-white-right": () => "#ffffff",
+  "#eye-white-left": () => "#ffffff",
   "#left-iris": (s) => s.irisColor,
   "#right-iris": (s) => s.irisColor,
   "#nose": (s) => s.strokeColor,
@@ -62,7 +64,7 @@ export const Bushbaby = (props: BushbabyProps) => {
   };
 
   const VIEWBOX_HEIGHT = 190;
-  const VIEWBOX_WIDTH = 214;
+  const VIEWBOX_WIDTH = 209;
   const svgHeight = `calc(${bushbabyStyle.width} * ${VIEWBOX_HEIGHT} / ${VIEWBOX_WIDTH})`;
 
   const animationStyle = () => ({
@@ -73,8 +75,8 @@ export const Bushbaby = (props: BushbabyProps) => {
       transformOrigin: "178px 99px",
       animation: "tailSway 3.5s infinite ease-in-out",
       "@keyframes tailSway": {
-        "0%, 100%": { transform: "translateX(-10px) rotate(0deg)" },
-        "50%": { transform: "translateX(-10px) rotate(15deg)" },
+        "0%, 100%": { transform: "rotate(0deg)" },
+        "50%": { transform: "rotate(15deg)" },
       },
     },
     "#bushbaby-head": {
@@ -117,7 +119,7 @@ export const Bushbaby = (props: BushbabyProps) => {
           style={{
             position: "absolute",
             top: "20px",
-            right: "0px",
+            right: "-20px",
           }}
           dangerouslySetInnerHTML={{ __html: bushbabySVGSrc(bushbabyStyle) }}
         />
