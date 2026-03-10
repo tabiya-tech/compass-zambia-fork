@@ -11,7 +11,7 @@ from textwrap import dedent
 from pydantic import BaseModel
 
 from app.agent.agent_types import AgentInput, AgentOutput, AgentType, LLMStats, AgentOutputWithReasoning
-from app.agent.constants import PLATFORM_MODULES
+from app.agent.constants import get_localized_platform_modules
 from app.agent.llm_caller import LLMCaller
 from app.agent.prompt_template.locale_style import get_language_style
 from app.agent.simple_llm_agent.prompt_response_template import get_json_response_instructions
@@ -47,15 +47,17 @@ class AMAModelResponse(BaseModel):
 
 
 def _build_modules_description() -> str:
+    """Build localized module descriptions based on current locale."""
     lines = []
-    for mod in PLATFORM_MODULES:
+    for mod in get_localized_platform_modules():
         lines.append(f'  - "{mod["name"]}" (route: {mod["route"]}): {mod["description"]}')
     return "\n".join(lines)
 
 
 def _build_system_instructions() -> str:
+    """Build locale-aware system instructions dynamically based on current locale."""
     response_part = get_json_response_instructions()
-    language_style = get_language_style(with_locale=False, for_json_output=True)
+    language_style = get_language_style(with_locale=True, for_json_output=True)
     modules_desc = _build_modules_description()
 
     # Extend the standard response instructions with suggested_actions
@@ -76,6 +78,8 @@ def _build_system_instructions() -> str:
         You are a friendly platform guide for the Compass career platform.
         Your role is to help users understand what the platform offers and direct them
         to the most relevant section for their needs.
+        
+        {language_style}
 
         You do NOT need to know the exact content of each module you only need to understand
         what each module does and guide users there when relevant.
@@ -92,8 +96,6 @@ def _build_system_instructions() -> str:
         - Do not invent features that do not exist on the platform.
         - Do not format your message with markdown.
         - The "finished" flag must always be false — this conversation is open-ended.
-
-        {language_style}
 
         {extended_response_part}
         """)
@@ -115,7 +117,13 @@ class AskMeAnythingAgent:
 
     def __init__(self) -> None:
         self._logger = logging.getLogger(AskMeAnythingAgent.__name__)
-        self._system_instructions = _build_system_instructions()
+        self._llm_caller: LLMCaller[AMAModelResponse] = LLMCaller[AMAModelResponse](
+            model_response_type=AMAModelResponse
+        )
+
+    def _get_llm(self) -> GeminiGenerativeLLM:
+        """Get LLM instance with locale-aware system instructions."""
+        system_instructions = _build_system_instructions()
         config = LLMConfig(
             generation_config=(
                 LOW_TEMPERATURE_GENERATION_CONFIG
@@ -123,14 +131,12 @@ class AskMeAnythingAgent:
                 | with_response_schema(AMAModelResponse)
             )
         )
-        self._llm = GeminiGenerativeLLM(system_instructions=self._system_instructions, config=config)
-        self._llm_caller: LLMCaller[AMAModelResponse] = LLMCaller[AMAModelResponse](
-            model_response_type=AMAModelResponse
-        )
+        return GeminiGenerativeLLM(system_instructions=system_instructions, config=config)
 
     @property
     def system_instructions(self) -> str:
-        return self._system_instructions
+        """Get current system instructions (locale-aware)."""
+        return _build_system_instructions()
 
     async def execute(self, user_input: AgentInput, context: ConversationContext) -> AgentOutput:
         """
@@ -148,8 +154,9 @@ class AskMeAnythingAgent:
         llm_stats_list: list[LLMStats]
 
         try:
+            llm = self._get_llm()
             model_response, llm_stats_list = await self._llm_caller.call_llm(
-                llm=self._llm,
+                llm=llm,
                 llm_input=ConversationHistoryFormatter.format_for_agent_generative_prompt(
                     model_response_instructions=get_json_response_instructions(),
                     context=context,
@@ -163,12 +170,16 @@ class AskMeAnythingAgent:
             llm_stats_list = []
 
         if model_response is None:
+            from app.i18n.translation_service import t
             model_response = AMAModelResponse(
                 reasoning="LLM call failed",
                 finished=False,
-                message="I'm having some trouble right now. Please try again in a moment.",
+                message=t("messages", "askMeAnything.errorRetry", fallback_message="I'm having some trouble right now. Please try again in a moment."),
                 suggested_actions=[
-                    SuggestedAction(label="Go to Home", route="/"),
+                    SuggestedAction(
+                        label=t("messages", "askMeAnything.platformModules.home.name", fallback_message="Go to Home"),
+                        route="/"
+                    ),
                 ],
             )
 

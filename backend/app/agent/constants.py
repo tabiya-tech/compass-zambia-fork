@@ -5,85 +5,99 @@ Platform modules and pages the agent knows about.
 Use the most specific route available when a user asks about something specific.
 """
 
-PLATFORM_MODULES = [
+PLATFORM_MODULES_CONFIG = [
     {
-        "name": "Skills & Interests",
+        "name_key": "askMeAnything.platformModules.skillsInterests.name",
         "route": "/skills-interests",
-        "description": (
-            "A chat-based experience where the user talks with an AI to uncover their skills and interests "
-            "from their studies, work, and everyday life."
-        ),
+        "description_key": "askMeAnything.platformModules.skillsInterests.description",
     },
-    # Career Readiness — top-level list + individual modules
     {
-        "name": "Career Readiness (all modules)",
+        "name_key": "askMeAnything.platformModules.careerReadiness.name",
         "route": "/career-readiness",
-        "description": "Lists all Career Readiness modules. Use when the user wants to explore job readiness in general.",
+        "description_key": "askMeAnything.platformModules.careerReadiness.description",
     },
     {
-        "name": "CV Development",
+        "name_key": "askMeAnything.platformModules.cvDevelopment.name",
         "route": "/career-readiness/cv-development",
-        "description": "AI-guided module for building and tailoring a professional CV.",
+        "description_key": "askMeAnything.platformModules.cvDevelopment.description",
     },
     {
-        "name": "Cover Letter Writing",
+        "name_key": "askMeAnything.platformModules.coverLetter.name",
         "route": "/career-readiness/cover-letter",
-        "description": "AI-guided module for writing a compelling cover letter.",
+        "description_key": "askMeAnything.platformModules.coverLetter.description",
     },
     {
-        "name": "Interview Preparation",
+        "name_key": "askMeAnything.platformModules.interviewPreparation.name",
         "route": "/career-readiness/interview-preparation",
-        "description": "AI-guided module for preparing for job interviews.",
+        "description_key": "askMeAnything.platformModules.interviewPreparation.description",
     },
     {
-        "name": "Professional Identity",
+        "name_key": "askMeAnything.platformModules.professionalIdentity.name",
         "route": "/career-readiness/professional-identity",
-        "description": "AI-guided module for developing a professional identity and personal brand.",
+        "description_key": "askMeAnything.platformModules.professionalIdentity.description",
     },
     {
-        "name": "Workplace Readiness",
+        "name_key": "askMeAnything.platformModules.workplaceReadiness.name",
         "route": "/career-readiness/workplace-readiness",
-        "description": "AI-guided module covering workplace skills and professional conduct.",
+        "description_key": "askMeAnything.platformModules.workplaceReadiness.description",
     },
     {
-        "name": "Entrepreneurship & Enterprise Development",
+        "name_key": "askMeAnything.platformModules.entrepreneurship.name",
         "route": "/career-readiness/entrepreneurship",
-        "description": "AI-guided module for developing an entrepreneurial mindset, starting and managing a business, and pitching ideas.",
+        "description_key": "askMeAnything.platformModules.entrepreneurship.description",
     },
-    # Knowledge Hub — top-level list + individual documents
     {
-        "name": "Knowledge Hub (all documents)",
+        "name_key": "askMeAnything.platformModules.knowledgeHub.name",
         "route": "/knowledge-hub",
-        "description": "Lists all Knowledge Hub documents. Use when the user wants to browse resources in general.",
+        "description_key": "askMeAnything.platformModules.knowledgeHub.description",
     },
     {
-        "name": "Mining Sector Pathway",
+        "name_key": "askMeAnything.platformModules.miningPathway.name",
         "route": "/knowledge-hub/mining-pathway",
-        "description": "Sector profile, salary data, and qualification pathways for the mining industry.",
+        "description_key": "askMeAnything.platformModules.miningPathway.description",
     },
     {
-        "name": "Energy Sector Pathway",
+        "name_key": "askMeAnything.platformModules.energyPathway.name",
         "route": "/knowledge-hub/energy-pathway",
-        "description": "Sector profile, salary data, and qualification pathways for the energy industry.",
+        "description_key": "askMeAnything.platformModules.energyPathway.description",
     },
     {
-        "name": "Hospitality Sector Pathway",
+        "name_key": "askMeAnything.platformModules.hospitalityPathway.name",
         "route": "/knowledge-hub/hospitality-pathway",
-        "description": "Sector profile, salary data, and qualification pathways for the hospitality industry.",
+        "description_key": "askMeAnything.platformModules.hospitalityPathway.description",
     },
     {
-        "name": "Agriculture Sector Pathway",
+        "name_key": "askMeAnything.platformModules.agriculturePathway.name",
         "route": "/knowledge-hub/agriculture-pathway",
-        "description": "Sector profile, salary data, and qualification pathways for the agriculture industry.",
+        "description_key": "askMeAnything.platformModules.agriculturePathway.description",
     },
     {
-        "name": "Water Sector Pathway",
+        "name_key": "askMeAnything.platformModules.waterPathway.name",
         "route": "/knowledge-hub/water-pathway",
-        "description": "Sector profile, salary data, and qualification pathways for the water industry.",
+        "description_key": "askMeAnything.platformModules.waterPathway.description",
     },
     {
-        "name": "Home",
+        "name_key": "askMeAnything.platformModules.home.name",
         "route": "/",
-        "description": "The main dashboard where the user can see all available modules and their overall progress.",
+        "description_key": "askMeAnything.platformModules.home.description",
     },
 ]
+
+
+def get_localized_platform_modules():
+    """
+    Get platform modules with localized names and descriptions based on current locale.
+    
+    Returns:
+        List of dictionaries with 'name', 'route', and 'description' keys.
+    """
+    from app.i18n.translation_service import t
+    
+    modules = []
+    for module_config in PLATFORM_MODULES_CONFIG:
+        modules.append({
+            "name": t("messages", module_config["name_key"], fallback_message=module_config["name_key"]),
+            "route": module_config["route"],
+            "description": t("messages", module_config["description_key"], fallback_message=module_config["description_key"]),
+        })
+    return modules

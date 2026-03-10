@@ -65,5 +65,70 @@
       "unpaidTrainee": "¿Qué creés que es importante al trabajar como aprendiz no remunerado?",
       "unseenUnpaid": "¿Qué creés que es más importante al ayudar en la comunidad o cuidar a otras personas?"
     }
+  },
+  "askMeAnything": {
+    "errorRetry": "Estoy teniendo algunos problemas ahora. Por favor intenta de nuevo en un momento.",
+    "platformModules": {
+      "skillsInterests": {
+        "name": "Habilidades e Intereses",
+        "description": "Una experiencia basada en chat donde el usuario habla con una IA para descubrir sus habilidades e intereses de sus estudios, trabajo y vida cotidiana."
+      },
+      "careerReadiness": {
+        "name": "Preparación para la Carrera (todos los módulos)",
+        "description": "Lista todos los módulos de Preparación para la Carrera. Usa cuando el usuario quiera explorar la preparación laboral en general."
+      },
+      "cvDevelopment": {
+        "name": "Desarrollo de CV",
+        "description": "Módulo guiado por IA para construir y adaptar un CV profesional."
+      },
+      "coverLetter": {
+        "name": "Escritura de Carta de Presentación",
+        "description": "Módulo guiado por IA para escribir una carta de presentación convincente."
+      },
+      "interviewPreparation": {
+        "name": "Preparación para Entrevistas",
+        "description": "Módulo guiado por IA para prepararse para entrevistas laborales."
+      },
+      "professionalIdentity": {
+        "name": "Identidad Profesional",
+        "description": "Módulo guiado por IA para desarrollar una identidad profesional y marca personal."
+      },
+      "workplaceReadiness": {
+        "name": "Preparación para el Lugar de Trabajo",
+        "description": "Módulo guiado por IA que cubre habilidades del lugar de trabajo y conducta profesional."
+      },
+      "entrepreneurship": {
+        "name": "Emprendimiento y Desarrollo Empresarial",
+        "description": "Módulo guiado por IA para desarrollar una mentalidad emprendedora, iniciar y gestionar un negocio, y presentar ideas."
+      },
+      "knowledgeHub": {
+        "name": "Centro de Conocimiento (todos los documentos)",
+        "description": "Lista todos los documentos del Centro de Conocimiento. Usa cuando el usuario quiera navegar recursos en general."
+      },
+      "miningPathway": {
+        "name": "Ruta del Sector Minero",
+        "description": "Perfil del sector, datos salariales y rutas de calificación para la industria minera."
+      },
+      "energyPathway": {
+        "name": "Ruta del Sector Energético",
+        "description": "Perfil del sector, datos salariales y rutas de calificación para la industria energética."
+      },
+      "hospitalityPathway": {
+        "name": "Ruta del Sector de Hospitalidad",
+        "description": "Perfil del sector, datos salariales y rutas de calificación para la industria de la hospitalidad."
+      },
+      "agriculturePathway": {
+        "name": "Ruta del Sector Agrícola",
+        "description": "Perfil del sector, datos salariales y rutas de calificación para la industria agrícola."
+      },
+      "waterPathway": {
+        "name": "Ruta del Sector del Agua",
+        "description": "Perfil del sector, datos salariales y rutas de calificación para la industria del agua."
+      },
+      "home": {
+        "name": "Ir al Inicio",
+        "description": "El panel principal donde el usuario puede ver todos los módulos disponibles y su progreso general."
+      }
+    }
   }
 }

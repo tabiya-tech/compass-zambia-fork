@@ -65,5 +65,70 @@
       "unpaidTrainee": "What do you think is important when working as an unpaid trainee?",
       "unseenUnpaid": "What do you think is most important when helping out in the community or caring for others?"
     }
+  },
+  "askMeAnything": {
+    "errorRetry": "I'm having some trouble right now. Please try again in a moment.",
+    "platformModules": {
+      "skillsInterests": {
+        "name": "Skills & Interests",
+        "description": "A chat-based experience where the user talks with an AI to uncover their skills and interests from their studies, work, and everyday life."
+      },
+      "careerReadiness": {
+        "name": "Career Readiness (all modules)",
+        "description": "Lists all Career Readiness modules. Use when the user wants to explore job readiness in general."
+      },
+      "cvDevelopment": {
+        "name": "CV Development",
+        "description": "AI-guided module for building and tailoring a professional CV."
+      },
+      "coverLetter": {
+        "name": "Cover Letter Writing",
+        "description": "AI-guided module for writing a compelling cover letter."
+      },
+      "interviewPreparation": {
+        "name": "Interview Preparation",
+        "description": "AI-guided module for preparing for job interviews."
+      },
+      "professionalIdentity": {
+        "name": "Professional Identity",
+        "description": "AI-guided module for developing a professional identity and personal brand."
+      },
+      "workplaceReadiness": {
+        "name": "Workplace Readiness",
+        "description": "AI-guided module covering workplace skills and professional conduct."
+      },
+      "entrepreneurship": {
+        "name": "Entrepreneurship & Enterprise Development",
+        "description": "AI-guided module for developing an entrepreneurial mindset, starting and managing a business, and pitching ideas."
+      },
+      "knowledgeHub": {
+        "name": "Knowledge Hub (all documents)",
+        "description": "Lists all Knowledge Hub documents. Use when the user wants to browse resources in general."
+      },
+      "miningPathway": {
+        "name": "Mining Sector Pathway",
+        "description": "Sector profile, salary data, and qualification pathways for the mining industry."
+      },
+      "energyPathway": {
+        "name": "Energy Sector Pathway",
+        "description": "Sector profile, salary data, and qualification pathways for the energy industry."
+      },
+      "hospitalityPathway": {
+        "name": "Hospitality Sector Pathway",
+        "description": "Sector profile, salary data, and qualification pathways for the hospitality industry."
+      },
+      "agriculturePathway": {
+        "name": "Agriculture Sector Pathway",
+        "description": "Sector profile, salary data, and qualification pathways for the agriculture industry."
+      },
+      "waterPathway": {
+        "name": "Water Sector Pathway",
+        "description": "Sector profile, salary data, and qualification pathways for the water industry."
+      },
+      "home": {
+        "name": "Go to Home",
+        "description": "The main dashboard where the user can see all available modules and their overall progress."
+      }
+    }
   }
 }

@@ -65,5 +65,70 @@
       "unpaidTrainee": "Unafikiri ni nini muhimu unapofanya kazi kama mfunzwa asiyelipwa?",
       "unseenUnpaid": "Unafikiri ni nini muhimu zaidi unaposaidia jamii au kutunza wengine?"
     }
+  },
+  "askMeAnything": {
+    "errorRetry": "Nina matatizo fulani kwa sasa. Tafadhali jaribu tena baadaye kidogo.",
+    "platformModules": {
+      "skillsInterests": {
+        "name": "Ujuzi na Maslahi",
+        "description": "Uzoefu wa mazungumzo ambapo mtumiaji anaongea na AI ili kugundua ujuzi na maslahi yao kutoka masomo, kazi, na maisha ya kila siku."
+      },
+      "careerReadiness": {
+        "name": "Uandaliwa wa Kazi (mijengo yote)",
+        "description": "Orodha ya mijengo yote ya Uandaliwa wa Kazi. Tumia wakati mtumiaji anataka kuchunguza uandaliwa wa kazi kwa ujumla."
+      },
+      "cvDevelopment": {
+        "name": "Maendeleo ya CV",
+        "description": "Mfumo unaoongozwa na AI wa kuunda na kuunganisha CV ya kitaalamu."
+      },
+      "coverLetter": {
+        "name": "Kuandika Barua ya Maombi",
+        "description": "Mfumo unaoongozwa na AI wa kuandika barua ya maombi yenye kuvutia."
+      },
+      "interviewPreparation": {
+        "name": "Maandalizi ya Mahojiano",
+        "description": "Mfumo unaoongozwa na AI wa kujiandaa kwa mahojiano ya kazi."
+      },
+      "professionalIdentity": {
+        "name": "Utambulisho wa Kitaalamu",
+        "description": "Mfumo unaoongozwa na AI wa kuendeleza utambulisho wa kitaalamu na chapa ya kibinafsi."
+      },
+      "workplaceReadiness": {
+        "name": "Uandaliwa wa Mahali pa Kazi",
+        "description": "Mfumo unaoongozwa na AI unaojumuisha ujuzi wa mahali pa kazi na mwenendo wa kitaalamu."
+      },
+      "entrepreneurship": {
+        "name": "Ujasiriamali na Maendeleo ya Biashara",
+        "description": "Mfumo unaoongozwa na AI wa kuendeleza mawazo ya ujasiriamali, kuanzisha na kusimamia biashara, na kuwasilisha mawazo."
+      },
+      "knowledgeHub": {
+        "name": "Kituo cha Maarifa (hifadhidata zote)",
+        "description": "Orodha ya hifadhidata zote za Kituo cha Maarifa. Tumia wakati mtumiaji anataka kuvinjari rasilimali kwa ujumla."
+      },
+      "miningPathway": {
+        "name": "Njia ya Sekta ya Madini",
+        "description": "Wasifu wa sekta, data ya mishahara, na njia za sifa za sekta ya madini."
+      },
+      "energyPathway": {
+        "name": "Njia ya Sekta ya Nishati",
+        "description": "Wasifu wa sekta, data ya mishahara, na njia za sifa za sekta ya nishati."
+      },
+      "hospitalityPathway": {
+        "name": "Njia ya Sekta ya Utalii",
+        "description": "Wasifu wa sekta, data ya mishahara, na njia za sifa za sekta ya utalii."
+      },
+      "agriculturePathway": {
+        "name": "Njia ya Sekta ya Kilimo",
+        "description": "Wasifu wa sekta, data ya mishahara, na njia za sifa za sekta ya kilimo."
+      },
+      "waterPathway": {
+        "name": "Njia ya Sekta ya Maji",
+        "description": "Wasifu wa sekta, data ya mishahara, na njia za sifa za sekta ya maji."
+      },
+      "home": {
+        "name": "Nenda Nyumbani",
+        "description": "Dashibodi kuu ambapo mtumiaji anaweza kuona mijengo yote inayopatikana na maendeleo yao ya jumla."
+      }
+    }
   }
 }
