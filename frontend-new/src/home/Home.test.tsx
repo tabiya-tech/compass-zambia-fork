@@ -12,10 +12,11 @@ import { DATA_TEST_ID as PAGE_HEADER_DATA_TEST_ID } from "src/home/components/Pa
 import { DATA_TEST_ID as FOOTER_DATA_TEST_ID } from "src/home/components/Footer/Footer";
 import { DATA_TEST_ID as PROGRESS_BAR_DATA_TEST_ID } from "src/home/components/ProgressBar/ProgressBar";
 import { resetAllMethodMocks } from "src/_test_utilities/resetAllMethodMocks";
+import { BadgeStatus } from "src/home/constants";
 
 // Mock useModuleProgress
 const mockOverallProgress = 40;
-const mockGetBadgeStatus = jest.fn((_moduleId: string): "continue" | "completed" | null => null);
+const mockGetBadgeStatus = jest.fn((_moduleId: string): BadgeStatus => null);
 jest.mock("src/home/hooks/useModuleProgress", () => ({
   useModuleProgress: () => ({
     overallProgress: mockOverallProgress,
@@ -101,7 +102,7 @@ describe("Home", () => {
     test("should show continue chip on skills_discovery card when getBadgeStatus returns continue", () => {
       // GIVEN getBadgeStatus returns continue for skills_discovery
       mockGetBadgeStatus.mockImplementation((moduleId: string) => {
-        if (moduleId === "skills_discovery") return "continue";
+        if (moduleId === "skills_discovery") return "continue" as BadgeStatus;
         return null;
       });
 
@@ -115,7 +116,7 @@ describe("Home", () => {
     test("should show completed chip on skills_discovery card when getBadgeStatus returns completed", () => {
       // GIVEN getBadgeStatus returns completed for skills_discovery
       mockGetBadgeStatus.mockImplementation((moduleId: string) => {
-        if (moduleId === "skills_discovery") return "completed";
+        if (moduleId === "skills_discovery") return "completed" as BadgeStatus;
         return null;
       });
 

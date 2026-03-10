@@ -838,17 +838,19 @@
     "modules": {
       "skillsDiscovery": "Luso ndi Zomwe Ndimakonda",
       "skillsDiscoverySubtitle": "Pezani luso lanu ndi zomwe mumakonda",
-      "careerDiscovery": "Kufufuza Ntchito",
-      "careerReadinessCard": "Kukonzekera Ntchito",
-      "careerExplorer": "Kufananiza Ntchito ndi Kusanthula",
+      "jobReadiness": "Kukonzekera Ntchito",
+      "careerExplorer": "Kufufuza Ntchito",
       "knowledgeHub": "Malo Ophunzirira",
+      "jobMatching": "Kufanana kwa Ntchito",
       "skillsDiscoveryDesc": "Lankhulani ndi {{appName}} kuti mupeze luso lanu ndi zomwe mumakonda — kuchokera ku maphunziro anu, ntchito, ndi moyo wa tsiku ndi tsiku.",
-      "careerDiscoveryDesc": "Fufuzani njira za ntchito mu Mphamvu, Migodi, Ulimi ndi zina — ndi chidziwitso cha malipiro ndi njira zoyenera.",
-      "careerReadinessCardDesc": "Phunzirani luso la ntchito kudzera mu ma module otsogoleredwa ndi AI — kuyambira kudziwika bwino ndi kukonza CV mpaka kukonzekera mafunso ndi luso la ntchito.",
-      "careerExplorerDesc": "Onani momwe luso lanu limafanana ndi maudindo a ntchito enieni ndikufufuza chidziwitso cha msika wa ntchito ku Zambia.",
+      "jobReadinessDesc": "Phunzirani luso lofunikira la ntchito kudzera mu ma module otsogoleredwa ndi AI — kuyambira kulemba CV mpaka kuchita mafunso oyeserera.",
+      "careerExplorerDesc": "Fufuzani njira za ntchito mu Mphamvu, Migodi, Ulimi ndi zina — ndi chidziwitso cha malipiro ndi njira zoyenera.",
       "knowledgeHubDesc": "Fufuzani mbiri ya magawo, malipiro, ndi njira za maphunziro a TEVET pamalo amodzi.",
+      "jobMatchingDesc": "Onani momwe luso lanu limafanana ndi maudindo a ntchito enieni ndikufufuza chidziwitso cha msika wa ntchito ku Zambia.",
       "continue": "Pitirizani",
-      "completed": "Zatha"
+      "completed": "Zatha",
+      "soon": "Posachedwa",
+      "comingSoon": "Zikubwera posachedwa"
     },
     "footer": {
       "privacyPolicy": "Ndondomeko ya Chinsinsi",

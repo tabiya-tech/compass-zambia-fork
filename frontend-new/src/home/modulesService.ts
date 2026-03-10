@@ -5,6 +5,7 @@ export interface Module {
   labelKey: string;
   descriptionKey: string;
   route: string;
+  disabled?: boolean;
 }
 
 /**
@@ -18,28 +19,29 @@ const DEFAULT_MODULES: Module[] = [
     route: routerPaths.SKILLS_INTERESTS,
   },
   {
-    id: "career_discovery",
-    labelKey: "home.modules.careerDiscovery",
-    descriptionKey: "home.modules.careerDiscoveryDesc",
-    route: routerPaths.SKILLS_INTERESTS,
-  },
-  {
-    id: "job_readiness",
-    labelKey: "home.modules.careerReadinessCard",
-    descriptionKey: "home.modules.careerReadinessCardDesc",
-    route: routerPaths.CAREER_READINESS,
-  },
-  {
     id: "career_explorer",
     labelKey: "home.modules.careerExplorer",
     descriptionKey: "home.modules.careerExplorerDesc",
     route: routerPaths.CAREER_EXPLORER,
   },
   {
+    id: "job_readiness",
+    labelKey: "home.modules.jobReadiness",
+    descriptionKey: "home.modules.jobReadinessDesc",
+    route: routerPaths.SKILLS_INTERESTS,
+  },
+  {
     id: "knowledge_hub",
     labelKey: "home.modules.knowledgeHub",
     descriptionKey: "home.modules.knowledgeHubDesc",
     route: routerPaths.KNOWLEDGE_HUB,
+  },
+  {
+    id: "job_matching",
+    labelKey: "home.modules.jobMatching",
+    descriptionKey: "home.modules.jobMatchingDesc",
+    route: routerPaths.SKILLS_INTERESTS,
+    disabled: true,
   },
 ];
 
