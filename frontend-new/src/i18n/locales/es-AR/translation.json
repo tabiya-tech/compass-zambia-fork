@@ -853,17 +853,19 @@
     "modules": {
       "skillsDiscovery": "Mis habilidades e intereses",
       "skillsDiscoverySubtitle": "Descubrí tus habilidades e intereses",
-      "careerDiscovery": "Explorador de carreras",
-      "careerReadinessCard": "Preparación profesional",
-      "careerExplorer": "Búsqueda y análisis de empleo",
+      "jobReadiness": "Preparación profesional",
+      "careerExplorer": "Explorador de carreras",
       "knowledgeHub": "Centro de conocimiento",
+      "jobMatching": "Coincidencia de trabajos",
       "skillsDiscoveryDesc": "Chateá con {{appName}} para descubrir tus habilidades e intereses — desde tus estudios, trabajo y vida cotidiana.",
-      "careerDiscoveryDesc": "Explorá caminos profesionales en Energía, Minería, Agricultura y más — con datos salariales y rutas de calificación.",
-      "careerReadinessCardDesc": "Desarrollá la preparación profesional con módulos guiados por IA — desde identidad profesional y desarrollo de CV hasta preparación de entrevistas y habilidades laborales.",
-      "careerExplorerDesc": "Mirá cómo tus habilidades coinciden con ofertas de trabajo reales y explorá información del mercado laboral.",
-      "knowledgeHubDesc": "Explorá perfiles sectoriales, referencias salariales y rutas de calificación en un solo lugar.",
+      "jobReadinessDesc": "Desarrollá habilidades esenciales para el trabajo a través de módulos guiados por IA — desde redacción de CV hasta práctica de entrevistas.",
+      "careerExplorerDesc": "Explorá caminos profesionales en Energía, Minería, Agricultura y más — con datos salariales y rutas de calificación.",
+      "knowledgeHubDesc": "Explorá perfiles sectoriales, referencias salariales y rutas de calificación TEVET en un solo lugar.",
+      "jobMatchingDesc": "Mirá cómo tus habilidades coinciden con ofertas de trabajo reales y explorá información del mercado laboral en Zambia.",
       "continue": "Continuar",
-      "completed": "Completado"
+      "completed": "Completado",
+      "soon": "Pronto",
+      "comingSoon": "Próximamente"
     },
     "footer": {
       "privacyPolicy": "Política de Privacidad",
