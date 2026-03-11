@@ -85,7 +85,6 @@ describe("gtmInit", () => {
 
       expect(console.info).toHaveBeenCalledWith("Initializing Google Tag Manager");
     });
-
   });
 
   describe("pushToDataLayer", () => {
@@ -113,6 +112,5 @@ describe("gtmInit", () => {
       // THEN expect it to not throw
       expect(() => pushToDataLayer("user_login", { method: "email" })).not.toThrow();
     });
-
   });
 });
