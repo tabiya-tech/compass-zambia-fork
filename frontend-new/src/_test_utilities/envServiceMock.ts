@@ -24,4 +24,6 @@ jest.mock("src/envService", () => ({
   getAppIconUrl: jest.fn(() => "mock-app-icon-url"),
   getThemeCssVariables: jest.fn(() => "{}"),
   getRegistrationCodeDisabled: jest.fn(() => "false"),
+  getGtmContainerId: jest.fn(() => ""),
+  getGtmEnabled: jest.fn(() => "false"),
 }));

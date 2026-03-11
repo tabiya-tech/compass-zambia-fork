@@ -95,6 +95,14 @@
       ]
     }
   },
+  "analytics": {
+    "ga4AccountId": "387253059",
+    "ga4PropertyId": "528078871",
+    "ga4MeasurementId": "G-722MET383C",
+    "gtmAccountId": "6343687890",
+    "gtmContainerId": "GTM-K3QPRR2W",
+    "enabled": true
+  },
   "sensitiveData": {
     "fields": {
       "name": {
@@ -289,6 +297,5 @@
         }
       }
     }
-
   }
 }

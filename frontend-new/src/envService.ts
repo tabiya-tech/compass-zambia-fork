@@ -33,6 +33,8 @@ export enum EnvVariables {
   FRONTEND_APP_ICON_URL = "FRONTEND_APP_ICON_URL",
   FRONTEND_THEME_CSS_VARIABLES = "FRONTEND_THEME_CSS_VARIABLES",
   FRONTEND_SKILLS_REPORT_OUTPUT_CONFIG = "FRONTEND_SKILLS_REPORT_OUTPUT_CONFIG",
+  FRONTEND_GTM_CONTAINER_ID = "FRONTEND_GTM_CONTAINER_ID",
+  FRONTEND_GTM_ENABLED = "FRONTEND_GTM_ENABLED",
 }
 
 export const requiredEnvVariables = [
@@ -224,6 +226,10 @@ export const getMetaDescription = () => getEnv(EnvVariables.FRONTEND_META_DESCRI
 export const getSeoEnvVar = () => getEnv(EnvVariables.FRONTEND_SEO);
 
 export const getSkillsReportOutputConfigEnvVar = () => getEnv(EnvVariables.FRONTEND_SKILLS_REPORT_OUTPUT_CONFIG);
+
+export const getGtmContainerId = () => getEnv(EnvVariables.FRONTEND_GTM_CONTAINER_ID);
+
+export const getGtmEnabled = () => getEnv(EnvVariables.FRONTEND_GTM_ENABLED);
 
 export const getLogoUrl = () => getEnv(EnvVariables.FRONTEND_LOGO_URL);
 
