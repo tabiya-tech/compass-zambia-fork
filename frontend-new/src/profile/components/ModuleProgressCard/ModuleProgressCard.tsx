@@ -49,12 +49,18 @@ export const ModuleProgressCard: React.FC<ModuleProgressCardProps> = ({ modules 
         <Typography
           variant="h6"
           sx={{
-            marginBottom: theme.spacing(theme.tabiyaSpacing.md),
             fontWeight: "bold",
           }}
           data-testid={DATA_TEST_ID.MODULE_PROGRESS_TITLE}
         >
-          {t("home.profile.moduleProgress")}
+          {t("home.profile.skillsInterestsProgressTitle")}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ marginBottom: theme.spacing(theme.tabiyaSpacing.md) }}
+        >
+          {t("home.profile.skillsInterestsProgressDescription")}
         </Typography>
 
         {modules.map((module, index) => (
