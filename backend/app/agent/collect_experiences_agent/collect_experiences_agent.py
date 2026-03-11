@@ -14,7 +14,7 @@ from app.agent.collect_experiences_agent._transition_decision_tool import Transi
 from app.agent.collect_experiences_agent._types import CollectedData
 from app.agent.experience.experience_entity import ExperienceEntity
 from app.agent.experience.timeline import Timeline
-from app.agent.experience.work_type import WorkType
+from app.agent.experience.work_type import WorkType, is_storage_work_type
 from app.agent.linking_and_ranking_pipeline import ExperiencePipelineConfig
 from app.agent.linking_and_ranking_pipeline.infer_occupation_tool import InferOccupationTool
 from app.conversation_memory.conversation_memory_types import ConversationContext
@@ -82,8 +82,8 @@ class CollectExperiencesAgentState(BaseModel):
     The data collected during the conversation.
     """
 
-    unexplored_types: list[WorkType] = Field(default_factory=lambda: [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
-                                                                      WorkType.UNSEEN_UNPAID])
+    unexplored_types: list[WorkType] = Field(default_factory=lambda: [WorkType.PAID_WORK,
+                                                                      WorkType.UNPAID_WORK])
     """
     The types of work experiences that have not been explored yet.
     """
@@ -316,7 +316,7 @@ class CollectExperiencesAgent(Agent):
             conversation_llm_output.finished = True
             self.logger.info(
                 "Transition decision: END_CONVERSATION"
-                "\n  - all work types explored: %s"
+                "\n  - all phases explored: %s"
                 "\n  - discovered experiences: %s"
                 "\n  - reasoning: %s",
                 len(self._state.explored_types) == 2,
@@ -342,12 +342,15 @@ class CollectExperiencesAgent(Agent):
         """
         Get the experiences extracted by the agent.
         If this method is called before the agent has finished its task, the list will be empty or incomplete.
-        :return:
+        Only includes experiences with a storage work type (not phase-only PAID_WORK/UNPAID_WORK).
         """
         experiences = []
         # The conversation is completed when the LLM has finished and all work types have been explored
         for elem in self._state.collected_data:
             self.logger.debug("Experience data collected: %s", elem)
+            wt = WorkType.from_string_key(elem.work_type)
+            if not is_storage_work_type(wt):
+                continue
             try:
                 entity = ExperienceEntity(
                     uuid=elem.uuid if elem.uuid else None,
@@ -356,7 +359,7 @@ class CollectExperiencesAgent(Agent):
                     company=elem.company,
                     location=elem.location,
                     timeline=Timeline(start=elem.start_date, end=elem.end_date),
-                    work_type=WorkType.from_string_key(elem.work_type)
+                    work_type=wt
                 )
                 experiences.append(entity)
             except Exception as e:  # pylint: disable=broad-except

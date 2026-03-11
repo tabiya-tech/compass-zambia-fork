@@ -74,8 +74,16 @@ export const constructExperienceList = async (
 ) => {
   constructExperiencesSectionHeader(paragraphs);
   // Group experiences by work type
-  const { unpaidWorkExperiences, traineeWorkExperiences, uncategorizedExperiences } =
+  const { salaryWorkExperiences, unpaidWorkExperiences, traineeWorkExperiences, uncategorizedExperiences } =
     groupExperiencesByWorkType(experiences);
+
+  await constructWorkTypeSection(
+    paragraphs,
+    salaryWorkExperiences,
+    ReportContent.SALARY_WORK_TITLE,
+    ReportContent.IMAGE_URLS.EMPLOYEE_ICON,
+    reportConfig
+  );
 
   await constructWorkTypeSection(
     paragraphs,
