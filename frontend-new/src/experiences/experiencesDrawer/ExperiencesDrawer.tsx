@@ -30,6 +30,7 @@ import { ExperienceError } from "src/error/commonErrors";
 import RestoreIcon from "src/theme/Icons/RestoreIcon";
 import { useTranslation } from "react-i18next";
 import { getSkillsReportOutputConfig } from "../report/config/getConfig";
+import ShareReportButton from "src/experiences/experiencesDrawer/components/shareReportButton/ShareReportButton";
 
 const LazyLoadedDownloadDropdown = lazyWithPreload(
   () => import("src/experiences/experiencesDrawer/components/downloadReportDropdown/DownloadReportDropdown")
@@ -347,7 +348,23 @@ const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
               notifyOnClose={handleClose}
               title={t("experiences.experiencesDrawer.andSkillsTitle")}
             />
-            <Box display="flex" flexDirection="column" alignItems="end" justifyContent="flex-end">
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="flex-end"
+              gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
+            >
+              <ShareReportButton
+                name={personalInfo.fullName}
+                email={personalInfo.contactEmail}
+                phone={personalInfo.phoneNumber}
+                address={personalInfo.address}
+                experiences={exploredExperiences}
+                conversationConductedAt={conversationConductedAt}
+                disabled={disableDownloadButton}
+                outputConfig={outputConfig}
+              />
               <Suspense
                 fallback={
                   <Skeleton variant="rectangular" height={40} width={theme.spacing(20)} sx={{ borderRadius: 1 }} />

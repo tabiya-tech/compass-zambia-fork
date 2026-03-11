@@ -58,8 +58,11 @@ exports[`ExperiencesDrawer should render ExperiencesDrawer correctly 1`] = `
           </button>
         </div>
         <div
-          class="MuiBox-root css-18bo27g"
+          class="MuiBox-root css-9f24pa"
         >
+          <div
+            data-testid="mock-ShareReportButton"
+          />
           <span
             class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse css-4ffv2m-MuiSkeleton-root"
             style="height: 40px;"

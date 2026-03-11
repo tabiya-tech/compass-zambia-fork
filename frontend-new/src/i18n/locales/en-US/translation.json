@@ -470,6 +470,14 @@
           "downloadCv": "Download CV",
           "downloading": "Downloading",
           "helpTipBlockedMessage": "You cannot download the report until you finish exploring at least one experience."
+        },
+        "shareReportButton": {
+          "shareReport": "Share Report",
+          "preparingPdf": "Preparing your pdf",
+          "shareTitle": "Experience Report",
+          "shareText": "Check out my Experience Report",
+          "shareFailed": "Failed to share report. Please try again.",
+          "shareCanceled": "Sharing canceled because of user's request"
         }
       },
       "deleteSuccess": "Experience deleted successfully!",

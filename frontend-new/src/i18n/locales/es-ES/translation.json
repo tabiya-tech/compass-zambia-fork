@@ -470,6 +470,14 @@
           "downloadCv": "Descargar CV",
           "downloading": "Descargando",
           "helpTipBlockedMessage": "No puedes descargar el informe hasta que termines de explorar al menos una experiencia."
+        },
+        "shareReportButton": {
+          "shareReport": "Compartir informe",
+          "preparingPdf": "Preparando tu pdf",
+          "shareTitle": "Informe de experiencias",
+          "shareText": "Mira mi informe de experiencias",
+          "shareFailed": "Error al compartir el informe. Por favor, inténtalo de nuevo.",
+          "shareCanceled": "Se canceló el compartir por solicitud del usuario"
         }
       },
       "deleteSuccess": "¡Experiencia eliminada con éxito!",
