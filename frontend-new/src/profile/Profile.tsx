@@ -6,6 +6,7 @@ import { SecurityCard } from "./components/SecurityCard/SecurityCard";
 import { PreferencesCard } from "./components/PreferencesCard/PreferencesCard";
 import { ProfileCard } from "./components/ProfileCard/ProfileCard";
 import { SkillsDiscoveredCard } from "./components/SkillsDiscoveredCard/SkillsDiscoveredCard";
+import { ModuleProgressCard } from "./components/ModuleProgressCard/ModuleProgressCard";
 import CareerReadinessProgressBanner from "src/careerReadiness/components/CareerReadinessProgressBanner/CareerReadinessProgressBanner";
 import type { ModuleSummary } from "src/careerReadiness/types";
 
@@ -26,6 +27,7 @@ export interface ProfileProps {
   year: string | null;
   skills: Skill[];
   modules: ModuleSummary[];
+  skillsInterestsProgress: number;
   isLoadingSecurity: boolean;
   isLoadingPreferences: boolean;
   isLoadingProfile: boolean;
@@ -62,6 +64,7 @@ export const Profile: React.FC<ProfileProps> = ({
   year,
   skills,
   modules,
+  skillsInterestsProgress,
   isLoadingSecurity,
   isLoadingPreferences,
   isLoadingProfile,
@@ -88,6 +91,10 @@ export const Profile: React.FC<ProfileProps> = ({
           program={program}
           year={year}
           isLoading={isLoadingProfile}
+        />
+
+        <ModuleProgressCard
+          modules={[{ id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: skillsInterestsProgress }]}
         />
 
         <CareerReadinessProgressBanner modules={modules} />

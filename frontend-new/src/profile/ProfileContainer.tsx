@@ -14,8 +14,7 @@ export const DATA_TEST_ID = {
 
 const ProfileContainer: React.FC = () => {
   const navigate = useNavigate();
-  const { profileData, isLoadingSecurity, isLoadingPreferences, isLoadingProfile, isLoadingSkills, isLoadingModules } =
-    useUserProfile();
+  const { profileData, isLoadingSecurity, isLoadingPreferences, isLoadingProfile, isLoadingSkills } = useUserProfile();
 
   return (
     <Box
@@ -46,6 +45,7 @@ const ProfileContainer: React.FC = () => {
         year={profileData.year}
         skills={profileData.skills}
         modules={profileData.modules}
+        skillsInterestsProgress={profileData.skillsInterestsProgress}
         isLoadingSecurity={isLoadingSecurity}
         isLoadingPreferences={isLoadingPreferences}
         isLoadingProfile={isLoadingProfile}
