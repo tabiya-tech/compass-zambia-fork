@@ -5,20 +5,15 @@ import { Skill } from "src/experiences/experienceService/experiences.types";
 import { SecurityCard } from "./components/SecurityCard/SecurityCard";
 import { PreferencesCard } from "./components/PreferencesCard/PreferencesCard";
 import { ProfileCard } from "./components/ProfileCard/ProfileCard";
-import { ModuleProgressCard } from "./components/ModuleProgressCard/ModuleProgressCard";
 import { SkillsDiscoveredCard } from "./components/SkillsDiscoveredCard/SkillsDiscoveredCard";
+import CareerReadinessProgressBanner from "src/careerReadiness/components/CareerReadinessProgressBanner/CareerReadinessProgressBanner";
+import type { ModuleSummary } from "src/careerReadiness/types";
 
 const uniqueId = "a7f8e4b2-9c3d-4a1e-8f6b-2d3e4a5b6c7d";
 
 export const DATA_TEST_ID = {
   PROFILE_CONTENT: `profile-content-${uniqueId}`,
 };
-
-export interface ModuleProgress {
-  id: string;
-  labelKey: string;
-  progress: number;
-}
 
 export interface ProfileProps {
   email: string | null;
@@ -30,7 +25,7 @@ export interface ProfileProps {
   program: string | null;
   year: string | null;
   skills: Skill[];
-  modules: ModuleProgress[];
+  modules: ModuleSummary[];
   isLoadingSecurity: boolean;
   isLoadingPreferences: boolean;
   isLoadingProfile: boolean;
@@ -95,7 +90,7 @@ export const Profile: React.FC<ProfileProps> = ({
           isLoading={isLoadingProfile}
         />
 
-        <ModuleProgressCard modules={modules} />
+        <CareerReadinessProgressBanner modules={modules} />
 
         <SkillsDiscoveredCard skills={skills} isLoading={isLoadingSkills} />
 

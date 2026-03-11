@@ -840,6 +840,7 @@
       "year": "Year",
       "notProvided": "Not provided",
       "notAvailable": "Not available",
+      "backToHome": "Back to Home",
       "noSkillsYet": "No skills discovered yet. Start a conversation to discover your skills!"
     },
     "modules": {
