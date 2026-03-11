@@ -14,6 +14,7 @@ import type { SvgIconProps } from "@mui/material/SvgIcon";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import SchoolIcon from "@mui/icons-material/School";
 import QuizIcon from "@mui/icons-material/Quiz";
+import WorkIcon from "@mui/icons-material/Work";
 import i18n from "src/i18n/i18n";
 
 /**
@@ -43,6 +44,9 @@ export const ERROR_MESSAGES = {
 } as const;
 
 export const WORK_TYPE_DESCRIPTIONS = {
+  get FORMAL_SECTOR_WAGED_EMPLOYMENT() {
+    return i18n.t("experiences.experiencesDrawer.util.workTypeDescription.formalSectorWagedEmployment");
+  },
   get FORMAL_SECTOR_UNPAID_TRAINEE_WORK() {
     return i18n.t("experiences.experiencesDrawer.util.workTypeDescription.formalSectorUnpaidTraineeWork");
   },
@@ -56,6 +60,8 @@ export const WORK_TYPE_DESCRIPTIONS = {
 
 export const getWorkTypeTitle = (workType: WorkType | null) => {
   switch (workType) {
+    case WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT:
+      return ReportContent.SALARY_WORK_TITLE;
     case WorkType.UNSEEN_UNPAID:
       return ReportContent.UNPAID_WORK_TITLE;
     case WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
@@ -67,6 +73,8 @@ export const getWorkTypeTitle = (workType: WorkType | null) => {
 
 export const getWorkTypeDescription = (workType: WorkType | null) => {
   switch (workType) {
+    case WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT:
+      return WORK_TYPE_DESCRIPTIONS.FORMAL_SECTOR_WAGED_EMPLOYMENT;
     case WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
       return WORK_TYPE_DESCRIPTIONS.FORMAL_SECTOR_UNPAID_TRAINEE_WORK;
     case WorkType.UNSEEN_UNPAID:
@@ -78,6 +86,8 @@ export const getWorkTypeDescription = (workType: WorkType | null) => {
 
 export const getWorkTypeIcon = (workType: WorkType | null, iconProps?: SvgIconProps): JSX.Element => {
   switch (workType) {
+    case WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT:
+      return <WorkIcon {...iconProps} />;
     case WorkType.UNSEEN_UNPAID:
       return <VolunteerActivismIcon {...iconProps} />;
     case WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:

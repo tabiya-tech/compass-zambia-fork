@@ -16,8 +16,8 @@ from common_libs.test_utilities import get_random_session_id
 logger = logging.getLogger(__name__)
 
 all_work_types = [
-    WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK,
-    WorkType.UNSEEN_UNPAID,
+    WorkType.PAID_WORK,
+    WorkType.UNPAID_WORK,
 ]
 
 

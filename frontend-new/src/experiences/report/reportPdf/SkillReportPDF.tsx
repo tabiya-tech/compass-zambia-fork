@@ -50,7 +50,7 @@ const SkillReportPDF: React.FC<SkillReportProps> = ({
   config,
 }) => {
   // Group experiences by work type
-  const { unpaidWorkExperiences, traineeWorkExperiences, uncategorizedExperiences } =
+  const { salaryWorkExperiences, unpaidWorkExperiences, traineeWorkExperiences, uncategorizedExperiences } =
     groupExperiencesByWorkType(experiences);
 
   // list of all unique skills
@@ -128,6 +128,11 @@ const SkillReportPDF: React.FC<SkillReportProps> = ({
             {ReportContent.EXPERIENCES_TITLE}
           </Text>
           <View style={styles.experiencesContainer} data-testid={DATA_TEST_ID.SKILL_REPORT_EXPERIENCES_CONTAINER}>
+            {ExperienceCategory(
+              ReportContent.SALARY_WORK_TITLE,
+              ReportContent.IMAGE_URLS.EMPLOYEE_ICON,
+              salaryWorkExperiences
+            )}
             {ExperienceCategory(
               ReportContent.UNPAID_WORK_TITLE,
               ReportContent.IMAGE_URLS.COMMUNITY_WORK_ICON,

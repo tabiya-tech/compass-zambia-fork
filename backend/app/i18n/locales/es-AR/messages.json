@@ -12,6 +12,8 @@
       "unpaidTraineeDescription": "trabajo no pago como aprendiz en una empresa u organización",
       "selfEmploymentDescription": "tener mi propio emprendimiento, hacer trabajos por cuenta propia o por contrato",
       "unseenUnpaidDescription": "trabajo no pago como voluntariado comunitario, cuidados a mi familia u otra, ayuda en un hogar",
+      "paidWorkPhaseDescription": "trabajo pago (trabajar para una empresa o el negocio de otra persona por dinero)",
+      "unpaidWorkPhaseDescription": "trabajo no pago (ej. pasantía, voluntariado, cuidados o ayuda en el hogar)",
       "noneDescription": "sin experiencia laboral",
       "notSupported": "tipo de trabajo no compatible"
     },
@@ -62,6 +64,7 @@
   "exploreSkills": {
     "finalMessage": "¡Gracias por compartir estos detalles! Tengo toda la información que necesito.",
     "question": {
+      "paidWork": "¿Qué pensás que es importante al trabajar en un trabajo remunerado o para un empleador?",
       "unpaidTrainee": "¿Qué pensás que es importante al trabajar como aprendiz no remunerado?",
       "unseenUnpaid": "¿Qué pensás que es más importante al ayudar en la comunidad o cuidar a otras personas?"
     }

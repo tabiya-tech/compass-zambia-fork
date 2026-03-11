@@ -21,6 +21,7 @@ from common_libs.retry import Retry
 from ._conversation_llm import _get_experience_type, _ask_experience_type_question
 from ._types import CollectedData
 from ..experience import WorkType
+from ..experience.work_type import get_storage_work_types_for_phase
 
 _TAGS_TO_FILTER = [
     "system instructions",
@@ -337,21 +338,23 @@ def _find_incomplete_required_for_work_type(
     exploring_type: WorkType | None,
 ) -> list[tuple[int, CollectedData, list[str]]]:
     """
-    Find experiences of the given work type that lack required fields (experience_title, work_type).
-    Used for early-exit: if any have missing required fields, we must CONTINUE to gather them.
-    Optional fields (start_date, end_date, company, location) are NOT checked here.
+    Find experiences of the current phase/work type that lack required fields (experience_title, work_type).
+    When exploring_type is a phase (PAID_WORK, UNPAID_WORK), check experiences with any of that phase's storage types.
     """
     if exploring_type is None:
         return []
-    key = exploring_type.name
+    keys = [wt.name for wt in get_storage_work_types_for_phase(exploring_type)]
+    if not keys:
+        return []
     result = []
-    for i, exp in enumerate (collected_data):
-        if exp.work_type and exp.work_type.strip() == key:
-            missing = []
-            if not (exp.experience_title and exp.experience_title.strip()):
-                missing.append("experience_title")
-            if not (exp.work_type and exp.work_type.strip()):
-                missing.append("work_type")
-            if missing:
-                result.append((i, exp, missing))
+    for i, exp in enumerate(collected_data):
+        if not exp.work_type or exp.work_type.strip() not in keys:
+            continue
+        missing = []
+        if not (exp.experience_title and exp.experience_title.strip()):
+            missing.append("experience_title")
+        if not (exp.work_type and exp.work_type.strip()):
+            missing.append("work_type")
+        if missing:
+            result.append((i, exp, missing))
     return result

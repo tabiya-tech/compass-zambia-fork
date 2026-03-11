@@ -12,6 +12,8 @@
       "unpaidTraineeDescription": "unpaid work as a trainee for a company or organization",
       "selfEmploymentDescription": "running my own business, doing freelance or contract work",
       "unseenUnpaidDescription": "unpaid work such as community volunteering, caregiving for own or another family, helping in a household",
+      "paidWorkPhaseDescription": "paid work (working for a company or someone else's business for money)",
+      "unpaidWorkPhaseDescription": "unpaid work (e.g. unpaid trainee or internship, volunteering, caregiving, or helping in a household)",
       "noneDescription": "no work experience",
       "notSupported": "The work type is not supported"
     },
@@ -62,6 +64,7 @@
   "exploreSkills": {
     "finalMessage": "Thank you for sharing these details! I have all the information I need.",
     "question": {
+      "paidWork": "What do you think is important when working in a paid job or for an employer?",
       "unpaidTrainee": "What do you think is important when working as an unpaid trainee?",
       "unseenUnpaid": "What do you think is most important when helping out in the community or caring for others?"
     }

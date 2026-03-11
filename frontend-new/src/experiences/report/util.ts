@@ -39,6 +39,10 @@ export const formatDate = (dateString: string | null): string => {
 
 // Utility function to group experiences by work type
 export const groupExperiencesByWorkType = (experiences: Experience[]) => {
+  const salaryWorkExperiences = experiences.filter(
+    (experience) => experience.work_type === WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT
+  );
+
   const unpaidWorkExperiences = experiences.filter((experience) => experience.work_type === WorkType.UNSEEN_UNPAID);
 
   const traineeWorkExperiences = experiences.filter(
@@ -48,6 +52,7 @@ export const groupExperiencesByWorkType = (experiences: Experience[]) => {
   const uncategorizedExperiences = experiences.filter((experience) => experience.work_type === null);
 
   return {
+    salaryWorkExperiences,
     unpaidWorkExperiences,
     traineeWorkExperiences,
     uncategorizedExperiences,
