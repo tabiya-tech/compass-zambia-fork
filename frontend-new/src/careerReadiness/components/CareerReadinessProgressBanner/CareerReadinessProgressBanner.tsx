@@ -40,9 +40,14 @@ const CareerReadinessProgressBanner: React.FC<CareerReadinessProgressBannerProps
       data-testid={DATA_TEST_ID.PROGRESS_BANNER}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
-          {t("careerReadiness.progressTitle")}
-        </Typography>
+        <Box>
+          <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+            {t("careerReadiness.progressTitle")}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {t("careerReadiness.progressDescription")}
+          </Typography>
+        </Box>
         <Typography variant="body2" fontWeight="bold" color="primary.main">
           {percentage}%
         </Typography>
