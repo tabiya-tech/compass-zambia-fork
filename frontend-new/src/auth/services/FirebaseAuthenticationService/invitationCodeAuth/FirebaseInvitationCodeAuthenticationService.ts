@@ -13,6 +13,7 @@ import UserPreferencesService from "src/userPreferences/UserPreferencesService/u
 import { Language } from "src/userPreferences/UserPreferencesService/userPreferences.types";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
 import AuthenticationService from "src/auth/services/Authentication.service";
+import { pushToDataLayer } from "src/gtmInit";
 import { formatTokenForLogging } from "src/auth/utils/formatTokenForLogging";
 import { TokenError } from "src/error/commonErrors";
 
@@ -101,6 +102,9 @@ class FirebaseInvitationCodeAuthenticationService extends AuthenticationService 
 
     // call the parent class method once the user is successfully logged in
     await super.onSuccessfulLogin(token);
+
+    pushToDataLayer("user_login", { method: "invitation_code" });
+
     return token;
   }
 

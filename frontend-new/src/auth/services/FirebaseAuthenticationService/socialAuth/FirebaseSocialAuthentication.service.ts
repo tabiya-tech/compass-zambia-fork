@@ -12,6 +12,7 @@ import AuthenticationService from "src/auth/services/Authentication.service";
 import { formatTokenForLogging } from "src/auth/utils/formatTokenForLogging";
 import { TokenError } from "src/error/commonErrors";
 import { AuthBroadcastChannel, AuthChannelMessage } from "src/auth/services/authBroadcastChannel/authBroadcastChannel";
+import { pushToDataLayer } from "src/gtmInit";
 
 class FirebaseSocialAuthenticationService extends AuthenticationService {
   private static instance: FirebaseSocialAuthenticationService;
@@ -64,6 +65,8 @@ class FirebaseSocialAuthenticationService extends AuthenticationService {
 
     // call the parent class method once the user is successfully logged in
     await super.onSuccessfulLogin(tokenResponse);
+
+    pushToDataLayer("user_login", { method: "google" });
 
     // Broadcast login to other tabs
     AuthBroadcastChannel.getInstance().broadcast(AuthChannelMessage.LOGIN_USER);

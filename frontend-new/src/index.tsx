@@ -15,6 +15,7 @@ import ErrorPage from "src/error/errorPage/ErrorPage";
 import { useTranslation } from "react-i18next";
 
 import { initSentry } from "./sentryInit";
+import { initGTM } from "./gtmInit";
 import { ensureRequiredEnvVars } from "./envService";
 import { applyBrandingFromEnv } from "src/branding/branding";
 
@@ -28,6 +29,9 @@ const ErrorBoundaryFallback: React.FC = () => {
 
 // initialize react sentry for log aggregation
 initSentry();
+
+// initialize Google Tag Manager for analytics
+initGTM();
 
 // Ensure all required environment variables are set
 ensureRequiredEnvVars();

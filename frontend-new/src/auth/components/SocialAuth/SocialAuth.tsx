@@ -17,6 +17,7 @@ import { invitationsService } from "src/auth/services/invitationsService/invitat
 import { InvitationStatus, InvitationType } from "src/auth/services/invitationsService/invitations.types";
 import { Language, UserPreference } from "src/userPreferences/UserPreferencesService/userPreferences.types";
 import { getRegistrationCodeDisabled, getRegistrationDisabled } from "src/envService";
+import { pushToDataLayer } from "src/gtmInit";
 
 const uniqueId = "f0324e97-83fd-49e6-95c3-1043751fa1db";
 export const DATA_TEST_ID = {
@@ -120,6 +121,8 @@ const SocialAuth: React.FC<Readonly<SocialAuthProps>> = ({
         }
 
         UserPreferencesStateService.getInstance().setUserPreferences(prefs);
+
+        pushToDataLayer("user_registered", { method: "google" });
       } catch (error: any) {
         await handleError(error);
       }

@@ -53,6 +53,10 @@ FRONTEND_ENV_MAP: Dict[str, str] = {
 
     # Sensitive data Fields
     "FRONTEND_SENSITIVE_DATA_FIELDS": "sensitiveData.fields",
+
+    # Analytics
+    "FRONTEND_GTM_CONTAINER_ID": "analytics.gtmContainerId",
+    "FRONTEND_GTM_ENABLED": "analytics.enabled",
 }
 
 FRONTEND_JSON_FIELDS = {

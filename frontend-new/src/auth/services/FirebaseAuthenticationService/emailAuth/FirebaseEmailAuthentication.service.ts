@@ -15,6 +15,7 @@ import { TokenError } from "src/error/commonErrors";
 import firebase from "firebase/compat/app";
 import { EmailAuthProvider } from "firebase/auth";
 import { AuthBroadcastChannel, AuthChannelMessage } from "src/auth/services/authBroadcastChannel/authBroadcastChannel";
+import { pushToDataLayer } from "src/gtmInit";
 
 type UserCredential = firebase.auth.UserCredential;
 
@@ -80,6 +81,8 @@ class FirebaseEmailAuthenticationService extends AuthenticationService {
     PersistentStorageService.setLoginMethod(AuthenticationServices.FIREBASE_EMAIL);
     // call the parent class method once the user is successfully logged in
     await super.onSuccessfulLogin(token);
+
+    pushToDataLayer("user_login", { method: "email" });
 
     // Broadcast login to other tabs
     AuthBroadcastChannel.getInstance().broadcast(AuthChannelMessage.LOGIN_USER);
@@ -160,6 +163,9 @@ class FirebaseEmailAuthenticationService extends AuthenticationService {
     // we expect this to be done in the onSuccessfulRegistration method
     // by calling the parent class method once the user is successfully registered
     await super.onSuccessfulRegistration(token, invitationCodeUsed);
+
+    pushToDataLayer("user_registered", { method: "email" });
+
     return token;
   }
 

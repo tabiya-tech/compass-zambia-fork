@@ -25,6 +25,7 @@ The configuration file is organized into the following top-level namespaces:
 - **cv**: CV feature availability
 - **skillsReport**: Skills report branding, formats, and content
 - **i18n**: Language and locale settings
+- **analytics**: Google Analytics 4 and Google Tag Manager integration
 
 Only options exposed in these namespaces are customizable. Core application logic, workflows, and layouts are fixed.
 
@@ -168,6 +169,22 @@ This allows customization of:
 
 
 For the complete schema documentation and examples, see the [Sensitive Data Fields Configuration Guide](../frontend-new/sensitive-data-fields-config.md).
+
+## Analytics Configuration
+
+Compass supports Google Analytics 4 (GA4) event tracking via Google Tag Manager (GTM).
+
+- **analytics.enabled**: Enable or disable GTM in the frontend
+- **analytics.gtmContainerId**: GTM container ID (e.g., `GTM-XXXXXXX`)
+- **analytics.ga4PropertyId**: GA4 property ID
+- **analytics.ga4MeasurementId**: GA4 measurement ID (e.g., `G-XXXXXXX`)
+
+When enabled, the frontend tracks `user_registered` and `user_login` events automatically.
+
+The setup is automated via `backend/scripts/analytics/setup_analytics.py`, which creates the GA4 property, GTM container, tags,
+triggers, and variables, then writes the generated IDs into the configuration file.
+
+For the full setup guide including prerequisites and step-by-step instructions, see the [Analytics Setup Guide](ANALYTICS_SETUP.md).
 
 ## Applying Configuration Locally
 

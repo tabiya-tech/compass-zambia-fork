@@ -12,4 +12,6 @@ ken-product/
 backend/*.log
 backend/evaluation_tests/.DS_Store
 
+config/.analytics_token.json
+
 __pycache__/
