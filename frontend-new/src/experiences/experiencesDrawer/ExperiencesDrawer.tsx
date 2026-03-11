@@ -14,6 +14,7 @@ import { ReportContent } from "src/experiences/report/reportContent";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import SchoolIcon from "@mui/icons-material/School";
 import QuizIcon from "@mui/icons-material/Quiz";
+import WorkIcon from "@mui/icons-material/Work";
 import ExperienceCategory from "src/experiences/experiencesDrawer/components/experienceCategory/ExperienceCategory";
 import ExperienceEditForm from "src/experiences/experiencesDrawer/components/experienceEditForm/ExperienceEditForm";
 import { lazyWithPreload } from "src/utils/preloadableComponent/PreloadableComponent";
@@ -426,6 +427,14 @@ const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
               {/* EXPERIENCES */}
               {!isLoading && (
                 <Box display="flex" flexDirection="column" gap={isSmallMobile ? 10 : 6}>
+                  <ExperienceCategory
+                    icon={<WorkIcon />}
+                    title={ReportContent.SALARY_WORK_TITLE}
+                    experiences={groupedExperiences.salaryWorkExperiences}
+                    onEditExperience={handleEditExperience}
+                    onDeleteExperience={handleDeleteExperience}
+                    onRestoreToOriginalExperience={handleRequestRestoreToOriginalExperience}
+                  />
                   <ExperienceCategory
                     icon={<VolunteerActivismIcon />}
                     title={ReportContent.UNPAID_WORK_TITLE}

@@ -10,9 +10,9 @@ import ProgressBar from "src/home/components/ProgressBar/ProgressBar";
 import ModuleCard from "src/home/components/ModuleCard/ModuleCard";
 import PageHeader from "src/home/components/PageHeader/PageHeader";
 import Footer from "src/home/components/Footer/Footer";
-import authenticationStateService from "src/auth/services/AuthenticationState.service";
 import { getProductName } from "src/envService";
 import { BADGE_STATUS } from "src/home/constants";
+import { useUserProfile } from "src/profile/hooks/useUserProfile";
 
 const uniqueId = "f1a2b3c4-5d6e-7f8a-9b0c-1d2e3f4a5b6c";
 
@@ -31,9 +31,9 @@ const Home: React.FC = () => {
   const { t } = useTranslation();
   const modules = getEnabledModules();
   const { overallProgress, getBadgeStatus } = useModuleProgress();
+  const { profileData } = useUserProfile();
 
-  const user = authenticationStateService.getInstance().getUser();
-  const userName = user?.name || "";
+  const userName = profileData.name && profileData.name !== "Not available" ? profileData.name : "";
   const appName = getProductName() || "";
 
   return (

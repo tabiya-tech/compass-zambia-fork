@@ -21,10 +21,12 @@ import { ReportContent } from "src/experiences/report/reportContent";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import SchoolIcon from "@mui/icons-material/School";
 import QuizIcon from "@mui/icons-material/Quiz";
+import WorkIcon from "@mui/icons-material/Work";
 import { mockExperiences } from "src/experiences/experienceService/_test_utilities/mockExperiencesResponses";
 
 describe("experiencesDrawer util", () => {
   test.each([
+    [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, ReportContent.SALARY_WORK_TITLE],
     [WorkType.UNSEEN_UNPAID, ReportContent.UNPAID_WORK_TITLE],
     [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, ReportContent.TRAINEE_WORK_TITLE],
     [null, ReportContent.UNCATEGORIZED_TITLE],
@@ -35,6 +37,7 @@ describe("experiencesDrawer util", () => {
   });
 
   test.each([
+    [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WORK_TYPE_DESCRIPTIONS.FORMAL_SECTOR_WAGED_EMPLOYMENT],
     [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, WORK_TYPE_DESCRIPTIONS.FORMAL_SECTOR_UNPAID_TRAINEE_WORK],
     [WorkType.UNSEEN_UNPAID, WORK_TYPE_DESCRIPTIONS.UNSEEN_UNPAID],
     [null, WORK_TYPE_DESCRIPTIONS.UNCATEGORIZED],
@@ -45,6 +48,7 @@ describe("experiencesDrawer util", () => {
   });
 
   test.each([
+    [WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT, WorkIcon],
     [WorkType.UNSEEN_UNPAID, VolunteerActivismIcon],
     [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK, SchoolIcon],
     [null, QuizIcon],
