@@ -31,12 +31,10 @@ jest.mock("./components/ProfileCard/ProfileCard", () => ({
   )),
 }));
 
-jest.mock(
-  "src/careerReadiness/components/CareerReadinessProgressBanner/CareerReadinessProgressBanner",
-  () =>
-    jest.fn(({ modules }) => (
-      <div data-testid="career-readiness-progress-banner">CareerReadinessProgressBanner: {modules.length} modules</div>
-    ))
+jest.mock("src/careerReadiness/components/CareerReadinessProgressBanner/CareerReadinessProgressBanner", () =>
+  jest.fn(({ modules }) => (
+    <div data-testid="career-readiness-progress-banner">CareerReadinessProgressBanner: {modules.length} modules</div>
+  ))
 );
 
 jest.mock("./components/SkillsDiscoveredCard/SkillsDiscoveredCard", () => ({
@@ -77,6 +75,7 @@ const getDefaultProps = (overrides?: Partial<ProfileProps>): ProfileProps => ({
   year: null,
   skills: [],
   modules: [],
+  skillsInterestsProgress: 0,
   isLoadingSecurity: false,
   isLoadingPreferences: false,
   isLoadingProfile: false,
