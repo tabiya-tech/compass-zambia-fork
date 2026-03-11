@@ -460,6 +460,14 @@
           "downloadCv": "Pakua CV",
           "downloading": "Inapakua",
           "helpTipBlockedMessage": "Huwezi kupakua ripoti hadi umalize kuchunguza angalau uzoefu mmoja."
+        },
+        "shareReportButton": {
+          "shareReport": "Shiriki Ripoti",
+          "preparingPdf": "Inaandaa pdf yako",
+          "shareTitle": "Ripoti ya Uzoefu",
+          "shareText": "Angalia ripoti yangu ya uzoefu",
+          "shareFailed": "Imeshindikana kushiriki ripoti. Tafadhali jaribu tena.",
+          "shareCanceled": "Kushiriki kumeghairiwa kwa ombi la mtumiaji"
         }
       },
       "deleteSuccess": "Uzoefu umefutwa kwa mafanikio!",
