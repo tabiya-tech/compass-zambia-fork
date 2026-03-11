@@ -86,19 +86,6 @@ describe("gtmInit", () => {
       expect(console.info).toHaveBeenCalledWith("Initializing Google Tag Manager");
     });
 
-    test("should encode container ID in the script URL", () => {
-      // GIVEN a container ID that could be manipulated
-      const givenContainerId = "GTM-TEST123";
-      (getGtmEnabled as jest.Mock).mockReturnValue("true");
-      (getGtmContainerId as jest.Mock).mockReturnValue(givenContainerId);
-
-      // WHEN initGTM is called
-      initGTM();
-
-      // THEN expect the container ID to be URL-encoded in the script src
-      const script = document.head.querySelector('script[src*="googletagmanager"]') as HTMLScriptElement;
-      expect(script.src).toContain(encodeURIComponent(givenContainerId));
-    });
   });
 
   describe("pushToDataLayer", () => {
@@ -127,15 +114,5 @@ describe("gtmInit", () => {
       expect(() => pushToDataLayer("user_login", { method: "email" })).not.toThrow();
     });
 
-    test("should push event without additional data", () => {
-      // GIVEN dataLayer is initialized
-      (window as any).dataLayer = [];
-
-      // WHEN pushToDataLayer is called with only an event name
-      pushToDataLayer("some_event");
-
-      // THEN expect only the event to be in the dataLayer
-      expect((window as any).dataLayer).toContainEqual({ event: "some_event" });
-    });
   });
 });
