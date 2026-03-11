@@ -21,7 +21,9 @@ jest.mock("src/userPreferences/UserPreferencesStateService", () => ({
   },
 }));
 jest.mock("./utils/fetchPersonalData", () => ({
-  fetchPersonalData: jest.fn(() => Promise.resolve({ name: null, location: null, school: null, program: null, year: null })),
+  fetchPersonalData: jest.fn(() =>
+    Promise.resolve({ name: null, location: null, school: null, program: null, year: null })
+  ),
 }));
 jest.mock("./utils/fetchSkills", () => ({
   fetchSkills: jest.fn(() => Promise.resolve([])),
@@ -29,7 +31,15 @@ jest.mock("./utils/fetchSkills", () => ({
 
 const mockModules: ModuleSummary[] = [
   { id: "m1", title: "Module 1", description: "", icon: "", status: "COMPLETED", sort_order: 1, input_placeholder: "" },
-  { id: "m2", title: "Module 2", description: "", icon: "", status: "IN_PROGRESS", sort_order: 2, input_placeholder: "" },
+  {
+    id: "m2",
+    title: "Module 2",
+    description: "",
+    icon: "",
+    status: "IN_PROGRESS",
+    sort_order: 2,
+    input_placeholder: "",
+  },
 ];
 
 describe("useUserProfile", () => {

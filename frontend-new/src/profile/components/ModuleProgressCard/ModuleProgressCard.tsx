@@ -55,11 +55,7 @@ export const ModuleProgressCard: React.FC<ModuleProgressCardProps> = ({ modules 
         >
           {t("home.profile.skillsInterestsProgressTitle")}
         </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ marginBottom: theme.spacing(theme.tabiyaSpacing.md) }}
-        >
+        <Typography variant="body2" color="text.secondary" sx={{ marginBottom: theme.spacing(theme.tabiyaSpacing.md) }}>
           {t("home.profile.skillsInterestsProgressDescription")}
         </Typography>
 

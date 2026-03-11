@@ -94,7 +94,9 @@ export const Profile: React.FC<ProfileProps> = ({
         />
 
         <ModuleProgressCard
-          modules={[{ id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: skillsInterestsProgress }]}
+          modules={[
+            { id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: skillsInterestsProgress },
+          ]}
         />
 
         <CareerReadinessProgressBanner modules={modules} />
