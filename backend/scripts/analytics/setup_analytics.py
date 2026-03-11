@@ -43,7 +43,7 @@ For full documentation, see config/ANALYTICS_SETUP.md (from repo root)
 
 import argparse
 import json
-import subprocess
+import subprocess  # nosec B404 - subprocess is used to call inject-config.py with validated paths
 import sys
 import time
 from pathlib import Path
@@ -346,7 +346,7 @@ def run_inject_config(config_path: Path) -> None:
     inject_script = config_path.parent / "inject-config.py"
     if inject_script.exists():
         print("\nRunning inject-config.py to propagate GTM container ID...")
-        subprocess.run(
+        subprocess.run(  # nosec B603 - arguments are constructed from validated Path objects, not user input
             [sys.executable, str(inject_script), "--config", str(config_path), "--namespaces", "analytics"],
             cwd=str(config_path.parent),
             check=True,

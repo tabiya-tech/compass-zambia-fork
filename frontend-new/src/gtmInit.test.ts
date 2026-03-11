@@ -31,9 +31,7 @@ describe("gtmInit", () => {
       // THEN expect GTM to not be initialized
       expect((window as any).dataLayer).toBeUndefined();
       expect(document.head.querySelector('script[src*="googletagmanager"]')).toBeNull();
-      expect(console.info).toHaveBeenCalledWith(
-        "GTM is not enabled. Google Tag Manager will not be initialized."
-      );
+      expect(console.info).toHaveBeenCalledWith("GTM is not enabled. Google Tag Manager will not be initialized.");
     });
 
     test("should not initialize GTM when container ID is empty", () => {
