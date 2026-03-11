@@ -470,6 +470,14 @@
           "downloadCv": "Tsitsani CV",
           "downloading": "Kutsitsa",
           "helpTipBlockedMessage": "Simungathe kutsitsa report mpaka mwatha kufufuza chitukuko chimodzi."
+        },
+        "shareReportButton": {
+          "shareReport": "Gawani Report",
+          "preparingPdf": "Kukonzekera pdf yanu",
+          "shareTitle": "Report ya Zochitika",
+          "shareText": "Onani report yanga ya zochitika",
+          "shareFailed": "Kugawa report kunalephera. Chonde, yesaninso.",
+          "shareCanceled": "Kugawa kwaletetsedwa chifukwa cha pempho la wogwiritsa ntchito"
         }
       },
       "deleteSuccess": "Chitukuko chachotsedwa bwino!",
