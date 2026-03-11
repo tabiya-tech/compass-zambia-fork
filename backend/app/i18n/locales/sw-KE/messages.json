@@ -12,6 +12,8 @@
       "unpaidTraineeDescription": "kazi isiyolipwa kama mfunzwa kwa kampuni au shirika",
       "selfEmploymentDescription": "kuendesha biashara yako mwenyewe, kufanya kazi ya kujitegemea au mkataba",
       "unseenUnpaidDescription": "kazi isiyolipwa kama kujitolea kwa jamii, kutunza familia yako au nyingine, kusaidia nyumbani",
+      "paidWorkPhaseDescription": "kazi ya kulipwa (kufanya kazi kwa kampuni au biashara ya mtu mwingine kwa pesa)",
+      "unpaidWorkPhaseDescription": "kazi isiyolipwa (mfano mfunzwa, kujitolea, kutunza au kusaidia nyumbani)",
       "noneDescription": "hakuna uzoefu wa kazi",
       "notSupported": "Aina hii ya kazi haitumiki"
     },
@@ -62,6 +64,7 @@
   "exploreSkills": {
     "finalMessage": "Asante kwa kushiriki maelezo haya! Nina taarifa zote ninazohitaji.",
     "question": {
+      "paidWork": "Unafikiri ni nini muhimu unapofanya kazi ya kulipwa au kwa mwajiri?",
       "unpaidTrainee": "Unafikiri ni nini muhimu unapofanya kazi kama mfunzwa asiyelipwa?",
       "unseenUnpaid": "Unafikiri ni nini muhimu zaidi unaposaidia jamii au kutunza wengine?"
     }

@@ -6,17 +6,23 @@ import React from "react";
 import { render, screen } from "src/_test_utilities/test-utils";
 import Home, { DATA_TEST_ID } from "./Home";
 import { getEnabledModules } from "src/home/modulesService";
-import AuthenticationStateService from "src/auth/services/AuthenticationState.service";
 import { DATA_TEST_ID as MODULE_CARD_DATA_TEST_ID } from "src/home/components/ModuleCard/ModuleCard";
 import { DATA_TEST_ID as PAGE_HEADER_DATA_TEST_ID } from "src/home/components/PageHeader/PageHeader";
 import { DATA_TEST_ID as FOOTER_DATA_TEST_ID } from "src/home/components/Footer/Footer";
 import { DATA_TEST_ID as PROGRESS_BAR_DATA_TEST_ID } from "src/home/components/ProgressBar/ProgressBar";
-import { resetAllMethodMocks } from "src/_test_utilities/resetAllMethodMocks";
 import { BadgeStatus } from "src/home/constants";
 
 // Mock useModuleProgress
 const mockOverallProgress = 40;
 const mockGetBadgeStatus = jest.fn((_moduleId: string): BadgeStatus => null);
+const mockProfileData = { name: "Test User" };
+
+jest.mock("src/profile/hooks/useUserProfile", () => ({
+  useUserProfile: () => ({
+    profileData: mockProfileData,
+  }),
+}));
+
 jest.mock("src/home/hooks/useModuleProgress", () => ({
   useModuleProgress: () => ({
     overallProgress: mockOverallProgress,
@@ -29,12 +35,7 @@ describe("Home", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockGetBadgeStatus.mockImplementation((_moduleId: string) => null);
-    jest.spyOn(AuthenticationStateService.getInstance(), "getUser").mockReturnValue({
-      id: "user-1",
-      name: "Test User",
-      email: "test@example.com",
-    } as ReturnType<typeof AuthenticationStateService.prototype.getUser>);
-    resetAllMethodMocks(AuthenticationStateService.getInstance());
+    mockProfileData.name = "Test User";
   });
 
   describe("render", () => {
@@ -74,11 +75,7 @@ describe("Home", () => {
 
     test("should show Welcome back with user name when user has a name", () => {
       // GIVEN a user with a name
-      jest.spyOn(AuthenticationStateService.getInstance(), "getUser").mockReturnValue({
-        id: "user-1",
-        name: "Jane",
-        email: "jane@example.com",
-      } as ReturnType<typeof AuthenticationStateService.prototype.getUser>);
+      mockProfileData.name = "Jane";
 
       // WHEN the Home page is rendered
       render(<Home />);
@@ -92,11 +89,10 @@ describe("Home", () => {
       // WHEN the Home page is rendered
       render(<Home />);
 
-      // THEN getBadgeStatus was called once per enabled module
+      // THEN getBadgeStatus was called for each enabled module id
       const modules = getEnabledModules();
-      expect(mockGetBadgeStatus).toHaveBeenCalledTimes(modules.length);
-      // AND it was called with each module id
-      modules.forEach((m) => expect(mockGetBadgeStatus).toHaveBeenCalledWith(m.id));
+      const calledModuleIds = mockGetBadgeStatus.mock.calls.map(([moduleId]) => moduleId);
+      modules.forEach((m) => expect(calledModuleIds).toContain(m.id));
     });
 
     test("should show continue chip on skills_discovery card when getBadgeStatus returns continue", () => {

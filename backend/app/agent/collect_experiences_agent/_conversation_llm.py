@@ -7,7 +7,7 @@ from app.agent.agent_types import AgentInput, AgentOutput, AgentType, LLMStats
 from app.agent.collect_experiences_agent._types import CollectedData
 from app.agent.config import AgentsConfig
 from app.agent.experience import ExperienceEntity
-from app.agent.experience.work_type import WORK_TYPE_DEFINITIONS_FOR_PROMPT, WorkType
+from app.agent.experience.work_type import WORK_TYPE_DEFINITIONS_FOR_PROMPT, WorkType, get_storage_work_types_for_phase
 from app.agent.penalty import get_penalty
 from app.agent.prompt_template import get_language_style
 from app.agent.prompt_template.agent_prompt_template import STD_AGENT_CHARACTER
@@ -45,27 +45,33 @@ def fill_incomplete_fields_as_declined(
 ) -> None:
     """
     Set None to "" for completeness fields (start_date, end_date, company, location)
-    on experiences of the given work type. Treats missing data as user declined to provide.
+    on experiences of the given work type (or phase). Treats missing data as user declined to provide.
     Mutates the experiences in place.
+    When work_type is a phase (PAID_WORK, UNPAID_WORK), fills all experiences that belong to that phase.
     """
     if work_type is None:
         return
     logger = logging.getLogger(__name__)
-    key = work_type.name
+    # Phase-only types map to one or more storage types; storage types map to themselves
+    keys_to_fill = [wt.name for wt in get_storage_work_types_for_phase(work_type)]
+    if not keys_to_fill:
+        return
     for exp in collected_data:
-        if exp.work_type and exp.work_type.strip() == key:
-            if exp.start_date is None:
-                logger.warning("Filling incomplete start_date as declined for %s experience: %s", key, exp.experience_title)
-                exp.start_date = ""
-            if exp.end_date is None:
-                logger.warning("Filling incomplete end_date as declined for %s experience: %s", key, exp.experience_title)
-                exp.end_date = ""
-            if exp.company is None:
-                logger.warning("Filling incomplete company as declined for %s experience: %s", key, exp.experience_title)
-                exp.company = ""
-            if exp.location is None:
-                logger.warning("Filling incomplete location as declined for %s experience: %s", key, exp.experience_title)
-                exp.location = ""
+        if not exp.work_type or exp.work_type.strip() not in keys_to_fill:
+            continue
+        key = exp.work_type.strip()
+        if exp.start_date is None:
+            logger.warning("Filling incomplete start_date as declined for %s experience: %s", key, exp.experience_title)
+            exp.start_date = ""
+        if exp.end_date is None:
+            logger.warning("Filling incomplete end_date as declined for %s experience: %s", key, exp.experience_title)
+            exp.end_date = ""
+        if exp.company is None:
+            logger.warning("Filling incomplete company as declined for %s experience: %s", key, exp.experience_title)
+            exp.company = ""
+        if exp.location is None:
+            logger.warning("Filling incomplete location as declined for %s experience: %s", key, exp.experience_title)
+            exp.location = ""
 
 
 def _get_incomplete_experiences_instructions(collected_data: list[CollectedData]) -> str:
@@ -491,6 +497,11 @@ class _ConversationLLM:
         # However, doing so seems to break the prompt.
         # We include it to ensure the model sticks to the conversation language.
         experience_type_description = _get_experience_type(exploring_type)
+        question_to_ask = _ask_experience_type_question(exploring_type)
+        if exploring_type == WorkType.PAID_WORK:
+            paid_unpaid_instruction = "In this step we only collect paid work experiences. Next we will ask about unpaid work."
+        else:
+            paid_unpaid_instruction = "Do NOT mention paid work, paid jobs, formal employment, or self-employment. We only collect unpaid experiences in this step."
         first_time_generative_prompt = dedent("""\
                 #Role
                     You are a counselor working for an employment agency helping me, a young person{country_of_user_segment}, 
@@ -508,14 +519,15 @@ class _ConversationLLM:
                     
                     {question_to_ask}.
                     
-                Do NOT mention paid work, paid jobs, formal employment, or self-employment. We only collect unpaid experiences.
+                {paid_unpaid_instruction}
                 """)
         return replace_placeholders_with_indent(first_time_generative_prompt,
                                                 country_of_user_segment=_get_country_of_user_segment(country_of_user),
                                                 language_style=get_language_style(),
                                                 persona_guidance=get_persona_prompt_section(persona_type),
                                                 experience_type_description=experience_type_description,
-                                                question_to_ask=_ask_experience_type_question(exploring_type))
+                                                question_to_ask=question_to_ask,
+                                                paid_unpaid_instruction=paid_unpaid_instruction)
 
 
 def _get_collected_experience_data(collected_data: list[CollectedData]) -> str:
@@ -598,10 +610,16 @@ def _get_not_missing_fields(collected_data: list[CollectedData], index: int) -> 
 
 
 def _get_experience_type(work_type: WorkType | None) -> str:
-    if work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
+    if work_type == WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT:
+        return t("messages", "collectExperiences.workType.formalWagedDescription")
+    elif work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
         return t("messages", "collectExperiences.workType.unpaidTraineeDescription")
     elif work_type == WorkType.UNSEEN_UNPAID:
         return t("messages", "collectExperiences.workType.unseenUnpaidDescription")
+    elif work_type == WorkType.PAID_WORK:
+        return t("messages", "collectExperiences.workType.paidWorkPhaseDescription")
+    elif work_type == WorkType.UNPAID_WORK:
+        return t("messages", "collectExperiences.workType.unpaidWorkPhaseDescription")
     elif work_type is None:
         return t("messages", "collectExperiences.workType.noneDescription")
     else:
@@ -618,6 +636,10 @@ def _get_excluding_experiences(work_type: WorkType) -> str:
         excluding_experience_types = [WorkType.UNSEEN_UNPAID]
     elif work_type == WorkType.UNSEEN_UNPAID:
         excluding_experience_types = [WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK]
+    elif work_type == WorkType.PAID_WORK:
+        excluding_experience_types = [WorkType.UNPAID_WORK]
+    elif work_type == WorkType.UNPAID_WORK:
+        excluding_experience_types = [WorkType.PAID_WORK]
     else:
         raise ValueError("The work type is not supported")
 
@@ -625,14 +647,18 @@ def _get_excluding_experiences(work_type: WorkType) -> str:
 
 
 def _ask_experience_type_question(work_type: WorkType) -> str:
-    question_to_ask: str
-    if work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
-        question_to_ask = "Have I worked as an unpaid trainee for a company or organization?"
+    if work_type == WorkType.PAID_WORK:
+        return "Have you done any paid work (e.g. working for a company or organization for a salary or wage)?"
+    elif work_type == WorkType.UNPAID_WORK:
+        return "Have you done any unpaid work (e.g. unpaid trainee or internship, volunteering, caregiving, or helping in a household)?"
+    elif work_type == WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK:
+        return "Do you have any other unpaid work as a trainee for a company or organization?"
     elif work_type == WorkType.UNSEEN_UNPAID:
-        question_to_ask = "Have I done unpaid work such as community volunteering, caregiving for my own or another family, or helping in a household?"
+        return "Have you done any unpaid work such as community volunteering, caregiving for your own or another family, or helping in a household?"
+    elif work_type == WorkType.FORMAL_SECTOR_WAGED_EMPLOYMENT:
+        return "Have you done any paid work (e.g. working for a company or organization for a salary or wage)?"
     else:
         raise ValueError("The exploring type is not supported")
-    return question_to_ask
 
 
 def _get_explore_experiences_instructions(*,
@@ -680,9 +706,9 @@ def _get_explore_experiences_instructions(*,
         
         Only move to the next work type after I have explicitly stated I have no more experiences of the current type.
         
-        IMPORTANT: Do NOT provide a recap or summary of all experiences until we have explored ALL work types. 
+        IMPORTANT: Do NOT provide a recap or summary of all experiences until we have explored ALL work types (paid work and unpaid work). 
         Do NOT say things like "We've now gone through the different types" or "Here's what we have so far" 
-        until we have finished exploring all work types (unpaid trainee work and unpaid work such as volunteering).
+        until we have finished exploring both: paid work and unpaid work.
         """)
         return replace_placeholders_with_indent(instructions_template,
                                                 questions_to_ask=questions_to_ask,
