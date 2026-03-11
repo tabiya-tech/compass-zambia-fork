@@ -1,5 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Profile, ProfileProps } from "./Profile";
+import type { ModuleSummary } from "src/careerReadiness/types";
+
+const makeModule = (id: string, status: ModuleSummary["status"]): ModuleSummary => ({
+  id,
+  title: id,
+  description: "",
+  icon: "",
+  status,
+  sort_order: 0,
+  input_placeholder: "",
+});
 
 /**
  * Creates a complete ProfileProps object with default values and optional overrides.
@@ -49,11 +60,12 @@ const createProfileState = (overrides?: Partial<ProfileProps>): ProfileProps => 
       },
     ],
     modules: [
-      { id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: 100 },
-      { id: "career_discovery", labelKey: "home.modules.careerDiscovery", progress: 75 },
-      { id: "job_readiness", labelKey: "home.modules.jobReadiness", progress: 50 },
-      { id: "career_explorer", labelKey: "home.modules.careerExplorer", progress: 25 },
+      makeModule("skills_discovery", "COMPLETED"),
+      makeModule("career_discovery", "IN_PROGRESS"),
+      makeModule("job_readiness", "UNLOCKED"),
+      makeModule("career_explorer", "NOT_STARTED"),
     ],
+    skillsInterestsProgress: 75,
 
     // Loading states
     isLoadingSecurity: false,
@@ -212,11 +224,11 @@ export const LoadingPreferencesSection: Story = {
 export const WithVariedModuleProgress: Story = {
   args: createProfileState({
     modules: [
-      { id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: 100 },
-      { id: "career_discovery", labelKey: "home.modules.careerDiscovery", progress: 90 },
-      { id: "job_readiness", labelKey: "home.modules.jobReadiness", progress: 60 },
-      { id: "career_explorer", labelKey: "home.modules.careerExplorer", progress: 30 },
-      { id: "knowledge_hub", labelKey: "home.modules.knowledgeHub", progress: 0 },
+      makeModule("skills_discovery", "COMPLETED"),
+      makeModule("career_discovery", "COMPLETED"),
+      makeModule("job_readiness", "IN_PROGRESS"),
+      makeModule("career_explorer", "UNLOCKED"),
+      makeModule("knowledge_hub", "NOT_STARTED"),
     ],
   }),
 };

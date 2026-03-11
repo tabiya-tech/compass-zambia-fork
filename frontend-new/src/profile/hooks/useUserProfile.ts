@@ -245,7 +245,8 @@ export const useUserProfile = (): UseUserProfileResult => {
     skillsInterestsProgress,
   };
 
-  const isLoading = isLoadingSecurity || isLoadingPreferences || isLoadingProfile || isLoadingSkills || isLoadingModules;
+  const isLoading =
+    isLoadingSecurity || isLoadingPreferences || isLoadingProfile || isLoadingSkills || isLoadingModules;
 
   return {
     profileData,
