@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchSkills } from "./utils/fetchSkills";
 import { fetchPersonalData } from "./utils/fetchPersonalData";
 import { Skill } from "src/experiences/experienceService/experiences.types";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
 import CareerReadinessService from "src/careerReadiness/services/CareerReadinessService";
+import ChatService from "src/chat/ChatService/ChatService";
 import type { ModuleSummary } from "src/careerReadiness/types";
 
 export interface UserProfileData {
@@ -18,6 +19,7 @@ export interface UserProfileData {
   year: string | null;
   skills: Skill[];
   modules: ModuleSummary[];
+  skillsInterestsProgress: number;
 }
 
 export interface UseUserProfileResult {
@@ -71,6 +73,9 @@ export const useUserProfile = (): UseUserProfileResult => {
   const [isLoadingModules, setIsLoadingModules] = useState(true);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [modules, setModules] = useState<ModuleSummary[]>([]);
+  const [skillsInterestsProgress, setSkillsInterestsProgress] = useState<number>(0);
+
+  const activeSessionId = useMemo(() => UserPreferencesStateService.getInstance().getActiveSessionId(), []);
 
   // Individual error states for each component
   const [errors, setErrors] = useState<{
@@ -191,7 +196,21 @@ export const useUserProfile = (): UseUserProfileResult => {
     fetchSkillsData();
   }, []);
 
-  // Effect 5: Fetch career readiness module statuses from API
+  // Effect 5: Fetch skills & interests progress from chat history
+  useEffect(() => {
+    if (!activeSessionId) return;
+
+    ChatService.getInstance()
+      .getChatHistory(activeSessionId)
+      .then((history) => {
+        setSkillsInterestsProgress(history.current_phase?.percentage ?? 0);
+      })
+      .catch(() => {
+        setSkillsInterestsProgress(0);
+      });
+  }, [activeSessionId]);
+
+  // Effect 6: Fetch career readiness module statuses from API
   useEffect(() => {
     const fetchModules = async () => {
       try {
@@ -223,6 +242,7 @@ export const useUserProfile = (): UseUserProfileResult => {
     year: personalData.year,
     skills,
     modules,
+    skillsInterestsProgress,
   };
 
   const isLoading = isLoadingSecurity || isLoadingPreferences || isLoadingProfile || isLoadingSkills || isLoadingModules;
