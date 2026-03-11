@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
 import { fetchSkills } from "./utils/fetchSkills";
-import { getEnabledModules } from "src/home/modulesService";
 import { fetchPersonalData } from "./utils/fetchPersonalData";
 import { Skill } from "src/experiences/experienceService/experiences.types";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
-
-export interface ModuleProgress {
-  id: string;
-  labelKey: string;
-  progress: number;
-}
+import CareerReadinessService from "src/careerReadiness/services/CareerReadinessService";
+import type { ModuleSummary } from "src/careerReadiness/types";
 
 export interface UserProfileData {
   name: string | null;
@@ -22,7 +17,7 @@ export interface UserProfileData {
   program: string | null;
   year: string | null;
   skills: Skill[];
-  modules: ModuleProgress[];
+  modules: ModuleSummary[];
 }
 
 export interface UseUserProfileResult {
@@ -32,11 +27,13 @@ export interface UseUserProfileResult {
   isLoadingPreferences: boolean;
   isLoadingProfile: boolean;
   isLoadingSkills: boolean;
+  isLoadingModules: boolean;
   errors: {
     security: Error | null;
     preferences: Error | null;
     profile: Error | null;
     skills: Error | null;
+    modules: Error | null;
   };
 }
 
@@ -71,8 +68,9 @@ export const useUserProfile = (): UseUserProfileResult => {
     program: null,
     year: null,
   });
+  const [isLoadingModules, setIsLoadingModules] = useState(true);
   const [skills, setSkills] = useState<Skill[]>([]);
-  const [modules, setModules] = useState<ModuleProgress[]>([]);
+  const [modules, setModules] = useState<ModuleSummary[]>([]);
 
   // Individual error states for each component
   const [errors, setErrors] = useState<{
@@ -80,11 +78,13 @@ export const useUserProfile = (): UseUserProfileResult => {
     preferences: Error | null;
     profile: Error | null;
     skills: Error | null;
+    modules: Error | null;
   }>({
     security: null,
     preferences: null,
     profile: null,
     skills: null,
+    modules: null,
   });
 
   // Effect 1: Fetch security data (email from authenticated user)
@@ -191,19 +191,24 @@ export const useUserProfile = (): UseUserProfileResult => {
     fetchSkillsData();
   }, []);
 
-  // Effect 5: Fetch modules (synchronous, no API call)
+  // Effect 5: Fetch career readiness module statuses from API
   useEffect(() => {
-    try {
-      const enabledModules = getEnabledModules();
-      const modulesWithProgress: ModuleProgress[] = enabledModules.map((module) => ({
-        id: module.id,
-        labelKey: module.labelKey,
-        progress: Math.floor(Math.random() * 70) + 30,
-      }));
-      setModules(modulesWithProgress);
-    } catch (error) {
-      console.error("Error fetching modules:", error);
-    }
+    const fetchModules = async () => {
+      try {
+        setIsLoadingModules(true);
+        setErrors((prev) => ({ ...prev, modules: null }));
+
+        const response = await CareerReadinessService.getInstance().listModules();
+        setModules(response.modules);
+      } catch (error) {
+        console.error("Error fetching career readiness modules:", error);
+        setErrors((prev) => ({ ...prev, modules: error as Error }));
+      } finally {
+        setIsLoadingModules(false);
+      }
+    };
+
+    fetchModules();
   }, []);
 
   // Combine all data into a single profile object
@@ -220,7 +225,7 @@ export const useUserProfile = (): UseUserProfileResult => {
     modules,
   };
 
-  const isLoading = isLoadingSecurity || isLoadingPreferences || isLoadingProfile || isLoadingSkills;
+  const isLoading = isLoadingSecurity || isLoadingPreferences || isLoadingProfile || isLoadingSkills || isLoadingModules;
 
   return {
     profileData,
@@ -229,6 +234,7 @@ export const useUserProfile = (): UseUserProfileResult => {
     isLoadingPreferences,
     isLoadingProfile,
     isLoadingSkills,
+    isLoadingModules,
     errors,
   };
 };
