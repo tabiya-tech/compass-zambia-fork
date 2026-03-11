@@ -126,6 +126,12 @@ window.tabiyaConfig = {
       "text-accent": "38 94 167",
     })
   ),
+  // ################################################################
+  // #       Analytics / Google Tag Manager
+  // ################################################################
+  FRONTEND_GTM_ENABLED: btoa("true"),
+  FRONTEND_GTM_CONTAINER_ID: btoa("GTM-XXXXXXX"),
+
   FRONTEND_SKILLS_REPORT_OUTPUT_CONFIG: btoa(
     JSON.stringify({
       logos: [
