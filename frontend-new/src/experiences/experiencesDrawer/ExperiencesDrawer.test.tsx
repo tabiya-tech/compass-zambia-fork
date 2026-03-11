@@ -38,6 +38,13 @@ jest.mock("src/experiences/experiencesDrawer/components/downloadReportDropdown/D
   });
 });
 
+// mock ShareReportButton
+jest.mock("src/experiences/experiencesDrawer/components/shareReportButton/ShareReportButton", () => {
+  return jest.fn(() => {
+    return <div data-testid={"mock-ShareReportButton"} />;
+  });
+});
+
 // mock the Confirm Modal Dialog
 jest.mock("src/theme/confirmModalDialog/ConfirmModalDialog", () => {
   const actual = jest.requireActual("src/theme/confirmModalDialog/ConfirmModalDialog");

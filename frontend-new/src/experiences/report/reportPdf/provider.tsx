@@ -5,25 +5,37 @@ import { pdf } from "@react-pdf/renderer";
 import { saveAs } from "src/experiences/saveAs";
 import { SkillsReportOutputConfig } from "src/experiences/report/config/types";
 
+export const PDF_REPORT_FILENAME = "Experience-Report.pdf";
+export const PDF_MIME_TYPE = "application/pdf";
+
 export class PDFReportDownloadProvider implements IReportFormatProvider {
   constructor(private config: SkillsReportOutputConfig) {}
+
+  /**
+   * Generates a PDF blob from the report props.
+   * Returns the blob with MIME type "application/pdf".
+   */
+  async generateBlob(props: ReportProps): Promise<Blob> {
+    const report = pdf(
+      <SkillReportPDF
+        name={props.name}
+        email={props.email}
+        phone={props.phone}
+        address={props.address}
+        experiences={props.experiences}
+        conversationConductedAt={props.conversationConductedAt}
+        config={this.config}
+      />
+    );
+    // noinspection JSVoidFunctionReturnValueUsed Intellij is wrong here, this is a promise
+    const blob = await report.toBlob();
+    return blob;
+  }
 
   async download(props: ReportProps) {
     try {
       const fileName = "compass-cv.pdf";
-      const report = pdf(
-        <SkillReportPDF
-          name={props.name}
-          email={props.email}
-          phone={props.phone}
-          address={props.address}
-          experiences={props.experiences}
-          conversationConductedAt={props.conversationConductedAt}
-          config={this.config}
-        />
-      );
-      // noinspection JSVoidFunctionReturnValueUsed Intellij is wrong here, this is a promise
-      const blob = await report.toBlob();
+      const blob = await this.generateBlob(props);
       saveAs(blob, fileName);
     } catch (error) {
       console.error("Failed to download report", error);
