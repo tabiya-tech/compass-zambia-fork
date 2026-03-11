@@ -853,6 +853,7 @@
       "year": "Año",
       "notProvided": "No proporcionado",
       "notAvailable": "No disponible",
+      "backToHome": "Volver al inicio",
       "noSkillsYet": "¡Aún no se descubrieron habilidades. Comenzá una conversación para descubrir tus habilidades!"
     },
     "modules": {

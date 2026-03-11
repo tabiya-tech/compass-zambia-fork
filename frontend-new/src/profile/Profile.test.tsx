@@ -31,11 +31,13 @@ jest.mock("./components/ProfileCard/ProfileCard", () => ({
   )),
 }));
 
-jest.mock("./components/ModuleProgressCard/ModuleProgressCard", () => ({
-  ModuleProgressCard: jest.fn(({ modules }) => (
-    <div data-testid="module-progress-card">ModuleProgressCard: {modules.length} modules</div>
-  )),
-}));
+jest.mock(
+  "src/careerReadiness/components/CareerReadinessProgressBanner/CareerReadinessProgressBanner",
+  () =>
+    jest.fn(({ modules }) => (
+      <div data-testid="career-readiness-progress-banner">CareerReadinessProgressBanner: {modules.length} modules</div>
+    ))
+);
 
 jest.mock("./components/SkillsDiscoveredCard/SkillsDiscoveredCard", () => ({
   SkillsDiscoveredCard: jest.fn(({ skills, isLoading }) => (
@@ -49,8 +51,19 @@ jest.mock("./components/SkillsDiscoveredCard/SkillsDiscoveredCard", () => ({
 import { SecurityCard } from "./components/SecurityCard/SecurityCard";
 import { PreferencesCard } from "./components/PreferencesCard/PreferencesCard";
 import { ProfileCard } from "./components/ProfileCard/ProfileCard";
-import { ModuleProgressCard } from "./components/ModuleProgressCard/ModuleProgressCard";
 import { SkillsDiscoveredCard } from "./components/SkillsDiscoveredCard/SkillsDiscoveredCard";
+import CareerReadinessProgressBanner from "src/careerReadiness/components/CareerReadinessProgressBanner/CareerReadinessProgressBanner";
+import type { ModuleSummary } from "src/careerReadiness/types";
+
+const makeModule = (id: string, status: ModuleSummary["status"]): ModuleSummary => ({
+  id,
+  title: id,
+  description: "",
+  icon: "",
+  status,
+  sort_order: 0,
+  input_placeholder: "",
+});
 
 // Helper function to create default props
 const getDefaultProps = (overrides?: Partial<ProfileProps>): ProfileProps => ({
@@ -90,10 +103,7 @@ describe("Profile Component", () => {
         program: "Computer Science",
         year: "2024",
         skills: [],
-        modules: [
-          { id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: 100 },
-          { id: "career_discovery", labelKey: "home.modules.careerDiscovery", progress: 50 },
-        ],
+        modules: [makeModule("skills_discovery", "COMPLETED"), makeModule("career_discovery", "IN_PROGRESS")],
       });
 
       // WHEN the Profile component is rendered
@@ -116,13 +126,10 @@ describe("Profile Component", () => {
         expect.anything()
       );
 
-      // AND ModuleProgressCard is called with correct props
-      expect(ModuleProgressCard).toHaveBeenCalledWith(
+      // AND CareerReadinessProgressBanner is called with correct props
+      expect(CareerReadinessProgressBanner).toHaveBeenCalledWith(
         {
-          modules: [
-            { id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: 100 },
-            { id: "career_discovery", labelKey: "home.modules.careerDiscovery", progress: 50 },
-          ],
+          modules: [makeModule("skills_discovery", "COMPLETED"), makeModule("career_discovery", "IN_PROGRESS")],
         },
         expect.anything()
       );

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { startTransition } from "react";
 import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import PageHeader from "src/home/components/PageHeader/PageHeader";
 import { Profile } from "./Profile";
 import { useUserProfile } from "./hooks/useUserProfile";
+import { routerPaths } from "src/app/routerPaths";
 
 const uniqueId = "b3c5d7e9-4f6a-8b2c-1d3e-5f7a9b1c3d5e";
 
@@ -11,7 +13,9 @@ export const DATA_TEST_ID = {
 };
 
 const ProfileContainer: React.FC = () => {
-  const { profileData, isLoadingSecurity, isLoadingPreferences, isLoadingProfile, isLoadingSkills } = useUserProfile();
+  const navigate = useNavigate();
+  const { profileData, isLoadingSecurity, isLoadingPreferences, isLoadingProfile, isLoadingSkills, isLoadingModules } =
+    useUserProfile();
 
   return (
     <Box
@@ -21,7 +25,16 @@ const ProfileContainer: React.FC = () => {
       }}
       data-testid={DATA_TEST_ID.PROFILE_CONTAINER}
     >
-      <PageHeader title="home.profile.title" subtitle="home.profile.subtitle" />
+      <PageHeader
+        title="home.profile.title"
+        subtitle="home.profile.subtitle"
+        backLinkLabel="home.profile.backToHome"
+        onBackClick={() => {
+          startTransition(() => {
+            navigate(routerPaths.ROOT);
+          });
+        }}
+      />
       <Profile
         email={profileData.email}
         language={profileData.language}
