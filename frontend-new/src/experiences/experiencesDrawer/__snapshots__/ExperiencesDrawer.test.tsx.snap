@@ -61,7 +61,7 @@ exports[`ExperiencesDrawer should render ExperiencesDrawer correctly 1`] = `
           class="MuiBox-root css-18bo27g"
         >
           <span
-            class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse css-4ffv2m-MuiSkeleton-root"
+            class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse css-3xwbb8-MuiSkeleton-root"
             style="height: 40px;"
           />
         </div>

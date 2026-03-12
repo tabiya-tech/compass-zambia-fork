@@ -157,35 +157,73 @@ exports[`ReportDrawerContent should render ExperiencesDrawerContent correctly 1`
 
 exports[`ReportDrawerContent should render ExperiencesDrawerContent skeleton correctly 1`] = `
 <div
-  class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row css-1590qpt-MuiGrid-root"
+  class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row css-1wikqt5-MuiGrid-root"
   data-testid="experiences-drawer-content-container-34a59a9e-e7f6-4a10-8b72-0fd401c727de"
 >
   <div
-    class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 css-1hw9i25-MuiGrid-root"
+    class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 css-yqiqnf-MuiGrid-root"
   >
     <div
-      class="MuiBox-root css-yj95vr"
+      class="MuiBox-root css-1qlryaq"
     >
+      <div
+        class="MuiBox-root css-1lekzkb"
+      >
+        <span
+          class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-pulse css-osjgt0-MuiSkeleton-root"
+          data-testid="skeleton-text"
+          style="width: 50%;"
+        />
+        <span
+          class="MuiSkeleton-root MuiSkeleton-circular MuiSkeleton-pulse css-li4ak8-MuiSkeleton-root"
+          data-testid="skeleton-icon"
+          style="width: 32px; height: 32px;"
+        />
+      </div>
       <span
-        class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-pulse css-14e33k0-MuiSkeleton-root"
+        class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-pulse css-1tivklj-MuiSkeleton-root"
         data-testid="skeleton-text"
-        style="width: 60%;"
+        style="width: 100%;"
       />
       <span
-        class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-pulse css-14e33k0-MuiSkeleton-root"
+        class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-pulse css-1tivklj-MuiSkeleton-root"
         data-testid="skeleton-text"
-        style="width: 90%;"
+        style="width: 80%;"
       />
+      <div
+        class="MuiBox-root css-1elaak3"
+      >
+        <span
+          class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-pulse css-osjgt0-MuiSkeleton-root"
+          data-testid="skeleton-text"
+          style="width: 90px;"
+        />
+        <span
+          class="MuiSkeleton-root MuiSkeleton-circular MuiSkeleton-pulse css-li4ak8-MuiSkeleton-root"
+          data-testid="skeleton-icon"
+          style="width: 20px; height: 20px;"
+        />
+      </div>
+      <div
+        class="MuiBox-root css-b7renb"
+      >
+        <span
+          class="MuiSkeleton-root MuiSkeleton-rounded MuiSkeleton-pulse css-ne7nex-MuiSkeleton-root"
+          data-testid="skeleton-chip"
+          style="width: 120px; height: 32px;"
+        />
+        <span
+          class="MuiSkeleton-root MuiSkeleton-rounded MuiSkeleton-pulse css-ne7nex-MuiSkeleton-root"
+          data-testid="skeleton-chip"
+          style="width: 150px; height: 32px;"
+        />
+        <span
+          class="MuiSkeleton-root MuiSkeleton-rounded MuiSkeleton-pulse css-ne7nex-MuiSkeleton-root"
+          data-testid="skeleton-chip"
+          style="width: 100px; height: 32px;"
+        />
+      </div>
     </div>
-  </div>
-  <div
-    class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-4 css-1oxte1b-MuiGrid-root"
-  >
-    <span
-      class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-pulse css-14e33k0-MuiSkeleton-root"
-      data-testid="skeleton-text"
-      style="width: 80%;"
-    />
   </div>
 </div>
 `;
