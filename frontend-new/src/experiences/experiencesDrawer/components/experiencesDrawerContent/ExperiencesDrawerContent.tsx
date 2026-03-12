@@ -243,15 +243,37 @@ export const LoadingExperienceDrawerContent = () => {
   const theme = useTheme();
 
   return (
-    <Grid container alignItems="flex-start" data-testid={DATA_TEST_ID.LOADING_EXPERIENCES_DRAWER_CONTENT_CONTAINER}>
-      <Grid size={8}>
-        <Box display="flex" flexDirection="column" gap={theme.tabiyaSpacing.md}>
-          <Skeleton variant="text" width="60%" data-testid="skeleton-text" />
-          <Skeleton variant="text" width="90%" data-testid="skeleton-text" />
+    <Grid container data-testid={DATA_TEST_ID.LOADING_EXPERIENCES_DRAWER_CONTENT_CONTAINER}>
+      <Grid size={12}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={theme.fixedSpacing(theme.tabiyaSpacing.xs)}
+          sx={{ paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.xl) }}
+        >
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Skeleton variant="text" width="50%" sx={{ minHeight: 24 }} data-testid="skeleton-text" />
+            <Skeleton variant="circular" width={32} height={32} data-testid="skeleton-icon" />
+          </Box>
+          <Skeleton variant="text" width="100%" sx={{ minHeight: 20 }} data-testid="skeleton-text" />
+          <Skeleton variant="text" width="80%" sx={{ minHeight: 20 }} data-testid="skeleton-text" />
+          <Box display="flex" alignItems="center" gap={1}>
+            <Skeleton variant="text" width={90} sx={{ minHeight: 24 }} data-testid="skeleton-text" />
+            <Skeleton variant="circular" width={20} height={20} data-testid="skeleton-icon" />
+          </Box>
+          <Box display="flex" flexWrap="wrap" gap={2}>
+            {[120, 150, 100].map((width) => (
+              <Skeleton
+                key={width}
+                variant="rounded"
+                width={width}
+                height={32}
+                sx={{ borderRadius: 16 }}
+                data-testid="skeleton-chip"
+              />
+            ))}
+          </Box>
         </Box>
-      </Grid>
-      <Grid size={4}>
-        <Skeleton variant="text" width="80%" data-testid="skeleton-text" />
       </Grid>
     </Grid>
   );
