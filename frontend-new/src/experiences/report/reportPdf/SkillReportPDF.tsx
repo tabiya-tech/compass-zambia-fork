@@ -18,8 +18,9 @@ import { SkillsReportOutputConfig } from "src/experiences/report/config/types";
 interface SkillReportProps {
   name: string;
   email: string;
-  phone: string;
-  address: string;
+  location: string;
+  school: string;
+  program: string;
   experiences: Experience[];
   conversationConductedAt: string | null;
   config: SkillsReportOutputConfig;
@@ -33,8 +34,8 @@ export const DATA_TEST_ID = {
   SKILL_REPORT_BODY: `skill-report-body-${uniqueId}`,
   SKILL_REPORT_NAME: `skill-report-name-${uniqueId}`,
   SKILL_REPORT_EMAIL: `skill-report-email-${uniqueId}`,
-  SKILL_REPORT_PHONE: `skill-report-phone-${uniqueId}`,
-  SKILL_REPORT_ADDRESS: `skill-report-address-${uniqueId}`,
+  SKILL_REPORT_LOCATION: `skill-report-location-${uniqueId}`,
+  SKILL_REPORT_EDUCATION: `skill-report-education-${uniqueId}`,
   SKILL_REPORT_BODY_TEXT: `skill-report-body-text-${uniqueId}`,
   SKILL_REPORT_EXPERIENCES_TITLE: `skill-report-experiences-title-${uniqueId}`,
   SKILL_REPORT_EXPERIENCES_CONTAINER: `skill-report-experiences-container-${uniqueId}`,
@@ -43,8 +44,9 @@ export const DATA_TEST_ID = {
 const SkillReportPDF: React.FC<SkillReportProps> = ({
   name,
   email,
-  phone,
-  address,
+  location,
+  school,
+  program,
   experiences,
   conversationConductedAt,
   config,
@@ -103,7 +105,7 @@ const SkillReportPDF: React.FC<SkillReportProps> = ({
           <View
             style={{
               ...styles.column,
-              paddingBottom: name || address || phone || email ? 18 : 0, // Remove padding if there is no personal info
+              paddingBottom: name || location || email || school || program ? 18 : 0, // Remove padding if there is no personal info
             }}
           >
             {name ? (
@@ -112,11 +114,24 @@ const SkillReportPDF: React.FC<SkillReportProps> = ({
               </Text>
             ) : null}
 
-            {renderPersonalInfo(address, ReportContent.IMAGE_URLS.LOCATION_ICON, DATA_TEST_ID.SKILL_REPORT_ADDRESS)}
-
-            {renderPersonalInfo(phone, ReportContent.IMAGE_URLS.PHONE_ICON, DATA_TEST_ID.SKILL_REPORT_PHONE)}
+            {renderPersonalInfo(location, ReportContent.IMAGE_URLS.LOCATION_ICON, DATA_TEST_ID.SKILL_REPORT_LOCATION)}
 
             {renderPersonalInfo(email, ReportContent.IMAGE_URLS.EMAIL_ICON, DATA_TEST_ID.SKILL_REPORT_EMAIL)}
+
+            {school || program ? (
+              <View style={styles.rowView} data-testid={DATA_TEST_ID.SKILL_REPORT_EDUCATION}>
+                <View style={styles.infoIcons}>
+                  <Image
+                    src={getBase64Image(ReportContent.IMAGE_URLS.EDUCATION_ICON)}
+                    style={styles.infoIcon}
+                    source={undefined}
+                  />
+                </View>
+                <Text x={0} y={0} style={styles.text}>
+                  {[program, school].filter(Boolean).join(" · ")}
+                </Text>
+              </View>
+            ) : null}
           </View>
           {config.report.summary.show && (
             <Text x={0} y={0} style={styles.bodyText} data-testid={DATA_TEST_ID.SKILL_REPORT_BODY_TEXT}>

@@ -20,8 +20,9 @@ export class PDFReportDownloadProvider implements IReportFormatProvider {
       <SkillReportPDF
         name={props.name}
         email={props.email}
-        phone={props.phone}
-        address={props.address}
+        location={props.location}
+        school={props.school}
+        program={props.program}
         experiences={props.experiences}
         conversationConductedAt={props.conversationConductedAt}
         config={this.config}

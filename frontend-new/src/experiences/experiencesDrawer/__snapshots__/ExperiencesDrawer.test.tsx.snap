@@ -163,30 +163,66 @@ exports[`ExperiencesDrawer should render ExperiencesDrawer correctly 1`] = `
                     >
                       Personal Information
                     </h6>
-                    <input
-                      aria-label="Name:"
-                      data-testid="mock-CustomTextField"
-                      placeholder="Enter your name here"
-                      value=""
-                    />
-                    <input
-                      aria-label="Email:"
-                      data-testid="mock-CustomTextField"
-                      placeholder="Enter your email here"
-                      value=""
-                    />
-                    <input
-                      aria-label="Phone:"
-                      data-testid="mock-CustomTextField"
-                      placeholder="Enter your phone number here"
-                      value=""
-                    />
-                    <input
-                      aria-label="Address:"
-                      data-testid="mock-CustomTextField"
-                      placeholder="Enter your address here"
-                      value=""
-                    />
+                    <div
+                      class="MuiBox-root css-1821gv5"
+                    >
+                      <div
+                        class="MuiBox-root css-i1rzee"
+                      >
+                        <p
+                          class="MuiTypography-root MuiTypography-body1 css-3bq9g5-MuiTypography-root"
+                        >
+                          Name:
+                        </p>
+                        <p
+                          class="MuiTypography-root MuiTypography-body1 css-19s6r5h-MuiTypography-root"
+                        >
+                          Jane Doe
+                        </p>
+                      </div>
+                      <div
+                        class="MuiBox-root css-i1rzee"
+                      >
+                        <p
+                          class="MuiTypography-root MuiTypography-body1 css-3bq9g5-MuiTypography-root"
+                        >
+                          Email:
+                        </p>
+                        <p
+                          class="MuiTypography-root MuiTypography-body1 css-19s6r5h-MuiTypography-root"
+                        >
+                          jane@example.com
+                        </p>
+                      </div>
+                      <div
+                        class="MuiBox-root css-i1rzee"
+                      >
+                        <p
+                          class="MuiTypography-root MuiTypography-body1 css-3bq9g5-MuiTypography-root"
+                        >
+                          Location:
+                        </p>
+                        <p
+                          class="MuiTypography-root MuiTypography-body1 css-19s6r5h-MuiTypography-root"
+                        >
+                          Lusaka
+                        </p>
+                      </div>
+                      <div
+                        class="MuiBox-root css-i1rzee"
+                      >
+                        <p
+                          class="MuiTypography-root MuiTypography-body1 css-3bq9g5-MuiTypography-root"
+                        >
+                          Education:
+                        </p>
+                        <p
+                          class="MuiTypography-root MuiTypography-body1 css-19s6r5h-MuiTypography-root"
+                        >
+                          BSc Computer Science · Example University
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

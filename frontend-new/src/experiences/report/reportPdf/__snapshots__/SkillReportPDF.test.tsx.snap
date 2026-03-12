@@ -43,7 +43,7 @@ exports[`Report should render Report correctly 1`] = `
           John Doe
         </text>
         <view
-          data-testid="skill-report-address-5a296552-f91f-4c38-b88f-542cacaced8e"
+          data-testid="skill-report-location-5a296552-f91f-4c38-b88f-542cacaced8e"
           style="display: flex; flex-direction: row; align-items: center; gap: 6px;"
         >
           <view
@@ -60,26 +60,6 @@ exports[`Report should render Report correctly 1`] = `
             y="0"
           >
             1234 Main St
-          </text>
-        </view>
-        <view
-          data-testid="skill-report-phone-5a296552-f91f-4c38-b88f-542cacaced8e"
-          style="display: flex; flex-direction: row; align-items: center; gap: 6px;"
-        >
-          <view
-            style="width: 14px; height: 12px;"
-          >
-            <image
-              src="[object Promise]"
-              style="max-width: 100%; max-height: 100%; object-fit: contain;"
-            />
-          </view>
-          <text
-            style="font-size: 12px; word-break: break-word;"
-            x="0"
-            y="0"
-          >
-            1234567890
           </text>
         </view>
         <view
@@ -100,6 +80,26 @@ exports[`Report should render Report correctly 1`] = `
             y="0"
           >
             johndoe@example.com
+          </text>
+        </view>
+        <view
+          data-testid="skill-report-education-5a296552-f91f-4c38-b88f-542cacaced8e"
+          style="display: flex; flex-direction: row; align-items: center; gap: 6px;"
+        >
+          <view
+            style="width: 14px; height: 12px;"
+          >
+            <image
+              src="[object Promise]"
+              style="max-width: 100%; max-height: 100%; object-fit: contain;"
+            />
+          </view>
+          <text
+            style="font-size: 12px; word-break: break-word;"
+            x="0"
+            y="0"
+          >
+            BSc Computer Science · University of Example
           </text>
         </view>
       </view>

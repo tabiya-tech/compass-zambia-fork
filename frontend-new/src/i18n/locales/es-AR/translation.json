@@ -494,18 +494,14 @@
       "noActiveSession": "No hay una sesión activa",
       "restoreSuccess": "¡Experiencia restaurada con éxito!",
       "restoreFailed": "Error al restaurar la experiencia.",
-      "personalInfoTooltip": "Los campos se completan con información que tal vez hayas proporcionado antes y se almacenan de forma segura en tu dispositivo. Completá los datos faltantes para personalizar tu CV.",
+      "personalInfoTooltip": "Esta información proviene de tu perfil y se incluye en tu CV. Para cambiarla o quitarla, edita el archivo descargado.",
       "andSkillsTitle": "Experiencias y habilidades",
       "personalInformationTitle": "Información personal",
       "personalInfo": {
         "nameLabel": "Nombre:",
-        "namePlaceholder": "Ingresá tu nombre acá",
         "emailLabel": "Correo:",
-        "emailPlaceholder": "Ingresá tu correo acá",
-        "phoneLabel": "Teléfono:",
-        "phonePlaceholder": "Ingresá tu número de teléfono acá",
-        "addressLabel": "Dirección:",
-        "addressPlaceholder": "Ingresá tu dirección acá"
+        "locationLabel": "Ubicación:",
+        "educationLabel": "Educación:"
       },
       "uncategorizedTooltip": "Según la conversación, estas experiencias no pudieron categorizarse automáticamente.",
       "restoreDeletedLink": "Restaurar experiencias eliminadas",

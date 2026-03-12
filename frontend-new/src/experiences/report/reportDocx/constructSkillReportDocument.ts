@@ -12,8 +12,9 @@ import { SkillsReportOutputConfig } from "src/experiences/report/config/types";
 export interface SkillReportDocumentProps {
   name: string;
   email: string;
-  phone: string;
-  address: string;
+  location: string;
+  school: string;
+  program: string;
   experiences: Experience[];
   conversationConductedAt: string | null;
   config: SkillsReportOutputConfig;
@@ -45,9 +46,10 @@ const createParagraphWithImage = async (text: string, imageUrl: string) => {
 const constructPersonalInformationSection = async (
   paragraphs: Paragraph[],
   name: string | undefined,
-  address: string | undefined,
-  phone: string | undefined,
-  email: string | undefined
+  location: string | undefined,
+  email: string | undefined,
+  school: string,
+  program: string
 ): Promise<void> => {
   if (name) {
     paragraphs.push(
@@ -65,16 +67,17 @@ const constructPersonalInformationSection = async (
     );
   }
 
-  if (address) {
-    paragraphs.push(await createParagraphWithImage(address, ReportContent.IMAGE_URLS.LOCATION_ICON));
-  }
-
-  if (phone) {
-    paragraphs.push(await createParagraphWithImage(phone, ReportContent.IMAGE_URLS.PHONE_ICON));
+  if (location) {
+    paragraphs.push(await createParagraphWithImage(location, ReportContent.IMAGE_URLS.LOCATION_ICON));
   }
 
   if (email) {
     paragraphs.push(await createParagraphWithImage(email, ReportContent.IMAGE_URLS.EMAIL_ICON));
+  }
+
+  if (school || program) {
+    const educationText = [program, school].filter(Boolean).join(" · ");
+    paragraphs.push(await createParagraphWithImage(educationText, ReportContent.IMAGE_URLS.EDUCATION_ICON));
   }
 };
 
@@ -126,7 +129,7 @@ const constructSectionDivider = (paragraphs: Paragraph[]): void => {
 };
 
 export const constructSkillReportDocument = async (props: SkillReportDocumentProps): Promise<Document> => {
-  const { name, email, phone, address, experiences, conversationConductedAt, config } = props;
+  const { name, email, location, school, program, experiences, conversationConductedAt, config } = props;
 
   const paragraphs: Paragraph[] = [];
 
@@ -134,7 +137,7 @@ export const constructSkillReportDocument = async (props: SkillReportDocumentPro
   constructReportTitle(paragraphs);
 
   // Add personal information section
-  await constructPersonalInformationSection(paragraphs, name, address, phone, email);
+  await constructPersonalInformationSection(paragraphs, name, location, email, school, program);
 
   // Add report description only if it is enabled in config
   if (config.report.summary.show) {
