@@ -30,8 +30,9 @@ export const Shown: Story = {
   args: {
     name: "John Doe",
     email: "john.doe@example.com",
-    phone: "+1 234 567 890",
-    address: "123 Main Street, New York, NY 10001",
+    location: "New York, NY",
+    school: "Example University",
+    program: "Computer Science",
     experiences: mockExperiences,
     conversationConductedAt: new Date().toISOString(),
   },
@@ -41,8 +42,9 @@ export const Disabled: Story = {
   args: {
     name: "John Doe",
     email: "john.doe@example.com",
-    phone: "+1 234 567 890",
-    address: "123 Main Street, New York, NY 10001",
+    location: "New York, NY",
+    school: "Example University",
+    program: "Computer Science",
     experiences: mockExperiences,
     conversationConductedAt: new Date().toISOString(),
     disabled: true,

@@ -89,8 +89,9 @@ describe("DownloadReportDropdown", () => {
   const mockData = {
     name: "John Doe",
     email: "john@example.com",
-    phone: "1234567890",
-    address: "123 Main St",
+    location: "123 Main St",
+    school: "Example University",
+    program: "BSc Computer Science",
     conversationConductedAt: "2021-06-01T00:00:00",
     experiences: mockExperiences,
     outputConfig: { downloadFormats: [DownloadFormat.PDF, DownloadFormat.DOCX] } as SkillsReportOutputConfig,

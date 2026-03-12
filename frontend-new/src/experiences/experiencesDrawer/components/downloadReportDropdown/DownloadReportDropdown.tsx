@@ -18,8 +18,9 @@ import { getSkillsReportOutputConfig } from "src/experiences/report/config/getCo
 interface DownloadReportDropdownProps {
   name: string;
   email: string;
-  phone: string;
-  address: string;
+  location: string;
+  school: string;
+  program: string;
   experiences: Experience[];
   conversationConductedAt: string | null;
   disabled?: boolean;
@@ -51,8 +52,9 @@ const DownloadReportDropdown: React.FC<DownloadReportDropdownProps> = (props) =>
   const reportProps = {
     name: props.name,
     email: props.email,
-    phone: props.phone,
-    address: props.address,
+    location: props.location,
+    school: props.school,
+    program: props.program,
     experiences: props.experiences,
     // if the conversation conducted at is somehow null, use the current date
     conversationConductedAt: props.conversationConductedAt ?? new Date().toISOString(),

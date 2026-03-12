@@ -1,13 +1,10 @@
-import React, { Suspense, useEffect, useMemo, useState } from "react";
+import React, { Suspense, useMemo, useState } from "react";
 import { Box, Divider, Drawer, Skeleton, Slide, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import ExperiencesDrawerHeader from "src/experiences/experiencesDrawer/components/experiencesDrawerHeader/ExperiencesDrawerHeader";
 import { LoadingExperienceDrawerContent } from "src/experiences/experiencesDrawer/components/experiencesDrawerContent/ExperiencesDrawerContent";
 import { DiveInPhase, Experience } from "src/experiences/experienceService/experiences.types";
-import { StoredPersonalInfo } from "src/sensitiveData/types";
-import CustomTextField from "src/theme/CustomTextField/CustomTextField";
 import CustomAccordion from "src/theme/CustomAccordion/CustomAccordion";
-import { PersistentStorageService } from "src/app/PersistentStorageService/PersistentStorageService";
 import { groupExperiencesByWorkType } from "src/experiences/report/util";
 import { sortSkillsByOrderIndex } from "src/experiences/experiencesDrawer/util";
 import { ReportContent } from "src/experiences/report/reportContent";
@@ -31,6 +28,7 @@ import RestoreIcon from "src/theme/Icons/RestoreIcon";
 import { useTranslation } from "react-i18next";
 import { getSkillsReportOutputConfig } from "../report/config/getConfig";
 import ShareReportButton from "src/experiences/experiencesDrawer/components/shareReportButton/ShareReportButton";
+import { useUserProfile } from "src/profile/hooks/useUserProfile";
 
 const LazyLoadedDownloadDropdown = lazyWithPreload(
   () => import("src/experiences/experiencesDrawer/components/downloadReportDropdown/DownloadReportDropdown")
@@ -64,26 +62,10 @@ export const DATA_TEST_ID = {
   PERSONAL_INFORMATION_TITLE: `personal-information-title-${uniqueId}`,
 };
 
-const useLocalStorage = (key: string, initialValue: Record<string, string>) => {
-  // Retrieve value from localStorage or fallback to initialValue
-  const [value, setValue] = useState<Record<string, string>>(() => {
-    const savedValue = PersistentStorageService.getPersonalInfo();
-    const parsedValue = savedValue ?? initialValue;
-    return Object.fromEntries(
-      Object.entries(parsedValue).map(([fieldName, fieldValue]) => [fieldName, (fieldValue as string).trim() ?? ""])
-    );
-  });
+const notAvailable = "Not available";
 
-  useEffect(() => {
-    const validatedValue = Object.fromEntries(
-      Object.entries(value).map(([fieldName, fieldValue]) => [fieldName, fieldValue.trim() ?? ""])
-    );
-
-    PersistentStorageService.setPersonalInfo(validatedValue as unknown as StoredPersonalInfo);
-  }, [key, value]);
-
-  return [value, setValue] as const;
-};
+const emptyIfNotAvailable = (value: string | null | undefined): string =>
+  value && value !== notAvailable ? value : "";
 
 const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
   isOpen,
@@ -98,12 +80,19 @@ const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
   const { t } = useTranslation();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   const isSmallMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
-  const [personalInfo, setPersonalInfo] = useLocalStorage("personalInfo", {
-    fullName: "",
-    phoneNumber: "",
-    contactEmail: "",
-    address: "",
-  });
+  const { profileData } = useUserProfile();
+
+  const profileDisplay = useMemo(
+    () => ({
+      name: emptyIfNotAvailable(profileData.name),
+      email: profileData.email ?? "",
+      location: emptyIfNotAvailable(profileData.location),
+      school: emptyIfNotAvailable(profileData.school),
+      program: emptyIfNotAvailable(profileData.program),
+    }),
+    [profileData.name, profileData.email, profileData.location, profileData.school, profileData.program]
+  );
+
   const [editingExperience, setEditingExperience] = useState<Experience | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -123,11 +112,6 @@ const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
       remaining_skills: sortSkillsByOrderIndex(exp.remaining_skills),
     }));
   }, [experiences]);
-
-  const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.debug("Personal info updated", { field, value: e.target.value });
-    setPersonalInfo({ ...personalInfo, [field]: e.target.value });
-  };
 
   const handleClose = () => {
     if (!editingExperience) {
@@ -306,8 +290,28 @@ const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
 
   const tooltipText = t("experiences.experiencesDrawer.personalInfoTooltip");
 
+  const personalInfoFields = [
+    {
+      label: t("experiences.experiencesDrawer.personalInfo.nameLabel"),
+      value: profileDisplay.name,
+    },
+    {
+      label: t("experiences.experiencesDrawer.personalInfo.emailLabel"),
+      value: profileDisplay.email,
+    },
+    {
+      label: t("experiences.experiencesDrawer.personalInfo.locationLabel"),
+      value: profileDisplay.location,
+    },
+    {
+      label: t("experiences.experiencesDrawer.personalInfo.educationLabel"),
+      value: [profileDisplay.program, profileDisplay.school].filter(Boolean).join(" · "),
+    },
+  ];
+
   // Disable download button if no explored experiences are available
   const disableDownloadButton = useMemo(() => exploredExperiences.length < 1, [exploredExperiences.length]);
+
   const renderDrawerContent = () => {
     if (showRestoreDrawer) {
       return (
@@ -356,10 +360,11 @@ const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
               gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
             >
               <ShareReportButton
-                name={personalInfo.fullName}
-                email={personalInfo.contactEmail}
-                phone={personalInfo.phoneNumber}
-                address={personalInfo.address}
+                name={profileDisplay.name}
+                email={profileDisplay.email}
+                location={profileDisplay.location}
+                school={profileDisplay.school}
+                program={profileDisplay.program}
                 experiences={exploredExperiences}
                 conversationConductedAt={conversationConductedAt}
                 disabled={disableDownloadButton}
@@ -371,10 +376,11 @@ const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
                 }
               >
                 <LazyLoadedDownloadDropdown
-                  name={personalInfo.fullName}
-                  email={personalInfo.contactEmail}
-                  phone={personalInfo.phoneNumber}
-                  address={personalInfo.address}
+                  name={profileDisplay.name}
+                  email={profileDisplay.email}
+                  location={profileDisplay.location}
+                  school={profileDisplay.school}
+                  program={profileDisplay.program}
                   experiences={exploredExperiences}
                   conversationConductedAt={conversationConductedAt}
                   disabled={disableDownloadButton}
@@ -391,30 +397,19 @@ const ExperiencesDrawer: React.FC<ExperiencesDrawerProps> = ({
               <Typography variant="h6" data-testid={DATA_TEST_ID.PERSONAL_INFORMATION_TITLE} sx={{ display: "none" }}>
                 {t("experiences.experiencesDrawer.personalInformationTitle")}
               </Typography>
-              <CustomTextField
-                label={`${t("experiences.experiencesDrawer.personalInfo.nameLabel")}`}
-                placeholder={t("experiences.experiencesDrawer.personalInfo.namePlaceholder")}
-                value={personalInfo.fullName}
-                onChange={handleInputChange("fullName")}
-              />
-              <CustomTextField
-                label={`${t("experiences.experiencesDrawer.personalInfo.emailLabel")}`}
-                placeholder={t("experiences.experiencesDrawer.personalInfo.emailPlaceholder")}
-                value={personalInfo.contactEmail}
-                onChange={handleInputChange("contactEmail")}
-              />
-              <CustomTextField
-                label={`${t("experiences.experiencesDrawer.personalInfo.phoneLabel")}`}
-                placeholder={t("experiences.experiencesDrawer.personalInfo.phonePlaceholder")}
-                value={personalInfo.phoneNumber}
-                onChange={handleInputChange("phoneNumber")}
-              />
-              <CustomTextField
-                label={`${t("experiences.experiencesDrawer.personalInfo.addressLabel")}`}
-                placeholder={t("experiences.experiencesDrawer.personalInfo.addressPlaceholder")}
-                value={personalInfo.address}
-                onChange={handleInputChange("address")}
-              />
+              <Box display="flex" flexDirection="column" gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}>
+                {personalInfoFields.map(
+                  (field) =>
+                    field.value && (
+                      <Box key={field.label} display="flex" flexDirection="row" gap={0.5} alignItems="baseline">
+                        <Typography variant="body1" fontWeight="bold">
+                          {field.label}
+                        </Typography>
+                        <Typography variant="body1">{field.value}</Typography>
+                      </Box>
+                    )
+                )}
+              </Box>
             </CustomAccordion>
             <Divider
               color="primary"
