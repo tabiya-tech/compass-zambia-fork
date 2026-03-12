@@ -790,6 +790,7 @@
     "moduleNotFound": "Moduli haijapatikana.",
     "moduleComplete": "Moduli imekamilika! Moduli inayofuata sasa inafunguliwa.",
     "progressTitle": "Maendeleo Yako",
+    "progressDescription": "Moduli za utayari wa kazi ulizokamilisha",
     "progressCompleted": "imekamilika",
     "progressRemaining": "imebaki",
     "quizRetry": "Jaribu Tena",
@@ -834,6 +835,8 @@
       "notProvided": "Haijatolewa",
       "notAvailable": "Haipatikani",
       "backToHome": "Rudi Nyumbani",
+      "skillsInterestsProgressTitle": "Maendeleo ya Ujuzi na Maslahi",
+      "skillsInterestsProgressDescription": "Umbali uliofika katika mazungumzo yako ya kugundua ujuzi",
       "noSkillsYet": "Hakuna ujuzi uliogundulika bado. Anza mazungumzo ili kugundua ujuzi wako!"
     },
     "modules": {

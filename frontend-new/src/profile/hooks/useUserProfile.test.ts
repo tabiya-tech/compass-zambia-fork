@@ -17,6 +17,7 @@ jest.mock("src/userPreferences/UserPreferencesStateService", () => ({
   default: {
     getInstance: jest.fn(() => ({
       getUserPreferences: jest.fn(() => ({ accepted_tc: null, language: "en" })),
+      getActiveSessionId: jest.fn(() => null),
     })),
   },
 }));
