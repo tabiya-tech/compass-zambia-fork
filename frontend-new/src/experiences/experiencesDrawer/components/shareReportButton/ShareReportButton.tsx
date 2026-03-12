@@ -25,8 +25,9 @@ export const DATA_TEST_ID = {
 export interface ShareReportButtonProps {
   name: string;
   email: string;
-  phone: string;
-  address: string;
+  location: string;
+  school: string;
+  program: string;
   experiences: Experience[];
   conversationConductedAt: string | null;
   disabled?: boolean;
@@ -43,8 +44,9 @@ export interface ShareReportButtonProps {
 const ShareReportButton: React.FC<ShareReportButtonProps> = ({
   name,
   email,
-  phone,
-  address,
+  location,
+  school,
+  program,
   experiences,
   conversationConductedAt,
   disabled,
@@ -85,8 +87,9 @@ const ShareReportButton: React.FC<ShareReportButtonProps> = ({
       const blob = await pdfProvider.generateBlob({
         name,
         email,
-        phone,
-        address,
+        location,
+        school,
+        program,
         experiences,
         conversationConductedAt: conversationConductedAt ?? new Date().toISOString(),
       });

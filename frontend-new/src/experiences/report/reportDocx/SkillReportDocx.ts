@@ -6,8 +6,9 @@ import { SkillsReportOutputConfig } from "src/experiences/report/config/types";
 interface SkillReportDocxProps {
   name: string;
   email: string;
-  phone: string;
-  address: string;
+  location: string;
+  school: string;
+  program: string;
   experiences: Experience[];
   conversationConductedAt: string | null;
   config: SkillsReportOutputConfig;

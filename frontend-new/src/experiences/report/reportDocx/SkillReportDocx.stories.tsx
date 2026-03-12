@@ -15,8 +15,9 @@ export default meta;
 const mockedData = {
   name: "John Doe",
   email: "john.doe@example.com",
-  phone: "123-456-7890",
-  address: "123 Main St, Chicago, USA",
+  location: "123 Main St, Chicago, USA",
+  school: "University of Chicago",
+  program: "BSc Computer Science",
   experiences: generateRandomExperiences(2),
   conversationConductedAt: "2021-08-01T00:00:00Z",
 };
@@ -82,8 +83,9 @@ export const ShowWithNoPersonalInfo = () => {
           ...mockedData,
           name: "",
           email: "",
-          phone: "",
-          address: "",
+          location: "",
+          school: "",
+          program: "",
         })
       }
     >
@@ -99,7 +101,8 @@ export const ShownWithSomePersonalInfo = () => {
         reportDownloadProvider.download({
           ...mockedData,
           email: "",
-          phone: "",
+          school: "",
+          program: "",
         })
       }
     >

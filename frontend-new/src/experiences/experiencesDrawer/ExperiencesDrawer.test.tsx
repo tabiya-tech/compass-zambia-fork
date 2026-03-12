@@ -31,6 +31,18 @@ jest.mock("src/theme/CustomTextField/CustomTextField", () => {
   });
 });
 
+jest.mock("src/profile/hooks/useUserProfile", () => ({
+  useUserProfile: jest.fn(() => ({
+    profileData: {
+      name: "Jane Doe",
+      email: "jane@example.com",
+      location: "Lusaka",
+      school: "Example University",
+      program: "BSc Computer Science",
+    },
+  })),
+}));
+
 // mock DownloadReportDropdown
 jest.mock("src/experiences/experiencesDrawer/components/downloadReportDropdown/DownloadReportDropdown", () => {
   return jest.fn(() => {
@@ -214,8 +226,8 @@ describe("ExperiencesDrawer", () => {
     expect(loadingContainer).toBeInTheDocument();
   });
 
-  test("should handle onChange correctly when the text field changes", async () => {
-    // GIVEN the ExperiencesDrawer component
+  test("should display personal info from profile and not show phone field", async () => {
+    // GIVEN the ExperiencesDrawer component (useUserProfile is mocked to return profile data)
     const givenExperiencesDrawer = (
       <ExperiencesDrawer
         isOpen={true}
@@ -229,29 +241,16 @@ describe("ExperiencesDrawer", () => {
     // AND the component is rendered
     render(givenExperiencesDrawer);
 
-    // WHEN the name field is changed
-    const nameField = screen.getByLabelText("Name:");
-    fireEvent.change(nameField, { target: { value: "John Doe" } });
-    // THEN expect the name field to have the correct value
-    expect(nameField).toHaveValue("John Doe");
-
-    // WHEN the email field is changed
-    const emailField = screen.getByLabelText("Email:");
-    fireEvent.change(emailField, { target: { value: "john.doe@example.com" } });
-    // THEN expect the email field to have the correct value
-    expect(emailField).toHaveValue("john.doe@example.com");
-
-    // WHEN the phone field is changed
-    const phoneField = screen.getByLabelText("Phone:");
-    // THEN expect the phone field to have the correct value
-    fireEvent.change(phoneField, { target: { value: "1234567890" } });
-    expect(phoneField).toHaveValue("1234567890");
-
-    // WHEN the address field is changed
-    const addressField = screen.getByLabelText("Address:");
-    fireEvent.change(addressField, { target: { value: "123 Main St" } });
-    // THEN expect the address field to have the correct value
-    expect(addressField).toHaveValue("123 Main St");
+    // THEN expect profile name to be displayed
+    expect(screen.getByText("Jane Doe")).toBeInTheDocument();
+    // AND profile email to be displayed
+    expect(screen.getByText("jane@example.com")).toBeInTheDocument();
+    // AND profile location to be displayed
+    expect(screen.getByText("Lusaka")).toBeInTheDocument();
+    // AND education (program · school) to be displayed
+    expect(screen.getByText("BSc Computer Science · Example University")).toBeInTheDocument();
+    // AND phone field must not be present
+    expect(screen.queryByText("Phone:")).not.toBeInTheDocument();
   });
 
   describe("ExperienceEditForm", () => {

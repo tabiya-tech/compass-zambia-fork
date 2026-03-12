@@ -48,6 +48,7 @@ export const ReportContent = {
     LOCATION_ICON: `${process.env.PUBLIC_URL}/location.png`,
     PHONE_ICON: `${process.env.PUBLIC_URL}/phone.png`,
     EMAIL_ICON: `${process.env.PUBLIC_URL}/email.png`,
+    EDUCATION_ICON: `${process.env.PUBLIC_URL}/trainee-work.png`,
     EMPLOYEE_ICON: `${process.env.PUBLIC_URL}/employee.png`,
     SELF_EMPLOYMENT_ICON: `${process.env.PUBLIC_URL}/self-employment.png`,
     COMMUNITY_WORK_ICON: `${process.env.PUBLIC_URL}/community-work.png`,

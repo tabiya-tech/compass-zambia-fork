@@ -15,8 +15,9 @@ describe("Report", () => {
       <SkillReportPDF
         name="John Doe"
         email="johndoe@example.com"
-        phone="1234567890"
-        address="1234 Main St"
+        location="1234 Main St"
+        school="University of Example"
+        program="BSc Computer Science"
         experiences={experiences}
         conversationConductedAt="2021-06-01T00:00:00Z"
         config={defaultSkillsReportOutputConfig}
@@ -38,10 +39,10 @@ describe("Report", () => {
     expect(screen.getByTestId(DATA_TEST_ID.SKILL_REPORT_NAME)).toBeInTheDocument();
     // AND the email to be in the document
     expect(screen.getByTestId(DATA_TEST_ID.SKILL_REPORT_EMAIL)).toBeInTheDocument();
-    // AND the phone to be in the document
-    expect(screen.getByTestId(DATA_TEST_ID.SKILL_REPORT_PHONE)).toBeInTheDocument();
-    // AND the address to be in the document
-    expect(screen.getByTestId(DATA_TEST_ID.SKILL_REPORT_ADDRESS)).toBeInTheDocument();
+    // AND the location to be in the document
+    expect(screen.getByTestId(DATA_TEST_ID.SKILL_REPORT_LOCATION)).toBeInTheDocument();
+    // AND the education to be in the document
+    expect(screen.getByTestId(DATA_TEST_ID.SKILL_REPORT_EDUCATION)).toBeInTheDocument();
     // AND the experiences to be in the document
     const experiencesContainer = screen.getByTestId(DATA_TEST_ID.SKILL_REPORT_EXPERIENCES_CONTAINER);
     expect(experiencesContainer).toBeInTheDocument();

@@ -468,18 +468,14 @@
       "noActiveSession": "Hakuna kipindi kinachotumika kilichopatikana",
       "restoreSuccess": "Uzoefu umerejeshwa kwa mafanikio!",
       "restoreFailed": "Imeshindikana kurejesha uzoefu.",
-      "personalInfoTooltip": "Sehemu zimejazwa kwa taarifa ulizoweza kutoa awali na zimehifadhiwa kwa usalama kwenye kifaa chako.",
+      "personalInfoTooltip": "Maelezo haya yanatoka kwenye wasifu wako na yamejumuishwa kwenye CV yako. Ili kubadilisha au kuondoa, hariri faili iliyopakuliwa.",
       "andSkillsTitle": "Uzoefu na Ujuzi",
       "personalInformationTitle": "Taarifa za Kibinafsi",
       "personalInfo": {
         "nameLabel": "Jina:",
-        "namePlaceholder": "Ingiza jina lako hapa",
         "emailLabel": "Barua pepe:",
-        "emailPlaceholder": "Ingiza barua pepe yako hapa",
-        "phoneLabel": "Simu:",
-        "phonePlaceholder": "Ingiza nambari yako ya simu hapa",
-        "addressLabel": "Anwani:",
-        "addressPlaceholder": "Ingiza anwani yako hapa"
+        "locationLabel": "Mahali:",
+        "educationLabel": "Elimu:"
       },
       "uncategorizedTooltip": "Kulingana na mazungumzo, uzoefu huu haukuweza kuainishwa kiotomatiki.",
       "restoreDeletedLink": "Rejesha uzoefu uliofutwa",

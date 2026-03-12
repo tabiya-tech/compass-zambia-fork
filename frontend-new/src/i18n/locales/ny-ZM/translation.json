@@ -486,18 +486,14 @@
       "noActiveSession": "Palibe session yogwira zinapezeka",
       "restoreSuccess": "Chitukuko chabwezeretsedwa bwino!",
       "restoreFailed": "Kubwezeretsa chitukuko kunalephera.",
-      "personalInfoTooltip": "Minda yazazidwa ndi zobisika zomwe mungadziwe kupereka kale ndipo zasungidwa bwino pa chipangizo chanu. Lembani zosagwirizana kuti mupangire CV yanu.",
+      "personalInfoTooltip": "Zobisikazi zimachokera ku profile yanu ndipo zimaphatikizidwa mu CV yanu. Kuti muzisinthe kapena muzichotsere, sinthani fayilo yotsitsidwa.",
       "andSkillsTitle": "Zochitika ndi Nzeru",
       "personalInformationTitle": "Zobisika Za Munthu",
       "personalInfo": {
         "nameLabel": "Dzina:",
-        "namePlaceholder": "Lembani dzina lanu pano",
         "emailLabel": "Imelo:",
-        "emailPlaceholder": "Lembani imelo yanu pano",
-        "phoneLabel": "Foni:",
-        "phonePlaceholder": "Lembani nambala yanu ya foni pano",
-        "addressLabel": "Adilesi:",
-        "addressPlaceholder": "Lembani adilesi yanu pano"
+        "locationLabel": "Malo:",
+        "educationLabel": "Maphunziro:"
       },
       "uncategorizedTooltip": "Pamalingaliro a nkhani, zochitikazi sizinathe kugawidwa yekha.",
       "restoreDeletedLink": "Bwezeretsani zochitika zachotsedwa",
