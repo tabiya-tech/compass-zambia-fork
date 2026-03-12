@@ -802,6 +802,7 @@
     "moduleNotFound": "Module sipinapezeke.",
     "moduleComplete": "Module yatha! Module yotsatira tsopano yavomerezedwa.",
     "progressTitle": "Kupita Kwanu",
+    "progressDescription": "Maphunziro a kukonzekera ntchito amene mwathera",
     "progressCompleted": "zachitika",
     "progressRemaining": "zotsala",
     "quizRetry": "Yesaninso",
@@ -846,6 +847,8 @@
       "notProvided": "Sichinaperekedwe",
       "notAvailable": "Sichipezeka",
       "backToHome": "Bwererani Ku Nyumba",
+      "skillsInterestsProgressTitle": "Kupita kwa Luso ndi Zokonda",
+      "skillsInterestsProgressDescription": "Motali mwafika m'kukambirana kwanu kwa kupeza luso",
       "noSkillsYet": "Palibe luso lopezeka mpaka pano. Yambani kukambirana kuti mupeze luso lanu!"
     },
     "modules": {

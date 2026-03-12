@@ -809,6 +809,7 @@
     "moduleNotFound": "Módulo no encontrado.",
     "moduleComplete": "¡Módulo completado! El siguiente módulo ya está desbloqueado.",
     "progressTitle": "Tu progreso",
+    "progressDescription": "Módulos de preparación profesional que has completado",
     "progressCompleted": "completados",
     "progressRemaining": "restantes",
     "quizRetry": "Reintentar",
@@ -853,6 +854,8 @@
       "notProvided": "No proporcionado",
       "notAvailable": "No disponible",
       "backToHome": "Volver al inicio",
+      "skillsInterestsProgressTitle": "Progreso en Habilidades e Intereses",
+      "skillsInterestsProgressDescription": "Hasta dónde has avanzado en tu conversación de descubrimiento de habilidades",
       "noSkillsYet": "¡Aún no se descubrieron habilidades. Comenzá una conversación para descubrir tus habilidades!"
     },
     "modules": {
