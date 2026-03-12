@@ -93,13 +93,21 @@ describe("ReportDrawerContent", () => {
     // WHEN the component is rendered
     render(givenReportDrawerContent);
 
-    // THEN expect no errors or warning to have occurred
+    // THEN the loading container should be in the document
     const loadingContainer = screen.getByTestId(DATA_TEST_ID.LOADING_EXPERIENCES_DRAWER_CONTENT_CONTAINER);
     expect(loadingContainer).toBeInTheDocument();
 
-    // AND expect skeleton elements to be in the document
-    const skeletonElement = screen.getAllByTestId("skeleton-text");
-    expect(skeletonElement).toHaveLength(3);
+    // AND expect skeleton text elements
+    const skeletonTextElements = screen.getAllByTestId("skeleton-text");
+    expect(skeletonTextElements).toHaveLength(4);
+
+    // AND expect skeleton icon elements
+    const skeletonIconElements = screen.getAllByTestId("skeleton-icon");
+    expect(skeletonIconElements).toHaveLength(2);
+
+    // AND expect skeleton chip elements
+    const skeletonChipElements = screen.getAllByTestId("skeleton-chip");
+    expect(skeletonChipElements).toHaveLength(3);
 
     // AND to match the snapshot
     expect(loadingContainer).toMatchSnapshot();

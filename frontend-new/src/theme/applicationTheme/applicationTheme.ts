@@ -413,6 +413,13 @@ export const applicationTheme = (theme: ThemeMode) => {
           },
         },
       },
+      MuiSkeleton: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            backgroundColor: theme.palette.grey[200],
+          }),
+        },
+      },
     },
   };
   return createTheme(activeTheme);
