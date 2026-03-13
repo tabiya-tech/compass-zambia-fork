@@ -173,10 +173,7 @@ describe("Chat Utils", () => {
       // AND a reaction
       const givenReaction = null;
       // AND quick reply options
-      const givenQuickReplyOptions = [
-        { label: "Yes" },
-        { label: "No" },
-      ];
+      const givenQuickReplyOptions = [{ label: "Yes" }, { label: "No" }];
       // AND a quick reply click handler
       const givenOnQuickReplyClick = jest.fn();
 
@@ -187,7 +184,7 @@ describe("Chat Utils", () => {
         givenSentAt,
         givenReaction,
         givenQuickReplyOptions,
-        givenOnQuickReplyClick,
+        givenOnQuickReplyClick
       );
 
       // THEN expect the message to have the correct structure including quick_reply_options
@@ -267,7 +264,7 @@ describe("Chat Utils", () => {
         givenMessage,
         givenSentAt,
         givenReaction,
-        givenQuickReplyOptions,
+        givenQuickReplyOptions
       );
 
       // THEN expect the payload to NOT contain quick_reply_options since null is falsy

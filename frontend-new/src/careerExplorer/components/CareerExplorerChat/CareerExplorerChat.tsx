@@ -47,34 +47,37 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
     setMessages(mapCareerExplorerMessagesToChatMessages(initialMessages, handleQuickReply));
   }, [initialMessages, handleQuickReply]);
 
-  const handleSend = useCallback(async (userMessage: string) => {
-    // Clear quick-reply buttons from all messages when user sends a new message
-    setMessages((prev) =>
-      prev.map((msg) => {
-        if (msg.payload?.quick_reply_options) {
-          return { ...msg, payload: { ...msg.payload, quick_reply_options: null } };
-        }
-        return msg;
-      })
-    );
-    const optimisticUserMessage = generateUserMessage(
-      userMessage,
-      new Date().toISOString(),
-      `optimistic-${Date.now()}`
-    );
-    setMessages((prev) => [...prev, optimisticUserMessage]);
-    setAiIsTyping(true);
-    try {
-      const res = await CareerExplorerService.getInstance().sendMessage(userMessage);
-      setMessages(mapCareerExplorerMessagesToChatMessages(res.messages, handleQuickReply));
-      setChatFinished(res.finished);
-    } catch (e) {
-      console.error("Failed to send message", e);
-      setMessages((prev) => [...prev, generateSomethingWentWrongMessage()]);
-    } finally {
-      setAiIsTyping(false);
-    }
-  }, [handleQuickReply]);
+  const handleSend = useCallback(
+    async (userMessage: string) => {
+      // Clear quick-reply buttons from all messages when user sends a new message
+      setMessages((prev) =>
+        prev.map((msg) => {
+          if (msg.payload?.quick_reply_options) {
+            return { ...msg, payload: { ...msg.payload, quick_reply_options: null } };
+          }
+          return msg;
+        })
+      );
+      const optimisticUserMessage = generateUserMessage(
+        userMessage,
+        new Date().toISOString(),
+        `optimistic-${Date.now()}`
+      );
+      setMessages((prev) => [...prev, optimisticUserMessage]);
+      setAiIsTyping(true);
+      try {
+        const res = await CareerExplorerService.getInstance().sendMessage(userMessage);
+        setMessages(mapCareerExplorerMessagesToChatMessages(res.messages, handleQuickReply));
+        setChatFinished(res.finished);
+      } catch (e) {
+        console.error("Failed to send message", e);
+        setMessages((prev) => [...prev, generateSomethingWentWrongMessage()]);
+      } finally {
+        setAiIsTyping(false);
+      }
+    },
+    [handleQuickReply]
+  );
 
   handleSendRef.current = handleSend;
 

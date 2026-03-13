@@ -97,10 +97,7 @@ describe("render tests", () => {
   test("should render QuickReplyButtons when quick_reply_options are provided with an onQuickReplyClick handler", () => {
     // GIVEN a compass chat message with quick reply options
     const givenDate = new Date(2024, 6, 25).toISOString();
-    const givenQuickReplyOptions: QuickReplyOption[] = [
-      { label: "Yes" },
-      { label: "No" },
-    ];
+    const givenQuickReplyOptions: QuickReplyOption[] = [{ label: "Yes" }, { label: "No" }];
     const givenOnQuickReplyClick = jest.fn();
     const messageData = {
       message_id: nanoid(),
@@ -184,10 +181,7 @@ describe("render tests", () => {
   test("should NOT render QuickReplyButtons when quick_reply_options is provided but onQuickReplyClick is not", () => {
     // GIVEN a compass chat message with quick reply options but no click handler
     const givenDate = new Date(2024, 6, 25).toISOString();
-    const givenQuickReplyOptions: QuickReplyOption[] = [
-      { label: "Yes" },
-      { label: "No" },
-    ];
+    const givenQuickReplyOptions: QuickReplyOption[] = [{ label: "Yes" }, { label: "No" }];
     const messageData = {
       message_id: nanoid(),
       message: "Do you want to continue?",
