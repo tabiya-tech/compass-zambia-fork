@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import ChatList from "src/chat/chatList/ChatList";
 import ChatMessageField from "src/chat/ChatMessageField/ChatMessageField";
@@ -28,6 +28,12 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
   const [aiIsTyping, setAiIsTyping] = useState(false);
   const [chatFinished, setChatFinished] = useState(false);
 
+  const handleSendRef = useRef<(msg: string) => void>(() => {});
+
+  const handleQuickReply = useCallback((label: string) => {
+    handleSendRef.current(label);
+  }, []);
+
   const typingMessage = useMemo(() => generateCareerExplorerTypingMessage(), []);
 
   const displayMessages = useMemo(() => {
@@ -38,10 +44,19 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
   }, [messages, aiIsTyping, typingMessage, isLoading]);
 
   useEffect(() => {
-    setMessages(mapCareerExplorerMessagesToChatMessages(initialMessages));
-  }, [initialMessages]);
+    setMessages(mapCareerExplorerMessagesToChatMessages(initialMessages, handleQuickReply));
+  }, [initialMessages, handleQuickReply]);
 
   const handleSend = useCallback(async (userMessage: string) => {
+    // Clear quick-reply buttons from all messages when user sends a new message
+    setMessages((prev) =>
+      prev.map((msg) => {
+        if (msg.payload?.quick_reply_options) {
+          return { ...msg, payload: { ...msg.payload, quick_reply_options: null } };
+        }
+        return msg;
+      })
+    );
     const optimisticUserMessage = generateUserMessage(
       userMessage,
       new Date().toISOString(),
@@ -51,7 +66,7 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
     setAiIsTyping(true);
     try {
       const res = await CareerExplorerService.getInstance().sendMessage(userMessage);
-      setMessages(mapCareerExplorerMessagesToChatMessages(res.messages));
+      setMessages(mapCareerExplorerMessagesToChatMessages(res.messages, handleQuickReply));
       setChatFinished(res.finished);
     } catch (e) {
       console.error("Failed to send message", e);
@@ -59,7 +74,9 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
     } finally {
       setAiIsTyping(false);
     }
-  }, []);
+  }, [handleQuickReply]);
+
+  handleSendRef.current = handleSend;
 
   return (
     <Box

@@ -7,6 +7,8 @@ Pydantic models for structured LLM responses across different phases.
 from typing import Optional
 from pydantic import BaseModel, Field
 
+from app.agent.agent_types import LLMQuickReplyOption
+
 
 class ConversationResponse(BaseModel):
     """
@@ -26,7 +28,10 @@ class ConversationResponse(BaseModel):
     
     metadata: Optional[dict] = None
     """Optional structured metadata for UI rendering"""
-    
+
+    quick_reply_options: list[LLMQuickReplyOption] | None = None
+    """Optional quick-reply button options"""
+
     class Config:
         extra = "forbid"
 

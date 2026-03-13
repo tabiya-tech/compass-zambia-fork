@@ -1,7 +1,8 @@
 import React from "react";
 import { Box, styled } from "@mui/material";
-import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
+import { ConversationMessageSender, QuickReplyOption } from "src/chat/ChatService/ChatService.types";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
+import QuickReplyButtons from "src/chat/chatMessage/suggestedActions/QuickReplyButtons";
 
 const uniqueId = "e46487bc-8ba0-4e0d-960a-b76897fb5aa9";
 
@@ -15,6 +16,8 @@ export interface CareerReadinessAgentMessageProps {
   message_id: string;
   message: string;
   sent_at: string;
+  quick_reply_options?: QuickReplyOption[] | null;
+  onQuickReplyClick?: (label: string) => void;
 }
 
 const MessageContainer = styled(Box)<{ origin: ConversationMessageSender }>(({ theme, origin }) => ({
@@ -25,7 +28,12 @@ const MessageContainer = styled(Box)<{ origin: ConversationMessageSender }>(({ t
   width: "100%",
 }));
 
-const CareerReadinessAgentMessage: React.FC<CareerReadinessAgentMessageProps> = ({ message_id, message }) => {
+const CareerReadinessAgentMessage: React.FC<CareerReadinessAgentMessageProps> = ({
+  message_id,
+  message,
+  quick_reply_options,
+  onQuickReplyClick,
+}) => {
   return (
     <MessageContainer
       origin={ConversationMessageSender.COMPASS}
@@ -43,6 +51,9 @@ const CareerReadinessAgentMessage: React.FC<CareerReadinessAgentMessageProps> = 
       >
         <Box sx={{ width: "100%" }}>
           <ChatBubble message={message} sender={ConversationMessageSender.COMPASS} />
+          {quick_reply_options && quick_reply_options.length > 0 && onQuickReplyClick && (
+            <QuickReplyButtons options={quick_reply_options} onSelect={onQuickReplyClick} />
+          )}
         </Box>
       </Box>
     </MessageContainer>

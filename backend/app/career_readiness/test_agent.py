@@ -230,3 +230,31 @@ class TestCareerReadinessAgent:
         call_args = given_agent._llm_caller.call_llm.call_args
         llm_input = call_args.kwargs["llm_input"]
         assert any("(silence)" in turn.content for turn in llm_input.turns)
+
+    @pytest.mark.asyncio
+    async def test_quick_reply_options_from_llm_pass_through_to_metadata(self, mock_llm_cls):
+        # GIVEN an agent with a mocked LLM that returns quick_reply_options
+        given_agent = CareerReadinessAgent(
+            module_title="Test Module", module_content="Test content.", topics=["Topic A"])
+        given_quick_reply_options = [{"label": "Yes"}, {"label": "No"}]
+        given_model_response = CareerReadinessModelResponse(
+            reasoning="Asking a yes/no question.",
+            finished=False,
+            message="Would you like to learn more about Topic A?",
+            topics_covered=[],
+            quick_reply_options=given_quick_reply_options,
+        )
+        given_agent._llm_caller.call_llm = AsyncMock(return_value=(given_model_response, []))
+        given_input = AgentInput(message="Tell me about Topic A")
+        given_context = ConversationContext(all_history=ConversationHistory(), history=ConversationHistory())
+
+        # WHEN execute is called
+        actual_output = await given_agent.execute(given_input, given_context)
+
+        # THEN the metadata contains quick_reply_options with correct label structure
+        assert actual_output.agent_output.metadata is not None
+        assert "quick_reply_options" in actual_output.agent_output.metadata
+        actual_options = actual_output.agent_output.metadata["quick_reply_options"]
+        assert len(actual_options) == 2
+        assert actual_options[0]["label"] == "Yes"
+        assert actual_options[1]["label"] == "No"

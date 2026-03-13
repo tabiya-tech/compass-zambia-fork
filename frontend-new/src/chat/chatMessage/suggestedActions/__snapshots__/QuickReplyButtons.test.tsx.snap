@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuickReplyButtons render tests should render a chip for each quick reply option 1`] = `
+<div
+  class="MuiBox-root css-fu7g4k"
+  data-testid="quick-reply-container-quick-reply-buttons-3f7a8b2c"
+>
+  <div
+    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-16wthj3-MuiButtonBase-root-MuiChip-root"
+    data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
+    role="button"
+    tabindex="0"
+  >
+    <span
+      class="MuiChip-label MuiChip-labelMedium css-1fh978c-MuiChip-label"
+    >
+      Yes
+    </span>
+  </div>
+  <div
+    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-16wthj3-MuiButtonBase-root-MuiChip-root"
+    data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
+    role="button"
+    tabindex="0"
+  >
+    <span
+      class="MuiChip-label MuiChip-labelMedium css-1fh978c-MuiChip-label"
+    >
+      No
+    </span>
+  </div>
+  <div
+    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-16wthj3-MuiButtonBase-root-MuiChip-root"
+    data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
+    role="button"
+    tabindex="0"
+  >
+    <span
+      class="MuiChip-label MuiChip-labelMedium css-1fh978c-MuiChip-label"
+    >
+      Maybe
+    </span>
+  </div>
+</div>
+`;

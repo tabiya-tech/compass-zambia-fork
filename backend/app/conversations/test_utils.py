@@ -1,15 +1,27 @@
 import logging
+from datetime import datetime, timezone
 
 import pytest
 
 from app.agent.agent_director.abstract_agent_director import ConversationPhase
+from app.agent.agent_types import AgentInput, AgentOutput, AgentType, LLMStats
 from app.agent.experience import WorkType, ExperienceEntity
 from app.agent.explore_experiences_agent_director import ExperienceState, DiveInPhase
 from app.application_state import ApplicationState
+from app.conversation_memory.conversation_memory_types import (
+    ConversationTurn, ConversationHistory, ConversationContext,
+)
 from app.conversations.constants import BEGINNING_CONVERSATION_PERCENTAGE, FINISHED_CONVERSATION_PERCENTAGE, \
     COLLECT_EXPERIENCES_PERCENTAGE, DIVE_IN_EXPERIENCES_PERCENTAGE, PREFERENCE_ELICITATION_PERCENTAGE
-from app.conversations.types import ConversationPhaseResponse, CurrentConversationPhaseResponse
-from app.conversations.utils import get_current_conversation_phase_response
+from app.conversations.types import (
+    ConversationPhaseResponse, CurrentConversationPhaseResponse,
+    ConversationMessageSender,
+)
+from app.conversations.utils import (
+    get_current_conversation_phase_response,
+    filter_conversation_history,
+    get_messages_from_conversation_manager,
+)
 from app.agent.explore_experiences_agent_director import ConversationPhase as CounselingConversationPhase
 from common_libs.test_utilities import get_random_session_id
 
@@ -144,3 +156,257 @@ class TestConversationPhase:
             current=expected_current,
             total=total
         )
+
+
+def _make_llm_stats() -> list[LLMStats]:
+    """Helper to create a minimal LLMStats list for AgentOutput."""
+    return [LLMStats(prompt_token_count=10, response_token_count=20, response_time_in_sec=0.5)]
+
+
+def _make_turn(*, index: int, user_message: str, compass_message: str,
+               metadata: dict | None = None, is_artificial: bool = False) -> ConversationTurn:
+    """Helper to create a ConversationTurn for testing."""
+    return ConversationTurn(
+        index=index,
+        input=AgentInput(
+            message=user_message,
+            is_artificial=is_artificial,
+            sent_at=datetime(2024, 1, 1, tzinfo=timezone.utc),
+        ),
+        output=AgentOutput(
+            message_for_user=compass_message,
+            finished=False,
+            agent_type=AgentType.COLLECT_EXPERIENCES_AGENT,
+            agent_response_time_in_sec=0.5,
+            llm_stats=_make_llm_stats(),
+            sent_at=datetime(2024, 1, 1, tzinfo=timezone.utc),
+            metadata=metadata,
+        ),
+    )
+
+
+class TestFilterConversationHistoryQuickReplyOptions:
+    """Tests for quick_reply_options propagation in filter_conversation_history"""
+
+    @pytest.mark.asyncio
+    async def test_last_turn_with_quick_reply_options(self):
+        """should attach quick_reply_options only to the last COMPASS message"""
+        # GIVEN a conversation history with two turns
+        given_quick_reply_options = [{"label": "Yes"}, {"label": "No"}]
+        given_turn_1 = _make_turn(
+            index=0,
+            user_message="Hello",
+            compass_message="Welcome!",
+            metadata=None,
+        )
+        given_turn_2 = _make_turn(
+            index=1,
+            user_message="I have experience",
+            compass_message="Do you have paid work?",
+            metadata={"quick_reply_options": given_quick_reply_options},
+        )
+        given_history = ConversationHistory(turns=[given_turn_1, given_turn_2])
+
+        # WHEN the conversation history is filtered
+        actual_messages = await filter_conversation_history(given_history, reactions_for_session=[])
+
+        # THEN the last COMPASS message should have quick_reply_options
+        actual_last_compass_message = actual_messages[-1]
+        assert actual_last_compass_message.sender == ConversationMessageSender.COMPASS
+        assert actual_last_compass_message.quick_reply_options is not None
+        assert len(actual_last_compass_message.quick_reply_options) == 2
+        assert actual_last_compass_message.quick_reply_options[0].label == "Yes"
+        assert actual_last_compass_message.quick_reply_options[1].label == "No"
+
+    @pytest.mark.asyncio
+    async def test_non_last_turn_does_not_have_quick_reply_options(self):
+        """should NOT attach quick_reply_options to non-last COMPASS messages even if metadata is present"""
+        # GIVEN a conversation history where the first turn has quick_reply_options in metadata
+        given_turn_1 = _make_turn(
+            index=0,
+            user_message="Hello",
+            compass_message="Welcome!",
+            metadata={"quick_reply_options": [{"label": "Yes"}, {"label": "No"}]},
+        )
+        # AND a second turn without quick_reply_options
+        given_turn_2 = _make_turn(
+            index=1,
+            user_message="I do",
+            compass_message="Tell me more about your paid work.",
+            metadata=None,
+        )
+        given_history = ConversationHistory(turns=[given_turn_1, given_turn_2])
+
+        # WHEN the conversation history is filtered
+        actual_messages = await filter_conversation_history(given_history, reactions_for_session=[])
+
+        # THEN the first COMPASS message should NOT have quick_reply_options
+        actual_first_compass_message = actual_messages[1]  # index 1 because index 0 is the user message
+        assert actual_first_compass_message.sender == ConversationMessageSender.COMPASS
+        assert actual_first_compass_message.quick_reply_options is None
+
+        # AND the last COMPASS message should also have no quick_reply_options (no metadata)
+        actual_last_compass_message = actual_messages[-1]
+        assert actual_last_compass_message.sender == ConversationMessageSender.COMPASS
+        assert actual_last_compass_message.quick_reply_options is None
+
+    @pytest.mark.asyncio
+    async def test_no_metadata_results_in_no_quick_reply_options(self):
+        """should result in no quick_reply_options when metadata is None"""
+        # GIVEN a conversation history with a single turn that has no metadata
+        given_turn = _make_turn(
+            index=0,
+            user_message="Hello",
+            compass_message="Welcome!",
+            metadata=None,
+        )
+        given_history = ConversationHistory(turns=[given_turn])
+
+        # WHEN the conversation history is filtered
+        actual_messages = await filter_conversation_history(given_history, reactions_for_session=[])
+
+        # THEN the COMPASS message should have no quick_reply_options
+        actual_compass_message = actual_messages[-1]
+        assert actual_compass_message.sender == ConversationMessageSender.COMPASS
+        assert actual_compass_message.quick_reply_options is None
+
+    @pytest.mark.asyncio
+    async def test_metadata_without_quick_reply_options_key(self):
+        """should result in no quick_reply_options when metadata exists but has no quick_reply_options key"""
+        # GIVEN a conversation history with metadata that does not contain quick_reply_options
+        given_turn = _make_turn(
+            index=0,
+            user_message="Hello",
+            compass_message="Welcome!",
+            metadata={"some_other_key": "value"},
+        )
+        given_history = ConversationHistory(turns=[given_turn])
+
+        # WHEN the conversation history is filtered
+        actual_messages = await filter_conversation_history(given_history, reactions_for_session=[])
+
+        # THEN the COMPASS message should have no quick_reply_options
+        actual_compass_message = actual_messages[-1]
+        assert actual_compass_message.quick_reply_options is None
+
+
+class TestGetMessagesFromConversationManagerQuickReplyOptions:
+    """Tests for quick_reply_options propagation in get_messages_from_conversation_manager"""
+
+    @pytest.mark.asyncio
+    async def test_extracts_quick_reply_options_from_last_turn(self):
+        """should extract quick_reply_options from the last turn's metadata"""
+        # GIVEN a conversation context with two turns where the last has quick_reply_options
+        given_quick_reply_options = [{"label": "That's all"}, {"label": "I want to add something"}]
+        given_turn_1 = _make_turn(
+            index=0,
+            user_message="Hello",
+            compass_message="Welcome!",
+            metadata=None,
+        )
+        given_turn_2 = _make_turn(
+            index=1,
+            user_message="I worked as a driver",
+            compass_message="Anything else?",
+            metadata={"quick_reply_options": given_quick_reply_options},
+        )
+        given_all_history = ConversationHistory(turns=[given_turn_1, given_turn_2])
+        given_context = ConversationContext(all_history=given_all_history)
+
+        # WHEN get_messages_from_conversation_manager is called starting from index 0
+        actual_messages = await get_messages_from_conversation_manager(given_context, from_index=0)
+
+        # THEN the last message should have quick_reply_options
+        actual_last_message = actual_messages[-1]
+        assert actual_last_message.quick_reply_options is not None
+        assert len(actual_last_message.quick_reply_options) == 2
+        assert actual_last_message.quick_reply_options[0].label == "That's all"
+        assert actual_last_message.quick_reply_options[1].label == "I want to add something"
+
+    @pytest.mark.asyncio
+    async def test_does_not_extract_quick_reply_options_from_non_last_turn(self):
+        """should NOT extract quick_reply_options from non-last turns"""
+        # GIVEN a conversation context where the first turn has quick_reply_options but the last does not
+        given_turn_1 = _make_turn(
+            index=0,
+            user_message="Hello",
+            compass_message="Do you have paid work?",
+            metadata={"quick_reply_options": [{"label": "Yes"}, {"label": "No"}]},
+        )
+        given_turn_2 = _make_turn(
+            index=1,
+            user_message="Yes I do",
+            compass_message="Tell me about your first job.",
+            metadata=None,
+        )
+        given_all_history = ConversationHistory(turns=[given_turn_1, given_turn_2])
+        given_context = ConversationContext(all_history=given_all_history)
+
+        # WHEN get_messages_from_conversation_manager is called starting from index 0
+        actual_messages = await get_messages_from_conversation_manager(given_context, from_index=0)
+
+        # THEN the first message should NOT have quick_reply_options
+        assert actual_messages[0].quick_reply_options is None
+
+        # AND the last message should also have no quick_reply_options (no metadata)
+        assert actual_messages[-1].quick_reply_options is None
+
+    @pytest.mark.asyncio
+    async def test_single_turn_with_quick_reply_options(self):
+        """should extract quick_reply_options when there is only one turn"""
+        # GIVEN a conversation context with a single turn that has quick_reply_options
+        given_quick_reply_options = [{"label": "Let's start!"}]
+        given_turn = _make_turn(
+            index=0,
+            user_message="Hi",
+            compass_message="Ready to get started?",
+            metadata={"quick_reply_options": given_quick_reply_options},
+        )
+        given_all_history = ConversationHistory(turns=[given_turn])
+        given_context = ConversationContext(all_history=given_all_history)
+
+        # WHEN get_messages_from_conversation_manager is called
+        actual_messages = await get_messages_from_conversation_manager(given_context, from_index=0)
+
+        # THEN the only message should have quick_reply_options
+        assert len(actual_messages) == 1
+        assert actual_messages[0].quick_reply_options is not None
+        assert actual_messages[0].quick_reply_options[0].label == "Let's start!"
+
+    @pytest.mark.asyncio
+    async def test_from_index_respects_quick_reply_on_last_in_batch(self):
+        """should attach quick_reply_options only to the last turn in the requested batch"""
+        # GIVEN a conversation context with three turns
+        given_turn_1 = _make_turn(
+            index=0,
+            user_message="Hello",
+            compass_message="Welcome!",
+            metadata=None,
+        )
+        given_turn_2 = _make_turn(
+            index=1,
+            user_message="I have experience",
+            compass_message="Tell me more.",
+            metadata={"quick_reply_options": [{"label": "Option A"}]},
+        )
+        given_turn_3 = _make_turn(
+            index=2,
+            user_message="I was a teacher",
+            compass_message="Anything else?",
+            metadata={"quick_reply_options": [{"label": "That's all"}]},
+        )
+        given_all_history = ConversationHistory(turns=[given_turn_1, given_turn_2, given_turn_3])
+        given_context = ConversationContext(all_history=given_all_history)
+
+        # WHEN get_messages_from_conversation_manager is called starting from index 1 (skipping the first turn)
+        actual_messages = await get_messages_from_conversation_manager(given_context, from_index=1)
+
+        # THEN the batch contains only turns 1 and 2
+        assert len(actual_messages) == 2
+
+        # AND the first message in the batch (turn index 1) should NOT have quick_reply_options
+        assert actual_messages[0].quick_reply_options is None
+
+        # AND the last message in the batch (turn index 2) should have quick_reply_options
+        assert actual_messages[-1].quick_reply_options is not None
+        assert actual_messages[-1].quick_reply_options[0].label == "That's all"

@@ -162,6 +162,122 @@ describe("Chat Utils", () => {
       expect(console.error).not.toHaveBeenCalled();
       expect(console.warn).not.toHaveBeenCalled();
     });
+
+    test("should include quick_reply_options in payload when provided", () => {
+      // GIVEN a message string
+      const givenMessage = "Do you want to continue?";
+      // AND a specific message ID
+      const givenMessageId = "specific-id";
+      // AND a timestamp
+      const givenSentAt = "2024-03-20T12:00:00Z";
+      // AND a reaction
+      const givenReaction = null;
+      // AND quick reply options
+      const givenQuickReplyOptions = [
+        { label: "Yes" },
+        { label: "No" },
+      ];
+      // AND a quick reply click handler
+      const givenOnQuickReplyClick = jest.fn();
+
+      // WHEN generating a compass message with quick reply options
+      const result = generateCompassMessage(
+        givenMessageId,
+        givenMessage,
+        givenSentAt,
+        givenReaction,
+        givenQuickReplyOptions,
+        givenOnQuickReplyClick,
+      );
+
+      // THEN expect the message to have the correct structure including quick_reply_options
+      expect(result).toEqual({
+        message_id: givenMessageId,
+        sender: ConversationMessageSender.COMPASS,
+        type: COMPASS_CHAT_MESSAGE_TYPE,
+        payload: {
+          message_id: givenMessageId,
+          message: givenMessage,
+          sent_at: givenSentAt,
+          reaction: givenReaction,
+          quick_reply_options: givenQuickReplyOptions,
+          onQuickReplyClick: givenOnQuickReplyClick,
+        },
+        component: expect.any(Function),
+      });
+      // AND expect the component to be a function that returns a CompassChatMessage
+      expect(result.component).toEqual(expect.any(Function));
+      // AND expect no errors or warnings to have been logged
+      expect(console.error).not.toHaveBeenCalled();
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+
+    test("should omit quick_reply_options from payload when not provided", () => {
+      // GIVEN a message string
+      const givenMessage = "Hello";
+      // AND a specific message ID
+      const givenMessageId = "specific-id";
+      // AND a timestamp
+      const givenSentAt = "2024-03-20T12:00:00Z";
+      // AND a reaction
+      const givenReaction = null;
+
+      // WHEN generating a compass message without quick reply options
+      const result = generateCompassMessage(givenMessageId, givenMessage, givenSentAt, givenReaction);
+
+      // THEN expect the payload to NOT contain quick_reply_options
+      expect(result.payload).not.toHaveProperty("quick_reply_options");
+      // AND expect the payload to NOT contain onQuickReplyClick
+      expect(result.payload).not.toHaveProperty("onQuickReplyClick");
+      // AND expect the rest of the structure to be correct
+      expect(result).toEqual({
+        message_id: givenMessageId,
+        sender: ConversationMessageSender.COMPASS,
+        type: COMPASS_CHAT_MESSAGE_TYPE,
+        payload: {
+          message_id: givenMessageId,
+          message: givenMessage,
+          sent_at: givenSentAt,
+          reaction: givenReaction,
+        },
+        component: expect.any(Function),
+      });
+      // AND expect the component to be a function that returns a CompassChatMessage
+      expect(result.component).toEqual(expect.any(Function));
+      // AND expect no errors or warnings to have been logged
+      expect(console.error).not.toHaveBeenCalled();
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+
+    test("should omit quick_reply_options from payload when null is provided", () => {
+      // GIVEN a message string
+      const givenMessage = "Hello";
+      // AND a specific message ID
+      const givenMessageId = "specific-id";
+      // AND a timestamp
+      const givenSentAt = "2024-03-20T12:00:00Z";
+      // AND a reaction
+      const givenReaction = null;
+      // AND null quick reply options
+      const givenQuickReplyOptions = null;
+
+      // WHEN generating a compass message with null quick reply options
+      const result = generateCompassMessage(
+        givenMessageId,
+        givenMessage,
+        givenSentAt,
+        givenReaction,
+        givenQuickReplyOptions,
+      );
+
+      // THEN expect the payload to NOT contain quick_reply_options since null is falsy
+      expect(result.payload).not.toHaveProperty("quick_reply_options");
+      // AND expect the payload to NOT contain onQuickReplyClick
+      expect(result.payload).not.toHaveProperty("onQuickReplyClick");
+      // AND expect no errors or warnings to have been logged
+      expect(console.error).not.toHaveBeenCalled();
+      expect(console.warn).not.toHaveBeenCalled();
+    });
   });
 
   describe("generateTypingMessage", () => {

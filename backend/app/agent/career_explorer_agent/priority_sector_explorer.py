@@ -5,11 +5,13 @@ Explorer for priority sectors using RAG (vector search). Answers based on retrie
 import logging
 from textwrap import dedent
 
-from app.agent.agent_types import LLMStats
+from pydantic import BaseModel
+
+from app.agent.agent_types import LLMStats, LLMQuickReplyOption
 from app.agent.llm_caller import LLMCaller
 from app.agent.prompt_template.locale_style import get_language_style
 from app.agent.prompt_template.agent_prompt_template import STD_AGENT_CHARACTER
-from app.agent.simple_llm_agent.llm_response import ModelResponse
+from app.agent.prompt_template.quick_reply_prompt import QUICK_REPLY_PROMPT
 from app.agent.simple_llm_agent.prompt_response_template import get_conversation_finish_instructions, get_json_response_instructions
 from app.app_config import get_application_config
 from app.i18n.translation_service import t
@@ -21,8 +23,20 @@ from app.conversation_memory.conversation_formatter import ConversationHistoryFo
 from .sector_search_service import SectorChunkEntity, SectorSearchService
 
 
+class _PrioritySectorResponse(BaseModel):
+    reasoning: str
+    finished: bool
+    message: str
+    quick_reply_options: list[LLMQuickReplyOption] | None = None
+
+    class Config:
+        extra = "forbid"
+
+
 def _build_base_instructions(retrieved_content: str) -> str:
     config = get_application_config()
+    # Escape braces in QUICK_REPLY_PROMPT so .format() treats them as literals
+    escaped_quick_reply = QUICK_REPLY_PROMPT.replace("{", "{{").replace("}", "}}")
     sectors = config.career_explorer_config.sectors
     sector_names = [s["name"] for s in sectors] if sectors else []
     sector_list_str = ", ".join(sector_names) if sector_names else "the priority sectors"
@@ -55,6 +69,8 @@ def _build_base_instructions(retrieved_content: str) -> str:
         {{retrieved_content}}
 
         {finish_instructions}
+
+        {escaped_quick_reply}
         </system_instructions>
     """).format(sector_list_str=sector_list_str, retrieved_content=retrieved_content)
 
@@ -78,19 +94,19 @@ class PrioritySectorExplorer:
         self._llm_config = LLMConfig(
             generation_config=LOW_TEMPERATURE_GENERATION_CONFIG
             | JSON_GENERATION_CONFIG
-            | with_response_schema(ModelResponse)
+            | with_response_schema(_PrioritySectorResponse)
         )
-        self._llm_caller = LLMCaller[ModelResponse](model_response_type=ModelResponse)
+        self._llm_caller = LLMCaller[_PrioritySectorResponse](model_response_type=_PrioritySectorResponse)
         self._logger = logging.getLogger(self.__class__.__name__)
 
     async def explore(
         self,
         user_input: str,
         context,
-    ) -> tuple[str, bool, str, list[LLMStats]]:
+    ) -> tuple[str, bool, str, list[LLMStats], dict | None]:
         chunks = await self._sector_search.search(query=user_input, k=5)
         retrieved = _format_chunks(chunks)
-        full_instructions = _build_base_instructions(retrieved).format(retrieved_content=retrieved)
+        full_instructions = _build_base_instructions(retrieved)
 
         self._logger.info(
             "Priority sector RAG for query '%s': found %d chunks",
@@ -114,11 +130,15 @@ class PrioritySectorExplorer:
 
         if model_response is None:
             error_msg = t("messages", "careerExplorer.errorRetry", "I'm having trouble right now. Could you try again?")
-            return error_msg, False, "", llm_stats
+            return error_msg, False, "", llm_stats, None
 
+        metadata = None
+        if model_response.quick_reply_options:
+            metadata = {"quick_reply_options": [opt.model_dump() for opt in model_response.quick_reply_options]}
         return (
             model_response.message.strip('"'),
             model_response.finished,
             model_response.reasoning,
             llm_stats,
+            metadata,
         )

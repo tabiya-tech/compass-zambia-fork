@@ -17,7 +17,7 @@ from app.server_dependencies.database_collections import Collections
 
 class ICareerExplorerConversationRepository(ABC):
     @abstractmethod
-    async def get_or_create_conversation(self, user_id: str, welcome_message: str) -> CareerExplorerConversationResponse:
+    async def get_or_create_conversation(self, user_id: str, welcome_message: str, metadata: dict | None = None) -> CareerExplorerConversationResponse:
         raise NotImplementedError()
 
     @abstractmethod
@@ -61,9 +61,14 @@ class CareerExplorerConversationRepository(ICareerExplorerConversationRepository
         Convert a CareerExplorerConversationDocument to a CareerExplorerConversationResponse.
         Strips metadata from messages as it should not be exposed to the frontend.
         """
-        messages_without_metadata = [m.model_copy(update={"metadata": None}) for m in document.messages]
+        cleaned_messages = []
+        for m in document.messages:
+            frontend_metadata = None
+            if m.metadata and "quick_reply_options" in m.metadata:
+                frontend_metadata = {"quick_reply_options": m.metadata["quick_reply_options"]}
+            cleaned_messages.append(m.model_copy(update={"metadata": frontend_metadata}))
         return CareerExplorerConversationResponse(
-            messages=messages_without_metadata,
+            messages=cleaned_messages,
             finished=finished,
         )
 
@@ -109,7 +114,7 @@ class CareerExplorerConversationRepository(ICareerExplorerConversationRepository
             return None
         return self._from_db_doc(document, finished=False)
 
-    async def get_or_create_conversation(self, user_id: str, welcome_message: str) -> CareerExplorerConversationResponse:
+    async def get_or_create_conversation(self, user_id: str, welcome_message: str, metadata: dict | None = None) -> CareerExplorerConversationResponse:
         existing = await self.find_response_by_user(user_id)
         if existing:
             return existing
@@ -120,6 +125,7 @@ class CareerExplorerConversationRepository(ICareerExplorerConversationRepository
             message=welcome_message,
             sent_at=now,
             sender=CareerExplorerMessageSender.AGENT,
+            metadata=metadata,
         )
         doc = CareerExplorerConversationDocument(
             user_id=user_id,

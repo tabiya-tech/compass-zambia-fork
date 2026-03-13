@@ -14,6 +14,10 @@ export interface MessageReaction {
 
 export type ConversationMessageType = "TEXT" | "BWS_TASK";
 
+export interface QuickReplyOption {
+  label: string;
+}
+
 // Type for individual conversation messages
 export interface ConversationMessage {
   message_id: string;
@@ -23,6 +27,7 @@ export interface ConversationMessage {
   reaction: MessageReaction | null;
   message_type?: ConversationMessageType;
   metadata?: BWSTaskMetadata;
+  quick_reply_options?: QuickReplyOption[] | null;
 }
 
 export interface ConversationResponse {
