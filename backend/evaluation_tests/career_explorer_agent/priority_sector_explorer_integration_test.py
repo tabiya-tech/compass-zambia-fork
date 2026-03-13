@@ -12,7 +12,14 @@ Excluded from the standard pipeline run:
     poetry run pytest -k "not (smoke_test or evaluation_test)" -m "not llm_integration"
 """
 
+import os
+
 import pytest
+
+pytestmark = pytest.mark.skipif(
+    not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") and not os.environ.get("GOOGLE_CLOUD_PROJECT"),
+    reason="Requires Google Cloud credentials (GOOGLE_APPLICATION_CREDENTIALS or GOOGLE_CLOUD_PROJECT)",
+)
 
 from app.agent.career_explorer_agent.priority_sector_explorer import PrioritySectorExplorer
 from app.agent.career_explorer_agent.sector_search_service import SectorChunkEntity
