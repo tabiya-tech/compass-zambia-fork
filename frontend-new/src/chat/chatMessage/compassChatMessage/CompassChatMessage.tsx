@@ -32,7 +32,14 @@ export interface CompassChatMessageProps {
   onQuickReplyClick?: (label: string) => void;
 }
 
-const CompassChatMessage: React.FC<CompassChatMessageProps> = ({ message_id, message, sent_at, reaction, quick_reply_options, onQuickReplyClick }) => {
+const CompassChatMessage: React.FC<CompassChatMessageProps> = ({
+  message_id,
+  message,
+  sent_at,
+  reaction,
+  quick_reply_options,
+  onQuickReplyClick,
+}) => {
   return (
     <MessageContainer origin={ConversationMessageSender.COMPASS} data-testid={DATA_TEST_ID.CHAT_MESSAGE_CONTAINER}>
       <Box

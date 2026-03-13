@@ -80,7 +80,7 @@ export const generateCompassMessage = (
   sent_at: string,
   reaction: MessageReaction | null,
   quick_reply_options?: QuickReplyOption[] | null,
-  onQuickReplyClick?: (label: string) => void,
+  onQuickReplyClick?: (label: string) => void
 ): IChatMessage<CompassChatMessageProps> => {
   const payload: CompassChatMessageProps = {
     message_id: message_id,

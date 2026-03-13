@@ -101,7 +101,7 @@ export const getLatestQuizHistorySummary = (messages: CareerReadinessMessage[]):
 export const mapCareerReadinessMessageToChatMessage = (
   msg: CareerReadinessMessage,
   isLastMessage: boolean = false,
-  onQuickReplyClick?: (label: string) => void,
+  onQuickReplyClick?: (label: string) => void
 ): IChatMessage<CareerReadinessAgentMessageProps> | IChatMessage<CareerReadinessUserMessageProps> => {
   const sentAt = msg.sent_at;
   if (msg.sender === "USER") {
@@ -135,7 +135,7 @@ export const mapCareerReadinessMessageToChatMessage = (
 
 export const mapCareerReadinessMessagesToChatMessages = (
   messages: CareerReadinessMessage[],
-  onQuickReplyClick?: (label: string) => void,
+  onQuickReplyClick?: (label: string) => void
 ): IChatMessage<any>[] => {
   const visible = messages.filter((msg, index) => !isHiddenCareerReadinessSystemMessage(msg, index, messages));
   return visible.map((msg, idx) =>

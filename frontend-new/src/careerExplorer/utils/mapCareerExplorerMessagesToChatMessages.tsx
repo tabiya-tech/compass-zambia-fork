@@ -11,7 +11,7 @@ import CareerExplorerAgentMessage, {
 export const mapCareerExplorerMessageToChatMessage = (
   msg: CareerExplorerMessage,
   isLastMessage: boolean = false,
-  onQuickReplyClick?: (label: string) => void,
+  onQuickReplyClick?: (label: string) => void
 ): IChatMessage<CareerExplorerAgentMessageProps> | ReturnType<typeof generateUserMessage> => {
   const sentAt = msg.sent_at;
   if (msg.sender === "USER") {
@@ -36,7 +36,7 @@ export const mapCareerExplorerMessageToChatMessage = (
 
 export const mapCareerExplorerMessagesToChatMessages = (
   messages: CareerExplorerMessage[],
-  onQuickReplyClick?: (label: string) => void,
+  onQuickReplyClick?: (label: string) => void
 ): IChatMessage<any>[] => {
   return messages.map((msg, idx) =>
     mapCareerExplorerMessageToChatMessage(msg, idx === messages.length - 1, onQuickReplyClick)

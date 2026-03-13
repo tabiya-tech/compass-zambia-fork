@@ -9,11 +9,7 @@ describe("QuickReplyButtons", () => {
   describe("render tests", () => {
     test("should render a chip for each quick reply option", () => {
       // GIVEN a list of quick reply options
-      const givenOptions: QuickReplyOption[] = [
-        { label: "Yes" },
-        { label: "No" },
-        { label: "Maybe" },
-      ];
+      const givenOptions: QuickReplyOption[] = [{ label: "Yes" }, { label: "No" }, { label: "Maybe" }];
       // AND a callback function
       const givenOnSelect = jest.fn();
 
@@ -62,11 +58,7 @@ describe("QuickReplyButtons", () => {
   describe("interaction tests", () => {
     test("should call onSelect with the label when a chip is clicked", () => {
       // GIVEN a list of quick reply options
-      const givenOptions: QuickReplyOption[] = [
-        { label: "Yes" },
-        { label: "No" },
-        { label: "Maybe" },
-      ];
+      const givenOptions: QuickReplyOption[] = [{ label: "Yes" }, { label: "No" }, { label: "Maybe" }];
       // AND a callback function
       const givenOnSelect = jest.fn();
 
@@ -88,10 +80,7 @@ describe("QuickReplyButtons", () => {
 
     test("should call onSelect with the correct label for each chip when clicked", () => {
       // GIVEN a list of quick reply options
-      const givenOptions: QuickReplyOption[] = [
-        { label: "Option A" },
-        { label: "Option B" },
-      ];
+      const givenOptions: QuickReplyOption[] = [{ label: "Option A" }, { label: "Option B" }];
       // AND a callback function
       const givenOnSelect = jest.fn();
 
