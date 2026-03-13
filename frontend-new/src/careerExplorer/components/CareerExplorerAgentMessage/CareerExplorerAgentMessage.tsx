@@ -1,9 +1,10 @@
 import React from "react";
 import { Box, styled } from "@mui/material";
-import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
+import { ConversationMessageSender, QuickReplyOption } from "src/chat/ChatService/ChatService.types";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
 import Timestamp from "src/chat/chatMessage/components/chatMessageFooter/components/timestamp/Timestamp";
 import ChatMessageFooterLayout from "src/chat/chatMessage/components/chatMessageFooter/ChatMessageFooterLayout";
+import QuickReplyButtons from "src/chat/chatMessage/suggestedActions/QuickReplyButtons";
 
 const uniqueId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
 
@@ -17,6 +18,8 @@ export interface CareerExplorerAgentMessageProps {
   message_id: string;
   message: string;
   sent_at: string;
+  quick_reply_options?: QuickReplyOption[] | null;
+  onQuickReplyClick?: (label: string) => void;
 }
 
 const MessageContainer = styled(Box)<{ origin: ConversationMessageSender }>(({ theme }) => ({
@@ -27,7 +30,13 @@ const MessageContainer = styled(Box)<{ origin: ConversationMessageSender }>(({ t
   width: "100%",
 }));
 
-const CareerExplorerAgentMessage: React.FC<CareerExplorerAgentMessageProps> = ({ message_id, message, sent_at }) => {
+const CareerExplorerAgentMessage: React.FC<CareerExplorerAgentMessageProps> = ({
+  message_id,
+  message,
+  sent_at,
+  quick_reply_options,
+  onQuickReplyClick,
+}) => {
   return (
     <MessageContainer
       origin={ConversationMessageSender.COMPASS}
@@ -48,6 +57,9 @@ const CareerExplorerAgentMessage: React.FC<CareerExplorerAgentMessageProps> = ({
           <ChatMessageFooterLayout sender={ConversationMessageSender.COMPASS}>
             <Timestamp sentAt={sent_at} />
           </ChatMessageFooterLayout>
+          {quick_reply_options && quick_reply_options.length > 0 && onQuickReplyClick && (
+            <QuickReplyButtons options={quick_reply_options} onSelect={onQuickReplyClick} />
+          )}
         </Box>
       </Box>
     </MessageContainer>

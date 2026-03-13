@@ -5,6 +5,7 @@ export interface CareerExplorerMessage {
   message: string;
   sent_at: string;
   sender: CareerExplorerMessageSender;
+  metadata?: { quick_reply_options?: { label: string }[] } | null;
 }
 
 export interface CareerExplorerConversationResponse {

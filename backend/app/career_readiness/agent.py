@@ -11,9 +11,10 @@ from textwrap import dedent
 
 from pydantic import BaseModel, ConfigDict
 
-from app.agent.agent_types import AgentInput, AgentOutput, AgentType, LLMStats, AgentOutputWithReasoning
+from app.agent.agent_types import AgentInput, AgentOutput, AgentType, LLMQuickReplyOption, LLMStats, AgentOutputWithReasoning
 from app.agent.llm_caller import LLMCaller
 from app.agent.prompt_template.locale_style import get_language_style
+from app.agent.prompt_template.quick_reply_prompt import QUICK_REPLY_PROMPT
 from app.agent.simple_llm_agent.prompt_response_template import (
     get_json_response_instructions,
 )
@@ -50,6 +51,9 @@ class CareerReadinessModelResponse(BaseModel):
     topics_covered: list[str] = []
     """Topics from the module's topic list that were addressed in this turn"""
 
+    quick_reply_options: list[LLMQuickReplyOption] | None = None
+    """Optional quick-reply button labels"""
+
 
 @dataclass
 class CareerReadinessAgentOutput:
@@ -80,7 +84,8 @@ def _build_instruction_mode_instructions(module_title: str, module_content: str,
         - "reasoning": Explain your pedagogical reasoning — what the student knows, what to cover next, which scaffolding level to use.
         - "finished": Set to true ONLY when you judge that ALL topics have been sufficiently covered and the student has demonstrated understanding. Do not set finished to true prematurely.
         - "message": Your response to the student. Do not format with markdown. Keep under 200 words.
-        - "topics_covered": List ONLY topic names from the module topic list that you meaningfully addressed in THIS turn. Use exact topic names from the list above. If you only briefly mentioned a topic, do not include it.""")
+        - "topics_covered": List ONLY topic names from the module topic list that you meaningfully addressed in THIS turn. Use exact topic names from the list above. If you only briefly mentioned a topic, do not include it.
+        - "quick_reply_options": An optional array of quick-reply button options. Each option is an object with a "label" field (the button text). Only include when your message asks a question with limited clear answers.""")
 
     template = dedent("""\
         You are a career readiness tutor specialising in "{module_title}".
@@ -134,6 +139,8 @@ def _build_instruction_mode_instructions(module_title: str, module_content: str,
 
         {language_style}
 
+        {quick_reply_prompt}
+
         {response_instructions}
         """)
 
@@ -142,6 +149,7 @@ def _build_instruction_mode_instructions(module_title: str, module_content: str,
         module_content=module_content,
         topics_list=topics_list,
         language_style=language_style,
+        quick_reply_prompt=QUICK_REPLY_PROMPT,
         response_instructions=response_instructions,
     )
 
@@ -162,7 +170,8 @@ def _build_support_mode_instructions(module_title: str, module_content: str) -> 
 
         - "finished": Always set to false in support mode.
         - "topics_covered": Always set to an empty list in support mode.
-        - "message": Your response to the student. Do not format with markdown. Keep under 200 words.""")
+        - "message": Your response to the student. Do not format with markdown. Keep under 200 words.
+        - "quick_reply_options": An optional array of quick-reply button options. Each option is an object with a "label" field (the button text). Only include when your message asks a question with limited clear answers.""")
 
     template = dedent("""\
         You are a career readiness support assistant for "{module_title}".
@@ -186,6 +195,8 @@ def _build_support_mode_instructions(module_title: str, module_content: str) -> 
 
         {language_style}
 
+        {quick_reply_prompt}
+
         {response_instructions}
         """)
 
@@ -193,6 +204,7 @@ def _build_support_mode_instructions(module_title: str, module_content: str) -> 
         module_title=module_title,
         module_content=module_content,
         language_style=language_style,
+        quick_reply_prompt=QUICK_REPLY_PROMPT,
         response_instructions=response_instructions,
     )
 
@@ -271,6 +283,9 @@ class CareerReadinessAgent:
             )
 
         agent_end_time = time.time()
+        metadata = None
+        if model_response.quick_reply_options:
+            metadata = {"quick_reply_options": [opt.model_dump() for opt in model_response.quick_reply_options]}
         agent_output = AgentOutputWithReasoning(
             message_for_user=model_response.message.strip('"'),
             finished=model_response.finished,
@@ -278,6 +293,7 @@ class CareerReadinessAgent:
             agent_type=AgentType.CAREER_READINESS_AGENT,
             agent_response_time_in_sec=round(agent_end_time - agent_start_time, 2),
             llm_stats=llm_stats_list,
+            metadata=metadata,
         )
 
         return CareerReadinessAgentOutput(

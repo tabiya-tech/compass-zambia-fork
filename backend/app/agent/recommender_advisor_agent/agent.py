@@ -47,6 +47,7 @@ from app.agent.prompt_template.agent_prompt_template import (
     STD_AGENT_CHARACTER,
     STD_LANGUAGE_STYLE
 )
+from app.agent.prompt_template.quick_reply_prompt import QUICK_REPLY_PROMPT
 from app.conversation_memory.conversation_memory_manager import ConversationContext
 from common_libs.llm.generative_models import GeminiGenerativeLLM
 from common_libs.llm.models_utils import (
@@ -265,6 +266,8 @@ class RecommenderAdvisorAgent(Agent):
             - "Your skills align well - you'd have a strong foundation"
             - "Based on what you shared, this matches your priorities"
 
+            {QUICK_REPLY_PROMPT}
+
             ### Response Format:
             Always respond with valid JSON matching the ConversationResponse schema.
         """
@@ -343,13 +346,19 @@ class RecommenderAdvisorAgent(Agent):
             return self._create_error_response(agent_start_time)
         
         # Create output
+        metadata = response.metadata or {}
+        if response.quick_reply_options:
+            metadata["quick_reply_options"] = [opt.model_dump() for opt in response.quick_reply_options]
+        if not metadata:
+            metadata = None
         return AgentOutputWithReasoning(
             message_for_user=response.message.strip('"'),
             finished=response.finished,
             reasoning=response.reasoning,
             agent_type=self.agent_type,
             agent_response_time_in_sec=round(time.time() - agent_start_time, 2),
-            llm_stats=llm_stats
+            llm_stats=llm_stats,
+            metadata=metadata
         )
     
     async def _route_to_handler(

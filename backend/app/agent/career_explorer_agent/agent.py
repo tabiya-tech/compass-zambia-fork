@@ -20,6 +20,14 @@ def _get_sectors_list() -> str:
     return "\n".join(f"{s['name']} — {s.get('description', '')}" for s in sectors)
 
 
+def _get_welcome_metadata() -> dict | None:
+    """Build quick-reply metadata with sector buttons for the welcome message."""
+    config = get_application_config()
+    sectors = config.career_explorer_config.sectors
+    sector_buttons = [{"label": s["name"]} for s in sectors] if sectors else None
+    return {"quick_reply_options": sector_buttons} if sector_buttons else None
+
+
 def _get_welcome_message() -> str:
     config = get_application_config()
     sectors = config.career_explorer_config.sectors
@@ -75,6 +83,7 @@ class CareerExplorerAgent(Agent):
                 _get_welcome_message(),
                 finished=False,
                 agent_start=agent_start,
+                metadata=_get_welcome_metadata(),
             )
 
         relevance, reasoning, classifier_stats = await self._classifier.classify(user_input=msg, context=context)
@@ -86,18 +95,14 @@ class CareerExplorerAgent(Agent):
         )
 
         if relevance == SectorRelevance.PRIORITY_SECTOR:
-            message, finished, reasoning, explorer_stats = await self._priority_explorer.explore(msg, context)
-            grounding_metadata = None
+            message, finished, reasoning, explorer_stats, metadata = await self._priority_explorer.explore(msg, context)
         else:
             message, finished, reasoning, explorer_stats, grounding_metadata = await self._non_priority_explorer.explore(
                 msg, context
             )
+            metadata = {"grounding_metadata": grounding_metadata.model_dump()} if grounding_metadata else None
 
         all_stats = classifier_stats + explorer_stats
-
-        metadata = None
-        if grounding_metadata:
-            metadata = {"grounding_metadata": grounding_metadata.model_dump()}
 
         return _construct_output(
             message,

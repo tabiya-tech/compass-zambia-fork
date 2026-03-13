@@ -22,7 +22,8 @@ from app.agent.agent_types import (
     AgentInput,
     AgentOutput,
     AgentOutputWithReasoning,
-    LLMStats
+    LLMStats,
+    LLMQuickReplyOption
 )
 from app.agent.llm_caller import LLMCaller
 from app.agent.preference_elicitation_agent.state import PreferenceElicitationAgentState
@@ -47,6 +48,7 @@ from app.agent.prompt_template.agent_prompt_template import (
     STD_AGENT_CHARACTER,
     STD_LANGUAGE_STYLE
 )
+from app.agent.prompt_template.quick_reply_prompt import QUICK_REPLY_PROMPT
 
 # Adaptive D-efficiency imports
 try:
@@ -102,6 +104,9 @@ class ConversationResponse(BaseModel):
 
     metadata: Optional[dict] = None
     """Optional structured metadata for UI rendering (e.g., BWS tasks, vignettes)"""
+
+    quick_reply_options: list[LLMQuickReplyOption] | None = None
+    """Optional quick-reply button options"""
 
     class Config:
         extra = "forbid"
@@ -520,6 +525,11 @@ class PreferenceElicitationAgent(Agent):
 
         # Create output
         agent_end_time = time.time()
+        metadata = response.metadata or {}
+        if response.quick_reply_options:
+            metadata["quick_reply_options"] = [opt.model_dump() for opt in response.quick_reply_options]
+        if not metadata:
+            metadata = None
         output = AgentOutputWithReasoning(
             message_for_user=response.message.strip('"'),
             finished=response.finished,
@@ -527,7 +537,7 @@ class PreferenceElicitationAgent(Agent):
             agent_type=self.agent_type,
             agent_response_time_in_sec=round(agent_end_time - agent_start_time, 2),
             llm_stats=llm_stats,
-            metadata=response.metadata  # Pass through metadata for structured UI rendering (BWS tasks, etc.)
+            metadata=metadata
         )
 
         return output
@@ -1821,6 +1831,8 @@ Vignettes Completed: {pv.n_vignettes_completed}
             - Use simple language, avoid jargon
             - Keep responses concise (2-3 sentences usually)
             - Transition smoothly between vignettes
+
+            {QUICK_REPLY_PROMPT}
 
             {get_json_response_instructions()}"""
 

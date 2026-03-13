@@ -23,6 +23,14 @@ class AgentType(Enum):
     CAREER_EXPLORER_AGENT = "CareerExplorerAgent"
 
 
+class LLMQuickReplyOption(BaseModel):
+    """Quick-reply option for the LLM to suggest in its response."""
+    label: str = Field(description="Short button text displayed to the user and sent as their reply when clicked (max ~40 chars)")
+
+    class Config:
+        extra = "forbid"
+
+
 class AgentInput(BaseModel):
     """
     The input to an agent

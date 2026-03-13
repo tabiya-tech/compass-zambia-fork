@@ -9,16 +9,21 @@ import CareerExplorerAgentMessage, {
 } from "src/careerExplorer/components/CareerExplorerAgentMessage/CareerExplorerAgentMessage";
 
 export const mapCareerExplorerMessageToChatMessage = (
-  msg: CareerExplorerMessage
+  msg: CareerExplorerMessage,
+  isLastMessage: boolean = false,
+  onQuickReplyClick?: (label: string) => void,
 ): IChatMessage<CareerExplorerAgentMessageProps> | ReturnType<typeof generateUserMessage> => {
   const sentAt = msg.sent_at;
   if (msg.sender === "USER") {
     return generateUserMessage(msg.message, sentAt, msg.message_id);
   }
+  const quickReplyOptions = isLastMessage ? msg.metadata?.quick_reply_options ?? null : null;
   const payload: CareerExplorerAgentMessageProps = {
     message_id: msg.message_id,
     message: msg.message,
     sent_at: sentAt,
+    quick_reply_options: quickReplyOptions,
+    onQuickReplyClick: quickReplyOptions ? onQuickReplyClick : undefined,
   };
   return {
     type: CAREER_EXPLORER_AGENT_MESSAGE_TYPE,
@@ -29,6 +34,11 @@ export const mapCareerExplorerMessageToChatMessage = (
   };
 };
 
-export const mapCareerExplorerMessagesToChatMessages = (messages: CareerExplorerMessage[]): IChatMessage<any>[] => {
-  return messages.map(mapCareerExplorerMessageToChatMessage);
+export const mapCareerExplorerMessagesToChatMessages = (
+  messages: CareerExplorerMessage[],
+  onQuickReplyClick?: (label: string) => void,
+): IChatMessage<any>[] => {
+  return messages.map((msg, idx) =>
+    mapCareerExplorerMessageToChatMessage(msg, idx === messages.length - 1, onQuickReplyClick)
+  );
 };

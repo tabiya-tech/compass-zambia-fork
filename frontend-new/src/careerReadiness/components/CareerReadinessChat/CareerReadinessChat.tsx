@@ -53,6 +53,12 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
   const [aiIsTyping, setAiIsTyping] = useState(false);
   const [isChatLockedForQuiz, setIsChatLockedForQuiz] = useState(false);
 
+  const handleSendRef = useRef<(msg: string) => void>(() => {});
+
+  const handleQuickReply = useCallback((label: string) => {
+    handleSendRef.current(label);
+  }, []);
+
   const typingMessage = useMemo(() => generateCareerReadinessTypingMessage(), []);
 
   const displayMessages = useMemo(() => {
@@ -269,7 +275,7 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
       try {
         const res = await CareerReadinessService.getInstance().getConversationHistory(moduleId, id);
         if (getIsCancelled?.()) return;
-        let chatMessages = mapCareerReadinessMessagesToChatMessages(res.messages);
+        let chatMessages = mapCareerReadinessMessagesToChatMessages(res.messages, handleQuickReply);
         const latestQuizSummary = getLatestQuizHistorySummary(res.messages);
 
         const storedQuizData = PersistentStorageService.getCareerReadinessQuizData(moduleId, id);
@@ -348,6 +354,7 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
       buildResultAgentMessage,
       createQuizSubmitHandler,
       persistQuizQuestions,
+      handleQuickReply,
     ]
   );
 
@@ -377,12 +384,21 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
     async (userMessage: string) => {
       if (!conversationId) return;
       if (isChatLockedForQuiz) return;
+      // Clear quick-reply buttons from all messages when user sends a new message
+      setMessages((prev) =>
+        prev.map((msg) => {
+          if (msg.payload?.quick_reply_options) {
+            return { ...msg, payload: { ...msg.payload, quick_reply_options: null } };
+          }
+          return msg;
+        })
+      );
       const optimisticUserMessage = buildUserMessage(userMessage, `optimistic-${Date.now()}`);
       setMessages((prev) => [...prev, optimisticUserMessage]);
       setAiIsTyping(true);
       try {
         const res = await CareerReadinessService.getInstance().sendMessage(moduleId, conversationId, userMessage);
-        let chatMessages = mapCareerReadinessMessagesToChatMessages(res.messages);
+        let chatMessages = mapCareerReadinessMessagesToChatMessages(res.messages, handleQuickReply);
 
         if (res.quiz_available) {
           try {
@@ -420,8 +436,11 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
       buildUserMessage,
       persistQuizQuestions,
       createQuizSubmitHandler,
+      handleQuickReply,
     ]
   );
+
+  handleSendRef.current = handleSend;
 
   return (
     <Box
