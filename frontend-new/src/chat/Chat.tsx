@@ -676,7 +676,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
                 messageItem.sent_at,
                 messageItem.reaction,
                 isLastMessage ? messageItem.quick_reply_options : null,
-                isLastMessage && messageItem.quick_reply_options ? handleQuickReply : undefined,
+                isLastMessage && messageItem.quick_reply_options ? handleQuickReply : undefined
               )
             );
           }
@@ -765,10 +765,11 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
         if (history.messages.length) {
           // Separate the last message if it's a conclusion
           const isConclusionMessage = history.conversation_completed;
-          const filteredMessages = history.messages
-            .filter((_, idx) => !(isConclusionMessage && idx === history.messages.length - 1));
-          const mappedMessages = filteredMessages
-            .map((message: ConversationMessage, idx: number, arr: ConversationMessage[]) => {
+          const filteredMessages = history.messages.filter(
+            (_, idx) => !(isConclusionMessage && idx === history.messages.length - 1)
+          );
+          const mappedMessages = filteredMessages.map(
+            (message: ConversationMessage, idx: number, arr: ConversationMessage[]) => {
               if (message.sender === ConversationMessageSender.USER) {
                 return generateUserMessage(message.message, message.sent_at);
               }
@@ -779,9 +780,10 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
                 message.sent_at,
                 message.reaction,
                 isLast && !history.conversation_completed ? message.quick_reply_options : null,
-                isLast && !history.conversation_completed && message.quick_reply_options ? handleQuickReply : undefined,
+                isLast && !history.conversation_completed && message.quick_reply_options ? handleQuickReply : undefined
               );
-            });
+            }
+          );
 
           setMessages(mappedMessages);
 
