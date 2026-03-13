@@ -93,7 +93,7 @@ def _set_zambia_config(setup_multi_locale_app_config):
 
 @pytest.mark.asyncio
 @pytest.mark.llm_integration
-async def test_rag_path_uses_retrieved_content(setup_multi_locale_app_config):
+async def test_rag_path_uses_retrieved_content():
     """
     When the search service returns chunks, the LLM should ground its answer
     in that content and reference Zambia-specific details.
@@ -119,7 +119,7 @@ async def test_rag_path_uses_retrieved_content(setup_multi_locale_app_config):
 
 @pytest.mark.asyncio
 @pytest.mark.llm_integration
-async def test_rag_path_does_not_hedge_unnecessarily(setup_multi_locale_app_config):
+async def test_rag_path_does_not_hedge_unnecessarily():
     """
     When answering from retrieved content the LLM should speak confidently,
     not use generic hedging phrases like 'generally' or 'typically'.
@@ -143,7 +143,7 @@ async def test_rag_path_does_not_hedge_unnecessarily(setup_multi_locale_app_conf
 
 @pytest.mark.asyncio
 @pytest.mark.llm_integration
-async def test_no_rag_data_answers_with_general_knowledge(setup_multi_locale_app_config):
+async def test_no_rag_data_answers_with_general_knowledge():
     """
     When the search service returns no chunks, the LLM must still give a
     substantive answer using general knowledge — not refuse or say 'I don't know'.
@@ -174,7 +174,7 @@ async def test_no_rag_data_answers_with_general_knowledge(setup_multi_locale_app
 
 @pytest.mark.asyncio
 @pytest.mark.llm_integration
-async def test_no_rag_data_applies_hedging_language(setup_multi_locale_app_config):
+async def test_no_rag_data_applies_hedging_language():
     """
     When answering from general knowledge, the LLM should hedge rather than
     present general facts as Zambia-specific verified data.
