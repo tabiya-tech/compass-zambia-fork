@@ -332,6 +332,7 @@ class CareerReadinessService(ICareerReadinessService):
             message=intro_output.message_for_user,
             sender=CareerReadinessMessageSender.AGENT,
             sent_at=intro_output.sent_at,
+            metadata=intro_output.metadata,
         )
 
         document = CareerReadinessConversationDocument(
@@ -400,6 +401,7 @@ class CareerReadinessService(ICareerReadinessService):
             message=agent_output.message_for_user,
             sender=CareerReadinessMessageSender.AGENT,
             sent_at=agent_output.sent_at,
+            metadata=agent_output.metadata,
         )
         await self._repository.append_message(conversation.conversation_id, agent_message)
         response_messages = all_messages + [agent_message]
@@ -459,6 +461,7 @@ class CareerReadinessService(ICareerReadinessService):
             message=agent_output.message_for_user,
             sender=CareerReadinessMessageSender.AGENT,
             sent_at=agent_output.sent_at,
+            metadata=agent_output.metadata,
         )
         await self._repository.append_message(conversation.conversation_id, agent_message)
 

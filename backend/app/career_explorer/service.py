@@ -5,7 +5,7 @@ from typing import Callable
 from bson import ObjectId
 
 from app.agent.agent_types import AgentInput
-from app.agent.career_explorer_agent.agent import CareerExplorerAgent, _get_welcome_message
+from app.agent.career_explorer_agent.agent import CareerExplorerAgent, _get_welcome_message, _get_welcome_metadata
 from app.career_explorer.context_builder import build_windowed_context
 from app.career_explorer.repository import ICareerExplorerConversationRepository
 from app.career_explorer.types import (
@@ -26,7 +26,7 @@ class CareerExplorerService:
         self._logger = logging.getLogger(self.__class__.__name__)
 
     async def get_or_create_conversation(self, user_id: str) -> CareerExplorerConversationResponse:
-        return await self._repository.get_or_create_conversation(user_id, _get_welcome_message())
+        return await self._repository.get_or_create_conversation(user_id, _get_welcome_message(), metadata=_get_welcome_metadata())
 
     async def send_message(self, user_id: str, user_input: str) -> CareerExplorerConversationResponse:
         conv = await self._repository.find_by_user(user_id)

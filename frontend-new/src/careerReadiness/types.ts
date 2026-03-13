@@ -43,6 +43,7 @@ export interface CareerReadinessMessage {
   message: string;
   sent_at: string;
   sender: CareerReadinessMessageSender;
+  metadata?: { quick_reply_options?: { label: string }[] } | null;
 }
 
 export interface CareerReadinessConversationResponse {

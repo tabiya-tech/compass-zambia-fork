@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { IChatMessage } from "src/chat/Chat.types";
-import { ConversationMessageSender, MessageReaction } from "./ChatService/ChatService.types";
+import { ConversationMessageSender, MessageReaction, QuickReplyOption } from "./ChatService/ChatService.types";
 import { CurrentPhase } from "src/chat/chatProgressbar/types";
 import { InvalidConversationPhasePercentage } from "./errors";
 import UserChatMessage, {
@@ -76,13 +76,17 @@ export const generateCompassMessage = (
   message_id: string,
   message: string,
   sent_at: string,
-  reaction: MessageReaction | null
+  reaction: MessageReaction | null,
+  quick_reply_options?: QuickReplyOption[] | null,
+  onQuickReplyClick?: (label: string) => void,
 ): IChatMessage<CompassChatMessageProps> => {
   const payload: CompassChatMessageProps = {
     message_id: message_id,
     message: message,
     sent_at: sent_at,
     reaction: reaction,
+    ...(quick_reply_options ? { quick_reply_options } : {}),
+    ...(onQuickReplyClick ? { onQuickReplyClick } : {}),
   };
   return {
     type: COMPASS_CHAT_MESSAGE_TYPE,

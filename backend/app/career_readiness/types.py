@@ -116,6 +116,9 @@ class CareerReadinessMessage(BaseModel):
     sender: CareerReadinessMessageSender
     """The sender of the message, either USER or AGENT"""
 
+    metadata: dict | None = None
+    """Optional metadata (e.g. quick_reply_options)"""
+
     @field_serializer('sent_at')
     def _serialize_sent_at(self, value: datetime) -> str:
         return value.astimezone(timezone.utc).isoformat()

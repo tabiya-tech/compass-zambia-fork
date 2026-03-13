@@ -11,6 +11,10 @@ export interface MessageReaction {
   kind: ReactionKind | null;
 }
 
+export interface QuickReplyOption {
+  label: string;
+}
+
 // Type for individual conversation messages
 export interface ConversationMessage {
   message_id: string;
@@ -18,6 +22,7 @@ export interface ConversationMessage {
   sent_at: string; // ISO formatted datetime string
   sender: ConversationMessageSender; // Either 'USER' or 'COMPASS'
   reaction: MessageReaction | null;
+  quick_reply_options?: QuickReplyOption[] | null;
 }
 
 export interface ConversationResponse {

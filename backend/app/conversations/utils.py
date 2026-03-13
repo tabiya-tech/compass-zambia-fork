@@ -9,7 +9,7 @@ from app.agent.explore_experiences_agent_director import ConversationPhase as Co
 from app.application_state import ApplicationState
 from app.conversation_memory.conversation_memory_types import ConversationHistory, ConversationContext
 from app.conversations.types import ConversationMessage, ConversationMessageSender, MessageReaction, \
-    ConversationPhaseResponse, CurrentConversationPhaseResponse
+    ConversationPhaseResponse, CurrentConversationPhaseResponse, QuickReplyOption
 from app.conversations.reactions.types import Reaction
 from app.conversations.constants import (
     BEGINNING_CONVERSATION_PERCENTAGE,
@@ -61,12 +61,23 @@ async def filter_conversation_history(history: 'ConversationHistory', reactions_
                 compass_reaction = reaction
                 reactions_for_session.pop(i)
                 break
+        # Only attach quick_reply_options to the last COMPASS message
+        quick_reply_options = None
+        if turn == history.turns[-1] and turn.output.metadata:
+            raw = turn.output.metadata.get("quick_reply_options")
+            if raw:
+                quick_reply_options = [
+                    QuickReplyOption(**opt) if isinstance(opt, dict) else QuickReplyOption(label=opt)
+                    for opt in raw
+                ]
+
         messages.append(ConversationMessage(
             message_id=turn.output.message_id,
             message=turn.output.message_for_user,
             sent_at=turn.output.sent_at.astimezone(timezone.utc).isoformat(),
             sender=ConversationMessageSender.COMPASS,
-            reaction=_convert_to_message_reaction(compass_reaction)
+            reaction=_convert_to_message_reaction(compass_reaction),
+            quick_reply_options=quick_reply_options
         ))
     return messages
 
@@ -86,13 +97,26 @@ async def get_messages_from_conversation_manager(context: 'ConversationContext',
     _last = _hist.turns[-1]
 
     messages = []
-    for turn in context.all_history.turns[from_index:]:
+    turns = context.all_history.turns[from_index:]
+    for turn in turns:
         turn.output.sent_at = datetime.now(timezone.utc)
+
+        # Only attach quick_reply_options to the last message in this batch
+        quick_reply_options = None
+        if turn == turns[-1] and turn.output.metadata:
+            raw = turn.output.metadata.get("quick_reply_options")
+            if raw:
+                quick_reply_options = [
+                    QuickReplyOption(**opt) if isinstance(opt, dict) else QuickReplyOption(label=opt)
+                    for opt in raw
+                ]
+
         messages.append(ConversationMessage(
             message_id=turn.output.message_id,
             message=turn.output.message_for_user,
             sent_at=turn.output.sent_at.astimezone(timezone.utc).isoformat(),
             sender=ConversationMessageSender.COMPASS,
+            quick_reply_options=quick_reply_options
         ))
     return messages
 

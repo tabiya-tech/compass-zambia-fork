@@ -99,7 +99,9 @@ export const getLatestQuizHistorySummary = (messages: CareerReadinessMessage[]):
 };
 
 export const mapCareerReadinessMessageToChatMessage = (
-  msg: CareerReadinessMessage
+  msg: CareerReadinessMessage,
+  isLastMessage: boolean = false,
+  onQuickReplyClick?: (label: string) => void,
 ): IChatMessage<CareerReadinessAgentMessageProps> | IChatMessage<CareerReadinessUserMessageProps> => {
   const sentAt = msg.sent_at;
   if (msg.sender === "USER") {
@@ -114,10 +116,13 @@ export const mapCareerReadinessMessageToChatMessage = (
       component: (p: CareerReadinessUserMessageProps) => <CareerReadinessUserMessage {...p} />,
     };
   }
+  const quickReplyOptions = isLastMessage ? msg.metadata?.quick_reply_options ?? null : null;
   const payload: CareerReadinessAgentMessageProps = {
     message_id: msg.message_id,
     message: msg.message,
     sent_at: sentAt,
+    quick_reply_options: quickReplyOptions,
+    onQuickReplyClick: quickReplyOptions ? onQuickReplyClick : undefined,
   };
   return {
     type: CAREER_READINESS_AGENT_MESSAGE_TYPE,
@@ -128,8 +133,12 @@ export const mapCareerReadinessMessageToChatMessage = (
   };
 };
 
-export const mapCareerReadinessMessagesToChatMessages = (messages: CareerReadinessMessage[]): IChatMessage<any>[] => {
-  return messages
-    .filter((msg, index) => !isHiddenCareerReadinessSystemMessage(msg, index, messages))
-    .map(mapCareerReadinessMessageToChatMessage);
+export const mapCareerReadinessMessagesToChatMessages = (
+  messages: CareerReadinessMessage[],
+  onQuickReplyClick?: (label: string) => void,
+): IChatMessage<any>[] => {
+  const visible = messages.filter((msg, index) => !isHiddenCareerReadinessSystemMessage(msg, index, messages));
+  return visible.map((msg, idx) =>
+    mapCareerReadinessMessageToChatMessage(msg, idx === visible.length - 1, onQuickReplyClick)
+  );
 };
