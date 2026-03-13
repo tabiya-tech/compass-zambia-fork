@@ -40,6 +40,33 @@ class SectorContentTestCase:
     """
 
 
+TEST_CASES_GENERAL_KNOWLEDGE = [
+    SectorContentTestCase(
+        name="general_knowledge_no_rag_data",
+        description="User asks a question unlikely to be in local embeddings — agent should use general knowledge with hedging",
+        scripted_user=[
+            "What soft skills do I need to advance my career in mining?",
+        ],
+        expected_phrases_by_turn=[
+            ["Welcome", "priority sectors", "sectors", "careers", "explore"],
+            # Should answer substantively from general knowledge, not refuse
+            ["communication", "teamwork", "leadership", "problem", "skills", "generally", "typically", "industry"],
+        ],
+    ),
+    SectorContentTestCase(
+        name="general_knowledge_career_progression",
+        description="User asks about career progression path — general concept unlikely to be fully covered in local data",
+        scripted_user=[
+            "How do I grow from an entry-level role to a senior position in agriculture?",
+        ],
+        expected_phrases_by_turn=[
+            ["Welcome", "priority sectors", "sectors", "careers", "explore"],
+            # Should give a substantive progression answer, not "I don't know"
+            ["experience", "senior", "progression", "grow", "skills", "generally", "typically", "career", "years"],
+        ],
+    ),
+]
+
 TEST_CASES = [
     SectorContentTestCase(
         name="ask_agriculture",
@@ -206,6 +233,64 @@ async def test_career_explorer_sector_content(
     save_conversation_context_to_json(context=context, file_path=ctx_path + ".json")
     save_conversation_context_to_markdown(
         title=f"Career Explorer: {test_case.name}",
+        context=context,
+        file_path=ctx_path + ".md",
+    )
+
+
+@pytest.mark.asyncio
+@pytest.mark.evaluation_test("gemini-2.5-flash-lite/")
+@pytest.mark.parametrize(
+    "test_case", TEST_CASES_GENERAL_KNOWLEDGE, ids=[tc.name for tc in TEST_CASES_GENERAL_KNOWLEDGE]
+)
+async def test_career_explorer_general_knowledge_fallback(
+    evals_setup, setup_multi_locale_app_config, career_explorer_config_with_sectors, test_case: SectorContentTestCase
+):
+    """
+    Verifies the agent answers substantively using general knowledge when local RAG data
+    does not cover the question, and applies hedging language instead of refusing.
+    """
+    logging.info("Running Career Explorer general-knowledge test case: %s", test_case.name)
+    get_i18n_manager().set_locale(Locale.EN_US)
+
+    executor = CareerExplorerExecutor()
+    max_iterations = len(test_case.scripted_user) + 1
+
+    conversation = await generate(
+        max_iterations=max_iterations,
+        execute_evaluated_agent=executor,
+        execute_simulated_user=ScriptedSimulatedUser(script=test_case.scripted_user),
+        is_finished=CareerExplorerIsFinished(),
+    )
+
+    _assert_rag_content(conversation, test_case)
+
+    output_folder = os.path.join(
+        os.getcwd(),
+        "test_output",
+        "career_explorer_agent",
+        "general_knowledge",
+        test_case.name,
+    )
+    os.makedirs(output_folder, exist_ok=True)
+
+    from datetime import datetime, timezone
+    time_now = datetime.now(timezone.utc).isoformat()
+    base_name = f"{test_case.name}_{time_now}"
+
+    from evaluation_tests.conversation_libs.evaluators.evaluation_result import ConversationEvaluationRecord
+    record = ConversationEvaluationRecord(
+        simulated_user_prompt=test_case.description,
+        test_case=test_case.name,
+    )
+    record.add_conversation_records(conversation)
+    record.save_data(folder=output_folder, base_file_name=base_name)
+
+    context = await CareerExplorerGetConversationContextExecutor(executor)()
+    ctx_path = os.path.join(output_folder, f"{base_name}_context")
+    save_conversation_context_to_json(context=context, file_path=ctx_path + ".json")
+    save_conversation_context_to_markdown(
+        title=f"Career Explorer (General Knowledge): {test_case.name}",
         context=context,
         file_path=ctx_path + ".md",
     )
