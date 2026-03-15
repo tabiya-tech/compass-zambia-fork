@@ -41,14 +41,22 @@ def _build_classifier_instructions() -> str:
     country_name = config.career_explorer_config.country
 
     return dedent(f"""\
-        Classify whether the user's message is about careers in one of {country_name}'s priority sectors or about careers outside them.
+        You classify user messages for routing purposes.
 
-        Priority sectors: {sector_list_str}
+        Return PRIORITY_SECTOR if the user is clearly asking about {country_name}'s priority sectors: {sector_list_str} — or a direct sub-field of these (e.g. solar within Energy, irrigation within Agriculture).
 
-        Return PRIORITY_SECTOR if the user is asking about, expressing interest in, or discussing careers in any of these sectors (or closely related sub-fields, e.g. irrigation within Agriculture, solar within Energy).
-        Return NON_PRIORITY_SECTOR if the user is asking about careers in other sectors (e.g. aeronautical engineering, IT, healthcare) or general career topics not covered by the priority sectors.
+        Return NON_PRIORITY_SECTOR for everything else, including healthcare, education, IT, finance, or any topic not clearly within the priority sectors above.
 
-        Be inclusive: if the user mentions multiple sectors and at least one is a priority sector, return PRIORITY_SECTOR.
+        Default: when uncertain, return NON_PRIORITY_SECTOR.
+
+        Examples:
+        - "What jobs are in solar energy?" → PRIORITY_SECTOR
+        - "How do I become a nurse?" → NON_PRIORITY_SECTOR
+        - "Tell me about farming in {country_name}" → PRIORITY_SECTOR
+        - "What does a software developer do?" → NON_PRIORITY_SECTOR
+        - "I want to be a doctor" → NON_PRIORITY_SECTOR
+        - "What mining jobs are available?" → PRIORITY_SECTOR
+
         Keep reasoning under {MAX_REASONING_LENGTH} characters.
         """)
 
