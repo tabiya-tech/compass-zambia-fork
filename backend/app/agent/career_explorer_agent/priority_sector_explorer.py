@@ -62,9 +62,9 @@ def _build_base_instructions(retrieved_content: str) -> str:
         {STD_AGENT_CHARACTER}
 
         # Instructions
-            - Start by suggesting the priority sectors ({sector_list_str}) and ask which interests the user most
-            - Stay on topic: focus on the priority sectors ({sector_list_str})
-            - If asked about something completely outside this scope, politely redirect to the priority sectors
+            - Your area of expertise is {country_name}'s priority sectors ({sector_list_str})
+            - Answer any career question to the best of your ability
+            - For topics outside your expertise, share what you know and be honest about your limitations — never refuse or redirect the user away
             - Be encouraging and conversational
 
         # How to Use Sources (follow this hierarchy strictly)
