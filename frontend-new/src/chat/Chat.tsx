@@ -30,7 +30,6 @@ import ExperienceService from "src/experiences/experienceService/experienceServi
 import InactiveBackdrop from "src/theme/Backdrop/InactiveBackdrop";
 import ConfirmModalDialog from "src/theme/confirmModalDialog/ConfirmModalDialog";
 import { ChatError, MetricsError } from "src/error/commonErrors";
-import AuthenticationServiceFactory from "src/auth/services/Authentication.service.factory";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
 import { ensureSessionForUser } from "./ensureSession";
 import { ChatProvider } from "src/chat/ChatContext";
@@ -125,7 +124,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const [lastActivityTime, setLastActivityTime] = React.useState<number>(Date.now());
   const [showRefreshConfirmDialog, setShowRefreshConfirmDialog] = React.useState<boolean>(false);
   const [exploredExperiencesNotification, setExploredExperiencesNotification] = useState<boolean>(false);
-  const [isLoggingOut, setIsLoggingOut] = React.useState<boolean>(false);
   const allowRefreshRef = useRef<boolean>(false);
   const networkInfoSentRef = useRef<boolean>(false);
   const [activeSessionId, setActiveSessionId] = useState<number | null>(
@@ -312,15 +310,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
     setIsDrawerOpen(true);
     await fetchExperiences();
   }, [fetchExperiences]);
-
-  const handleLogout = useCallback(async () => {
-    setIsLoggingOut(true);
-    const authenticationService = AuthenticationServiceFactory.getCurrentAuthenticationService();
-    await authenticationService!.logout();
-    navigate(routerPaths.LANDING, { replace: true });
-    enqueueSnackbar(t(NOTIFICATION_MESSAGES_TEXT.SUCCESSFULLY_LOGGED_OUT), { variant: "success" });
-    setIsLoggingOut(false);
-  }, [enqueueSnackbar, navigate, t]);
 
   // Helper to stop polling and cleanup
   const stopPollingForUpload = useCallback(
@@ -1059,122 +1048,117 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
 
   return (
     <Suspense fallback={<Backdrop isShown={true} transparent={true} />}>
-      {isLoggingOut ? (
-        <Backdrop isShown={isLoggingOut} message={t("chat.chat.backdrop.loggingOut")} />
-      ) : (
-        <ChatProvider
-          handleOpenExperiencesDrawer={handleOpenExperiencesDrawer}
-          removeMessageFromChat={removeMessageFromChat}
-          addMessageToChat={addMessageToChat}
+      <ChatProvider
+        handleOpenExperiencesDrawer={handleOpenExperiencesDrawer}
+        removeMessageFromChat={removeMessageFromChat}
+        addMessageToChat={addMessageToChat}
+      >
+        <Box
+          width="100%"
+          height="100%"
+          display="flex"
+          flexDirection="column"
+          position="relative"
+          data-testid={DATA_TEST_ID.CHAT_CONTAINER}
+          // The "is-initialized" attribute helps make the component testable.
+          // When the component mounts, an initialization function runs, changing the state and causing a rerender.
+          // Tests need to wait for the component to "settle" after mounting, but they don't know when that happens.
+          // To check if the component is settled, tests can wait for the "is-initialized" attribute to be true:
+          //   await waitFor(() => {
+          //     expect(screen.getByTestId(DATA_TEST_ID.CHAT_CONTAINER)).toHaveAttribute("is-initialized", "true");
+          //   });
+          // This technique can solve the "Warning: An update to Chat inside a test was not wrapped in act(...)" warning.
+          is-initialized={`${initialized}`}
         >
+          <PageHeader
+            title="home.modules.skillsDiscovery"
+            subtitle="home.modules.skillsDiscoverySubtitle"
+            backLinkLabel="home.backToDashboard"
+            onBackClick={() => navigate(routerPaths.ROOT)}
+          />
           <Box
-            width="100%"
-            height="100%"
-            display="flex"
-            flexDirection="column"
-            position="relative"
-            data-testid={DATA_TEST_ID.CHAT_CONTAINER}
-            // The "is-initialized" attribute helps make the component testable.
-            // When the component mounts, an initialization function runs, changing the state and causing a rerender.
-            // Tests need to wait for the component to "settle" after mounting, but they don't know when that happens.
-            // To check if the component is settled, tests can wait for the "is-initialized" attribute to be true:
-            //   await waitFor(() => {
-            //     expect(screen.getByTestId(DATA_TEST_ID.CHAT_CONTAINER)).toHaveAttribute("is-initialized", "true");
-            //   });
-            // This technique can solve the "Warning: An update to Chat inside a test was not wrapped in act(...)" warning.
-            is-initialized={`${initialized}`}
+            sx={{
+              paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.sm),
+              paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.md),
+              paddingX: theme.spacing(theme.tabiyaSpacing.md),
+              width: { xs: "100%", md: "60%" },
+              margin: { xs: "0", md: "0 auto" },
+            }}
           >
-            <PageHeader
-              title="home.modules.skillsDiscovery"
-              subtitle="home.modules.skillsDiscoverySubtitle"
-              backLinkLabel="home.backToDashboard"
-              onBackClick={() => navigate(routerPaths.ROOT)}
-            />
             <Box
               sx={{
-                paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.sm),
-                paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.md),
-                paddingX: theme.spacing(theme.tabiyaSpacing.md),
-                width: { xs: "100%", md: "60%" },
-                margin: { xs: "0", md: "0 auto" },
+                display: "flex",
+                alignItems: "center",
+                gap: theme.spacing(theme.tabiyaSpacing.sm),
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: theme.spacing(theme.tabiyaSpacing.sm),
-                }}
-              >
-                <Box sx={{ flex: 1 }}>
-                  <ChatProgressBar
-                    percentage={currentPhase.percentage}
-                    phase={currentPhase.phase}
-                    current={currentPhase.current}
-                    total={currentPhase.total}
-                  />
-                </Box>
-                <Box sx={{ flexShrink: 0 }}>
-                  <ChatHeader
-                    notifyOnLogout={handleLogout}
-                    experiencesExplored={exploredExperiencesCount.length}
-                    exploredExperiencesNotification={exploredExperiencesNotification}
-                    setExploredExperiencesNotification={setExploredExperiencesNotification}
-                    conversationCompleted={conversationCompleted}
-                    timeUntilNotification={timeUntilFeedbackNotification}
-                    progressPercentage={currentPhase.percentage}
-                    conversationPhase={currentPhase.phase}
-                    collectedExperiences={experiences?.length}
-                  />
-                </Box>
+              <Box sx={{ flex: 1 }}>
+                <ChatProgressBar
+                  percentage={currentPhase.percentage}
+                  phase={currentPhase.phase}
+                  current={currentPhase.current}
+                  total={currentPhase.total}
+                />
+              </Box>
+              <Box sx={{ flexShrink: 0 }}>
+                <ChatHeader
+                  experiencesExplored={exploredExperiencesCount.length}
+                  exploredExperiencesNotification={exploredExperiencesNotification}
+                  setExploredExperiencesNotification={setExploredExperiencesNotification}
+                  conversationCompleted={conversationCompleted}
+                  timeUntilNotification={timeUntilFeedbackNotification}
+                  progressPercentage={currentPhase.percentage}
+                  conversationPhase={currentPhase.phase}
+                  collectedExperiences={experiences?.length}
+                />
               </Box>
             </Box>
-            <Box sx={{ flex: 1, overflowY: "auto", paddingX: theme.spacing(theme.tabiyaSpacing.lg) }}>
-              <ChatList messages={messages} />
-            </Box>
-            {showBackdrop && <InactiveBackdrop isShown={showBackdrop} />}
-            <Box sx={{ flexShrink: 0, padding: theme.tabiyaSpacing.lg, paddingTop: theme.tabiyaSpacing.xs }}>
-              <ChatMessageField
-                handleSend={handleSend}
-                aiIsTyping={aiIsTyping}
-                isChatFinished={conversationCompleted}
-                isUploadingCv={isUploadingCv || activeUploads.size > 0}
-                onUploadCv={handleUploadCv}
-                currentPhase={currentPhase.phase}
-                prefillMessage={prefillMessage}
-                cvUploadError={cvUploadError}
-              />
-            </Box>
           </Box>
-          <ExperiencesDrawer
-            isOpen={isDrawerOpen}
-            notifyOnClose={handleDrawerClose}
-            isLoading={isLoading}
-            experiences={experiences}
-            conversationConductedAt={conversationConductedAt}
-            onExperiencesUpdated={fetchExperiences}
-          />
-          {showRefreshConfirmDialog && (
-            <ConfirmModalDialog
-              isOpen={showRefreshConfirmDialog}
-              title={t("chat.chat.refreshConfirmationDialog.title")}
-              content={
-                <>
-                  {t("chat.chat.refreshConfirmationDialog.content")}
-                  <br />
-                  <br />
-                  {t("chat.chat.refreshConfirmationDialog.question")}
-                </>
-              }
-              onCancel={handleCancelRefresh}
-              onConfirm={handleConfirmRefresh}
-              onDismiss={handleCancelRefresh}
-              cancelButtonText={t("chat.chat.refreshConfirmationDialog.waitButton")}
-              confirmButtonText={t("chat.chat.refreshConfirmationDialog.refreshButton")}
+          <Box sx={{ flex: 1, overflowY: "auto", paddingX: theme.spacing(theme.tabiyaSpacing.lg) }}>
+            <ChatList messages={messages} />
+          </Box>
+          {showBackdrop && <InactiveBackdrop isShown={showBackdrop} />}
+          <Box sx={{ flexShrink: 0, padding: theme.tabiyaSpacing.lg, paddingTop: theme.tabiyaSpacing.xs }}>
+            <ChatMessageField
+              handleSend={handleSend}
+              aiIsTyping={aiIsTyping}
+              isChatFinished={conversationCompleted}
+              isUploadingCv={isUploadingCv || activeUploads.size > 0}
+              onUploadCv={handleUploadCv}
+              currentPhase={currentPhase.phase}
+              prefillMessage={prefillMessage}
+              cvUploadError={cvUploadError}
             />
-          )}
-        </ChatProvider>
-      )}
+          </Box>
+        </Box>
+        <ExperiencesDrawer
+          isOpen={isDrawerOpen}
+          notifyOnClose={handleDrawerClose}
+          isLoading={isLoading}
+          experiences={experiences}
+          conversationConductedAt={conversationConductedAt}
+          onExperiencesUpdated={fetchExperiences}
+        />
+        {showRefreshConfirmDialog && (
+          <ConfirmModalDialog
+            isOpen={showRefreshConfirmDialog}
+            title={t("chat.chat.refreshConfirmationDialog.title")}
+            content={
+              <>
+                {t("chat.chat.refreshConfirmationDialog.content")}
+                <br />
+                <br />
+                {t("chat.chat.refreshConfirmationDialog.question")}
+              </>
+            }
+            onCancel={handleCancelRefresh}
+            onConfirm={handleConfirmRefresh}
+            onDismiss={handleCancelRefresh}
+            cancelButtonText={t("chat.chat.refreshConfirmationDialog.waitButton")}
+            confirmButtonText={t("chat.chat.refreshConfirmationDialog.refreshButton")}
+          />
+        )}
+      </ChatProvider>
     </Suspense>
   );
 };
