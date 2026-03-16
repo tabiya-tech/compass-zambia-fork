@@ -163,7 +163,15 @@
     "chatMessage": {
       "typingChatMessage": {
         "typing": "Kulemba",
-        "thinking": "Chonde dikirani, ndikuganiza"
+        "thinking": "Chonde dikirani, ndikuganiza",
+        "thinkingPreferenceElicitation": "Ndikuganiza za yankho lanu…"
+      },
+      "bwsTaskMessage": {
+        "whichWouldYouPrefer": "Mukakonda chiyani?",
+        "most": "Zambiri:",
+        "least": "Zochepera:",
+        "submit": "Tumizani",
+        "submitted": "Yatumizidwa"
       },
       "conversationConclusionFooter": {
         "youCanNow": "Tsopano mungathe",

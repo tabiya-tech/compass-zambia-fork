@@ -131,6 +131,7 @@ describe("ChatHeader", () => {
     const givenNumberOfExploredExperiences = 1;
     const givenChatHeader = (
       <ChatHeader
+        notifyOnLogout={jest.fn()}
         experiencesExplored={givenNumberOfExploredExperiences}
         exploredExperiencesNotification={givenExploredExperiencesNotification}
         setExploredExperiencesNotification={jest.fn()}
@@ -312,7 +313,6 @@ describe("ChatHeader", () => {
       // AND a logged-in user for metrics
       const mockUser = { id: "foo123", name: "Foo", email: "foo@bar" };
       jest.spyOn(AuthenticationStateService.getInstance(), "getUser").mockReturnValue(mockUser);
-      const metricsSpy = jest.spyOn(MetricsService.getInstance(), "sendMetricsEvent").mockReturnValue();
       const givenChatHeader = (
         <ChatHeader
           notifyOnLogout={jest.fn()}
@@ -353,6 +353,7 @@ describe("ChatHeader", () => {
       const metricsSpy = jest.spyOn(MetricsService.getInstance(), "sendMetricsEvent").mockReturnValue();
       const givenChatHeader = (
         <ChatHeader
+          notifyOnLogout={jest.fn()}
           experiencesExplored={0}
           exploredExperiencesNotification={true}
           setExploredExperiencesNotification={jest.fn()}
@@ -406,6 +407,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       const givenChatHeader = (
         <ChatHeader
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={givenExploredExperiencesNotification}
           setExploredExperiencesNotification={jest.fn()}
@@ -440,6 +442,7 @@ describe("ChatHeader", () => {
       // AND the component is rendered
       const givenChatHeader = (
         <ChatHeader
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={givenExploredExperiencesNotification}
           setExploredExperiencesNotification={jest.fn()}
@@ -578,6 +581,7 @@ describe("ChatHeader", () => {
         // GIVEN a ChatHeader component
         const givenChatHeader = (
           <ChatHeader
+            notifyOnLogout={jest.fn()}
             experiencesExplored={0}
             exploredExperiencesNotification={false}
             setExploredExperiencesNotification={jest.fn()}
@@ -884,6 +888,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
@@ -914,6 +919,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
@@ -999,6 +1005,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
@@ -1031,6 +1038,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
+          notifyOnLogout={jest.fn()}
           experiencesExplored={givenExploredExperiences}
           exploredExperiencesNotification={false}
           setExploredExperiencesNotification={jest.fn()}
