@@ -45,6 +45,9 @@ backend:
 frontend:
   config:
     gcp:region: <region>
+admin_frontend:
+  config:
+    gcp:region: <region>
 common:
   config:
     gcp:region: <region>

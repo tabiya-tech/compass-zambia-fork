@@ -18,6 +18,12 @@ jobs:
     with:
       upload-artifacts: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/zambia-working-branch' || contains(github.event.head_commit.message, '[pulumi up]'))) }}
 
+  admin-frontend-ci:
+    uses: ./.github/workflows/admin-frontend-ci.yml
+    secrets: inherit
+    with:
+      upload-artifacts: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/zambia-working-branch' || contains(github.event.head_commit.message, '[pulumi up]'))) }}
+
   backend-ci:
     uses: ./.github/workflows/backend-ci.yml
     secrets: inherit
@@ -30,7 +36,7 @@ jobs:
     if: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/zambia-working-branch'  || contains(github.event.head_commit.message, '[pulumi up]'))) }}
 
   deploy:
-    needs: [ frontend-ci, backend-ci, config-ci ]
+    needs: [ frontend-ci, admin-frontend-ci, backend-ci, config-ci ]
     if: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/zambia-working-branch'  || contains(github.event.head_commit.message, '[pulumi up]'))) }}
     uses: ./.github/workflows/deploy.yml
     secrets: inherit

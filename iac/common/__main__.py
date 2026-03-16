@@ -29,6 +29,8 @@ def main():
     frontend_domain = getstackref(env_reference, "frontend_domain")
     frontend_url = getstackref(env_reference, "frontend_url")
     backend_url = getstackref(env_reference, "backend_url")
+    admin_frontend_domain = getstackref(env_reference, "admin_frontend_domain")
+    admin_frontend_url = getstackref(env_reference, "admin_frontend_url")
 
     # Get stack reference for dns
     dns_stack_ref = pulumi.StackReference(f"tabiya-tech/compass-dns/{stack_name}")
@@ -38,6 +40,11 @@ def main():
     frontend_stack_ref = pulumi.StackReference(f"tabiya-tech/compass-frontend/{stack_name}")
     frontend_bucket_name = getstackref(frontend_stack_ref, "bucket_name")
     frontend_bucket_name.apply(lambda name: print(f"Using frontend bucket name: {name}"))
+
+    # Get stack reference for admin frontend
+    admin_frontend_stack_ref = pulumi.StackReference(f"tabiya-tech/compass-admin-frontend/{stack_name}")
+    admin_frontend_bucket_name = getstackref(admin_frontend_stack_ref, "bucket_name")
+    admin_frontend_bucket_name.apply(lambda name: print(f"Using admin frontend bucket name: {name}"))
 
     # Get stack reference for backend
     backend_stack_ref = pulumi.StackReference(f"tabiya-tech/compass-backend/{stack_name}")
@@ -53,7 +60,10 @@ def main():
         frontend_bucket_name=frontend_bucket_name,
         frontend_url=frontend_url,
         backend_url=backend_url,
-        api_gateway_id=api_gateway_id)
+        api_gateway_id=api_gateway_id,
+        admin_frontend_domain=admin_frontend_domain,
+        admin_frontend_url=admin_frontend_url,
+        admin_frontend_bucket_name=admin_frontend_bucket_name)
 
 
 if __name__ == "__main__":

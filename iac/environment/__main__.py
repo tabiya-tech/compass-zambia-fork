@@ -62,6 +62,10 @@ def main():
 
     pulumi.export("auth_domain", domain_name.apply(lambda _domain_name: f"auth.{_domain_name}"))
 
+    # Admin frontend domain: admin.<env-name>.<realm-name>.<base-domain>
+    pulumi.export("admin_frontend_domain", domain_name.apply(lambda _domain_name: f"admin.{_domain_name}"))
+    pulumi.export("admin_frontend_url", domain_name.apply(lambda _domain_name: f"https://admin.{_domain_name}"))
+
     create_new_environment(
         realm_name=realm_name,
         region=gcp_region,

@@ -1,0 +1,4 @@
+name: compass-admin-frontend
+runtime:
+  name: python
+description: Tabiya Compass Admin Frontend Infrastructure
