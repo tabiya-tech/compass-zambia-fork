@@ -9,6 +9,7 @@ import { PersistentStorageService } from "src/app/PersistentStorageService/Persi
 import { useSentryFeedbackForm } from "src/feedback/hooks/useSentryFeedbackForm";
 
 export type ChatHeaderProps = {
+  notifyOnLogout: () => void;
   experiencesExplored: number;
   exploredExperiencesNotification: boolean;
   setExploredExperiencesNotification: React.Dispatch<SetStateAction<boolean>>;
@@ -24,6 +25,7 @@ export const DATA_TEST_ID = {
 };
 
 const ChatHeader: React.FC<Readonly<ChatHeaderProps>> = ({
+  notifyOnLogout,
   experiencesExplored,
   exploredExperiencesNotification,
   setExploredExperiencesNotification,

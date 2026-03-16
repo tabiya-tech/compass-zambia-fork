@@ -798,16 +798,18 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
                 }
                 return [bwsMessage];
               }
-              return [generateCompassMessage(
-                message.message_id,
-                message.message,
-                message.sent_at,
-                message.reaction,
-                isLast && !history.conversation_completed ? message.quick_reply_options : null,
-                isLast && !history.conversation_completed && message.quick_reply_options
-                  ? handleQuickReply
-                  : undefined
-              )];
+              return [
+                generateCompassMessage(
+                  message.message_id,
+                  message.message,
+                  message.sent_at,
+                  message.reaction,
+                  isLast && !history.conversation_completed ? message.quick_reply_options : null,
+                  isLast && !history.conversation_completed && message.quick_reply_options
+                    ? handleQuickReply
+                    : undefined
+                ),
+              ];
             }
           );
 
