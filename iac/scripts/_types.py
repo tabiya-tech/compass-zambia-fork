@@ -19,6 +19,7 @@ class IaCModules(Enum):
     AUTH = "auth"
     BACKEND = "backend"
     FRONTEND = "frontend"
+    ADMIN_FRONTEND = "admin_frontend"
     COMMON = "common"
 
 
@@ -78,6 +79,7 @@ class StackConfigs:
     auth: Mapping[str, Any]
     backend: Mapping[str, Any]
     frontend: Mapping[str, Any]
+    admin_frontend: Mapping[str, Any]
     common: Mapping[str, Any]
 
     raw_config: dict
@@ -99,6 +101,7 @@ class StackConfigs:
             auth=_dict[IaCModules.AUTH.value],
             backend=_dict[IaCModules.BACKEND.value],
             frontend=_dict[IaCModules.FRONTEND.value],
+            admin_frontend=_dict.get(IaCModules.ADMIN_FRONTEND.value, {}),
             common=_dict[IaCModules.COMMON.value],
             raw_config=_dict
         )

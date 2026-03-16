@@ -1,0 +1,62 @@
+name: Admin Frontend CI & Artifact Upload
+
+on:
+  workflow_call:
+    inputs:
+      upload-artifacts:
+        required: true
+        type: boolean
+        description: 'Whether to upload deployable artifacts'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+          cache-dependency-path: admin-frontend/yarn.lock
+
+      - name: Install node packages
+        run: yarn install
+        working-directory: admin-frontend
+
+      - name: Test Admin Frontend
+        run: yarn run test --watchAll=false --passWithNoTests
+        working-directory: admin-frontend
+
+  build-and-upload:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.upload-artifacts }}
+    needs: [ test ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+          cache-dependency-path: admin-frontend/yarn.lock
+
+      - name: Install node packages
+        run: yarn install
+        working-directory: admin-frontend
+
+      - name: Authenticate to google cloud
+        id: auth
+        uses: google-github-actions/auth@v2.1.2
+        with:
+          credentials_json:
+            ${{ secrets.GCP_LOWER_ENVS_SERVICE_ACCOUNT_JSON }}
+
+      - name: Run build and upload script.
+        shell: bash
+        run: |
+          ./iac/scripts/build-and-upload-fe.sh ${{ vars.ARTIFACT_REGISTRY_REGION }} ${{ secrets.GCP_REALM_ROOT_PROJECT_ID }} $GITHUB_STEP_SUMMARY $GITHUB_RUN_NUMBER admin-frontend

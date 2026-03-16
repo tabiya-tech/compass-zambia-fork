@@ -19,6 +19,7 @@ iac_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, iac_folder)
 
 from frontend.prepare_frontend import download_frontend_bundle
+from admin_frontend.prepare_admin_frontend import download_admin_frontend_bundle
 
 from environment.env_types import EnvironmentTypes
 from _types import IaCModules, Environment, StackConfigs
@@ -85,6 +86,12 @@ def _download_artifacts_and_config(_realm_name: str, _artifacts_version: Version
         deployment_number=_deployment_number)
 
     download_frontend_bundle(
+        realm_name=_realm_name,
+        artifacts_version=_artifacts_version,
+        deployment_number=_deployment_number
+    )
+
+    download_admin_frontend_bundle(
         realm_name=_realm_name,
         artifacts_version=_artifacts_version,
         deployment_number=_deployment_number
@@ -197,6 +204,11 @@ def _prepare_environment_deployment(*,
         stack_name=environment.stack_name,
         module=IaCModules.FRONTEND,
         content=stack_configs.frontend)
+
+    write_config_to_pulumi_yaml_file(
+        stack_name=environment.stack_name,
+        module=IaCModules.ADMIN_FRONTEND,
+        content=stack_configs.admin_frontend)
 
     write_config_to_pulumi_yaml_file(
         stack_name=environment.stack_name,

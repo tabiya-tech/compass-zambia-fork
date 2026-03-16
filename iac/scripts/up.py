@@ -20,6 +20,7 @@ sys.path.insert(0, iac_dir)
 from environment.env_types import EnvironmentTypes
 from _types import IaCModules, Environment
 from frontend.prepare_frontend import prepare_frontend
+from admin_frontend.prepare_admin_frontend import prepare_admin_frontend
 from lib import load_dot_realm_env, getenv, get_pulumi_stack_outputs, Version, clear_dot_env
 from _common import add_select_environments_arguments, run_pulumi_up, find_environments
 
@@ -64,6 +65,18 @@ def _deploy_frontend(stack_name: str):
     _run_smoke_tests(f"{bucket_url}/data/version.json")
 
 
+def _deploy_admin_frontend(stack_name: str):
+    # prepare the admin frontend to be deployed.
+    prepare_admin_frontend(stack_name=stack_name)
+
+    # run pulumi up for the admin frontend stack.
+    up_results = run_pulumi_up(stack_name, IaCModules.ADMIN_FRONTEND)
+
+    # run the smoke tests for the admin frontend.
+    bucket_url = up_results.outputs["bucket_url"].value
+    _run_smoke_tests(f"{bucket_url}/data/version.json")
+
+
 def _deploy_backend(stack_name: str):
     # run pulumi up on the backend
     up_results = run_pulumi_up(stack_name, IaCModules.BACKEND)
@@ -87,6 +100,10 @@ def _deploy_common(stack_name: str):
     # 2.2 run smoke tests for the frontend
     frontend_url = environment_outputs["frontend_url"].value
     _run_smoke_tests(f"{frontend_url}/data/version.json", 30)
+
+    # 2.3 run smoke tests for the admin frontend
+    admin_frontend_url = environment_outputs["admin_frontend_url"].value
+    _run_smoke_tests(f"{admin_frontend_url}/data/version.json", 30)
 
 
 def _tag_the_environment_with_deployment_info(stack_name: str):
@@ -137,13 +154,16 @@ def _deploy_environment(stack_name: str):
         # 1.3 Deploy the frontend.
         _deploy_frontend(stack_name)
 
-        # 1.4 Deploy the backend.
+        # 1.4 Deploy the admin frontend.
+        _deploy_admin_frontend(stack_name)
+
+        # 1.5 Deploy the backend.
         _deploy_backend(stack_name)
 
-        # 1.5 Deploy the common
+        # 1.6 Deploy the common
         _deploy_common(stack_name)
 
-        # 1.6 set the necessary tags to the pulumi environment, necessary for the deployment report.
+        # 1.7 set the necessary tags to the pulumi environment, necessary for the deployment report.
         _tag_the_environment_with_deployment_info(stack_name)
 
     except Exception as e:
