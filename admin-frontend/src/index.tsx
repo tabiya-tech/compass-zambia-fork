@@ -1,16 +1,110 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "src/App";
+import reportWebVitals from "src/reportWebVitals";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import applicationTheme, { ThemeMode } from "src/theme/applicationTheme/applicationTheme";
+import SnackbarProvider from "src/theme/SnackbarProvider/SnackbarProvider";
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+import "src/styles/variables.css";
+
+import * as Sentry from "@sentry/react";
+import { useTranslation } from "react-i18next";
+
+import { initSentry } from "./sentryInit";
+import { ensureRequiredEnvVars } from "./envService";
+import { applyBrandingFromEnv } from "src/branding/branding";
+
+import "./i18n/i18n";
+
+// Error boundary fallback that uses i18n like the rest of the app
+const ErrorBoundaryFallback: React.FC = () => {
+  const { t } = useTranslation();
+  return (
+    <div style={{ padding: "20px", textAlign: "center" }}>
+      <h1>{t("error.errorPage.defaultMessage", "Something went wrong")}</h1>
+    </div>
+  );
+};
+
+// initialize react sentry for log aggregation
+initSentry();
+
+// Ensure all required environment variables are set
+ensureRequiredEnvVars();
+
+// Apply branding overrides
+applyBrandingFromEnv();
+
+export const MAX_WAIT_TIME_FOR_ROOT_ELEMENT = 10000; // it should be greater than the minimum time
+// the loading screen will be shown (see public/index.html)
+export const ROOT_ELEMENT_POLL_INTERVAL = 250;
+// Wait for the root element to be available in the DOM.
+// The root element is added if the app loads within a certain time frame,
+// or after the loading screen has been shown for the minimum required time (see public/index.html),
+// whichever happens first.
+const waitForRoot = (): Promise<HTMLElement> => {
+  const MAX_ATTEMPTS = MAX_WAIT_TIME_FOR_ROOT_ELEMENT / ROOT_ELEMENT_POLL_INTERVAL;
+  return new Promise((resolve, reject) => {
+    let attempts = 0;
+    let timeoutId: NodeJS.Timeout;
+
+    const checkRoot = () => {
+      const rootElement = document.getElementById("root");
+
+      if (rootElement) {
+        clearTimeout(timeoutId);
+        resolve(rootElement);
+        return;
+      }
+
+      attempts++;
+      if (attempts >= MAX_ATTEMPTS) {
+        clearTimeout(timeoutId);
+        reject(new Error("Root element not found after maximum attempts"));
+        return;
+      }
+
+      timeoutId = setTimeout(checkRoot, ROOT_ELEMENT_POLL_INTERVAL);
+    };
+
+    checkRoot();
+  });
+};
+
+function fadeOutAndHide(el: HTMLElement, duration: number) {
+  el.style.transition = `opacity ${duration}ms ease`;
+  el.style.opacity = "0";
+  setTimeout(() => {
+    el.style.display = "none";
+  }, duration);
+}
+
+// Initialize React after root element is available
+waitForRoot()
+  .then((rootElement) => {
+    // At this point, the root element is in the DOM and the loading screen can be hidden.
+    const loadingScreen = document.getElementById("loading");
+    if (loadingScreen) {
+      fadeOutAndHide(loadingScreen, 500); // fade out the loading screen over 500ms
+    }
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <React.StrictMode>
+        <Sentry.ErrorBoundary fallback={<ErrorBoundaryFallback />}>
+          <CssBaseline />
+          <ThemeProvider theme={applicationTheme(ThemeMode.LIGHT)}>
+            <SnackbarProvider>
+              <App />
+            </SnackbarProvider>
+          </ThemeProvider>
+        </Sentry.ErrorBoundary>
+      </React.StrictMode>
+    );
+  })
+  .catch((error) => {
+    console.error("Failed to initialize React:", error);
+  });
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

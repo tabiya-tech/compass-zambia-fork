@@ -1,0 +1,103 @@
+{
+  "common": {
+    "buttons": {
+      "login": "Login",
+      "logout": "Logout",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "confirm": "Yes, I'm sure",
+      "save": "Save",
+      "goBack": "Go Back",
+      "continue": "Continue",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "validation": {
+      "validEmailRequired": "Please enter a valid email address",
+      "passwordMinLength": "Password must be at least 8 characters long."
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "api": {
+        "unexpectedError": "An unexpected error occurred. Please try again later.",
+        "serverConnectionError": "Cannot connect to the service. Please check your internet connection or try again later.",
+        "authenticationFailure": "It looks like you not logged in. Please log in to continue.",
+        "permissionDenied": "It looks like you do not have the necessary permissions. Please log out and log in again."
+      }
+    },
+    "status": {
+      "loading": "Loading",
+      "saving": "Saving"
+    },
+    "modal": {
+      "areYouSure": "Are you sure?"
+    }
+  },
+  "auth": {
+    "pages": {
+      "login": {
+        "welcomeTitle": "Welcome to {{appName}} Admin!",
+        "welcomeBack": "Welcome back!",
+        "loginToYourAccountToContinue": "Login to your account to continue",
+        "loggingYouIn": "Logging you in..."
+      }
+    },
+    "errors": {
+      "loginFailedWithMessage": "Failed to login: {{message}}",
+      "firebase": {
+        "invalidCredential": "The email/password provided is invalid.",
+        "invalidEmail": "The email address is not valid.",
+        "userDisabled": "The user account has been disabled.",
+        "userNotFound": "No user was found for the given credentials.",
+        "wrongPassword": "The password is invalid.",
+        "tooManyRequests": "We have blocked all requests from this device due to unusual activity. Try again later.",
+        "internalError": "An internal error has occurred."
+      }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "welcome": "Welcome to the Admin Portal"
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "settings": "Settings"
+    }
+  },
+  "error": {
+    "errorPage": {
+      "illustrationAlt": "error illustration",
+      "defaultMessage": "Something went wrong. Try reloading the page...",
+      "notFound": "404 Error - Page Not Found"
+    }
+  },
+  "app": {
+    "isOnlineProvider": {
+      "offline": "You are offline",
+      "backOnline": "You are back online"
+    },
+    "logoAlt": "{{appName}} Logo"
+  },
+  "theme": {
+    "confirmModalDialog": {
+      "closeConfirmModal": "close confirm modal"
+    },
+    "passwordInput": {
+      "togglePasswordVisibility": "toggle password visibility"
+    },
+    "helpTip": {
+      "tooltip": "help"
+    }
+  },
+  "i18n": {
+    "languageContextMenu": {
+      "selector": "Language Selector"
+    }
+  }
+}

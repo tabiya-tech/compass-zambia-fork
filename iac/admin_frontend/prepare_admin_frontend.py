@@ -1,7 +1,9 @@
+import json
 import os
 import sys
 import shutil
 import subprocess
+from typing import Optional
 
 # Determine the absolute path to the 'iac' directory
 iac_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -11,7 +13,7 @@ sys.path.insert(0, iac_folder)
 
 from lib import getenv, get_realm_and_env_name_from_stack, \
     get_pulumi_stack_outputs, construct_artifacts_dir, save_content_in_file, \
-    download_generic_artifacts_file, Version
+    download_generic_artifacts_file, Version, base64_encode
 
 from scripts.formatters import construct_artifacts_version
 
@@ -46,6 +48,7 @@ def download_admin_frontend_bundle(
     artifacts_dir = construct_artifacts_dir(
         deployment_number=deployment_number,
         fully_qualified_version=admin_frontend_artifacts_version)
+
     # artifacts dir, the folder to store the admin frontend build bundle.
     artifacts_destination_dir = os.path.join(base_artifacts_dir, artifacts_dir)
     os.makedirs(artifacts_destination_dir, exist_ok=False)
@@ -89,6 +92,62 @@ def download_admin_frontend_bundle(
         raise
 
 
+def _construct_env_js_content(*, artifacts_dir: str, stack_name: str):
+    """
+    Construct the env.js file for the admin frontend.
+
+    This function reads environment variables and constructs the env.js file
+    that will be used by the admin frontend application.
+
+    Args:
+        :param artifacts_dir: The directory where the admin frontend build bundle is stored.
+        :param stack_name: The name of the Pulumi stack.
+    """
+    # Sentry configuration
+    sentry_dsn: str = getenv("FRONTEND_SENTRY_DSN", True, False)
+    enable_sentry: str = getenv("FRONTEND_ENABLE_SENTRY", False, False)
+    sentry_config: str = getenv("FRONTEND_SENTRY_CONFIG", False, False)
+
+    # Locales
+    supported_locales = getenv("FRONTEND_SUPPORTED_LOCALES", False, True)
+    default_locale = getenv("FRONTEND_DEFAULT_LOCALE", False, True)
+
+    # Branding
+    global_product_name: Optional[str] = getenv("FRONTEND_PRODUCT_NAME", False, False)
+    frontend_browser_tab_title: Optional[str] = getenv("FRONTEND_BROWSER_TAB_TITLE", False, False)
+    frontend_meta_description: Optional[str] = getenv("FRONTEND_META_DESCRIPTION", False, False)
+    frontend_logo_url: Optional[str] = getenv("FRONTEND_LOGO_URL", False, False)
+    frontend_favicon_url: Optional[str] = getenv("FRONTEND_FAVICON_URL", False, False)
+    frontend_app_icon_url: Optional[str] = getenv("FRONTEND_APP_ICON_URL", False, False)
+    frontend_theme_css_variables: Optional[str] = getenv("FRONTEND_THEME_CSS_VARIABLES", False, False)
+
+    print(f"Constructing the env.js file... for the run: {stack_name}")
+
+    environment_outputs = get_pulumi_stack_outputs(stack_name=stack_name, module="environment")
+    _, env_name = get_realm_and_env_name_from_stack(stack_name)
+
+    frontend_env_json = {
+        "BACKEND_URL": base64_encode(environment_outputs["backend_url"].value),
+        "TARGET_ENVIRONMENT_NAME": base64_encode(env_name),
+        "FRONTEND_ENABLE_SENTRY": base64_encode(enable_sentry),
+        "FRONTEND_SENTRY_DSN": base64_encode(sentry_dsn),
+        "FRONTEND_SENTRY_CONFIG": base64_encode(sentry_config),
+        "FRONTEND_SUPPORTED_LOCALES": base64_encode(supported_locales),
+        "FRONTEND_DEFAULT_LOCALE": base64_encode(default_locale),
+        "GLOBAL_PRODUCT_NAME": base64_encode(global_product_name),
+        "FRONTEND_BROWSER_TAB_TITLE": base64_encode(frontend_browser_tab_title),
+        "FRONTEND_META_DESCRIPTION": base64_encode(frontend_meta_description),
+        "FRONTEND_LOGO_URL": base64_encode(frontend_logo_url),
+        "FRONTEND_FAVICON_URL": base64_encode(frontend_favicon_url),
+        "FRONTEND_APP_ICON_URL": base64_encode(frontend_app_icon_url),
+        "FRONTEND_THEME_CSS_VARIABLES": base64_encode(frontend_theme_css_variables),
+    }
+
+    env_json_content = f"""window.tabiyaConfig = {json.dumps(frontend_env_json, indent=4)};"""
+    frontend_env_json_file_path = os.path.join(artifacts_dir, "data", "env.js")
+    save_content_in_file(frontend_env_json_file_path, env_json_content)
+
+
 def prepare_admin_frontend(
         *,
         stack_name: str):
@@ -97,11 +156,13 @@ def prepare_admin_frontend(
      1. Ensures that the artifact is downloaded, otherwise downloads it.
      2. Copies the downloaded artifact to the stack artifacts dir
         Specifically for the stack name, otherwise the env.js will be the same for all the stacks.
+     3. Constructs the env.js file for the admin frontend.
     """
 
     # Get the path to the admin frontend build bundle
     # This is specific to the deployment, and the stack name
     # because the admin frontend build bundle is specific to the deployment, and the stack name.
+    # Because the admin-frontend/env.js file is specific to the deployment, and the stack name.
     deployment_number = getenv("DEPLOYMENT_RUN_NUMBER")
     artifacts_version = Version(
         git_branch_name=getenv("TARGET_GIT_BRANCH_NAME"),
@@ -141,8 +202,15 @@ def prepare_admin_frontend(
         fully_qualified_version=generic_artifact_version,
         stack_name=stack_name)
 
+    # copy the artifacts to the stack artifacts dir, so that we can make necessary changes to the admin frontend build bundle.
     # copy the artifacts to the stack artifacts dir.
     stack_artifacts_dir = os.path.join(deployments_dir, stack_artifacts_dir)
     shutil.copytree(artifacts_dir, stack_artifacts_dir, dirs_exist_ok=True)
+
+    # construct the env.js content for this deployment and stack.
+    _construct_env_js_content(
+        stack_name=stack_name,
+        artifacts_dir=stack_artifacts_dir
+    )
 
     print(f"Done preparing admin frontend for the run: {artifacts_dir}-{stack_name}.")
