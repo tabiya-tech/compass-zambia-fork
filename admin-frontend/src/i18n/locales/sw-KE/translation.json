@@ -1,0 +1,103 @@
+{
+  "common": {
+    "buttons": {
+      "login": "Ingia",
+      "logout": "Ondoka",
+      "submit": "Wasilisha",
+      "cancel": "Ghairi",
+      "confirm": "Ndio, nina uhakika",
+      "save": "Hifadhi",
+      "goBack": "Rudi Nyuma",
+      "continue": "Endelea",
+      "yes": "Ndio",
+      "no": "Hapana"
+    },
+    "fields": {
+      "email": "Barua pepe",
+      "password": "Nenosiri"
+    },
+    "validation": {
+      "validEmailRequired": "Tafadhali ingiza anwani ya barua pepe halali",
+      "passwordMinLength": "Nenosiri lazima liwe na angalau herufi 8."
+    },
+    "errors": {
+      "generic": "Jambo fulani halikwenda sawa. Tafadhali jaribu tena.",
+      "api": {
+        "unexpectedError": "Hitilafu isiyotarajiwa imetokea. Tafadhali jaribu tena baadaye.",
+        "serverConnectionError": "Haiwezi kuunganisha na huduma. Tafadhali angalia muunganisho wako wa intaneti au jaribu tena baadaye.",
+        "authenticationFailure": "Inaonekana hujaingia. Tafadhali ingia ili kuendelea.",
+        "permissionDenied": "Inaonekana huna ruhusa zinazohitajika. Tafadhali ondoka na uingie tena."
+      }
+    },
+    "status": {
+      "loading": "Inapakia",
+      "saving": "Inahifadhi"
+    },
+    "modal": {
+      "areYouSure": "Una uhakika?"
+    }
+  },
+  "auth": {
+    "pages": {
+      "login": {
+        "welcomeTitle": "Karibu {{appName}} Admin!",
+        "welcomeBack": "Karibu tena!",
+        "loginToYourAccountToContinue": "Ingia kwenye akaunti yako ili kuendelea",
+        "loggingYouIn": "Unaingia..."
+      }
+    },
+    "errors": {
+      "loginFailedWithMessage": "Imeshindwa kuingia: {{message}}",
+      "firebase": {
+        "invalidCredential": "Barua pepe/nenosiri iliyotolewa si sahihi.",
+        "invalidEmail": "Anwani ya barua pepe si sahihi.",
+        "userDisabled": "Akaunti ya mtumiaji imezimwa.",
+        "userNotFound": "Hakuna mtumiaji aliyepatikana kwa hati za utambulisho zilizotolewa.",
+        "wrongPassword": "Nenosiri si sahihi.",
+        "tooManyRequests": "Tumezuia maombi yote kutoka kwa kifaa hiki kwa sababu ya shughuli zisizo za kawaida. Jaribu tena baadaye.",
+        "internalError": "Hitilafu ya ndani imetokea."
+      }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Dashibodi ya Msimamizi",
+      "welcome": "Karibu kwenye Tovuti ya Msimamizi"
+    },
+    "navigation": {
+      "dashboard": "Dashibodi",
+      "users": "Watumiaji",
+      "settings": "Mipangilio"
+    }
+  },
+  "error": {
+    "errorPage": {
+      "illustrationAlt": "mchoro wa hitilafu",
+      "defaultMessage": "Jambo fulani halikwenda sawa. Jaribu kupakia upya ukurasa...",
+      "notFound": "Hitilafu 404 - Ukurasa Haupatikani"
+    }
+  },
+  "app": {
+    "isOnlineProvider": {
+      "offline": "Huna mtandao",
+      "backOnline": "Uko tena mtandaoni"
+    },
+    "logoAlt": "Nembo ya {{appName}}"
+  },
+  "theme": {
+    "confirmModalDialog": {
+      "closeConfirmModal": "funga modali ya kuthibitisha"
+    },
+    "passwordInput": {
+      "togglePasswordVisibility": "badilisha uonekano wa nenosiri"
+    },
+    "helpTip": {
+      "tooltip": "msaada"
+    }
+  },
+  "i18n": {
+    "languageContextMenu": {
+      "selector": "Kichaguzi cha Lugha"
+    }
+  }
+}

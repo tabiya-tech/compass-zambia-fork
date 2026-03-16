@@ -26,6 +26,18 @@ jobs:
         run: yarn install
         working-directory: admin-frontend
 
+      - name: Check Format
+        run: yarn run format:check
+        working-directory: admin-frontend
+
+      - name: Lint Admin Frontend
+        run: yarn run lint
+        working-directory: admin-frontend
+
+      - name: Compile
+        run: yarn run compile
+        working-directory: admin-frontend
+
       - name: Test Admin Frontend
         run: yarn run test --watchAll=false --passWithNoTests
         working-directory: admin-frontend

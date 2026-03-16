@@ -1,0 +1,103 @@
+{
+  "common": {
+    "buttons": {
+      "login": "Iniciar sesión",
+      "logout": "Cerrar sesión",
+      "submit": "Enviar",
+      "cancel": "Cancelar",
+      "confirm": "Sí, estoy seguro",
+      "save": "Guardar",
+      "goBack": "Volver",
+      "continue": "Continuar",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "fields": {
+      "email": "Correo electrónico",
+      "password": "Contraseña"
+    },
+    "validation": {
+      "validEmailRequired": "Por favor, ingresá una dirección de correo electrónico válida",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres."
+    },
+    "errors": {
+      "generic": "Algo salió mal. Por favor, intentá de nuevo.",
+      "api": {
+        "unexpectedError": "Se produjo un error inesperado. Por favor, intentá de nuevo más tarde.",
+        "serverConnectionError": "No se puede conectar al servicio. Por favor, verificá tu conexión a Internet o intentá de nuevo más tarde.",
+        "authenticationFailure": "Parece que no iniciaste sesión. Por favor, iniciá sesión para continuar.",
+        "permissionDenied": "Parece que no tenés los permisos necesarios. Por favor, cerrá sesión e iniciá sesión de nuevo."
+      }
+    },
+    "status": {
+      "loading": "Cargando",
+      "saving": "Guardando"
+    },
+    "modal": {
+      "areYouSure": "¿Estás seguro?"
+    }
+  },
+  "auth": {
+    "pages": {
+      "login": {
+        "welcomeTitle": "¡Bienvenido a {{appName}} Admin!",
+        "welcomeBack": "¡Bienvenido de nuevo!",
+        "loginToYourAccountToContinue": "Iniciá sesión en tu cuenta para continuar",
+        "loggingYouIn": "Iniciando sesión..."
+      }
+    },
+    "errors": {
+      "loginFailedWithMessage": "Error al iniciar sesión: {{message}}",
+      "firebase": {
+        "invalidCredential": "El correo electrónico o la contraseña proporcionados no son válidos.",
+        "invalidEmail": "La dirección de correo electrónico no es válida.",
+        "userDisabled": "La cuenta de usuario ha sido deshabilitada.",
+        "userNotFound": "No se encontró ningún usuario con las credenciales proporcionadas.",
+        "wrongPassword": "La contraseña no es válida.",
+        "tooManyRequests": "Hemos bloqueado todas las solicitudes de este dispositivo debido a actividad inusual. Intentá de nuevo más tarde.",
+        "internalError": "Se ha producido un error interno."
+      }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Panel de Administración",
+      "welcome": "Bienvenido al Portal de Administración"
+    },
+    "navigation": {
+      "dashboard": "Panel",
+      "users": "Usuarios",
+      "settings": "Configuración"
+    }
+  },
+  "error": {
+    "errorPage": {
+      "illustrationAlt": "ilustración de error",
+      "defaultMessage": "Algo salió mal. Intentá recargar la página...",
+      "notFound": "Error 404 - Página no encontrada"
+    }
+  },
+  "app": {
+    "isOnlineProvider": {
+      "offline": "Estás sin conexión",
+      "backOnline": "Estás de nuevo en línea"
+    },
+    "logoAlt": "Logo de {{appName}}"
+  },
+  "theme": {
+    "confirmModalDialog": {
+      "closeConfirmModal": "cerrar modal de confirmación"
+    },
+    "passwordInput": {
+      "togglePasswordVisibility": "alternar visibilidad de contraseña"
+    },
+    "helpTip": {
+      "tooltip": "ayuda"
+    }
+  },
+  "i18n": {
+    "languageContextMenu": {
+      "selector": "Selector de idioma"
+    }
+  }
+}

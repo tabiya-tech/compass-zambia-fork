@@ -1,0 +1,103 @@
+{
+  "common": {
+    "buttons": {
+      "login": "Lowani",
+      "logout": "Tulukani",
+      "submit": "Tumizani",
+      "cancel": "Sinthani",
+      "confirm": "Inde, ndikutsimikiza",
+      "save": "Sungani",
+      "goBack": "Bwererani",
+      "continue": "Pitirizani",
+      "yes": "Inde",
+      "no": "Ayi"
+    },
+    "fields": {
+      "email": "Imelo",
+      "password": "Achinsinsi"
+    },
+    "validation": {
+      "validEmailRequired": "Chonde lembani imelo yoyenera",
+      "passwordMinLength": "Achinsinsi ayenera kukhala ndi zilembo zosachepera 8."
+    },
+    "errors": {
+      "generic": "Chinachake chalakwika. Chonde yesaninso.",
+      "api": {
+        "unexpectedError": "Cholakwika chosayembekezeka chachitika. Chonde yesaninso mtsogolo.",
+        "serverConnectionError": "Sitikutha kulumikizana ndi ntchito. Chonde onetsetsani intaneti yanu kapena yesaninso mtsogolo.",
+        "authenticationFailure": "Zikuoneka kuti simunalowe. Chonde lowani kuti mupitirize.",
+        "permissionDenied": "Zikuoneka kuti mulibe chilolezo choyenera. Chonde tulukani ndikuowanso."
+      }
+    },
+    "status": {
+      "loading": "Kukweza",
+      "saving": "Kusunga"
+    },
+    "modal": {
+      "areYouSure": "Mukutsimikiza?"
+    }
+  },
+  "auth": {
+    "pages": {
+      "login": {
+        "welcomeTitle": "Takulandirani ku {{appName}} Admin!",
+        "welcomeBack": "Takulandirani!",
+        "loginToYourAccountToContinue": "Lowani mu akaunti yanu kuti mupitirize",
+        "loggingYouIn": "Tikulowetsani..."
+      }
+    },
+    "errors": {
+      "loginFailedWithMessage": "Kulephera kulowa: {{message}}",
+      "firebase": {
+        "invalidCredential": "Imelo/achinsinsi omwe mwaperekawo ndi olakwika.",
+        "invalidEmail": "Imelo imeneyi ndi yolakwika.",
+        "userDisabled": "Akaunti ya wogwiritsa ntchitoyi yatsekedwa.",
+        "userNotFound": "Palibe wogwiritsa ntchito amene apezeka ndi zomwe mwaperekazo.",
+        "wrongPassword": "Achinsinsi ndi olakwika.",
+        "tooManyRequests": "Taletsa zopempha zonse kuchokera pa chipangizo ichi chifukwa cha zochitika zosayenera. Yesaninso mtsogolo.",
+        "internalError": "Cholakwika chamkati chachitika."
+      }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Dashibodi ya Woyang'anira",
+      "welcome": "Takulandirani ku Portal ya Woyang'anira"
+    },
+    "navigation": {
+      "dashboard": "Dashibodi",
+      "users": "Ogwiritsa ntchito",
+      "settings": "Zosintha"
+    }
+  },
+  "error": {
+    "errorPage": {
+      "illustrationAlt": "chithunzi cha vuto",
+      "defaultMessage": "Chinachake chalakwika. Yesani kukwezanso tsamba...",
+      "notFound": "Vuto 404 - Tsamba Silipezeka"
+    }
+  },
+  "app": {
+    "isOnlineProvider": {
+      "offline": "Mulibe intaneti",
+      "backOnline": "Mwabwerera pa intaneti"
+    },
+    "logoAlt": "Logo ya {{appName}}"
+  },
+  "theme": {
+    "confirmModalDialog": {
+      "closeConfirmModal": "tsekani tsamba lotsimikizira"
+    },
+    "passwordInput": {
+      "togglePasswordVisibility": "sinthani kuoneka kwa achinsinsi"
+    },
+    "helpTip": {
+      "tooltip": "thandizo"
+    }
+  },
+  "i18n": {
+    "languageContextMenu": {
+      "selector": "Chosankha Chilankhulo"
+    }
+  }
+}
