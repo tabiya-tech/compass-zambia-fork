@@ -26,6 +26,7 @@ import { getRegistrationDisabled } from "src/envService";
 import { useTranslation } from "react-i18next";
 import Home from "src/home/Home";
 import { AppErrorFallback } from "src/error/errorPage/AppErrorFallback";
+import { ExperiencesDrawerProvider } from "src/experiences/ExperiencesDrawerProvider";
 
 const LazyLoadedSensitiveDataForm = lazyWithPreload(
   () => import("src/sensitiveData/components/sensitiveDataForm/SensitiveDataForm")
@@ -404,7 +405,11 @@ const App = () => {
       ],
     },
   ]);
-  return <RouterProvider router={router} />;
+  return (
+    <ExperiencesDrawerProvider>
+      <RouterProvider router={router} />
+    </ExperiencesDrawerProvider>
+  );
 };
 
 export default Sentry.withProfiler(App);

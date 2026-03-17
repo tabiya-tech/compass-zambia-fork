@@ -18,15 +18,13 @@ import {
 } from "./util";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import { Box, useTheme } from "@mui/material";
-import ChatHeader from "./ChatHeader/ChatHeader";
 import ChatMessageField from "./ChatMessageField/ChatMessageField";
+import ChatHeader from "src/chat/ChatHeader/ChatHeader";
 import PageHeader from "src/home/components/PageHeader/PageHeader";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
 import { ConversationMessage, ConversationMessageSender, ConversationResponse } from "./ChatService/ChatService.types";
 import { Backdrop } from "src/theme/Backdrop/Backdrop";
-import ExperiencesDrawer from "src/experiences/experiencesDrawer/ExperiencesDrawer";
-import { DiveInPhase, Experience } from "src/experiences/experienceService/experiences.types";
-import ExperienceService from "src/experiences/experienceService/experienceService";
+import { DiveInPhase } from "src/experiences/experienceService/experiences.types";
 import InactiveBackdrop from "src/theme/Backdrop/InactiveBackdrop";
 import ConfirmModalDialog from "src/theme/confirmModalDialog/ConfirmModalDialog";
 import { ChatError, MetricsError } from "src/error/commonErrors";
@@ -53,6 +51,7 @@ import { getCvUploadErrorMessageFromErrorCode } from "./CVUploadErrorHandling";
 import type { UploadStatus } from "./Chat.types";
 import { nanoid } from "nanoid";
 import { routerPaths } from "src/app/routerPaths";
+import { useExperiencesDrawer } from "src/experiences/ExperiencesDrawerProvider";
 
 export const INACTIVITY_TIMEOUT = 3 * 60 * 1000; // in milliseconds
 // Set the interval to check every TIMEOUT/3,
@@ -114,12 +113,8 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const [messages, setMessages] = useState<IChatMessage<any>[]>([]);
   const [conversationCompleted, setConversationCompleted] = useState<boolean>(false);
   const [exploredExperiences, setExploredExperiences] = useState<number>(0);
-  const [conversationConductedAt, setConversationConductedAt] = useState<string | null>(null);
   const [aiIsTyping, setAiIsTyping] = useState<boolean>(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [experiences, setExperiences] = React.useState<Experience[]>([]);
   const [prefillMessage, setPrefillMessage] = React.useState<string | null>(null);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [showBackdrop, setShowBackdrop] = useState(showInactiveSessionAlert);
   const [lastActivityTime, setLastActivityTime] = React.useState<number>(Date.now());
   const [showRefreshConfirmDialog, setShowRefreshConfirmDialog] = React.useState<boolean>(false);
@@ -144,6 +139,8 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const handleBWSSubmitRef = useRef<((taskId: string, bestWaId: string, worstWaId: string) => Promise<void>) | null>(
     null
   );
+
+  const { experiences, fetchExperiences, openExperiencesDrawer, setConversationConductedAt } = useExperiencesDrawer();
 
   // Experiences that have been processed
   const exploredExperiencesCount = useMemo(
@@ -286,31 +283,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   /**
    * --- Service handlers ---
    */
-  // Goes to the experience service to get the experiences
-  const fetchExperiences = useCallback(async () => {
-    if (!activeSessionId) {
-      // If there is no session id, we can't get the experiences
-      throw new ChatError("Session id is not available");
-    }
-    setIsLoading(true);
-    try {
-      const experienceService = ExperienceService.getInstance();
-      const data = await experienceService.getExperiences(activeSessionId);
-      setExperiences(data);
-    } catch (error) {
-      console.error(new ChatError("Failed to retrieve experiences", error));
-      enqueueSnackbar(t("chat.chat.notifications.experiencesFetchFailed"), { variant: "error" });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [enqueueSnackbar, activeSessionId, t]);
-
-  // Opens the experiences drawer and get experiences if needed
-  const handleOpenExperiencesDrawer = useCallback(async () => {
-    setIsDrawerOpen(true);
-    await fetchExperiences();
-  }, [fetchExperiences]);
-
   // Helper to stop polling and cleanup
   const stopPollingForUpload = useCallback(
     (uploadId: string, intervalId?: NodeJS.Timeout, timeoutId?: NodeJS.Timeout) => {
@@ -742,6 +714,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
       activeSessionId,
       showSkillsRanking,
       recordChatResponseMetrics,
+      setConversationConductedAt,
     ]
   );
 
@@ -862,7 +835,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
         setAiIsTyping(false);
       }
     },
-    [addMessageToChat, setAiIsTyping, showSkillsRanking, sendMessage]
+    [addMessageToChat, setAiIsTyping, showSkillsRanking, sendMessage, setConversationConductedAt]
   );
 
   // Resets the text field for the next message
@@ -885,14 +858,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
     [sendMessage, activeSessionId]
   );
   handleBWSSubmitRef.current = handleBWSSubmit;
-
-  /**
-   * --- Callbacks for child components ---
-   */
-
-  const handleDrawerClose = () => {
-    setIsDrawerOpen(false);
-  };
 
   /**
    * --- UseEffects ---
@@ -1049,7 +1014,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   return (
     <Suspense fallback={<Backdrop isShown={true} transparent={true} />}>
       <ChatProvider
-        handleOpenExperiencesDrawer={handleOpenExperiencesDrawer}
+        handleOpenExperiencesDrawer={openExperiencesDrawer}
         removeMessageFromChat={removeMessageFromChat}
         addMessageToChat={addMessageToChat}
       >
@@ -1075,6 +1040,15 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
             subtitle="home.modules.skillsDiscoverySubtitle"
             backLinkLabel="home.backToDashboard"
             onBackClick={() => navigate(routerPaths.ROOT)}
+            showExperiencesButton={true}
+            showExperiencesBadge={true}
+            experiencesExplored={exploredExperiencesCount.length}
+            exploredExperiencesNotification={exploredExperiencesNotification}
+          />
+          <ChatHeader
+            conversationCompleted={conversationCompleted}
+            timeUntilNotification={timeUntilFeedbackNotification}
+            progressPercentage={currentPhase.percentage}
           />
           <Box
             sx={{
@@ -1100,18 +1074,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
                   total={currentPhase.total}
                 />
               </Box>
-              <Box sx={{ flexShrink: 0 }}>
-                <ChatHeader
-                  experiencesExplored={exploredExperiencesCount.length}
-                  exploredExperiencesNotification={exploredExperiencesNotification}
-                  setExploredExperiencesNotification={setExploredExperiencesNotification}
-                  conversationCompleted={conversationCompleted}
-                  timeUntilNotification={timeUntilFeedbackNotification}
-                  progressPercentage={currentPhase.percentage}
-                  conversationPhase={currentPhase.phase}
-                  collectedExperiences={experiences?.length}
-                />
-              </Box>
             </Box>
           </Box>
           <Box sx={{ flex: 1, overflowY: "auto", paddingX: theme.spacing(theme.tabiyaSpacing.lg) }}>
@@ -1131,14 +1093,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
             />
           </Box>
         </Box>
-        <ExperiencesDrawer
-          isOpen={isDrawerOpen}
-          notifyOnClose={handleDrawerClose}
-          isLoading={isLoading}
-          experiences={experiences}
-          conversationConductedAt={conversationConductedAt}
-          onExperiencesUpdated={fetchExperiences}
-        />
         {showRefreshConfirmDialog && (
           <ConfirmModalDialog
             isOpen={showRefreshConfirmDialog}

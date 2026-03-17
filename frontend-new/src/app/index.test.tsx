@@ -19,6 +19,13 @@ import AuthenticationStateService from "src/auth/services/AuthenticationState.se
 import { routerPaths } from "src/app/routerPaths";
 import { AuthBroadcastChannel, AuthChannelMessage } from "src/auth/services/authBroadcastChannel/authBroadcastChannel";
 
+// Mock useUserProfile so route content
+jest.mock("src/profile/hooks/useUserProfile", () => ({
+  useUserProfile: () => ({
+    profileData: jest.fn(),
+  }),
+}));
+
 // mock the snackbar
 jest.mock("src/theme/SnackbarProvider/SnackbarProvider", () => {
   const actual = jest.requireActual("src/theme/SnackbarProvider/SnackbarProvider");
@@ -68,11 +75,13 @@ jest.mock("src/auth/services/authBroadcastChannel/authBroadcastChannel.ts", () =
   };
 });
 
+const ROUTER_TEST_ID = "hash-router-id";
+
 async function waitForAppLoadingToFinish() {
-  // Wait for the backdrop to disappear so that we know the app has finished loading and the dom has settled
-  // not doing this can cause the Warning: An update to App inside a test was not wrapped in act(...).
+  // Wait for the app to finish loading: when loading is true we only show Backdrop; when false we render the router.
+  // (Backdrops may stay in the DOM as hidden nodes, so we wait for the router to appear.)
   await waitFor(() => {
-    expect(screen.getByTestId(BACKDROP_DATA_TEST_ID.BACKDROP_CONTAINER)).toBeInTheDocument();
+    expect(screen.getByTestId(ROUTER_TEST_ID)).toBeInTheDocument();
   });
 }
 
@@ -232,13 +241,10 @@ describe("index", () => {
       // WHEN the preferences are resolved
       act(() => resolvePreferences(mockPreferences));
 
-      // THEN the backdrop should be hidden
+      // THEN the app should finish loading and show the router
       await waitFor(() => {
-        expect(screen.queryByTestId(BACKDROP_DATA_TEST_ID.BACKDROP_CONTAINER)).not.toBeInTheDocument();
+        expect(screen.getByTestId(ROUTER_TEST_ID)).toBeInTheDocument();
       });
-
-      // AND the router should be rendered with the protected routes
-      expect(screen.getByTestId("hash-router-id")).toBeInTheDocument();
     });
 
     test("should properly clean up on unmount", async () => {
