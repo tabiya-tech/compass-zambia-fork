@@ -103,6 +103,11 @@ def _construct_env_js_content(*, artifacts_dir: str, stack_name: str):
         :param artifacts_dir: The directory where the admin frontend build bundle is stored.
         :param stack_name: The name of the Pulumi stack.
     """
+    # Admin frontend Firebase authentication (manually created, passed via env vars)
+    admin_firebase_api_key: str = getenv("ADMIN_FRONTEND_FIREBASE_API_KEY", False, True)
+    admin_firebase_auth_domain: str = getenv("ADMIN_FRONTEND_FIREBASE_AUTH_DOMAIN", False, True)
+    admin_firebase_tenant_id: Optional[str] = getenv("ADMIN_FRONTEND_FIREBASE_TENANT_ID", False, False)
+
     # Sentry configuration
     sentry_dsn: str = getenv("FRONTEND_SENTRY_DSN", True, False)
     enable_sentry: str = getenv("FRONTEND_ENABLE_SENTRY", False, False)
@@ -125,8 +130,13 @@ def _construct_env_js_content(*, artifacts_dir: str, stack_name: str):
 
     environment_outputs = get_pulumi_stack_outputs(stack_name=stack_name, module="environment")
     _, env_name = get_realm_and_env_name_from_stack(stack_name)
+    firebase_project_id = environment_outputs["project_id"].value
 
     frontend_env_json = {
+        "ADMIN_FRONTEND_FIREBASE_API_KEY": base64_encode(admin_firebase_api_key),
+        "ADMIN_FRONTEND_FIREBASE_AUTH_DOMAIN": base64_encode(admin_firebase_auth_domain),
+        "ADMIN_FRONTEND_FIREBASE_TENANT_ID": base64_encode(admin_firebase_tenant_id),
+        "ADMIN_FRONTEND_FIREBASE_PROJECT_ID": base64_encode(firebase_project_id),
         "BACKEND_URL": base64_encode(environment_outputs["backend_url"].value),
         "TARGET_ENVIRONMENT_NAME": base64_encode(env_name),
         "FRONTEND_ENABLE_SENTRY": base64_encode(enable_sentry),

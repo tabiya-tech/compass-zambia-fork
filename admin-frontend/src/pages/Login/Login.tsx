@@ -1,17 +1,24 @@
-import React from "react";
-import { Box, Button, Container, Paper, TextField, Typography, useTheme } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, CircularProgress, Container, TextField, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { routerPaths } from "src/app/routerPaths";
+import FirebaseEmailAuthenticationService from "src/auth/services/FirebaseAuthenticationService/FirebaseEmailAuthenticationService";
+import { FirebaseError } from "src/error/FirebaseError/firebaseError";
+import { FirebaseErrorCodes } from "src/error/FirebaseError/firebaseError.constants";
+import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
+import { getLogoUrl } from "src/envService";
 
 const uniqueId = "login-page-5a8f3b2c-1d4e-4f6a-9b8c-7e2d1f0a3b5c";
 
 export const DATA_TEST_ID = {
   LOGIN_PAGE_CONTAINER: `${uniqueId}-container`,
+  LOGIN_PAGE_LOGO: `${uniqueId}-logo`,
   LOGIN_PAGE_TITLE: `${uniqueId}-title`,
   LOGIN_PAGE_EMAIL_INPUT: `${uniqueId}-email-input`,
   LOGIN_PAGE_PASSWORD_INPUT: `${uniqueId}-password-input`,
   LOGIN_PAGE_SUBMIT_BUTTON: `${uniqueId}-submit-button`,
+  LOGIN_PAGE_LOADING_SPINNER: `${uniqueId}-loading-spinner`,
 };
 
 export interface LoginProps {}
@@ -20,11 +27,57 @@ const Login: React.FC<LoginProps> = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const logoUrl = getLogoUrl() || "/logo.svg";
+
+  const getErrorMessage = (error: FirebaseError): string => {
+    switch (error.code) {
+      case FirebaseErrorCodes.USER_NOT_FOUND:
+      case FirebaseErrorCodes.WRONG_PASSWORD:
+      case FirebaseErrorCodes.INVALID_CREDENTIAL:
+        return t("login.errors.invalidCredentials", "Invalid email or password");
+      case FirebaseErrorCodes.USER_DISABLED:
+        return t("login.errors.userDisabled", "This account has been disabled");
+      case FirebaseErrorCodes.TOO_MANY_REQUESTS:
+        return t("login.errors.tooManyRequests", "Too many failed attempts. Please try again later");
+      case FirebaseErrorCodes.NETWORK_REQUEST_FAILED:
+        return t("login.errors.networkError", "Network error. Please check your connection");
+      case FirebaseErrorCodes.INVALID_EMAIL:
+        return t("login.errors.invalidEmail", "Please enter a valid email address");
+      default:
+        return t("login.errors.generic", "Login failed. Please try again");
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // TODO: Implement actual login logic
-    navigate(routerPaths.DASHBOARD);
+
+    if (!email || !password) {
+      enqueueSnackbar(t("login.errors.fillAllFields", "Please fill in all fields"), { variant: "warning" });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const authService = FirebaseEmailAuthenticationService.getInstance();
+      await authService.login(email, password);
+      navigate(routerPaths.ROOT);
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error instanceof FirebaseError) {
+        enqueueSnackbar(getErrorMessage(error), { variant: "error" });
+      } else {
+        enqueueSnackbar(t("login.errors.generic", "Login failed. Please try again"), { variant: "error" });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,14 +91,36 @@ const Login: React.FC<LoginProps> = () => {
           minHeight: "100vh",
         }}
       >
-        <Paper
-          elevation={3}
+        <Box
           sx={{
             padding: theme.spacing(4),
             width: "100%",
             borderRadius: theme.tabiyaRounding.sm,
+            border: `1px solid ${theme.palette.divider}`,
+            backgroundColor: theme.palette.background.paper,
           }}
         >
+          {/* Logo */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: theme.tabiyaSpacing.lg,
+            }}
+          >
+            <Box
+              component="img"
+              src={logoUrl}
+              alt={t("login.logoAlt", "Logo")}
+              data-testid={DATA_TEST_ID.LOGIN_PAGE_LOGO}
+              sx={{
+                height: 64,
+                width: "auto",
+                maxWidth: "100%",
+              }}
+            />
+          </Box>
+
           <Typography
             variant="h4"
             component="h1"
@@ -56,6 +131,15 @@ const Login: React.FC<LoginProps> = () => {
             {t("login.title", "Admin Login")}
           </Typography>
 
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            textAlign="center"
+            sx={{ marginBottom: theme.tabiyaSpacing.lg }}
+          >
+            {t("login.subtitle", "Sign in to access the admin portal")}
+          </Typography>
+
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
             <TextField
               fullWidth
@@ -63,6 +147,11 @@ const Login: React.FC<LoginProps> = () => {
               type="email"
               margin="normal"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
+              autoComplete="email"
+              autoFocus
               data-testid={DATA_TEST_ID.LOGIN_PAGE_EMAIL_INPUT}
             />
             <TextField
@@ -71,19 +160,28 @@ const Login: React.FC<LoginProps> = () => {
               type="password"
               margin="normal"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
+              autoComplete="current-password"
               data-testid={DATA_TEST_ID.LOGIN_PAGE_PASSWORD_INPUT}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
+              sx={{ mt: 3, mb: 2, height: 48 }}
               data-testid={DATA_TEST_ID.LOGIN_PAGE_SUBMIT_BUTTON}
             >
-              {t("login.submit", "Sign In")}
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" data-testid={DATA_TEST_ID.LOGIN_PAGE_LOADING_SPINNER} />
+              ) : (
+                t("login.submit", "Sign In")
+              )}
             </Button>
           </Box>
-        </Paper>
+        </Box>
       </Box>
     </Container>
   );

@@ -30,8 +30,8 @@
       }
     },
     "status": {
-      "loading": "Cargando",
-      "saving": "Guardando"
+      "loading": "Cargando...",
+      "saving": "Guardando..."
     },
     "modal": {
       "areYouSure": "¿Estás seguro?"
@@ -98,6 +98,15 @@
   "i18n": {
     "languageContextMenu": {
       "selector": "Selector de idioma"
+    }
+  },
+  "navbar": {
+    "title": "{{appName}} Admin",
+    "profileMenu": "Menú de perfil",
+    "logout": "Cerrar sesión",
+    "role": {
+      "admin": "Administrador",
+      "institutionStaff": "Personal de Institución"
     }
   }
 }

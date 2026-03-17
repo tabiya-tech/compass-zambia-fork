@@ -30,8 +30,8 @@
       }
     },
     "status": {
-      "loading": "Inapakia",
-      "saving": "Inahifadhi"
+      "loading": "Inapakia...",
+      "saving": "Inahifadhi..."
     },
     "modal": {
       "areYouSure": "Una uhakika?"
@@ -98,6 +98,15 @@
   "i18n": {
     "languageContextMenu": {
       "selector": "Kichaguzi cha Lugha"
+    }
+  },
+  "navbar": {
+    "title": "{{appName}} Admin",
+    "profileMenu": "Menyu ya wasifu",
+    "logout": "Ondoka",
+    "role": {
+      "admin": "Msimamizi",
+      "institutionStaff": "Wafanyakazi wa Taasisi"
     }
   }
 }

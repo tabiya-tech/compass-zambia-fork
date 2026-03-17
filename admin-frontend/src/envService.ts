@@ -1,8 +1,10 @@
 import { EnvError } from "./error/commonErrors";
 
 export enum EnvVariables {
-  FIREBASE_AUTH_DOMAIN = "FIREBASE_AUTH_DOMAIN",
-  FIREBASE_API_KEY = "FIREBASE_API_KEY",
+  ADMIN_FRONTEND_FIREBASE_AUTH_DOMAIN = "ADMIN_FRONTEND_FIREBASE_AUTH_DOMAIN",
+  ADMIN_FRONTEND_FIREBASE_API_KEY = "ADMIN_FRONTEND_FIREBASE_API_KEY",
+  ADMIN_FRONTEND_FIREBASE_TENANT_ID = "ADMIN_FRONTEND_FIREBASE_TENANT_ID",
+  ADMIN_FRONTEND_FIREBASE_PROJECT_ID = "ADMIN_FRONTEND_FIREBASE_PROJECT_ID",
   BACKEND_URL = "BACKEND_URL",
   FRONTEND_SENTRY_DSN = "FRONTEND_SENTRY_DSN",
   FRONTEND_ENABLE_SENTRY = "FRONTEND_ENABLE_SENTRY",
@@ -23,8 +25,8 @@ export enum EnvVariables {
 }
 
 export const requiredEnvVariables = [
-  EnvVariables.FIREBASE_AUTH_DOMAIN,
-  EnvVariables.FIREBASE_API_KEY,
+  EnvVariables.ADMIN_FRONTEND_FIREBASE_AUTH_DOMAIN,
+  EnvVariables.ADMIN_FRONTEND_FIREBASE_API_KEY,
   EnvVariables.BACKEND_URL,
   EnvVariables.TARGET_ENVIRONMENT_NAME,
   EnvVariables.FRONTEND_SUPPORTED_LOCALES,
@@ -66,11 +68,19 @@ export const getEnv = (key: string): string => {
 };
 
 export const getFirebaseDomain = () => {
-  return getEnv(EnvVariables.FIREBASE_AUTH_DOMAIN);
+  return getEnv(EnvVariables.ADMIN_FRONTEND_FIREBASE_AUTH_DOMAIN);
 };
 
 export const getFirebaseAPIKey = () => {
-  return getEnv(EnvVariables.FIREBASE_API_KEY);
+  return getEnv(EnvVariables.ADMIN_FRONTEND_FIREBASE_API_KEY);
+};
+
+export const getFirebaseTenantId = () => {
+  return getEnv(EnvVariables.ADMIN_FRONTEND_FIREBASE_TENANT_ID);
+};
+
+export const getFirebaseProjectId = () => {
+  return getEnv(EnvVariables.ADMIN_FRONTEND_FIREBASE_PROJECT_ID);
 };
 
 export const getBackendUrl = () => {

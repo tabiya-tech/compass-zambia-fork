@@ -1,5 +1,9 @@
 console.log("env.js loaded.....");
 window.tabiyaConfig = {
+  ADMIN_FRONTEND_FIREBASE_API_KEY: btoa("your-api-key"),
+  ADMIN_FRONTEND_FIREBASE_AUTH_DOMAIN: btoa("auth-domain"),
+  ADMIN_FRONTEND_FIREBASE_TENANT_ID: btoa("tenant-id"),
+  ADMIN_FRONTEND_FIREBASE_PROJECT_ID: btoa("your-project-id"),
   BACKEND_URL: btoa("https://foo.bar/api"),
   TARGET_ENVIRONMENT_NAME: btoa("local"),
   // The SENTRY_DSN variable is picked up by the Sentry SDK.
@@ -30,9 +34,7 @@ window.tabiyaConfig = {
   // ################################################################
   GLOBAL_PRODUCT_NAME: btoa("Compass Admin"),
   FRONTEND_BROWSER_TAB_TITLE: btoa("Compass Admin"),
-  FRONTEND_META_DESCRIPTION: btoa(
-    "Compass Admin Portal - Manage and configure Compass platform settings."
-  ),
+  FRONTEND_META_DESCRIPTION: btoa("Compass Admin Portal - Manage and configure Compass platform settings."),
   FRONTEND_LOGO_URL: btoa("/logo.svg"),
   FRONTEND_FAVICON_URL: btoa("/favicon.svg"),
   FRONTEND_APP_ICON_URL: btoa("/logo.svg"),

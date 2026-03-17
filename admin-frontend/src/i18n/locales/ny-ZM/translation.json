@@ -30,8 +30,8 @@
       }
     },
     "status": {
-      "loading": "Kukweza",
-      "saving": "Kusunga"
+      "loading": "Kukweza...",
+      "saving": "Kusunga..."
     },
     "modal": {
       "areYouSure": "Mukutsimikiza?"
@@ -98,6 +98,15 @@
   "i18n": {
     "languageContextMenu": {
       "selector": "Chosankha Chilankhulo"
+    }
+  },
+  "navbar": {
+    "title": "{{appName}} Admin",
+    "profileMenu": "Menyu ya mbiri",
+    "logout": "Tulukani",
+    "role": {
+      "admin": "Woyang'anira",
+      "institutionStaff": "Wantchito wa Bungwe"
     }
   }
 }
