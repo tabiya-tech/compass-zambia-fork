@@ -88,6 +88,7 @@ export const ModuleProgressCard: React.FC<ModuleProgressCardProps> = ({ modules 
               sx={{
                 height: 8,
                 borderRadius: theme.rounding(theme.tabiyaRounding.sm),
+                backgroundColor: theme.palette.grey[200],
               }}
             />
           </Box>

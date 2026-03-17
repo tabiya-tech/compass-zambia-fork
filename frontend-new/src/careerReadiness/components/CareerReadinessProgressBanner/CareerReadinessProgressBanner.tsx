@@ -30,8 +30,8 @@ const CareerReadinessProgressBanner: React.FC<CareerReadinessProgressBannerProps
     <Box
       sx={{
         borderRadius: theme.rounding(theme.tabiyaRounding.sm),
-        border: `1px solid ${theme.palette.primary.main}`,
-        backgroundColor: `color-mix(in srgb, ${theme.palette.primary.main} 6%, white)`,
+        border: `1px solid ${theme.palette.divider}`,
+        backgroundColor: theme.palette.background.paper,
         padding: theme.fixedSpacing(theme.tabiyaSpacing.md),
         display: "flex",
         flexDirection: "column",
@@ -58,13 +58,9 @@ const CareerReadinessProgressBanner: React.FC<CareerReadinessProgressBannerProps
         aria-label="Career Readiness Progress"
         value={percentage}
         sx={{
-          height: 20,
-          borderRadius: 4,
+          height: 8,
+          borderRadius: theme.rounding(theme.tabiyaRounding.sm),
           backgroundColor: theme.palette.grey[200],
-          "& .MuiLinearProgress-bar": {
-            borderRadius: 4,
-            backgroundColor: theme.palette.primary.main,
-          },
         }}
         data-testid={DATA_TEST_ID.PROGRESS_BAR}
       />
