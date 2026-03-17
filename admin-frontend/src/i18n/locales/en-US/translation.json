@@ -30,8 +30,8 @@
       }
     },
     "status": {
-      "loading": "Loading",
-      "saving": "Saving"
+      "loading": "Loading...",
+      "saving": "Saving..."
     },
     "modal": {
       "areYouSure": "Are you sure?"
@@ -98,6 +98,15 @@
   "i18n": {
     "languageContextMenu": {
       "selector": "Language Selector"
+    }
+  },
+  "navbar": {
+    "title": "{{appName}} Admin",
+    "profileMenu": "Profile menu",
+    "logout": "Logout",
+    "role": {
+      "admin": "Admin",
+      "institutionStaff": "Institution Staff"
     }
   }
 }
