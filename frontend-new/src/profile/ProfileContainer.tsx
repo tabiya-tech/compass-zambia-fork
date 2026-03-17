@@ -27,7 +27,7 @@ const ProfileContainer: React.FC = () => {
       <PageHeader
         title="home.profile.title"
         subtitle="home.profile.subtitle"
-        backLinkLabel="home.profile.backToHome"
+        backLinkLabel="home.backToDashboard"
         onBackClick={() => {
           startTransition(() => {
             navigate(routerPaths.ROOT);
