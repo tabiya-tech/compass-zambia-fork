@@ -709,7 +709,8 @@
     "errorPage": {
       "illustrationAlt": "ilustración de error",
       "defaultMessage": "Algo salió mal con {{appName}}. Intentá recargar la página...",
-      "notFound": "Error 404 - Página no encontrada"
+      "notFound": "Error 404 - Página no encontrada",
+      "refreshButton": "Actualizar página"
     },
     "restAPIError": {
       "storyChooseMessageLabel": "Elegí un mensaje de error para mostrar en una notificación:",

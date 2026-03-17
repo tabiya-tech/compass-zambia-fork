@@ -36,3 +36,10 @@ export const ShownWith404ErrorMessage: Story = {
     errorMessage: "404 Error - Page Not Found",
   },
 };
+
+export const WithRefreshButton: Story = {
+  args: {
+    errorMessage: "Something went wrong. Try reloading the page...",
+    showRefreshButton: true,
+  },
+};

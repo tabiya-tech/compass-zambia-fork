@@ -709,7 +709,8 @@
     "errorPage": {
       "illustrationAlt": "chithunzi cha cholakwika",
       "defaultMessage": "Chinthu chinachitika cholakwika ndi {{appName}}. Yesani kutsitsa tsamba...",
-      "notFound": "Cholakwika 404 - Tsamba Silinapezeke"
+      "notFound": "Cholakwika 404 - Tsamba Silinapezeke",
+      "refreshButton": "Tsitsani tsamba"
     },
     "restAPIError": {
       "storyChooseMessageLabel": "Sankhani uthenga wa cholakwika woonesedwa m'chidziwitso:",
