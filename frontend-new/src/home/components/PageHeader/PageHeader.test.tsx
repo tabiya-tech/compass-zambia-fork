@@ -127,6 +127,29 @@ describe("PageHeader", () => {
       expect(screen.getByTestId(DATA_TEST_ID.PAGE_HEADER_BUTTON_USER)).toBeInTheDocument();
       expect(screen.getByTestId(DATA_TEST_ID.PAGE_HEADER_ICON_USER)).toBeInTheDocument();
     });
+
+    test("should render experiences button when showExperiencesButton is true and call handler on click", async () => {
+      // GIVEN a handler for view experiences
+      const handleViewExperiences = jest.fn();
+
+      // WHEN the page PageHeader is rendered with showExperiencesButton true
+      render(
+        <PageHeader
+          title="home.dashboard"
+          showExperiencesButton={true}
+          experiencesExplored={3}
+          exploredExperiencesNotification={true}
+          onViewExperiencesClick={handleViewExperiences}
+        />
+      );
+
+      // THEN the experience button is in the document
+      const experiencesButton = screen.getByTestId(DATA_TEST_ID.PAGE_HEADER_BUTTON_EXPERIENCES);
+      expect(experiencesButton).toBeInTheDocument();
+      // AND the handler is called when the experience button is clicked
+      await userEvent.click(experiencesButton);
+      expect(handleViewExperiences).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe("feedback button", () => {

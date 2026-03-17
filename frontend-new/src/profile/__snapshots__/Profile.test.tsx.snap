@@ -1,0 +1,361 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Profile Component Rendering should render all profile sections with correct props 1`] = `
+<div
+  class="MuiBox-root css-2b0dhr"
+  data-testid="profile-content-a7f8e4b2-9c3d-4a1e-8f6b-2d3e4a5b6c7d"
+>
+  <div
+    class="MuiStack-root css-4otudh-MuiStack-root"
+  >
+    <div
+      data-testid="profile-card"
+    >
+      ProfileCard: 
+      John Doe
+      , 
+      Lusaka
+      , 
+      University of Zambia
+      , 
+      Computer Science
+      , 
+      2024
+      ,
+       
+      loaded
+    </div>
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-3p7kj1-MuiPaper-root-MuiCard-root"
+      data-testid="module-progress-card-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+      style="--Paper-shadow: var(--mui-shadows-1);"
+    >
+      <div
+        class="MuiCardContent-root css-11tpxt5-MuiCardContent-root"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-6u7d2r-MuiTypography-root"
+          data-testid="module-progress-title-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+        >
+          Skills & Interests Progress
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body2 css-domiiu-MuiTypography-root"
+        >
+          How far you have progressed in your skills discovery conversation
+        </p>
+        <div
+          class="MuiBox-root css-9iyoh4"
+          data-testid="module-item-0-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+        >
+          <div
+            class="MuiBox-root css-jn1mkv"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body2 css-vtq6gs-MuiTypography-root"
+              data-testid="module-name-0-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+            >
+              My Skills & Interests
+            </p>
+            <p
+              class="MuiTypography-root MuiTypography-body2 css-12x7psx-MuiTypography-root"
+            >
+              0
+              %
+            </p>
+          </div>
+          <span
+            aria-label="Progress for My Skills & Interests"
+            aria-valuemax="100"
+            aria-valuemin="0"
+            aria-valuenow="0"
+            class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate css-2vfj37-MuiLinearProgress-root"
+            data-testid="module-progress-0-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+            role="progressbar"
+          >
+            <span
+              class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate css-184k4oh-MuiLinearProgress-bar1"
+              style="transform: translateX(-100%);"
+            />
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      data-testid="career-readiness-progress-banner"
+    >
+      CareerReadinessProgressBanner: 
+      2
+       modules
+    </div>
+    <div
+      data-testid="skills-discovered-card"
+    >
+      SkillsDiscoveredCard: 
+      0
+       skills, 
+      loaded
+    </div>
+    <div
+      class="MuiStack-root css-vtfvzf-MuiStack-root"
+    >
+      <div
+        data-testid="security-card"
+      >
+        SecurityCard: 
+        john.doe@example.com
+        , 
+        loaded
+      </div>
+      <div
+        data-testid="preferences-card"
+      >
+        PreferencesCard: 
+        en
+        , 
+        loaded
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Profile Component Rendering should render correctly with partial data 1`] = `
+<div
+  class="MuiBox-root css-2b0dhr"
+  data-testid="profile-content-a7f8e4b2-9c3d-4a1e-8f6b-2d3e4a5b6c7d"
+>
+  <div
+    class="MuiStack-root css-4otudh-MuiStack-root"
+  >
+    <div
+      data-testid="profile-card"
+    >
+      ProfileCard: 
+      John Doe
+      , 
+      null
+      , 
+      null
+      , 
+      null
+      , 
+      null
+      ,
+       
+      loaded
+    </div>
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-3p7kj1-MuiPaper-root-MuiCard-root"
+      data-testid="module-progress-card-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+      style="--Paper-shadow: var(--mui-shadows-1);"
+    >
+      <div
+        class="MuiCardContent-root css-11tpxt5-MuiCardContent-root"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-6u7d2r-MuiTypography-root"
+          data-testid="module-progress-title-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+        >
+          Skills & Interests Progress
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body2 css-domiiu-MuiTypography-root"
+        >
+          How far you have progressed in your skills discovery conversation
+        </p>
+        <div
+          class="MuiBox-root css-9iyoh4"
+          data-testid="module-item-0-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+        >
+          <div
+            class="MuiBox-root css-jn1mkv"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body2 css-vtq6gs-MuiTypography-root"
+              data-testid="module-name-0-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+            >
+              My Skills & Interests
+            </p>
+            <p
+              class="MuiTypography-root MuiTypography-body2 css-12x7psx-MuiTypography-root"
+            >
+              0
+              %
+            </p>
+          </div>
+          <span
+            aria-label="Progress for My Skills & Interests"
+            aria-valuemax="100"
+            aria-valuemin="0"
+            aria-valuenow="0"
+            class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate css-2vfj37-MuiLinearProgress-root"
+            data-testid="module-progress-0-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+            role="progressbar"
+          >
+            <span
+              class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate css-184k4oh-MuiLinearProgress-bar1"
+              style="transform: translateX(-100%);"
+            />
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      data-testid="career-readiness-progress-banner"
+    >
+      CareerReadinessProgressBanner: 
+      0
+       modules
+    </div>
+    <div
+      data-testid="skills-discovered-card"
+    >
+      SkillsDiscoveredCard: 
+      0
+       skills, 
+      loaded
+    </div>
+    <div
+      class="MuiStack-root css-vtfvzf-MuiStack-root"
+    >
+      <div
+        data-testid="security-card"
+      >
+        SecurityCard: 
+        john@example.com
+        , 
+        loaded
+      </div>
+      <div
+        data-testid="preferences-card"
+      >
+        PreferencesCard: 
+        null
+        , 
+        loaded
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Profile Component Rendering should render with null data showing 'Not available' 1`] = `
+<div
+  class="MuiBox-root css-2b0dhr"
+  data-testid="profile-content-a7f8e4b2-9c3d-4a1e-8f6b-2d3e4a5b6c7d"
+>
+  <div
+    class="MuiStack-root css-4otudh-MuiStack-root"
+  >
+    <div
+      data-testid="profile-card"
+    >
+      ProfileCard: 
+      null
+      , 
+      null
+      , 
+      null
+      , 
+      null
+      , 
+      null
+      ,
+       
+      loaded
+    </div>
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-3p7kj1-MuiPaper-root-MuiCard-root"
+      data-testid="module-progress-card-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+      style="--Paper-shadow: var(--mui-shadows-1);"
+    >
+      <div
+        class="MuiCardContent-root css-11tpxt5-MuiCardContent-root"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-6u7d2r-MuiTypography-root"
+          data-testid="module-progress-title-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+        >
+          Skills & Interests Progress
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body2 css-domiiu-MuiTypography-root"
+        >
+          How far you have progressed in your skills discovery conversation
+        </p>
+        <div
+          class="MuiBox-root css-9iyoh4"
+          data-testid="module-item-0-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+        >
+          <div
+            class="MuiBox-root css-jn1mkv"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body2 css-vtq6gs-MuiTypography-root"
+              data-testid="module-name-0-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+            >
+              My Skills & Interests
+            </p>
+            <p
+              class="MuiTypography-root MuiTypography-body2 css-12x7psx-MuiTypography-root"
+            >
+              0
+              %
+            </p>
+          </div>
+          <span
+            aria-label="Progress for My Skills & Interests"
+            aria-valuemax="100"
+            aria-valuemin="0"
+            aria-valuenow="0"
+            class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate css-2vfj37-MuiLinearProgress-root"
+            data-testid="module-progress-0-module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b"
+            role="progressbar"
+          >
+            <span
+              class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate css-184k4oh-MuiLinearProgress-bar1"
+              style="transform: translateX(-100%);"
+            />
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      data-testid="career-readiness-progress-banner"
+    >
+      CareerReadinessProgressBanner: 
+      0
+       modules
+    </div>
+    <div
+      data-testid="skills-discovered-card"
+    >
+      SkillsDiscoveredCard: 
+      0
+       skills, 
+      loaded
+    </div>
+    <div
+      class="MuiStack-root css-vtfvzf-MuiStack-root"
+    >
+      <div
+        data-testid="security-card"
+      >
+        SecurityCard: 
+        null
+        , 
+        loaded
+      </div>
+      <div
+        data-testid="preferences-card"
+      >
+        PreferencesCard: 
+        null
+        , 
+        loaded
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -9,7 +9,6 @@ import Chat, {
   NOTIFICATION_MESSAGES_TEXT,
 } from "src/chat/Chat";
 import i18n from "src/i18n/i18n";
-import ChatHeader, { DATA_TEST_ID as CHAT_HEADER_TEST_ID } from "src/chat/ChatHeader/ChatHeader";
 import PageHeader, { DATA_TEST_ID as PAGE_HEADER_TEST_ID } from "src/home/components/PageHeader/PageHeader";
 import ChatList, { DATA_TEST_ID as CHAT_LIST_TEST_ID } from "src/chat/chatList/ChatList";
 import ChatMessageField, {
@@ -26,6 +25,7 @@ import ExperienceService from "src/experiences/experienceService/experienceServi
 import ExperiencesDrawer, {
   DATA_TEST_ID as EXPERIENCE_DRAWER_TEST_ID,
 } from "src/experiences/experiencesDrawer/ExperiencesDrawer";
+import { ExperiencesDrawerProvider } from "src/experiences/ExperiencesDrawerProvider";
 import { DiveInPhase, WorkType } from "src/experiences/experienceService/experiences.types";
 import {
   Language,
@@ -82,19 +82,6 @@ jest.mock("src/home/components/PageHeader/PageHeader", () => {
   return {
     __esModule: true,
     default: mockPageHeader,
-    DATA_TEST_ID: actual.DATA_TEST_ID,
-  };
-});
-
-// mock the ChatHeader component
-jest.mock("src/chat/ChatHeader/ChatHeader", () => {
-  const actual = jest.requireActual("src/chat/ChatHeader/ChatHeader");
-  const mockChatHeader = jest
-    .fn()
-    .mockImplementation(() => <div data-testid={actual.DATA_TEST_ID.CHAT_HEADER_CONTAINER}></div>);
-  return {
-    __esModule: true,
-    default: mockChatHeader,
     DATA_TEST_ID: actual.DATA_TEST_ID,
   };
 });
@@ -385,8 +372,6 @@ describe("Chat", () => {
         }),
         {}
       );
-      // AND expect the chat header to be visible
-      expect(screen.getByTestId(CHAT_HEADER_TEST_ID.CHAT_HEADER_CONTAINER)).toBeInTheDocument();
       // AND expect the chat list to be visible
       expect(screen.getByTestId(CHAT_LIST_TEST_ID.CHAT_LIST_CONTAINER)).toBeInTheDocument();
       // AND expect the chat message field to be visible
@@ -568,14 +553,6 @@ describe("Chat", () => {
             {}
           );
         });
-        // AND expect the experiences notification to be shown
-        expect(ChatHeader as jest.Mock).toHaveBeenLastCalledWith(
-          expect.objectContaining({
-            experiencesExplored: processedExperiences.length,
-            exploredExperiencesNotification: true,
-          }),
-          {}
-        );
         // AND expect the DownloadReportDropdown to be preloaded
         await waitFor(() => {
           expect(lazyWithPreload).toHaveBeenCalledWith(expect.any(Function));
@@ -1111,7 +1088,11 @@ describe("Chat", () => {
         expect(chatHistoryResolve).toBeDefined();
 
         // WHEN the component is mounted
-        render(<Chat />);
+        render(
+          <ExperiencesDrawerProvider>
+            <Chat />
+          </ExperiencesDrawerProvider>
+        );
 
         // THEN chatservice.getChatHistory should be called with the active session ID
         expect(getChatHistorySpy).toHaveBeenCalledWith(givenActiveSessionId);
@@ -1582,14 +1563,6 @@ describe("Chat", () => {
           {}
         );
       });
-      // AND expect the experiences notification to be shown
-      expect(ChatHeader as jest.Mock).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          experiencesExplored: processedExperiences.length,
-          exploredExperiencesNotification: true,
-        }),
-        {}
-      );
       // AND expect the DownloadReportDropdown to be preloaded
       await waitFor(() => {
         expect(lazyWithPreload).toHaveBeenCalledWith(expect.any(Function));
@@ -1759,7 +1732,11 @@ describe("Chat", () => {
       mockGetExperiences.mockResolvedValue(givenExperiences);
 
       // WHEN the component is rendered
-      render(<Chat />);
+      render(
+        <ExperiencesDrawerProvider>
+          <Chat />
+        </ExperiencesDrawerProvider>
+      );
 
       // THEN expect the Chat component to be initialized
       await assertChatInitialized();
@@ -1835,7 +1812,11 @@ describe("Chat", () => {
       mockGetExperiences.mockRejectedValueOnce(givenError);
 
       // WHEN the component is mounted
-      render(<Chat />);
+      render(
+        <ExperiencesDrawerProvider>
+          <Chat />
+        </ExperiencesDrawerProvider>
+      );
 
       // THEN expect the Chat component to be initialized
       await assertChatInitialized();

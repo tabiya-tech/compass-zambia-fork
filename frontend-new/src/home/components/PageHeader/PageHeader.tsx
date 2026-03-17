@@ -14,6 +14,7 @@ import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import { useTranslation } from "react-i18next";
 import type { TranslationKey } from "src/react-i18next";
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
+import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
@@ -26,6 +27,8 @@ import { useSentryFeedbackForm } from "src/feedback/hooks/useSentryFeedbackForm"
 import { parseEnvSupportedLocales } from "src/i18n/languageContextMenu/parseEnvSupportedLocales";
 import { LocalesLabels } from "src/i18n/constants";
 import BackButton from "src/knowledgeHub/components/BackButton";
+import AnimatedBadge from "src/theme/AnimatedBadge/AnimatedBadge";
+import { useExperiencesDrawer } from "src/experiences/ExperiencesDrawerProvider";
 
 const uniqueId = "b2e4c1a8-3f5d-4e6a-9c7b-1d2e3f4a5b6c";
 
@@ -41,6 +44,8 @@ export const DATA_TEST_ID = {
   PAGE_HEADER_BUTTON_FEEDBACK: `page-header-button-feedback-${uniqueId}`,
   PAGE_HEADER_BUTTON_MENU: `page-header-button-menu-${uniqueId}`,
   PAGE_HEADER_MOBILE_LANGUAGE_TRIGGER: `page-header-mobile-language-trigger-${uniqueId}`,
+  PAGE_HEADER_BUTTON_EXPERIENCES: `page-header-button-experiences-${uniqueId}`,
+  PAGE_HEADER_ICON_EXPERIENCES: `page-header-icon-experiences-${uniqueId}`,
 };
 
 export const MENU_ITEM_ID = {
@@ -49,6 +54,7 @@ export const MENU_ITEM_ID = {
   REGISTER: `register-${uniqueId}`,
   VIEW_PROFILE: `page-header-view-profile-${uniqueId}`,
   MOBILE_LANGUAGE: `page-header-mobile-language-${uniqueId}`,
+  MOBILE_VIEW_EXPERIENCES: `page-header-mobile-view-experiences-${uniqueId}`,
 };
 
 export interface PageHeaderProps {
@@ -56,9 +62,26 @@ export interface PageHeaderProps {
   subtitle?: string;
   backLinkLabel?: string;
   onBackClick?: () => void;
+  showExperiencesButton?: boolean;
+  showExperiencesBadge?: boolean;
+  experiencesExplored?: number;
+  exploredExperiencesNotification?: boolean;
+  onViewExperiencesClick?: () => void;
+  isViewExperiencesDisabled?: boolean;
 }
 
-const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel, onBackClick }) => {
+const PageHeader: React.FC<PageHeaderProps> = ({
+  title,
+  subtitle,
+  backLinkLabel,
+  onBackClick,
+  showExperiencesButton = true,
+  showExperiencesBadge = false,
+  experiencesExplored = 0,
+  exploredExperiencesNotification = false,
+  onViewExperiencesClick,
+  isViewExperiencesDisabled,
+}) => {
   const theme = useTheme();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -71,6 +94,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
   const isOnline = useContext(IsOnlineContext);
   const { sentryEnabled, openFeedbackForm } = useSentryFeedbackForm();
+  const { openExperiencesDrawer } = useExperiencesDrawer();
 
   const user = authenticationStateService.getInstance().getUser();
   const isAnonymous = !user?.name || !user?.email;
@@ -179,13 +203,25 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
   );
 
   const mobileMenuItems: MenuItemConfig[] = useMemo(() => {
-    return [
+    const baseItems: MenuItemConfig[] = [
       {
         id: MENU_ITEM_ID.VIEW_PROFILE,
         text: t("chat.chatHeader.viewMyProfile").toLowerCase(),
         disabled: false,
         action: navigateToProfile,
       },
+      ...(showExperiencesButton && onViewExperiencesClick
+        ? [
+            {
+              id: MENU_ITEM_ID.MOBILE_VIEW_EXPERIENCES,
+              text: t("chat.chatHeader.viewExperiences").toLowerCase(),
+              disabled: isViewExperiencesDisabled ?? !isOnline,
+              action: () => {
+                (onViewExperiencesClick ?? openExperiencesDrawer)();
+              },
+            } as MenuItemConfig,
+          ]
+        : []),
       {
         id: MENU_ITEM_ID.MOBILE_LANGUAGE,
         text: t("i18n.languageContextMenu.selector" as TranslationKey).toLowerCase(),
@@ -225,11 +261,17 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
         },
       },
     ];
+
+    return baseItems;
   }, [
     t,
+    showExperiencesButton,
+    onViewExperiencesClick,
+    openExperiencesDrawer,
+    isViewExperiencesDisabled,
+    isOnline,
     navigateToProfile,
     sentryEnabled,
-    isOnline,
     handleReportBug,
     isAnonymous,
     handleRegister,
@@ -326,6 +368,30 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, backLinkLabel,
               </PrimaryIconButton>
             ) : (
               <>
+                {showExperiencesButton && (
+                  <PrimaryIconButton
+                    sx={{
+                      color: theme.palette.common.black,
+                    }}
+                    onClick={() => {
+                      (onViewExperiencesClick ?? openExperiencesDrawer)();
+                    }}
+                    data-testid={DATA_TEST_ID.PAGE_HEADER_BUTTON_EXPERIENCES}
+                    title={t("chat.chatHeader.viewExperiences").toLowerCase()}
+                    disabled={isViewExperiencesDisabled ?? !isOnline}
+                  >
+                    {showExperiencesBadge ? (
+                      <AnimatedBadge
+                        badgeContent={experiencesExplored}
+                        invisible={!exploredExperiencesNotification || experiencesExplored === 0}
+                      >
+                        <BadgeOutlinedIcon data-testid={DATA_TEST_ID.PAGE_HEADER_ICON_EXPERIENCES} />
+                      </AnimatedBadge>
+                    ) : (
+                      <BadgeOutlinedIcon data-testid={DATA_TEST_ID.PAGE_HEADER_ICON_EXPERIENCES} />
+                    )}
+                  </PrimaryIconButton>
+                )}
                 {sentryEnabled && (
                   <PrimaryIconButton
                     sx={{

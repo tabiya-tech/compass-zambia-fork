@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PersistentStorageService } from "src/app/PersistentStorageService/PersistentStorageService";
 import ChatHeader from "src/chat/ChatHeader/ChatHeader";
-import { ConversationPhase } from "src/chat/chatProgressbar/types";
-import { mockExperiences } from "src/experiences/experienceService/_test_utilities/mockExperiencesResponses";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
 
 const meta: Meta<typeof ChatHeader> = {
@@ -10,12 +8,9 @@ const meta: Meta<typeof ChatHeader> = {
   component: ChatHeader,
   tags: ["autodocs"],
   args: {
-    setExploredExperiencesNotification: () => {},
-    conversationPhase: ConversationPhase.INTRO,
-    collectedExperiences: 0,
-  },
-  argTypes: {
-    setExploredExperiencesNotification: { action: "setExploredExperiencesNotification" },
+    conversationCompleted: false,
+    progressPercentage: 0,
+    timeUntilNotification: null,
   },
   decorators: [
     (Story) => {
@@ -27,7 +22,7 @@ const meta: Meta<typeof ChatHeader> = {
       // Mock the methods to always show the feedback notification
       PersistentStorageService.hasSeenFeedbackNotification = () => false;
       PersistentStorageService.setSeenFeedbackNotification = () => {};
-      return Story();
+      return <Story />;
     },
   ],
 };
@@ -36,31 +31,11 @@ export default meta;
 
 type Story = StoryObj<typeof ChatHeader>;
 
-export const Shown: Story = {
-  args: {
-    exploredExperiencesNotification: false,
-    experiencesExplored: 0,
-    conversationCompleted: false,
-    progressPercentage: 0,
-    timeUntilNotification: null,
-  },
-};
+export const Default: Story = {};
 
-export const ShownWithExperiencesNotification: Story = {
+export const FeedbackReminderReady: Story = {
   args: {
-    exploredExperiencesNotification: true,
-    experiencesExplored: mockExperiences.length,
     conversationCompleted: false,
-    progressPercentage: 0,
-    timeUntilNotification: null,
-  },
-};
-
-export const ShownWithFeedbackNotification: Story = {
-  args: {
-    exploredExperiencesNotification: false,
-    conversationCompleted: false,
-    experiencesExplored: 0,
     progressPercentage: 10,
     timeUntilNotification: 0,
   },

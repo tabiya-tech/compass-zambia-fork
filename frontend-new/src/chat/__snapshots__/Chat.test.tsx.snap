@@ -10,6 +10,10 @@ exports[`Chat render tests should render the Chat component with all its childre
     data-testid="page-header-container-b2e4c1a8-3f5d-4e6a-9c7b-1d2e3f4a5b6c"
   />
   <div
+    class="MuiBox-root css-pori7h"
+    data-testid="chat-header-container-7413b63a-887b-4f41-b930-89e9770db12b"
+  />
+  <div
     class="MuiBox-root css-1u5054q"
   >
     <div
@@ -26,13 +30,6 @@ exports[`Chat render tests should render the Chat component with all its childre
           50
           %
         </div>
-      </div>
-      <div
-        class="MuiBox-root css-6su6fj"
-      >
-        <div
-          data-testid="chat-header-container-7413b63a-887b-4f41-b930-89e9770db12b"
-        />
       </div>
     </div>
   </div>
