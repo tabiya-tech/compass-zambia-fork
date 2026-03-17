@@ -12,12 +12,12 @@ exports[`ErrorPage ErrorPage renders correctly 1`] = `
     style="margin-bottom: 2rem;"
     width="250px"
   />
-  <h2
-    class="MuiTypography-root MuiTypography-h2 css-30zt8z-MuiTypography-root"
+  <h3
+    class="MuiTypography-root MuiTypography-h3 css-5j6fa2-MuiTypography-root"
     data-testid="error-message-37d307ae-4f1e-4d8d-bafe-fd642f8af4ab"
   >
     404 Error - Page Not Found
-  </h2>
+  </h3>
   <span
     data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
   />

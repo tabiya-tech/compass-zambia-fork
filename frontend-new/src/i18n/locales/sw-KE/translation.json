@@ -691,7 +691,8 @@
     "errorPage": {
       "illustrationAlt": "picha ya kosa",
       "defaultMessage": "Kuna kitu kimekwenda vibaya na {{appName}}. Jaribu kupaisha upya ukurasa...",
-      "notFound": "Kosa la 404 - Ukurasa Haujapatikana"
+      "notFound": "Kosa la 404 - Ukurasa Haujapatikana",
+      "refreshButton": "Onyesha upya ukurasa"
     },
     "restAPIError": {
       "storyChooseMessageLabel": "Chagua ujumbe wa kosa wa kuonyesha:",

@@ -1,5 +1,5 @@
 import React, { startTransition, useEffect, useState } from "react";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider, Outlet, useRouteError } from "react-router-dom";
 import Login from "src/auth/pages/Login/Login";
 import ErrorPage from "src/error/errorPage/ErrorPage";
 import Register from "src/auth/pages/Register/Register";
@@ -25,6 +25,7 @@ import { AuthBroadcastChannel, AuthChannelMessage } from "src/auth/services/auth
 import { getRegistrationDisabled } from "src/envService";
 import { useTranslation } from "react-i18next";
 import Home from "src/home/Home";
+import { AppErrorFallback } from "src/error/errorPage/AppErrorFallback";
 
 const LazyLoadedSensitiveDataForm = lazyWithPreload(
   () => import("src/sensitiveData/components/sensitiveDataForm/SensitiveDataForm")
@@ -76,6 +77,11 @@ const ProtectedRouteKeys = {
 const NotFound: React.FC = () => {
   const { t } = useTranslation();
   return <ErrorPage errorMessage={t("error.errorPage.notFound")} />;
+};
+
+const RouterErrorBoundary: React.FC = () => {
+  const error = useRouteError();
+  return <AppErrorFallback error={error} />;
 };
 
 const App = () => {
@@ -271,124 +277,131 @@ const App = () => {
   const router = sentryCreateBrowserRouter([
     {
       path: routerPaths.ROOT,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.ROOT}>
-          <Home />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.SKILLS_INTERESTS,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.SKILLS_INTERESTS}>
-          <LazyLoadedChat />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.LANDING,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.LANDING}>
-          <Landing />
-        </ProtectedRoute>
-      ),
-    },
-    // Only include register route if registration is not disabled
-    ...(isRegistrationDisabled
-      ? []
-      : [
-          {
-            path: routerPaths.REGISTER,
-            element: (
-              <ProtectedRoute key={ProtectedRouteKeys.REGISTER}>
-                <Register />
-              </ProtectedRoute>
-            ),
-          },
-        ]),
-    {
-      path: routerPaths.LOGIN,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.LOGIN}>
-          <Login />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.VERIFY_EMAIL,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.VERIFY_EMAIL}>
-          <VerifyEmail />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.CONSENT,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.CONSENT}>
-          <Consent />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.SENSITIVE_DATA,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.SENSITIVE_DATA}>
-          <LazyLoadedSensitiveDataForm />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.KNOWLEDGE_HUB,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB}>
-          <LazyLoadedKnowledgeHubList />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.KNOWLEDGE_HUB_DOCUMENT,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB_DOCUMENT}>
-          <LazyLoadedKnowledgeHubDocument />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.CAREER_EXPLORER,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.CAREER_EXPLORER}>
-          <LazyLoadedCareerExplorer />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.CAREER_READINESS,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS}>
-          <LazyLoadedCareerReadinessList />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.CAREER_READINESS_MODULE,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS_MODULE}>
-          <LazyLoadedCareerReadinessModule />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: routerPaths.PROFILE,
-      element: (
-        <ProtectedRoute key={ProtectedRouteKeys.PROFILE}>
-          <LazyLoadedProfile />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: "*",
-      element: <NotFound />,
+      element: <Outlet />,
+      errorElement: <RouterErrorBoundary />,
+      children: [
+        {
+          index: true,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.ROOT}>
+              <Home />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.SKILLS_INTERESTS,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.SKILLS_INTERESTS}>
+              <LazyLoadedChat />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.LANDING,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.LANDING}>
+              <Landing />
+            </ProtectedRoute>
+          ),
+        },
+        // Only include register route if registration is not disabled
+        ...(isRegistrationDisabled
+          ? []
+          : [
+              {
+                path: routerPaths.REGISTER,
+                element: (
+                  <ProtectedRoute key={ProtectedRouteKeys.REGISTER}>
+                    <Register />
+                  </ProtectedRoute>
+                ),
+              },
+            ]),
+        {
+          path: routerPaths.LOGIN,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.LOGIN}>
+              <Login />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.VERIFY_EMAIL,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.VERIFY_EMAIL}>
+              <VerifyEmail />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.CONSENT,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.CONSENT}>
+              <Consent />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.SENSITIVE_DATA,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.SENSITIVE_DATA}>
+              <LazyLoadedSensitiveDataForm />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.KNOWLEDGE_HUB,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB}>
+              <LazyLoadedKnowledgeHubList />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.KNOWLEDGE_HUB_DOCUMENT,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB_DOCUMENT}>
+              <LazyLoadedKnowledgeHubDocument />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.CAREER_EXPLORER,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.CAREER_EXPLORER}>
+              <LazyLoadedCareerExplorer />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.CAREER_READINESS,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS}>
+              <LazyLoadedCareerReadinessList />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.CAREER_READINESS_MODULE,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS_MODULE}>
+              <LazyLoadedCareerReadinessModule />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.PROFILE,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.PROFILE}>
+              <LazyLoadedProfile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "*",
+          element: <NotFound />,
+        },
+      ],
     },
   ]);
   return <RouterProvider router={router} />;
