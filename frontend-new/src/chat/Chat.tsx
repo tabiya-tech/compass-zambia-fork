@@ -1085,6 +1085,9 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
             exploredExperiencesNotification={exploredExperiencesNotification}
           />
           <ChatHeader
+            experiencesExplored={exploredExperiencesCount.length}
+            exploredExperiencesNotification={exploredExperiencesNotification}
+            setExploredExperiencesNotification={setExploredExperiencesNotification}
             conversationCompleted={conversationCompleted}
             timeUntilNotification={timeUntilFeedbackNotification}
             progressPercentage={currentPhase.percentage}
