@@ -37,6 +37,9 @@ jest.mock("src/theme/SnackbarProvider/SnackbarProvider", () => {
 });
 
 const defaultProps = {
+  experiencesExplored: 0,
+  exploredExperiencesNotification: false,
+  setExploredExperiencesNotification: jest.fn(),
   conversationCompleted: false,
   progressPercentage: 0,
   timeUntilNotification: null as number | null,
@@ -94,6 +97,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered with a notification delay
       renderWithChatProvider(
         <ChatHeader
+          {...defaultProps}
           conversationCompleted={false}
           progressPercentage={50}
           timeUntilNotification={FEEDBACK_NOTIFICATION_DELAY}
@@ -113,6 +117,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
+          {...defaultProps}
           conversationCompleted={false}
           progressPercentage={50}
           timeUntilNotification={FEEDBACK_NOTIFICATION_DELAY}
@@ -140,6 +145,7 @@ describe("ChatHeader", () => {
       // WHEN the component is rendered
       renderWithChatProvider(
         <ChatHeader
+          {...defaultProps}
           conversationCompleted={false}
           progressPercentage={70}
           timeUntilNotification={FEEDBACK_NOTIFICATION_DELAY}
@@ -158,7 +164,7 @@ describe("ChatHeader", () => {
 
       // WHEN the component is rendered (immediate notification)
       renderWithChatProvider(
-        <ChatHeader conversationCompleted={false} progressPercentage={50} timeUntilNotification={0} />
+        <ChatHeader {...defaultProps} conversationCompleted={false} progressPercentage={50} timeUntilNotification={0} />
       );
 
       // THEN no snackbar is shown
@@ -179,7 +185,7 @@ describe("ChatHeader", () => {
 
       // WHEN the component is rendered and the snackbar link is clicked
       renderWithChatProvider(
-        <ChatHeader conversationCompleted={false} progressPercentage={50} timeUntilNotification={0} />
+        <ChatHeader {...defaultProps} conversationCompleted={false} progressPercentage={50} timeUntilNotification={0} />
       );
       jest.advanceTimersByTime(0);
 
