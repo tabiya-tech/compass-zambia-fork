@@ -6,6 +6,11 @@ export interface Module {
   descriptionKey: string;
   route: string;
   disabled?: boolean;
+  /**
+   * The id of the next top-level module to suggest when this module completes.
+   * Leave undefined if there is no automatic handoff.
+   */
+  nextModuleId?: string;
 }
 
 /**
@@ -17,6 +22,7 @@ const DEFAULT_MODULES: Module[] = [
     labelKey: "home.modules.skillsDiscovery",
     descriptionKey: "home.modules.skillsDiscoveryDesc",
     route: routerPaths.SKILLS_INTERESTS,
+    nextModuleId: "career_explorer",
   },
   {
     id: "career_explorer",
@@ -29,6 +35,7 @@ const DEFAULT_MODULES: Module[] = [
     labelKey: "home.modules.jobReadiness",
     descriptionKey: "home.modules.jobReadinessDesc",
     route: routerPaths.CAREER_READINESS,
+    nextModuleId: "knowledge_hub",
   },
   {
     id: "knowledge_hub",
