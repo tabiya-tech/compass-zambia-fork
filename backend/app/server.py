@@ -16,6 +16,7 @@ from app.job_preferences import add_job_preferences_routes
 from app.career_path import add_career_path_routes
 from app.career_readiness import add_career_readiness_routes
 from app.career_explorer.routes import add_career_explorer_routes
+from app.analytics import add_analytics_routes
 from app.career_explorer.config import parse_career_explorer_config
 from app.metrics.routes.routes import add_metrics_routes
 from app.sentry_init import init_sentry, set_sentry_contexts
@@ -421,6 +422,11 @@ add_career_path_routes(app)
 ############################################
 add_career_readiness_routes(app, auth)
 add_career_explorer_routes(app, auth)
+
+############################################
+# Add analytics routes (admin dashboard)
+############################################
+add_analytics_routes(app, auth)
 
 ############################################
 # Add routes relevant for esco search

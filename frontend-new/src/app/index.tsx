@@ -25,6 +25,7 @@ import { AuthBroadcastChannel, AuthChannelMessage } from "src/auth/services/auth
 import { getRegistrationDisabled } from "src/envService";
 import { useTranslation } from "react-i18next";
 import Home from "src/home/Home";
+import Analytics from "src/analytics/Analytics";
 import { AppErrorFallback } from "src/error/errorPage/AppErrorFallback";
 
 const LazyLoadedSensitiveDataForm = lazyWithPreload(
@@ -394,6 +395,14 @@ const App = () => {
           element: (
             <ProtectedRoute key={ProtectedRouteKeys.PROFILE}>
               <LazyLoadedProfile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.ANALYTICS,
+          element: (
+            <ProtectedRoute key="ANALYTICS">
+              <Analytics />
             </ProtectedRoute>
           ),
         },
