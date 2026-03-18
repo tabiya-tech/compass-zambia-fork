@@ -52,6 +52,8 @@ import type { UploadStatus } from "./Chat.types";
 import { nanoid } from "nanoid";
 import { routerPaths } from "src/app/routerPaths";
 import { useExperiencesDrawer } from "src/experiences/ExperiencesDrawerProvider";
+import ModuleHandoffBanner from "src/home/components/ModuleHandoffBanner/ModuleHandoffBanner";
+import { useNextModule } from "src/home/useNextModule";
 
 export const INACTIVITY_TIMEOUT = 3 * 60 * 1000; // in milliseconds
 // Set the interval to check every TIMEOUT/3,
@@ -112,6 +114,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const navigate = useNavigate();
   const [messages, setMessages] = useState<IChatMessage<any>[]>([]);
   const [conversationCompleted, setConversationCompleted] = useState<boolean>(false);
+  const nextModule = useNextModule("skills_discovery");
   const [exploredExperiences, setExploredExperiences] = useState<number>(0);
   const [aiIsTyping, setAiIsTyping] = useState<boolean>(false);
   const [prefillMessage, setPrefillMessage] = React.useState<string | null>(null);
@@ -1134,6 +1137,9 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
               cvUploadError={cvUploadError}
             />
           </Box>
+          {conversationCompleted && nextModule && (
+            <ModuleHandoffBanner nextModuleLabel={t(nextModule.labelKey as any)} nextModuleRoute={nextModule.route} />
+          )}
         </Box>
         {showRefreshConfirmDialog && (
           <ConfirmModalDialog
