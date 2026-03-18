@@ -57,26 +57,28 @@ except ImportError:
     print("Missing dependencies. Install with: pip install -r requirements.txt")
     sys.exit(1)
 
+from ga4 import create_ga4_property, create_ga4_data_stream
+from gtm import (
+    GTM_API_DELAY_SECONDS,
+    CUSTOM_EVENTS,
+    create_gtm_container,
+    get_default_workspace,
+    create_gtm_variable,
+    create_gtm_custom_event_trigger,
+    create_gtm_ga4_config_tag,
+    create_gtm_virtual_page_url_variable,
+    create_gtm_history_change_trigger,
+    create_gtm_page_view_tag,
+    create_gtm_ga4_event_tag,
+    create_gtm_data_layer_variables,
+    publish_gtm_version,
+)
+
 SCOPES = [
     "https://www.googleapis.com/auth/analytics.edit",
     "https://www.googleapis.com/auth/tagmanager.edit.containers",
     "https://www.googleapis.com/auth/tagmanager.edit.containerversions",
     "https://www.googleapis.com/auth/tagmanager.publish",
-]
-
-# GTM API has a rate limit of 0.25 QPS (1 request per 4 seconds)
-GTM_API_DELAY_SECONDS = 4
-
-# Custom events to track
-CUSTOM_EVENTS = [
-    {
-        "name": "user_registered",
-        "parameters": [{"key": "method", "type": "template"}],
-    },
-    {
-        "name": "user_login",
-        "parameters": [{"key": "method", "type": "template"}],
-    },
 ]
 
 
@@ -98,233 +100,6 @@ def authenticate(credentials_path: str) -> service_account.Credentials:
     )
     print(f"  Service account: {creds.service_account_email}")
     return creds
-
-
-def create_ga4_property(analytics_admin, account_id: str, property_name: str) -> dict:
-    """Create a GA4 property."""
-    print(f"\nCreating GA4 property '{property_name}'...")
-    body = {
-        "parent": f"accounts/{account_id}",
-        "displayName": property_name,
-        "timeZone": "UTC",
-        "currencyCode": "USD",
-    }
-    prop = analytics_admin.properties().create(
-        body=body,
-    ).execute()
-
-    # Link to account
-    property_id = prop["name"].split("/")[-1]
-    print(f"  Created property: {prop['name']} (ID: {property_id})")
-    return prop
-
-
-def create_ga4_data_stream(analytics_admin, property_name: str, url: str, display_name: str) -> dict:
-    """Create a web data stream for a GA4 property."""
-    print(f"\nCreating GA4 web data stream for {url}...")
-    body = {
-        "type": "WEB_DATA_STREAM",
-        "webStreamData": {
-            "defaultUri": url,
-        },
-        "displayName": f"{display_name} Web Stream",
-    }
-    stream = analytics_admin.properties().dataStreams().create(
-        parent=property_name,
-        body=body,
-    ).execute()
-
-    measurement_id = stream.get("webStreamData", {}).get("measurementId", "")
-    print(f"  Created data stream: {stream['name']}")
-    print(f"  Measurement ID: {measurement_id}")
-    return stream
-
-
-def create_gtm_container(tagmanager, account_id: str, container_name: str) -> dict:
-    """Create a GTM web container."""
-    print(f"\nCreating GTM container '{container_name}'...")
-    body = {
-        "name": container_name,
-        "usageContext": ["web"],
-    }
-    container = tagmanager.accounts().containers().create(
-        parent=f"accounts/{account_id}",
-        body=body,
-    ).execute()
-
-    print(f"  Created container: {container['name']}")
-    print(f"  Container ID: {container['publicId']}")
-    return container
-
-
-def get_default_workspace(tagmanager, container_path: str) -> dict:
-    """Get the default workspace for a container."""
-    time.sleep(GTM_API_DELAY_SECONDS)
-    workspaces = tagmanager.accounts().containers().workspaces().list(
-        parent=container_path,
-    ).execute()
-
-    workspace = workspaces["workspace"][0]
-    print(f"  Using workspace: {workspace['name']}")
-    return workspace
-
-
-def create_gtm_variable(tagmanager, workspace_path: str, name: str, value: str) -> dict:
-    """Create a constant variable in GTM."""
-    time.sleep(GTM_API_DELAY_SECONDS)
-    print(f"  Creating variable: {name}...")
-    body = {
-        "name": name,
-        "type": "c",
-        "parameter": [
-            {"type": "template", "key": "value", "value": value},
-        ],
-    }
-    return tagmanager.accounts().containers().workspaces().variables().create(
-        parent=workspace_path,
-        body=body,
-    ).execute()
-
-
-def create_gtm_custom_event_trigger(tagmanager, workspace_path: str, event_name: str) -> dict:
-    """Create a custom event trigger in GTM."""
-    time.sleep(GTM_API_DELAY_SECONDS)
-    trigger_name = f"CE - {event_name}"
-    print(f"  Creating trigger: {trigger_name}...")
-    body = {
-        "name": trigger_name,
-        "type": "customEvent",
-        "customEventFilter": [
-            {
-                "type": "equals",
-                "parameter": [
-                    {"type": "template", "key": "arg0", "value": "{{_event}}"},
-                    {"type": "template", "key": "arg1", "value": event_name},
-                ],
-            }
-        ],
-    }
-    return tagmanager.accounts().containers().workspaces().triggers().create(
-        parent=workspace_path,
-        body=body,
-    ).execute()
-
-
-def create_gtm_ga4_config_tag(tagmanager, workspace_path: str, measurement_id_var: str) -> dict:
-    """Create a GA4 Configuration tag (Google Tag) that fires on all pages."""
-    time.sleep(GTM_API_DELAY_SECONDS)
-    print("  Creating GA4 Config tag...")
-    body = {
-        "name": "GA4 Config",
-        "type": "gaawc",
-        "parameter": [
-            {"type": "template", "key": "measurementId", "value": f"{{{{{measurement_id_var}}}}}"},
-            {"type": "boolean", "key": "sendPageView", "value": "true"},
-        ],
-        # Fire on All Pages (built-in trigger ID)
-        "firingTriggerId": ["2147479553"],
-    }
-    return tagmanager.accounts().containers().workspaces().tags().create(
-        parent=workspace_path,
-        body=body,
-    ).execute()
-
-
-def create_gtm_ga4_event_tag(
-    tagmanager, workspace_path: str, event_name: str,
-    trigger_id: str, measurement_id_var: str, event_params: list
-) -> dict:
-    """Create a GA4 Event tag."""
-    time.sleep(GTM_API_DELAY_SECONDS)
-    tag_name = f"GA4 Event - {event_name}"
-    print(f"  Creating tag: {tag_name}...")
-
-    # Build event parameters list for the tag
-    param_list = []
-    for param in event_params:
-        param_list.append({
-            "type": "map",
-            "map": [
-                {"type": "template", "key": "name", "value": param["key"]},
-                {"type": "template", "key": "value", "value": f"{{{{{param['key']}}}}}"},
-            ],
-        })
-
-    parameters = [
-        {"type": "template", "key": "eventName", "value": event_name},
-        {"type": "template", "key": "measurementIdOverride", "value": f"{{{{{measurement_id_var}}}}}"},
-    ]
-
-    if param_list:
-        parameters.append({
-            "type": "list",
-            "key": "eventParameters",
-            "list": param_list,
-        })
-
-    body = {
-        "name": tag_name,
-        "type": "gaawe",
-        "parameter": parameters,
-        "firingTriggerId": [trigger_id],
-    }
-    return tagmanager.accounts().containers().workspaces().tags().create(
-        parent=workspace_path,
-        body=body,
-    ).execute()
-
-
-def create_gtm_data_layer_variables(tagmanager, workspace_path: str) -> None:
-    """Create Data Layer Variables for event parameters."""
-    # Collect all unique parameter keys across events
-    created_vars = set()
-    for event in CUSTOM_EVENTS:
-        for param in event["parameters"]:
-            param_key = param["key"]
-            if param_key not in created_vars:
-                time.sleep(GTM_API_DELAY_SECONDS)
-                print(f"  Creating Data Layer Variable: {param_key}...")
-                body = {
-                    "name": param_key,
-                    "type": "v",
-                    "parameter": [
-                        {"type": "integer", "key": "dataLayerVersion", "value": "2"},
-                        {"type": "boolean", "key": "setDefaultValue", "value": "false"},
-                        {"type": "template", "key": "name", "value": param_key},
-                    ],
-                }
-                tagmanager.accounts().containers().workspaces().variables().create(
-                    parent=workspace_path,
-                    body=body,
-                ).execute()
-                created_vars.add(param_key)
-
-
-def publish_gtm_version(tagmanager, workspace_path: str) -> dict:
-    """Create and publish a GTM container version."""
-    time.sleep(GTM_API_DELAY_SECONDS)
-    print("\nPublishing GTM container version...")
-    version = tagmanager.accounts().containers().workspaces().create_version(
-        path=workspace_path,
-        body={
-            "name": "Initial analytics setup",
-            "notes": "Automated GA4+GTM setup by setup_analytics.py",
-        },
-    ).execute()
-
-    container_version = version.get("containerVersion", {})
-    version_id = container_version.get("containerVersionId", "")
-
-    # Extract the container path from the workspace path
-    container_path = "/".join(workspace_path.split("/")[:4])
-
-    time.sleep(GTM_API_DELAY_SECONDS)
-    tagmanager.accounts().containers().versions().publish(
-        path=f"{container_path}/versions/{version_id}",
-    ).execute()
-
-    print(f"  Published version {version_id}")
-    return version
 
 
 def update_config(config_path: Path, updates: dict) -> None:
@@ -357,6 +132,7 @@ def run_inject_config(config_path: Path) -> None:
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description="Automated GA4 + GTM setup for Compass forks",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -387,13 +163,14 @@ Prerequisites:
     parser.add_argument("--dry-run", action="store_true", help="Validate inputs without creating resources")
     parser.add_argument(
         "--step", default=None,
-        choices=["ga4", "gtm", "publish", "config"],
+        choices=["ga4", "gtm", "spa-tracking", "publish", "config"],
         help=(
             "Run only a specific step (uses IDs from config for dependencies):\n"
-            "  ga4     - Create GA4 property + data stream\n"
-            "  gtm     - Create GTM container + tags/triggers/variables\n"
-            "  publish - Publish the GTM container version\n"
-            "  config  - Update config JSON and run inject-config.py"
+            "  ga4          - Create GA4 property + data stream\n"
+            "  gtm          - Create GTM container + tags/triggers/variables\n"
+            "  spa-tracking - Add SPA page view tracking to an existing container\n"
+            "  publish      - Publish the GTM container version\n"
+            "  config       - Update config JSON and run inject-config.py"
         ),
     )
     # For --step=publish or --step=config, allow passing existing IDs directly
@@ -455,16 +232,16 @@ def step_gtm(tagmanager, account_id: str, container_name: str, measurement_id: s
     gtm_container_id = gtm_container["publicId"]
     container_path = gtm_container["path"]
 
-    print(f"\n  Getting workspace...")
+    print("\n  Getting workspace...")
     workspace = get_default_workspace(tagmanager, container_path)
     workspace_path = workspace["path"]
 
     measurement_id_var_name = "GA4 Measurement ID"
-    print(f"\n  Creating GTM variables...")
+    print("\n  Creating GTM variables...")
     create_gtm_variable(tagmanager, workspace_path, measurement_id_var_name, measurement_id)
     create_gtm_data_layer_variables(tagmanager, workspace_path)
 
-    print(f"\n  Creating GTM triggers and event tags...")
+    print("\n  Creating GTM triggers and event tags...")
     for event in CUSTOM_EVENTS:
         trigger = create_gtm_custom_event_trigger(tagmanager, workspace_path, event["name"])
         trigger_id = trigger["triggerId"]
@@ -473,13 +250,54 @@ def step_gtm(tagmanager, account_id: str, container_name: str, measurement_id: s
             trigger_id, measurement_id_var_name, event["parameters"],
         )
 
-    print(f"\n  Creating GA4 Config tag...")
+    print("\n  Creating GA4 Config tag...")
     create_gtm_ga4_config_tag(tagmanager, workspace_path, measurement_id_var_name)
+
+    print("\n  Setting up SPA (HashRouter) page view tracking...")
+    create_gtm_virtual_page_url_variable(tagmanager, workspace_path)
+    history_trigger = create_gtm_history_change_trigger(tagmanager, workspace_path)
+    history_trigger_id = history_trigger["triggerId"]
+    create_gtm_page_view_tag(tagmanager, workspace_path, measurement_id_var_name, history_trigger_id)
 
     print(f"\n  [OK] GTM Container ID: {gtm_container_id}")
     print(f"  [OK] Container path: {container_path}")
     print(f"  [OK] Workspace path: {workspace_path}")
     return gtm_container_id, container_path, workspace_path
+
+
+def step_spa_tracking(tagmanager, container_path: str, measurement_id: str) -> None:
+    """Add SPA (HashRouter) page view tracking to an existing GTM container."""
+    print("\n" + "=" * 60)
+    print("STEP: SPA-TRACKING — Add hash-based page view tracking")
+    print("=" * 60)
+
+    print(f"\n  Looking up workspace for container: {container_path}")
+    workspace = get_default_workspace(tagmanager, container_path)
+    workspace_path = workspace["path"]
+
+    measurement_id_var_name = "GA4 Measurement ID"
+
+    # Check if the measurement ID variable already exists, create if not
+    time.sleep(GTM_API_DELAY_SECONDS)
+    existing_vars = tagmanager.accounts().containers().workspaces().variables().list(
+        parent=workspace_path,
+    ).execute()
+    var_names = [v["name"] for v in existing_vars.get("variable", [])]
+    if measurement_id_var_name not in var_names:
+        print("\n  Measurement ID variable not found, creating it...")
+        create_gtm_variable(tagmanager, workspace_path, measurement_id_var_name, measurement_id)
+    else:
+        print("\n  Measurement ID variable already exists, skipping...")
+
+    print("\n  Creating SPA page view tracking resources...")
+    create_gtm_virtual_page_url_variable(tagmanager, workspace_path)
+    history_trigger = create_gtm_history_change_trigger(tagmanager, workspace_path)
+    history_trigger_id = history_trigger["triggerId"]
+    create_gtm_page_view_tag(tagmanager, workspace_path, measurement_id_var_name, history_trigger_id)
+
+    print(f"\n  [OK] SPA tracking added to container: {container_path}")
+    print("  Note: You must publish the container for changes to take effect.")
+    print("  Run with --step=publish --gtm-container-path=... to publish.")
 
 
 def step_publish(tagmanager, container_path: str) -> None:
@@ -494,7 +312,7 @@ def step_publish(tagmanager, container_path: str) -> None:
     workspace_path = workspace["path"]
 
     publish_gtm_version(tagmanager, workspace_path)
-    print(f"\n  [OK] GTM container published")
+    print("\n  [OK] GTM container published")
 
 
 def step_config(config_path: Path, ids: dict) -> None:
@@ -505,7 +323,7 @@ def step_config(config_path: Path, ids: dict) -> None:
 
     update_config(config_path, ids)
     run_inject_config(config_path)
-    print(f"\n  [OK] Config updated and injected")
+    print("\n  [OK] Config updated and injected")
 
 
 def main():
@@ -534,7 +352,11 @@ def main():
         for event in CUSTOM_EVENTS:
             params = ", ".join(p["key"] for p in event["parameters"])
             print(f"    - Event: {event['name']} (params: {params})")
-        print("  - GA4 Config tag (all pages)")
+        print("  - GA4 Config tag (all pages, sendPageView=false)")
+        print("  - SPA page view tracking (HashRouter support):")
+        print("    - Custom JS Variable: Virtual Page URL (normalizes hash URLs)")
+        print("    - History Change trigger for SPA navigation")
+        print("    - GA4 Page View tag (fires on all pages + history changes)")
         print(f"  - Would update {config_path} with generated IDs")
         return
 
@@ -603,6 +425,16 @@ def main():
             if gtm_container_id:
                 print(f"\n  [SKIP] GTM — using existing Container ID: {gtm_container_id}")
 
+        # --- SPA tracking step (standalone) ---
+        if step == "spa-tracking":
+            if tagmanager is None:
+                tagmanager = build("tagmanager", "v2", credentials=creds)
+            container_path = args.gtm_container_path or ""
+            if not container_path:
+                print("Error: --gtm-container-path is required for --step=spa-tracking.")
+                sys.exit(1)
+            step_spa_tracking(tagmanager, container_path, measurement_id)
+
         # --- Publish step ---
         if step in (None, "publish"):
             if tagmanager is None:
@@ -632,7 +464,7 @@ def main():
     except HttpError as e:
         print(f"\n[ERROR] API Error: {e}")
         print(f"Details: {e.content.decode()}")
-        print(f"\nTip: Check config file for saved checkpoints. Resume with --step=<step>")
+        print("\nTip: Check config file for saved checkpoints. Resume with --step=<step>")
         sys.exit(1)
 
 

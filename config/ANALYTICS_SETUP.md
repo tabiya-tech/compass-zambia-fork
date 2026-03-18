@@ -28,11 +28,30 @@ The process is largely automated by `backend/scripts/analytics/setup_analytics.p
 
 | Event | Parameters | Where |
 |-------|-----------|-------|
+| `page_view` | `page_location` (virtual URL with hash normalized) | Automatic: initial load + every route navigation |
 | `user_registered` | `method`: `"email"` or `"google"` | After successful registration |
 | `user_login` | `method`: `"email"`, `"google"`, or `"invitation_code"` | After successful login |
 
 Each fork can extend these events by adding more `pushToDataLayer()` calls in the frontend code and
 creating corresponding triggers/tags in GTM (either via the script or manually).
+
+### SPA Page View Tracking (HashRouter)
+
+Compass uses React's `HashRouter`, so URLs look like `https://example.com/#/skills-interests`.
+GA4's default page view tracking only sees `/` as the page path because the hash fragment is not
+part of the URL path. The setup script handles this automatically by creating:
+
+1. **`Virtual Page URL` variable** — Custom JavaScript that normalizes hash URLs into proper paths
+   (e.g., `https://example.com/#/skills-interests` → `https://example.com/skills-interests`)
+2. **`History Change - SPA Navigation` trigger** — Fires on every hash change (route navigation)
+3. **`GA4 Page View - SPA` tag** — Sends `page_view` events on initial load and every navigation,
+   with `page_location` overridden to the virtual URL
+
+The GA4 Config tag has `sendPageView` disabled to avoid duplicate page views.
+
+> **Important:** In your GA4 data stream settings, disable **"Page changes based on browser history
+> events"** under Enhanced Measurement → Advanced Settings. This prevents GA4 from sending its own
+> `page_view` events (which would have `/` as the path) in addition to the ones from GTM.
 
 ## Prerequisites (One-Time Manual Steps)
 
@@ -121,10 +140,16 @@ python3 setup_analytics.py \
 
 This will:
 1. Create a GA4 property and web data stream
-2. Create a GTM container with tags, triggers, and variables for the tracked events
+2. Create a GTM container with:
+   - GA4 Config tag (fires on all pages)
+   - Custom event triggers and tags for `user_registered` and `user_login`
+   - SPA page view tracking (Virtual Page URL variable, History Change trigger, GA4 Page View tag)
 3. Publish the GTM container
 4. Write the generated IDs into `config/default.json`
 5. Run `inject-config.py` to propagate IDs to `frontend-new/public/data/env.js`
+
+> **Post-setup:** Disable "Page changes based on browser history events" in your GA4 data stream's
+> Enhanced Measurement → Advanced Settings to avoid duplicate page views.
 
 ### Resuming After a Failure
 
@@ -143,7 +168,26 @@ python3 setup_analytics.py \
   --gtm-container-path accounts/<GTM_ACCOUNT_ID>/containers/<CONTAINER_ID>
 ```
 
-Available steps: `ga4`, `gtm`, `publish`, `config`
+Available steps: `ga4`, `gtm`, `spa-tracking`, `publish`, `config`
+
+### Adding SPA Page View Tracking to an Existing Container
+
+If you already have a GTM container (created manually or by a previous run of the script)
+and need to add the SPA page view tracking:
+
+```bash
+python3 setup_analytics.py \
+  --ga4-account-id <GA4_ACCOUNT_ID> \
+  --gtm-account-id <GTM_ACCOUNT_ID> \
+  --url "https://your-fork.compass.tabiya.tech" \
+  --config ../../../config/default.json \
+  --credentials path/to/service_account_key.json \
+  --step spa-tracking \
+  --gtm-container-path accounts/<GTM_ACCOUNT_ID>/containers/<CONTAINER_ID>
+```
+
+This creates only the 3 SPA tracking resources (Virtual Page URL variable, History Change trigger,
+GA4 Page View tag) in the existing container. After running, publish the container with `--step publish`.
 
 You can also pass existing IDs directly via CLI args:
 
