@@ -164,9 +164,8 @@ yarn analyze
 
 | Path | Page | Description |
 |------|------|-------------|
-| `/` | - | Redirects to `/dashboard` |
+| `/` | Dashboard | Overview with stats and activity |
 | `/login` | Login | Admin authentication |
-| `/dashboard` | Dashboard | Overview with stats and activity |
 | `/users` | Users | User management table |
 | `/settings` | Settings | System configuration |
 | `*` | NotFound | 404 error page |

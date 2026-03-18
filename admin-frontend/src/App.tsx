@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { routerPaths } from "src/app/routerPaths";
 import ProtectedRoute from "src/app/ProtectedRoute/ProtectedRoute";
 import Login from "src/pages/Login";
-import Home from "src/pages/Home";
+import Dashboard from "src/pages/Dashboard";
 import NotFound from "src/pages/NotFound";
 import AuthenticationStateService from "src/auth/services/AuthenticationState.service";
 import FirebaseEmailAuthenticationService from "src/auth/services/FirebaseAuthenticationService/FirebaseEmailAuthenticationService";
@@ -22,7 +22,7 @@ const router = sentryCreateHashRouter([
     path: routerPaths.ROOT,
     element: (
       <ProtectedRoute>
-        <Home />
+        <Dashboard />
       </ProtectedRoute>
     ),
   },

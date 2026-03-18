@@ -437,6 +437,12 @@ app.include_router(search_router)
 add_metrics_routes(app)
 
 ############################################
+# Add analytics dashboard routes
+############################################
+from app.analytics.routes import add_analytics_routes
+add_analytics_routes(app, auth)
+
+############################################
 # Add POC chat routes
 ############################################
 add_poc_routes(app, auth)
