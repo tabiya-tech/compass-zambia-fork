@@ -27,18 +27,27 @@ class SectorRelevance(str, Enum):
 
 class SectorRelevanceClassification(BaseModel):
     relevance: SectorRelevance
+    sector_name: str | None = None
+    is_priority: bool = False
     reasoning: str = Field(default="")
 
     class Config:
         extra = "forbid"
 
 
-def _build_classifier_instructions() -> str:
+def _build_classifier_instructions(existing_sectors: list[str] | None = None) -> str:
     config = get_application_config()
     sectors = config.career_explorer_config.sectors
     sector_names = [s["name"] for s in sectors] if sectors else []
     sector_list_str = ", ".join(sector_names) if sector_names else "the priority sectors"
     country_name = config.career_explorer_config.country
+
+    existing_sectors_str = ", ".join(existing_sectors) if existing_sectors is not None and existing_sectors else ""
+    existing_sectors_instruction = (
+        f"\n        Previously used sector names: {existing_sectors_str}. If the user's sector matches one of these, reuse that exact name."
+        if existing_sectors_str
+        else ""
+    )
 
     return dedent(f"""\
         Classify whether the user's message is about careers in one of {country_name}'s priority sectors or about careers outside them.
@@ -49,6 +58,15 @@ def _build_classifier_instructions() -> str:
         Return NON_PRIORITY_SECTOR if the user is asking about careers in other sectors (e.g. aeronautical engineering, IT, healthcare) or general career topics not covered by the priority sectors.
 
         Be inclusive: if the user mentions multiple sectors and at least one is a priority sector, return PRIORITY_SECTOR.
+
+        Also return a sector_name:
+        - For priority sectors, use the exact configured sector name from the list above.
+        - For non-priority sectors, use a broad high-level industry category (e.g. "Agriculture", "Tech/ICT", "Healthcare").
+        - Return null if the message isn't about any sector.
+        {existing_sectors_instruction}
+
+        Set is_priority to true only for priority sectors.
+
         Keep reasoning under {MAX_REASONING_LENGTH} characters.
         """)
 
@@ -68,15 +86,16 @@ class SectorRelevanceClassifier:
         self,
         user_input: str,
         context: ConversationContext,
-    ) -> tuple[SectorRelevance, str, list]:
+        existing_sectors: list[str] | None = None,
+    ) -> tuple[SectorRelevance, str | None, bool, str, list]:
         llm = GeminiGenerativeLLM(
-            system_instructions=_build_classifier_instructions(),
+            system_instructions=_build_classifier_instructions(existing_sectors),
             config=self._llm_config,
         )
         result, stats = await self._llm_caller.call_llm(
             llm=llm,
             llm_input=ConversationHistoryFormatter.format_for_agent_generative_prompt(
-                model_response_instructions="Classify the user's message. Return JSON with relevance and reasoning.",
+                model_response_instructions="Classify the user's message. Return JSON with relevance, sector_name, is_priority, and reasoning.",
                 context=context,
                 user_input=user_input,
             ),
@@ -84,12 +103,14 @@ class SectorRelevanceClassifier:
         )
         if result is None:
             self._logger.warning("Sector relevance classification failed, defaulting to NON_PRIORITY_SECTOR")
-            return SectorRelevance.NON_PRIORITY_SECTOR, "", stats
+            return SectorRelevance.NON_PRIORITY_SECTOR, None, False, "", stats
         reasoning = (result.reasoning or "")[:MAX_REASONING_LENGTH]
         self._logger.info(
-            "Sector relevance for '%s': %s (%s)",
+            "Sector relevance for '%s': %s, sector_name=%s, is_priority=%s (%s)",
             user_input[:50],
             result.relevance.value,
+            result.sector_name,
+            result.is_priority,
             reasoning,
         )
-        return result.relevance, reasoning, stats
+        return result.relevance, result.sector_name, result.is_priority, reasoning, stats

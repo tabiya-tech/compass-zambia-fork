@@ -32,18 +32,19 @@ class ClassifierTestCase:
     name: str
     user_input: str
     expected_relevance: SectorRelevance
+    expected_sector_name: str | None
 
 
 CLASSIFIER_TEST_CASES = [
-    ClassifierTestCase("agriculture", "Tell me about Agriculture", SectorRelevance.PRIORITY_SECTOR),
-    ClassifierTestCase("mining", "What roles are there in mining?", SectorRelevance.PRIORITY_SECTOR),
-    ClassifierTestCase("energy_solar", "I want to know about solar careers", SectorRelevance.PRIORITY_SECTOR),
-    ClassifierTestCase("water", "Careers in water treatment?", SectorRelevance.PRIORITY_SECTOR),
-    ClassifierTestCase("hospitality", "What about tourism jobs?", SectorRelevance.PRIORITY_SECTOR),
-    ClassifierTestCase("aeronautical", "I want to talk about aeronautical engineering", SectorRelevance.NON_PRIORITY_SECTOR),
-    ClassifierTestCase("it_software", "What about software development careers?", SectorRelevance.NON_PRIORITY_SECTOR),
-    ClassifierTestCase("healthcare", "Careers in nursing or healthcare?", SectorRelevance.NON_PRIORITY_SECTOR),
-    ClassifierTestCase("general_career", "How do I find a job?", SectorRelevance.NON_PRIORITY_SECTOR),
+    ClassifierTestCase("agriculture", "Tell me about Agriculture", SectorRelevance.PRIORITY_SECTOR, "Agriculture"),
+    ClassifierTestCase("mining", "What roles are there in mining?", SectorRelevance.PRIORITY_SECTOR, "Mining"),
+    ClassifierTestCase("energy_solar", "I want to know about solar careers", SectorRelevance.PRIORITY_SECTOR, "Energy"),
+    ClassifierTestCase("water", "Careers in water treatment?", SectorRelevance.PRIORITY_SECTOR, "Water"),
+    ClassifierTestCase("hospitality", "What about tourism jobs?", SectorRelevance.PRIORITY_SECTOR, "Hospitality"),
+    ClassifierTestCase("aeronautical", "I want to talk about aeronautical engineering", SectorRelevance.NON_PRIORITY_SECTOR, "Aviation"),
+    ClassifierTestCase("it_software", "What about software development careers?", SectorRelevance.NON_PRIORITY_SECTOR, "Tech/ICT"),
+    ClassifierTestCase("healthcare", "Careers in nursing or healthcare?", SectorRelevance.NON_PRIORITY_SECTOR, "Healthcare"),
+    ClassifierTestCase("general_career", "How do I find a job?", SectorRelevance.NON_PRIORITY_SECTOR, None),
 ]
 
 
@@ -65,16 +66,39 @@ async def test_sector_relevance_classifier(
     career_explorer_config_with_sectors,
     test_case: ClassifierTestCase,
 ):
+    # GIVEN the i18n locale is set
     get_i18n_manager().set_locale(Locale.EN_US)
 
-    context = FakeConversationContext()
-    context.add_turn("", "Welcome! Which sector interests you?")
-    context.add_turn(test_case.user_input, "")
+    # AND a conversation context with a welcome turn and the user's input
+    given_context = FakeConversationContext()
+    given_context.add_turn("", "Welcome! Which sector interests you?")
+    given_context.add_turn(test_case.user_input, "")
 
+    # WHEN the classifier is called with the user's input
     classifier = SectorRelevanceClassifier()
-    relevance, _reasoning, _ = await classifier.classify(user_input=test_case.user_input, context=context)
-
-    assert relevance == test_case.expected_relevance, (
-        f"For '{test_case.user_input}' expected {test_case.expected_relevance.value} but got {relevance.value}"
+    actual_relevance, actual_sector_name, actual_is_priority, _reasoning, _ = await classifier.classify(
+        user_input=test_case.user_input, context=given_context
     )
-    logging.info("Classifier test %s: %s -> %s (correct)", test_case.name, test_case.user_input[:40], relevance.value)
+
+    # THEN the relevance matches the expected value
+    assert actual_relevance == test_case.expected_relevance, (
+        f"For '{test_case.user_input}' expected {test_case.expected_relevance.value} but got {actual_relevance.value}"
+    )
+    # AND the sector name matches the expected value
+    if test_case.expected_sector_name is not None:
+        assert actual_sector_name is not None, (
+            f"For '{test_case.user_input}' expected sector_name '{test_case.expected_sector_name}' but got None"
+        )
+        assert test_case.expected_sector_name.lower() in actual_sector_name.lower(), (
+            f"For '{test_case.user_input}' expected sector_name containing '{test_case.expected_sector_name}' but got '{actual_sector_name}'"
+        )
+    else:
+        assert actual_sector_name is None, (
+            f"For '{test_case.user_input}' expected sector_name to be None but got '{actual_sector_name}'"
+        )
+    # AND the is_priority flag matches the expected value
+    expected_is_priority = test_case.expected_relevance == SectorRelevance.PRIORITY_SECTOR
+    assert actual_is_priority == expected_is_priority, (
+        f"For '{test_case.user_input}' expected is_priority={expected_is_priority} but got {actual_is_priority}"
+    )
+    logging.info("Classifier test %s: %s -> %s, sector=%s (correct)", test_case.name, test_case.user_input[:40], actual_relevance.value, actual_sector_name)

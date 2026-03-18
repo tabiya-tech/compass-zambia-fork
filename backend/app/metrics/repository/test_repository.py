@@ -11,7 +11,7 @@ from app.metrics.types import ConversationPhaseLiteral, ConversationPhaseEvent, 
     MessageReactionCreatedEvent, ConversationTurnEvent, \
     FeedbackProvidedEvent, FeedbackTypeLiteral, FeedbackRatingValueEvent, \
     CVFormatLiteral, CVDownloadedEvent, DeviceSpecificationEvent, UserLocationEvent, ExperienceDiscoveredEvent, \
-    ExperienceExploredEvent, UIInteractionEvent, ExperienceChangedEvent, SkillChangedEvent
+    ExperienceExploredEvent, UIInteractionEvent, ExperienceChangedEvent, SkillChangedEvent, SectorEngagementEvent
 from common_libs.test_utilities import get_random_user_id, get_random_session_id, get_random_printable_string
 from common_libs.time_utilities import mongo_date_to_datetime, truncate_microseconds, get_now
 
@@ -160,6 +160,14 @@ def get_skill_changed_event():
     )
 
 
+def get_sector_engagement_event(*, sector_name: str | None = None, is_priority: bool = True):
+    return SectorEngagementEvent(
+        user_id=get_random_user_id(),
+        sector_name=sector_name or get_random_printable_string(10),
+        is_priority=is_priority,
+    )
+
+
 def _assert_metric_event_fields_match(given_event_dict: Dict[str, Any], actual_stored_event: Dict[str, Any]) -> None:
     # Remove MongoDB _id if present
     given_event_dict.pop("_id", None)
@@ -197,6 +205,7 @@ class TestRecordEvent:
             lambda: get_ui_interaction_event(),
             lambda: get_experience_changed_event(),
             lambda: get_skill_changed_event(),
+            lambda: get_sector_engagement_event(),
         ],
         ids=[
             "UserAccountCreatedEvent",
@@ -212,6 +221,7 @@ class TestRecordEvent:
             "UIInteractionEvent",
             "ExperienceChangedEvent",
             "SkillChangedEvent",
+            "SectorEngagementEvent",
         ]
     )
     async def test_record_single_event_success(
@@ -266,11 +276,12 @@ class TestRecordEvent:
             get_device_specification_event(),
             get_ui_interaction_event(),
             get_experience_changed_event(),
-            get_skill_changed_event()
+            get_skill_changed_event(),
+            get_sector_engagement_event()
         ]
         repository = await get_metrics_repository
 
-        # Guard: ensure no events in the database   
+        # Guard: ensure no events in the database
         assert await repository.collection.count_documents({}) == 0
 
         # WHEN the events are recorded
@@ -301,6 +312,7 @@ class TestRecordEvent:
             lambda: get_ui_interaction_event(),
             lambda: get_experience_changed_event(),
             lambda: get_skill_changed_event(),
+            lambda: get_sector_engagement_event(),
         ],
         ids=[
             "UserAccountCreatedEvent",
@@ -315,6 +327,7 @@ class TestRecordEvent:
             "UIInteractionEvent",
             "ExperienceChangedEvent",
             "SkillChangedEvent",
+            "SectorEngagementEvent",
         ]
     )
     async def test_record_event_database_bulk_write_failure(
@@ -369,6 +382,7 @@ class TestRecordEvent:
             get_ui_interaction_event(),
             get_experience_changed_event(),
             get_skill_changed_event(),
+            get_sector_engagement_event(),
         ]
         repository = await get_metrics_repository
 
@@ -732,4 +746,81 @@ class TestRecordEvent:
                 for actual_stored_event, given_event in zip(actual_stored_events, given_events):
                     given_event_dict = given_event.model_dump()
                     _assert_metric_event_fields_match(given_event_dict, actual_stored_event)
+
+        class TestSectorEngagementEvent:
+            @pytest.mark.asyncio
+            async def test_upsert_sector_engagement_event_increments_inquiry_count(
+                    self,
+                    get_metrics_repository: Awaitable[MetricsRepository],
+                    setup_application_config: ApplicationConfig
+            ):
+                # GIVEN a sector engagement event
+                given_event = get_sector_engagement_event(sector_name="Agriculture", is_priority=True)
+                repository = await get_metrics_repository
+
+                # WHEN the event is recorded
+                await repository.record_event([given_event])
+
+                # THEN the event is recorded in the database
+                assert await repository.collection.count_documents({}) == 1
+
+                # AND the event data matches what we expect
+                actual_stored_event = await repository.collection.find_one({})
+                _assert_metric_event_fields_match(given_event.model_dump(), actual_stored_event)
+                # AND the inquiry count is 1
+                assert actual_stored_event["inquiry_count"] == 1
+
+                # WHEN a second event for the same user and sector is recorded
+                given_second_event = get_sector_engagement_event(sector_name="Agriculture", is_priority=True)
+                given_second_event.anonymized_user_id = given_event.anonymized_user_id
+
+                # guard: ensure the two events are not identical
+                assert given_event.model_dump() != given_second_event.model_dump()
+
+                # WHEN we attempt to record the event again
+                await repository.record_event([given_second_event])
+
+                # THEN the event is updated rather than recorded again
+                assert await repository.collection.count_documents({}) == 1
+
+                # AND the event data matches what we expect
+                actual_second_stored_event = await repository.collection.find_one({})
+                _assert_metric_event_fields_match(given_second_event.model_dump(), actual_second_stored_event)
+                # AND the inquiry count is incremented to 2
+                assert actual_second_stored_event["inquiry_count"] == 2
+
+
+class TestGetSectorNamesForUser:
+    @pytest.mark.asyncio
+    async def test_returns_sector_names_for_user_and_not_other_users(
+            self,
+            get_metrics_repository: Awaitable[MetricsRepository],
+            setup_application_config: ApplicationConfig
+    ):
+        # GIVEN two sector engagement events for user A
+        given_user_a_event_1 = get_sector_engagement_event(sector_name="Agriculture", is_priority=True)
+        given_user_a_event_2 = get_sector_engagement_event(sector_name="Tech/ICT", is_priority=False)
+        given_user_a_event_2.anonymized_user_id = given_user_a_event_1.anonymized_user_id
+        # AND one sector engagement event for user B
+        given_user_b_event = get_sector_engagement_event(sector_name="Healthcare", is_priority=False)
+
+        repository = await get_metrics_repository
+
+        # WHEN all events are recorded
+        await repository.record_event([given_user_a_event_1, given_user_a_event_2, given_user_b_event])
+
+        # THEN get_sector_names_for_user returns only user A's sectors
+        expected_user_a_sectors = ["Agriculture", "Tech/ICT"]
+        actual_user_a_sectors = await repository.get_sector_names_for_user(given_user_a_event_1.anonymized_user_id)
+        assert sorted(actual_user_a_sectors) == expected_user_a_sectors
+
+        # AND returns only user B's sectors for user B
+        expected_user_b_sectors = ["Healthcare"]
+        actual_user_b_sectors = await repository.get_sector_names_for_user(given_user_b_event.anonymized_user_id)
+        assert actual_user_b_sectors == expected_user_b_sectors
+
+        # AND returns empty list for unknown user
+        expected_unknown_sectors = []
+        actual_unknown_sectors = await repository.get_sector_names_for_user("unknown_user_id")
+        assert actual_unknown_sectors == expected_unknown_sectors
 

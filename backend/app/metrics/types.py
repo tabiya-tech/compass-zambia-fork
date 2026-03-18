@@ -121,6 +121,37 @@ class UserAccountCreatedEvent(AbstractUserAccountEvent):
         extra = "forbid"
 
 
+@final
+class SectorEngagementEvent(AbstractUserAccountEvent):
+    """
+    A metric event representing a user engaging with a specific sector
+    in the career explorer module.
+    """
+    sector_name: str
+    is_priority: bool
+
+    def __init__(
+        self,
+        *,
+        user_id: str,
+        sector_name: str,
+        is_priority: bool,
+        client_id: str | None = None,
+        relevant_experiments: dict[str, str] | None = None,
+    ):
+        super().__init__(
+            user_id=user_id,
+            client_id=client_id,
+            event_type=EventType.SECTOR_ENGAGEMENT,
+            sector_name=sector_name,
+            is_priority=is_priority,
+            relevant_experiments=relevant_experiments or {},
+        )
+
+    class Config:
+        extra = "forbid"
+
+
 class AbstractConversationEvent(AbstractUserAccountEvent):
     """
     Abstract base class for a metric event representing a conversation event. It is not meant to be instantiated directly.

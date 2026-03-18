@@ -1,8 +1,7 @@
 from abc import ABC
 import logging
 
-from click import Tuple
-
+from app.metrics.common import hash_metric_value
 from app.metrics.types import AbstractCompassMetricEvent, AbstractUserAccountEvent
 from app.metrics.repository.repository import IMetricsRepository
 from app.users.repositories import IUserPreferenceRepository
@@ -26,6 +25,14 @@ class IMetricsService(ABC):
         Record a list of events. This is a fire and forget operation.
         The caller should not handle exceptions from this service as it will not throw any.
         :param events: The events to record.
+        """
+        raise NotImplementedError()
+
+    async def get_sector_names_for_user(self, user_id: str) -> list[str]:
+        """
+        Get the sector names for a user.
+        :param user_id: The user ID.
+        :return: A list of sector names.
         """
         raise NotImplementedError()
 
@@ -91,3 +98,7 @@ class MetricsService(IMetricsService):
                 delattr(event, "user_id")
         if len(errors) > 0:
             self._logger.error(f"Errors occurred while processing events: {ExceptionGroup('User account event processing errors', errors)}")
+
+    async def get_sector_names_for_user(self, user_id: str) -> list[str]:
+        anonymized_user_id = hash_metric_value(user_id)
+        return await self._metrics_repository.get_sector_names_for_user(anonymized_user_id)
