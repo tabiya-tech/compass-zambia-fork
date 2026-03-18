@@ -22,7 +22,7 @@ const ErrorBoundaryFallback: React.FC = () => {
   const { t } = useTranslation();
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
-      <h1>{t("error.errorPage.defaultMessage", "Something went wrong")}</h1>
+      <h1>{t("error.errorPage.defaultMessage")}</h1>
     </div>
   );
 };

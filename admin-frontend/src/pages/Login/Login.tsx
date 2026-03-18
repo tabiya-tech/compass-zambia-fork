@@ -53,13 +53,13 @@ const Login: React.FC<LoginProps> = () => {
             textAlign="center"
             data-testid={DATA_TEST_ID.LOGIN_PAGE_TITLE}
           >
-            {t("login.title", "Admin Login")}
+            {t("login.title")}
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
             <TextField
               fullWidth
-              label={t("login.email", "Email")}
+              label={t("login.email")}
               type="email"
               margin="normal"
               required
@@ -67,7 +67,7 @@ const Login: React.FC<LoginProps> = () => {
             />
             <TextField
               fullWidth
-              label={t("login.password", "Password")}
+              label={t("login.password")}
               type="password"
               margin="normal"
               required
@@ -80,7 +80,7 @@ const Login: React.FC<LoginProps> = () => {
               sx={{ mt: 3, mb: 2 }}
               data-testid={DATA_TEST_ID.LOGIN_PAGE_SUBMIT_BUTTON}
             >
-              {t("login.submit", "Sign In")}
+              {t("login.submit")}
             </Button>
           </Box>
         </Paper>

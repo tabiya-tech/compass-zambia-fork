@@ -1,12 +1,16 @@
-import React from "react";
-import { Box, Card, CardContent, Container, Grid, Typography, useTheme } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Container, Grid, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import PeopleIcon from "@mui/icons-material/People";
-import SettingsIcon from "@mui/icons-material/Settings";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import Header from "src/components/Header/Header";
+import Footer from "src/components/Footer/Footer";
+import StatCard from "src/components/StatCard/StatCard";
+import DashboardTabs, { DashboardTabValue } from "src/components/DashboardTabs/DashboardTabs";
+import DailyAdoptionTrendChart from "src/components/DailyAdoptionTrendChart/DailyAdoptionTrendChart";
+import InstitutionsTable from "src/components/InstitutionsTable/InstitutionsTable";
+import { useInstitutions } from "src/hooks/useInstitutions";
+import { useDashboardStats } from "src/hooks/useDashboardStats";
 
-const uniqueId = "dashboard-page-7c9d2e1f-3a5b-4c8d-9e0f-1a2b3c4d5e6f";
+const uniqueId = "78972cb9-14de-4075-bd34-7fd96d135f5e";
 
 export const DATA_TEST_ID = {
   DASHBOARD_PAGE_CONTAINER: `${uniqueId}-container`,
@@ -14,118 +18,85 @@ export const DATA_TEST_ID = {
   DASHBOARD_STAT_CARD: `${uniqueId}-stat-card`,
 };
 
-export interface DashboardProps {}
-
-interface StatCardProps {
-  title: string;
-  value: string | number;
-  icon: React.ReactNode;
-  color: string;
-}
-
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color }) => {
-  const theme = useTheme();
-
-  return (
-    <Card
-      sx={{
-        height: "100%",
-        borderRadius: theme.tabiyaRounding.sm,
-      }}
-      data-testid={DATA_TEST_ID.DASHBOARD_STAT_CARD}
-    >
-      <CardContent>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <Box>
-            <Typography color="textSecondary" gutterBottom variant="overline">
-              {title}
-            </Typography>
-            <Typography variant="h4" component="div">
-              {value}
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              backgroundColor: color,
-              borderRadius: theme.tabiyaRounding.sm,
-              padding: theme.spacing(1),
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {icon}
-          </Box>
-        </Box>
-      </CardContent>
-    </Card>
-  );
-};
-
-const Dashboard: React.FC<DashboardProps> = () => {
+const Dashboard: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const { institutions } = useInstitutions();
+  const { stats } = useDashboardStats();
 
-  const stats = [
-    {
-      title: t("dashboard.stats.totalUsers", "Total Users"),
-      value: "1,234",
-      icon: <PeopleIcon sx={{ color: "white" }} />,
-      color: theme.palette.primary.main,
-    },
-    {
-      title: t("dashboard.stats.activeUsers", "Active Users"),
-      value: "856",
-      icon: <TrendingUpIcon sx={{ color: "white" }} />,
-      color: theme.palette.success.main,
-    },
-    {
-      title: t("dashboard.stats.sessions", "Sessions Today"),
-      value: "423",
-      icon: <BarChartIcon sx={{ color: "white" }} />,
-      color: theme.palette.info.main,
-    },
-    {
-      title: t("dashboard.stats.configurations", "Configurations"),
-      value: "12",
-      icon: <SettingsIcon sx={{ color: "white" }} />,
-      color: theme.palette.warning.main,
-    },
-  ];
+  const [tab, setTab] = useState<DashboardTabValue>("institutions");
 
   return (
-    <Container maxWidth="lg" data-testid={DATA_TEST_ID.DASHBOARD_PAGE_CONTAINER}>
-      <Box sx={{ py: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom data-testid={DATA_TEST_ID.DASHBOARD_PAGE_TITLE}>
-          {t("dashboard.title", "Dashboard")}
-        </Typography>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundColor: theme.palette.containerBackground.light,
+      }}
+      data-testid={DATA_TEST_ID.DASHBOARD_PAGE_CONTAINER}
+    >
+      <Header />
 
-        <Typography variant="body1" color="textSecondary" sx={{ mb: 4 }}>
-          {t("dashboard.welcome", "Welcome to the Compass Admin Portal")}
-        </Typography>
+      <Container maxWidth="lg">
+        <Box sx={{ display: "flex", flexDirection: "column", gap: theme.fixedSpacing(theme.tabiyaSpacing.xl) }}>
+          <Box>
+            <Typography variant="overline" sx={{ color: theme.palette.primary.main, fontWeight: 700 }}>
+              {t("dashboard.sectionTitle")}
+            </Typography>
+            <Typography variant="h3" sx={{ fontWeight: 700 }} data-testid={DATA_TEST_ID.DASHBOARD_PAGE_TITLE}>
+              {t("dashboard.header.welcome", { name: "John Doe" })}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {t("dashboard.header.school")}
+            </Typography>
+          </Box>
 
-        <Grid container spacing={3}>
-          {stats.map((stat, index) => (
-            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
-              <StatCard title={stat.title} value={stat.value} icon={stat.icon} color={stat.color} />
-            </Grid>
-          ))}
-        </Grid>
+          <Grid container spacing={theme.fixedSpacing(theme.tabiyaSpacing.md)}>
+            {stats.map((stat) => (
+              <Grid
+                key={stat.id ?? stat.titleKey}
+                size={{ xs: 12, md: 4 }}
+                data-testid={DATA_TEST_ID.DASHBOARD_STAT_CARD}
+              >
+                <StatCard
+                  title={t(stat.titleKey)}
+                  value={stat.value}
+                  subtitle={stat.subtitleKey ? t(stat.subtitleKey) : undefined}
+                />
+              </Grid>
+            ))}
+          </Grid>
 
-        <Box sx={{ mt: 4 }}>
-          <Card sx={{ borderRadius: theme.tabiyaRounding.sm }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                {t("dashboard.recentActivity", "Recent Activity")}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+              backgroundColor: theme.palette.background.paper,
+              borderRadius: theme.tabiyaRounding.sm,
+            }}
+          >
+            <DashboardTabs value={tab} onChange={setTab} />
+
+            {tab === "institutions" ? (
+              <Box>
+                <Box sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
+                  <DailyAdoptionTrendChart />
+                </Box>
+                <InstitutionsTable rows={institutions} />
+              </Box>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                {t("dashboard.comingSoon")}
               </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {t("dashboard.noActivity", "No recent activity to display.")}
-              </Typography>
-            </CardContent>
-          </Card>
+            )}
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+
+      <Footer />
+    </Box>
   );
 };
 

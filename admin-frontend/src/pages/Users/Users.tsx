@@ -94,7 +94,7 @@ const Users: React.FC<UsersProps> = () => {
       <Box sx={{ py: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
           <Typography variant="h4" component="h1" data-testid={DATA_TEST_ID.USERS_PAGE_TITLE}>
-            {t("users.title", "Users")}
+            {t("users.title")}
           </Typography>
           <Button
             variant="contained"
@@ -102,7 +102,7 @@ const Users: React.FC<UsersProps> = () => {
             onClick={handleAddUser}
             data-testid={DATA_TEST_ID.USERS_PAGE_ADD_BUTTON}
           >
-            {t("users.addUser", "Add User")}
+            {t("users.addUser")}
           </Button>
         </Box>
 
@@ -110,12 +110,12 @@ const Users: React.FC<UsersProps> = () => {
           <Table data-testid={DATA_TEST_ID.USERS_PAGE_TABLE}>
             <TableHead>
               <TableRow>
-                <TableCell>{t("users.table.name", "Name")}</TableCell>
-                <TableCell>{t("users.table.email", "Email")}</TableCell>
-                <TableCell>{t("users.table.role", "Role")}</TableCell>
-                <TableCell>{t("users.table.status", "Status")}</TableCell>
-                <TableCell>{t("users.table.lastLogin", "Last Login")}</TableCell>
-                <TableCell align="right">{t("users.table.actions", "Actions")}</TableCell>
+                <TableCell>{t("users.table.name")}</TableCell>
+                <TableCell>{t("users.table.email")}</TableCell>
+                <TableCell>{t("users.table.role")}</TableCell>
+                <TableCell>{t("users.table.status")}</TableCell>
+                <TableCell>{t("users.table.lastLogin")}</TableCell>
+                <TableCell align="right">{t("users.table.actions")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

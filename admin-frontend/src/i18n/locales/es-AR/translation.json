@@ -99,5 +99,99 @@
     "languageContextMenu": {
       "selector": "Selector de idioma"
     }
+  },
+  "header": {
+    "logout": "Logout",
+    "user": "User"
+  },
+  "footer": {
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use",
+    "accessibility": "Accessibility",
+    "contact": "Contact",
+    "collaboration": "{{appName}} is a collaboration between the World Bank Group and Tabiya."
+  },
+  "dashboard": {
+    "sectionTitle": "Administrator dashboard — cross-institutional monitoring and analytics",
+    "header": {
+      "welcome": "Welcome, {{name}}",
+      "school": "TEVETA — Technical Education, Vocational and Entrepreneurship Training Authority"
+    },
+    "tabs": {
+      "institutions": "Institutions",
+      "modules": "Modules",
+      "skillsAnalytics": "Skills Analytics",
+      "jobPostings": "Job Postings"
+    },
+    "dailyAdoptionTrend": {
+      "title": "Daily Adoption Trend"
+    },
+    "stats": {
+      "institutionsActive": "Institutions Active",
+      "institutionsActiveSubtitle": "of 15 pilot institutions",
+      "totalStudentsRegistered": "Total Students Registered",
+      "activeStudents7Days": "Active Students (7 days)",
+      "activeStudents7DaysSubtitle": "68% of registered"
+    },
+    "institutionsTable": {
+      "headers": {
+        "institution": "Institution",
+        "province": "Province",
+        "students": "Students",
+        "active7Days": "Active (7D)",
+        "skillsDiscovery": "Skills Discovery",
+        "careerReadiness": "Career Readiness",
+        "careerExplorer": "Career Explorer"
+      },
+      "subHeaders": {
+        "started": "Started",
+        "completed": "Completed",
+        "ofReg": "% of reg.",
+        "ofStarted": "% of started"
+      }
+    },
+    "comingSoon": "Coming soon."
+  },
+  "users": {
+    "title": "Users",
+    "addUser": "Add User",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "lastLogin": "Last Login",
+      "actions": "Actions"
+    }
+  },
+  "login": {
+    "title": "Admin Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign In"
+  },
+  "settings": {
+    "title": "Settings",
+    "save": "Save Changes",
+    "general": {
+      "title": "General Settings",
+      "appName": "Application Name",
+      "supportEmail": "Support Email"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "email": "Enable Email Notifications",
+      "push": "Enable Push Notifications"
+    },
+    "advanced": {
+      "title": "Advanced Settings",
+      "maintenanceMode": "Maintenance Mode",
+      "debugMode": "Debug Mode"
+    }
+  },
+  "notFound": {
+    "message": "Page Not Found",
+    "description": "The page you are looking for might have been removed or is temporarily unavailable.",
+    "goHome": "Go to Dashboard"
   }
 }

@@ -59,7 +59,7 @@ const Settings: React.FC<SettingsProps> = () => {
       <Box sx={{ py: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
           <Typography variant="h4" component="h1" data-testid={DATA_TEST_ID.SETTINGS_PAGE_TITLE}>
-            {t("settings.title", "Settings")}
+            {t("settings.title")}
           </Typography>
           <Button
             variant="contained"
@@ -67,28 +67,28 @@ const Settings: React.FC<SettingsProps> = () => {
             onClick={handleSave}
             data-testid={DATA_TEST_ID.SETTINGS_PAGE_SAVE_BUTTON}
           >
-            {t("settings.save", "Save Changes")}
+            {t("settings.save")}
           </Button>
         </Box>
 
         <Card sx={{ mb: 3, borderRadius: theme.tabiyaRounding.sm }} data-testid={DATA_TEST_ID.SETTINGS_GENERAL_SECTION}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              {t("settings.general.title", "General Settings")}
+              {t("settings.general.title")}
             </Typography>
             <Divider sx={{ mb: 2 }} />
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <TextField
                 fullWidth
-                label={t("settings.general.appName", "Application Name")}
+                label={t("settings.general.appName")}
                 value={settings.appName}
                 onChange={handleChange("appName")}
                 data-testid={DATA_TEST_ID.SETTINGS_APP_NAME_INPUT}
               />
               <TextField
                 fullWidth
-                label={t("settings.general.supportEmail", "Support Email")}
+                label={t("settings.general.supportEmail")}
                 type="email"
                 value={settings.supportEmail}
                 onChange={handleChange("supportEmail")}
@@ -104,7 +104,7 @@ const Settings: React.FC<SettingsProps> = () => {
         >
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              {t("settings.notifications.title", "Notifications")}
+              {t("settings.notifications.title")}
             </Typography>
             <Divider sx={{ mb: 2 }} />
 
@@ -116,7 +116,7 @@ const Settings: React.FC<SettingsProps> = () => {
                     onChange={handleChange("enableEmailNotifications")}
                   />
                 }
-                label={t("settings.notifications.email", "Enable Email Notifications")}
+                label={t("settings.notifications.email")}
               />
               <FormControlLabel
                 control={
@@ -125,7 +125,7 @@ const Settings: React.FC<SettingsProps> = () => {
                     onChange={handleChange("enablePushNotifications")}
                   />
                 }
-                label={t("settings.notifications.push", "Enable Push Notifications")}
+                label={t("settings.notifications.push")}
               />
             </Box>
           </CardContent>
@@ -134,18 +134,18 @@ const Settings: React.FC<SettingsProps> = () => {
         <Card sx={{ borderRadius: theme.tabiyaRounding.sm }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              {t("settings.advanced.title", "Advanced Settings")}
+              {t("settings.advanced.title")}
             </Typography>
             <Divider sx={{ mb: 2 }} />
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <FormControlLabel
                 control={<Switch checked={settings.maintenanceMode} onChange={handleChange("maintenanceMode")} />}
-                label={t("settings.advanced.maintenanceMode", "Maintenance Mode")}
+                label={t("settings.advanced.maintenanceMode")}
               />
               <FormControlLabel
                 control={<Switch checked={settings.debugMode} onChange={handleChange("debugMode")} />}
-                label={t("settings.advanced.debugMode", "Debug Mode")}
+                label={t("settings.advanced.debugMode")}
               />
             </Box>
           </CardContent>
