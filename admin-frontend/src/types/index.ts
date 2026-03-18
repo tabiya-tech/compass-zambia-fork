@@ -1,0 +1,85 @@
+export interface DashboardStatItem {
+  id?: string;
+  titleKey: string;
+  value: string | number;
+  subtitleKey?: string;
+}
+
+export interface InstitutionRow {
+  id: string;
+  institution: string;
+  students: number | null;
+  active7Days: number | null;
+  skillsDiscoveryStartedPct: number | null;
+  skillsDiscoveryCompletedPct: number | null;
+  careerReadinessStartedPct: number | null;
+  careerReadinessCompletedPct: number | null;
+  careerExplorerStartedPct: number | null;
+}
+
+export interface ModuleSummaryRow {
+  labelKey: string;
+  value: number;
+  total: number;
+  pct: number;
+  showBar: boolean;
+}
+
+export interface ModuleBreakdownItem {
+  labelKey: string;
+  value?: number;
+  total?: number;
+  completed?: number;
+  percentage?: number;
+  color?: string;
+}
+
+export interface ModuleData {
+  id: string;
+  titleKey: string;
+  totalStudents: number;
+  summary: ModuleSummaryRow[];
+  breakdownType: "funnel" | "subModules" | "topSectors";
+  breakdownTitleKey: string;
+  breakdownCaption?: string;
+  breakdownItems: ModuleBreakdownItem[];
+}
+
+export interface SkillsDemandSupplyData {
+  [key: string]: string | number;
+  skillName: string;
+  supplyPct: number;
+  demandPct: number;
+}
+
+export interface SkillsGapSectorData {
+  sector: string;
+  supplyPct: number;
+  demandPct: number;
+}
+
+export interface JobPostingStats {
+  jobsSourced: number;
+  sectorsCovered: number;
+  sourcePlatformsCount: number;
+}
+
+export interface JobPostingFilters {
+  search: string;
+  sector: string;
+  location: string;
+  platform: string;
+  zqfLevel: string;
+}
+
+export interface JobPostingRow {
+  id: string;
+  jobTitle: string;
+  sector: string;
+  location: string;
+  zqfLevel: string;
+  platform: string;
+  skills: string[];
+  candidatePool: number;
+  jobUrl: string;
+}

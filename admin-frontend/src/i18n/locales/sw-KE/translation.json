@@ -26,7 +26,14 @@
         "unexpectedError": "Hitilafu isiyotarajiwa imetokea. Tafadhali jaribu tena baadaye.",
         "serverConnectionError": "Haiwezi kuunganisha na huduma. Tafadhali angalia muunganisho wako wa intaneti au jaribu tena baadaye.",
         "authenticationFailure": "Inaonekana hujaingia. Tafadhali ingia ili kuendelea.",
-        "permissionDenied": "Inaonekana huna ruhusa zinazohitajika. Tafadhali ondoka na uingie tena."
+        "permissionDenied": "Inaonekana huna ruhusa zinazohitajika. Tafadhali ondoka na uingie tena.",
+        "resourceNotFound": "Rasilimali iliyoombwa haikupatikana.",
+        "tooManyRequests": "Maombi mengi sana. Tafadhali jaribu tena baadaye.",
+        "requestTooLong": "Ombi lilikuwa refu sana. Tafadhali jaribu tena na data ndogo.",
+        "unableToProcessResponse": "Haiwezi kuchakata jibu. Tafadhali onyesha ukurasa upya.",
+        "serviceUnavailable": "Huduma haipatikani kwa muda. Tafadhali jaribu tena baadaye.",
+        "dataValidationError": "Kulikuwa na tatizo na data. Tafadhali angalia na jaribu tena.",
+        "unableToProcessRequest": "Haiwezi kuchakata ombi. Tafadhali jaribu tena."
       }
     },
     "status": {
@@ -108,5 +115,217 @@
       "admin": "Msimamizi",
       "institutionStaff": "Wafanyakazi wa Taasisi"
     }
+  },
+  "header": {
+    "logout": "Logout",
+    "user": "User"
+  },
+  "footer": {
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use",
+    "accessibility": "Accessibility",
+    "contact": "Contact",
+    "collaboration": "{{appName}} is a collaboration between the World Bank Group and Tabiya."
+  },
+  "dashboard": {
+    "sectionTitle": "Administrator dashboard — cross-institutional monitoring and analytics",
+    "header": {
+      "welcome": "Welcome, {{name}}",
+      "school": "TEVETA — Technical Education, Vocational and Entrepreneurship Training Authority"
+    },
+    "tabs": {
+      "institutions": "Institutions",
+      "modules": "Modules",
+      "skillsAnalytics": "Skills Analytics",
+      "jobPostings": "Job Postings"
+    },
+    "dailyAdoptionTrend": {
+      "title": "Daily Adoption Trend",
+      "noData": "Hakuna data inayopatikana",
+      "newRegistrations": "Usajili Mpya",
+      "dailyActiveUsers": "Watumiaji Wanaotumia Kila Siku"
+    },
+    "stats": {
+      "institutionsActive": "Institutions Active",
+      "institutionsActiveSubtitle": "of 15 pilot institutions",
+      "totalStudentsRegistered": "Total Students Registered",
+      "activeStudents7Days": "Active Students (7 days)",
+      "activeStudents7DaysSubtitle": "68% of registered"
+    },
+    "modules": {
+      "titles": {
+        "skillsDiscovery": "Skills Discovery",
+        "careerReadiness": "Career Readiness",
+        "careerExplorer": "Career Explorer"
+      },
+      "registeredStudents": "{{count}} registered students",
+      "started": "Started",
+      "completed": "Completed",
+      "completedAll5": "Completed all 5",
+      "returned2Plus": "Returned 2+ times",
+      "avgSubModulesCompleted": "Avg. sub-modules completed",
+      "engagementFunnel": "Engagement funnel",
+      "funnelCaption": "301 students in progress",
+      "subModuleBreakdown": "Sub-module breakdown",
+      "topSectorsExplored": "Top sectors explored",
+      "startedLegend": "Started",
+      "completedLegend": "Completed",
+      "sharingExperiences": "Sharing Experiences",
+      "identifyingSkills": "Identifying Skills",
+      "collectingPreferences": "Collecting Preferences",
+      "professionalIdentity": "Professional Identity",
+      "cvDevelopment": "CV Development",
+      "coverLetterMotivation": "Cover Letter & Motivation",
+      "interviewPreparation": "Interview Preparation",
+      "workplaceReadiness": "Workplace Readiness",
+      "sectors": {
+        "ict": "ICT",
+        "mining": "Mining",
+        "energy": "Energy",
+        "construction": "Construction",
+        "agriculture": "Agriculture",
+        "hospitality": "Hospitality",
+        "manufacturing": "Manufacturing",
+        "water": "Water",
+        "transport": "Transport",
+        "other": "Other"
+      },
+      "filters": {
+        "allProvinces": "All Provinces",
+        "allInstitutions": "All Institutions",
+        "allQualifications": "All Qualifications",
+        "allYears": "All Years"
+      }
+    },
+    "skillsAnalytics": {
+      "supplyVsDemandTitle": "Skills Supply vs Labour Market Demand",
+      "topSkillsAmongStudents": "Top Skills Among Students",
+      "topSkillsInDemand": "Top Skills In Demand (Job Postings)",
+      "gapBySectorTitle": "Skills Gap by Sector",
+      "avgGapLabel": "Avg. gap between student skills supply and labour market demand",
+      "gapPp": "{{gap}}pp",
+      "legend": {
+        "supply": "Supply",
+        "demand": "Demand",
+        "supplyStudents": "Supply (students)",
+        "demandEmployers": "Demand (employers)"
+      },
+      "aria": {
+        "supplyBar": "Usambazaji wa {{skill}}: {{value}}%",
+        "demandBar": "Mahitaji ya {{skill}}: {{value}}%",
+        "gapBar": "Pengo la ujuzi kwa {{sector}}: usambazaji {{supply}}%, mahitaji {{demand}}%"
+      },
+      "filters": {
+        "allProvinces": "All Provinces",
+        "allSectors": "All Sectors"
+      }
+    },
+    "jobPostings": {
+      "stats": {
+        "jobsSourced": "Jobs Sourced",
+        "sectorsCovered": "Sectors Covered",
+        "sourcePlatforms": "Source Platforms",
+        "lastUpdated": "Last updated 2 days ago",
+        "sourcePlatformsList": "GoZ Jobs, BrighterMonday, JobWeb, LinkedIn, Indeed"
+      },
+      "searchPlaceholder": "Search job titles...",
+      "jobsCount": "{{count}} of {{total}} jobs",
+      "moreSkills": "+{{count}} more",
+      "filters": {
+        "allSectors": "All Sectors",
+        "allLocations": "All Locations",
+        "allPlatforms": "All Platforms",
+        "allZqfLevels": "All ZQF Levels"
+      },
+      "table": {
+        "jobTitle": "Job Title",
+        "sector": "Sector",
+        "location": "Location",
+        "zqf": "ZQF",
+        "platform": "Platform",
+        "skillsExtracted": "Skills Extracted",
+        "candidatePool": "Candidate Pool",
+        "candidatePoolSubheader": "50%+ skills match",
+        "link": "Link"
+      },
+      "aria": {
+        "search": "Search job titles",
+        "openJob": "Open job posting for {{title}}",
+        "table": "Job postings table",
+        "moreSkills": "Show {{count}} more skills",
+        "detailsDialog": "Job posting details dialog",
+        "closeDetailsDialog": "Close job posting details"
+      },
+      "modal": {
+        "platform": "Platform",
+        "candidatePool": "Candidate Pool",
+        "candidatePoolValue": "{{count}} students (50%+ match)",
+        "skillsExtracted": "Skills Extracted ({{count}})",
+        "viewOriginalPosting": "View Original Posting"
+      }
+    },
+    "institutionsTable": {
+      "headers": {
+        "institution": "Institution",
+        "students": "Students",
+        "active7Days": "Active (7D)",
+        "skillsDiscovery": "Skills Discovery",
+        "careerReadiness": "Career Readiness",
+        "careerExplorer": "Career Explorer"
+      },
+      "subHeaders": {
+        "started": "Started",
+        "completed": "Completed",
+        "ofReg": "% of reg.",
+        "ofStarted": "% of started"
+      },
+      "empty": "Hakuna taasisi zilizopatikana.",
+      "prevPage": "Ukurasa uliopita",
+      "nextPage": "Ukurasa unaofuata",
+      "page": "Ukurasa {{page}}"
+    },
+    "comingSoon": "Coming soon."
+  },
+  "users": {
+    "title": "Users",
+    "addUser": "Add User",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "lastLogin": "Last Login",
+      "actions": "Actions"
+    }
+  },
+  "login": {
+    "title": "Admin Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign In"
+  },
+  "settings": {
+    "title": "Settings",
+    "save": "Save Changes",
+    "general": {
+      "title": "General Settings",
+      "appName": "Application Name",
+      "supportEmail": "Support Email"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "email": "Enable Email Notifications",
+      "push": "Enable Push Notifications"
+    },
+    "advanced": {
+      "title": "Advanced Settings",
+      "maintenanceMode": "Maintenance Mode",
+      "debugMode": "Debug Mode"
+    }
+  },
+  "notFound": {
+    "message": "Page Not Found",
+    "description": "The page you are looking for might have been removed or is temporarily unavailable.",
+    "goHome": "Go to Dashboard"
   }
 }

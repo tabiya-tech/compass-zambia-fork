@@ -26,7 +26,14 @@
         "unexpectedError": "Se produjo un error inesperado. Por favor, intentá de nuevo más tarde.",
         "serverConnectionError": "No se puede conectar al servicio. Por favor, verificá tu conexión a Internet o intentá de nuevo más tarde.",
         "authenticationFailure": "Parece que no iniciaste sesión. Por favor, iniciá sesión para continuar.",
-        "permissionDenied": "Parece que no tenés los permisos necesarios. Por favor, cerrá sesión e iniciá sesión de nuevo."
+        "permissionDenied": "Parece que no tenés los permisos necesarios. Por favor, cerrá sesión e iniciá sesión de nuevo.",
+        "resourceNotFound": "El recurso solicitado no se encontró.",
+        "tooManyRequests": "Demasiadas solicitudes. Por favor, intentá de nuevo más tarde.",
+        "requestTooLong": "La solicitud era demasiado larga. Por favor, intentá de nuevo con menos datos.",
+        "unableToProcessResponse": "No se puede procesar la respuesta. Por favor, actualizá la página.",
+        "serviceUnavailable": "El servicio no está disponible temporalmente. Por favor, intentá de nuevo más tarde.",
+        "dataValidationError": "Hubo un problema con los datos. Por favor, verificá e intentá de nuevo.",
+        "unableToProcessRequest": "No se puede procesar la solicitud. Por favor, intentá de nuevo."
       }
     },
     "status": {
@@ -108,5 +115,217 @@
       "admin": "Administrador",
       "institutionStaff": "Personal de Institución"
     }
+  },
+  "header": {
+    "logout": "Logout",
+    "user": "User"
+  },
+  "footer": {
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use",
+    "accessibility": "Accessibility",
+    "contact": "Contact",
+    "collaboration": "{{appName}} is a collaboration between the World Bank Group and Tabiya."
+  },
+  "dashboard": {
+    "sectionTitle": "Administrator dashboard — cross-institutional monitoring and analytics",
+    "header": {
+      "welcome": "Welcome, {{name}}",
+      "school": "TEVETA — Technical Education, Vocational and Entrepreneurship Training Authority"
+    },
+    "tabs": {
+      "institutions": "Institutions",
+      "modules": "Modules",
+      "skillsAnalytics": "Skills Analytics",
+      "jobPostings": "Job Postings"
+    },
+    "dailyAdoptionTrend": {
+      "title": "Daily Adoption Trend",
+      "noData": "No hay datos disponibles",
+      "newRegistrations": "Nuevas Registraciones",
+      "dailyActiveUsers": "Usuarios Activos Diarios"
+    },
+    "stats": {
+      "institutionsActive": "Institutions Active",
+      "institutionsActiveSubtitle": "of 15 pilot institutions",
+      "totalStudentsRegistered": "Total Students Registered",
+      "activeStudents7Days": "Active Students (7 days)",
+      "activeStudents7DaysSubtitle": "68% of registered"
+    },
+    "modules": {
+      "titles": {
+        "skillsDiscovery": "Skills Discovery",
+        "careerReadiness": "Career Readiness",
+        "careerExplorer": "Career Explorer"
+      },
+      "registeredStudents": "{{count}} registered students",
+      "started": "Started",
+      "completed": "Completed",
+      "completedAll5": "Completed all 5",
+      "returned2Plus": "Returned 2+ times",
+      "avgSubModulesCompleted": "Avg. sub-modules completed",
+      "engagementFunnel": "Engagement funnel",
+      "funnelCaption": "301 students in progress",
+      "subModuleBreakdown": "Sub-module breakdown",
+      "topSectorsExplored": "Top sectors explored",
+      "startedLegend": "Started",
+      "completedLegend": "Completed",
+      "sharingExperiences": "Sharing Experiences",
+      "identifyingSkills": "Identifying Skills",
+      "collectingPreferences": "Collecting Preferences",
+      "professionalIdentity": "Professional Identity",
+      "cvDevelopment": "CV Development",
+      "coverLetterMotivation": "Cover Letter & Motivation",
+      "interviewPreparation": "Interview Preparation",
+      "workplaceReadiness": "Workplace Readiness",
+      "sectors": {
+        "ict": "ICT",
+        "mining": "Mining",
+        "energy": "Energy",
+        "construction": "Construction",
+        "agriculture": "Agriculture",
+        "hospitality": "Hospitality",
+        "manufacturing": "Manufacturing",
+        "water": "Water",
+        "transport": "Transport",
+        "other": "Other"
+      },
+      "filters": {
+        "allProvinces": "All Provinces",
+        "allInstitutions": "All Institutions",
+        "allQualifications": "All Qualifications",
+        "allYears": "All Years"
+      }
+    },
+    "skillsAnalytics": {
+      "supplyVsDemandTitle": "Skills Supply vs Labour Market Demand",
+      "topSkillsAmongStudents": "Top Skills Among Students",
+      "topSkillsInDemand": "Top Skills In Demand (Job Postings)",
+      "gapBySectorTitle": "Skills Gap by Sector",
+      "avgGapLabel": "Avg. gap between student skills supply and labour market demand",
+      "gapPp": "{{gap}}pp",
+      "legend": {
+        "supply": "Supply",
+        "demand": "Demand",
+        "supplyStudents": "Supply (students)",
+        "demandEmployers": "Demand (employers)"
+      },
+      "aria": {
+        "supplyBar": "Oferta para {{skill}}: {{value}}%",
+        "demandBar": "Demanda para {{skill}}: {{value}}%",
+        "gapBar": "Brecha de habilidades para {{sector}}: oferta {{supply}}%, demanda {{demand}}%"
+      },
+      "filters": {
+        "allProvinces": "All Provinces",
+        "allSectors": "All Sectors"
+      }
+    },
+    "jobPostings": {
+      "stats": {
+        "jobsSourced": "Empleos obtenidos",
+        "sectorsCovered": "Sectores cubiertos",
+        "sourcePlatforms": "Plataformas de origen",
+        "lastUpdated": "Actualizado hace 2 dias",
+        "sourcePlatformsList": "GoZ Jobs, BrighterMonday, JobWeb, LinkedIn, Indeed"
+      },
+      "searchPlaceholder": "Buscar titulos de empleo...",
+      "jobsCount": "{{count}} de {{total}} empleos",
+      "moreSkills": "+{{count}} mas",
+      "filters": {
+        "allSectors": "Todos los sectores",
+        "allLocations": "Todas las ubicaciones",
+        "allPlatforms": "Todas las plataformas",
+        "allZqfLevels": "Todos los niveles ZQF"
+      },
+      "table": {
+        "jobTitle": "Titulo del empleo",
+        "sector": "Sector",
+        "location": "Ubicacion",
+        "zqf": "ZQF",
+        "platform": "Plataforma",
+        "skillsExtracted": "Habilidades extraidas",
+        "candidatePool": "Grupo de candidatos",
+        "candidatePoolSubheader": "50%+ coincidencia de habilidades",
+        "link": "Enlace"
+      },
+      "aria": {
+        "search": "Buscar titulos de empleo",
+        "openJob": "Abrir oferta de empleo para {{title}}",
+        "table": "Tabla de ofertas de empleo",
+        "moreSkills": "Mostrar {{count}} habilidades mas",
+        "detailsDialog": "Dialogo de detalles de oferta",
+        "closeDetailsDialog": "Cerrar detalles de oferta"
+      },
+      "modal": {
+        "platform": "Plataforma",
+        "candidatePool": "Grupo de candidatos",
+        "candidatePoolValue": "{{count}} estudiantes (coincidencia de 50%+)",
+        "skillsExtracted": "Habilidades extraidas ({{count}})",
+        "viewOriginalPosting": "Ver oferta original"
+      }
+    },
+    "institutionsTable": {
+      "headers": {
+        "institution": "Institution",
+        "students": "Students",
+        "active7Days": "Active (7D)",
+        "skillsDiscovery": "Skills Discovery",
+        "careerReadiness": "Career Readiness",
+        "careerExplorer": "Career Explorer"
+      },
+      "subHeaders": {
+        "started": "Started",
+        "completed": "Completed",
+        "ofReg": "% of reg.",
+        "ofStarted": "% of started"
+      },
+      "empty": "No se encontraron instituciones.",
+      "prevPage": "Página anterior",
+      "nextPage": "Página siguiente",
+      "page": "Página {{page}}"
+    },
+    "comingSoon": "Coming soon."
+  },
+  "users": {
+    "title": "Users",
+    "addUser": "Add User",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "lastLogin": "Last Login",
+      "actions": "Actions"
+    }
+  },
+  "login": {
+    "title": "Admin Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign In"
+  },
+  "settings": {
+    "title": "Settings",
+    "save": "Save Changes",
+    "general": {
+      "title": "General Settings",
+      "appName": "Application Name",
+      "supportEmail": "Support Email"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "email": "Enable Email Notifications",
+      "push": "Enable Push Notifications"
+    },
+    "advanced": {
+      "title": "Advanced Settings",
+      "maintenanceMode": "Maintenance Mode",
+      "debugMode": "Debug Mode"
+    }
+  },
+  "notFound": {
+    "message": "Page Not Found",
+    "description": "The page you are looking for might have been removed or is temporarily unavailable.",
+    "goHome": "Go to Dashboard"
   }
 }

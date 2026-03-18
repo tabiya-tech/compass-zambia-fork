@@ -142,18 +142,18 @@ describe("ProtectedRoute", () => {
       // GIVEN the user is not authenticated
       mockGetUser(null);
       // AND a custom protected path
-      const givenProtectedPath = "/dashboard";
+      const givenProtectedPath = "/users";
 
       // WHEN navigating to the custom protected path
       renderWithRouter(givenProtectedPath, [
-        { path: givenProtectedPath, element: <div>Dashboard Page</div> },
+        { path: givenProtectedPath, element: <div>Users Page</div> },
         { path: routerPaths.LOGIN, element: <div>Login Page</div> },
       ]);
 
       // THEN expect the user to be redirected to the login page
       expect(screen.getByText("Login Page")).toBeInTheDocument();
-      // AND expect the dashboard page not to be displayed
-      expect(screen.queryByText("Dashboard Page")).not.toBeInTheDocument();
+      // AND expect the protected page not to be displayed
+      expect(screen.queryByText("Users Page")).not.toBeInTheDocument();
     });
   });
 

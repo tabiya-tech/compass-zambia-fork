@@ -56,18 +56,15 @@ const NotFound: React.FC<NotFoundProps> = () => {
           gutterBottom
           data-testid={DATA_TEST_ID.NOT_FOUND_PAGE_MESSAGE}
         >
-          {t("notFound.message", "Page Not Found")}
+          {t("notFound.message")}
         </Typography>
 
         <Typography variant="body1" color="textSecondary" sx={{ mb: 4 }}>
-          {t(
-            "notFound.description",
-            "The page you are looking for might have been removed or is temporarily unavailable."
-          )}
+          {t("notFound.description")}
         </Typography>
 
         <Button variant="contained" onClick={handleGoHome} data-testid={DATA_TEST_ID.NOT_FOUND_PAGE_HOME_BUTTON}>
-          {t("notFound.goHome", "Go to Dashboard")}
+          {t("notFound.goHome")}
         </Button>
       </Box>
     </Container>
