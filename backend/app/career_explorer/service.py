@@ -13,6 +13,8 @@ from app.career_explorer.types import (
     CareerExplorerMessage,
     CareerExplorerMessageSender,
 )
+from app.metrics.services.service import IMetricsService
+from app.metrics.types import SectorEngagementEvent
 
 
 class CareerExplorerService:
@@ -20,9 +22,11 @@ class CareerExplorerService:
         self,
         repository: ICareerExplorerConversationRepository,
         agent_factory: Callable[[], CareerExplorerAgent],
+        metrics_service: IMetricsService,
     ):
         self._repository = repository
         self._agent_factory = agent_factory
+        self._metrics_service = metrics_service
         self._logger = logging.getLogger(self.__class__.__name__)
 
     async def get_or_create_conversation(self, user_id: str) -> CareerExplorerConversationResponse:
@@ -54,9 +58,11 @@ class CareerExplorerService:
                 new_num_turns,
             )
 
+        existing_sectors = await self._metrics_service.get_sector_names_for_user(user_id)
+
         agent = self._agent_factory()
         agent_input = AgentInput(message=user_input, sent_at=now)
-        agent_output = await agent.execute(agent_input, context)
+        agent_output = await agent.execute(agent_input, context, existing_sectors=existing_sectors)
 
         agent_msg = CareerExplorerMessage(
             message_id=agent_output.message_id or str(ObjectId()),
@@ -66,6 +72,19 @@ class CareerExplorerService:
             metadata=agent_output.metadata,
         )
         await self._repository.append_message(user_id, agent_msg)
+
+        try:
+            sector_classification = (agent_output.metadata or {}).get("sector_classification")
+            if sector_classification:
+                await self._metrics_service.record_event(
+                    SectorEngagementEvent(
+                        user_id=user_id,
+                        sector_name=sector_classification["sector_name"],
+                        is_priority=sector_classification["is_priority"],
+                    )
+                )
+        except Exception as e:
+            self._logger.exception("Failed to record sector engagement metric: %s", e)
 
         updated_response = await self._repository.find_response_by_user(user_id)
         if updated_response is None:

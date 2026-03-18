@@ -13,6 +13,7 @@ class EventType(Enum):
     EXPERIENCE_DISCOVERED = 100007
     EXPERIENCE_EXPLORED = 100008
     EXPERIENCE_ENTITY_CHANGED = 100009
+    SECTOR_ENGAGEMENT = 100010
 
     # Frontend events
     # As a convention, all events created on the frontend should start with 20000

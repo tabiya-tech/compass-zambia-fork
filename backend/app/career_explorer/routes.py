@@ -23,6 +23,8 @@ from app.agent.career_explorer_agent.agent import CareerExplorerAgent
 from app.agent.career_explorer_agent.sector_search_service import SectorSearchService
 from app.vector_search.vector_search_dependencies import get_embeddings_service
 from app.vector_search.embeddings_model import EmbeddingService
+from app.metrics.services.get_metrics_service import get_metrics_service
+from app.metrics.services.service import IMetricsService
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +35,7 @@ _service_singleton: Optional[CareerExplorerService] = None
 async def get_career_explorer_service(
     career_explorer_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_career_explorer_db),
     embedding_service: EmbeddingService = Depends(get_embeddings_service),
+    metrics_service: IMetricsService = Depends(get_metrics_service),
 ) -> CareerExplorerService:
     global _service_singleton
     if _service_singleton is None:
@@ -49,6 +52,7 @@ async def get_career_explorer_service(
                 _service_singleton = CareerExplorerService(
                     repository=CareerExplorerConversationRepository(career_explorer_db),
                     agent_factory=agent_factory,
+                    metrics_service=metrics_service,
                 )
     return _service_singleton
 

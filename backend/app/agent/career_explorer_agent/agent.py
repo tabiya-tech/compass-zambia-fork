@@ -74,7 +74,7 @@ class CareerExplorerAgent(Agent):
         self._non_priority_explorer = NonPrioritySectorExplorer()
         self._logger = logging.getLogger(self.__class__.__name__)
 
-    async def execute(self, user_input: AgentInput, context) -> AgentOutput:
+    async def execute(self, user_input: AgentInput, context, existing_sectors: list[str] | None = None) -> AgentOutput:
         agent_start = time.time()
 
         msg = (user_input.message or "").strip()
@@ -86,7 +86,9 @@ class CareerExplorerAgent(Agent):
                 metadata=_get_welcome_metadata(),
             )
 
-        relevance, reasoning, classifier_stats = await self._classifier.classify(user_input=msg, context=context)
+        relevance, sector_name, is_priority, reasoning, classifier_stats = await self._classifier.classify(
+            user_input=msg, context=context, existing_sectors=existing_sectors
+        )
 
         self._logger.info(
             "Routing to %s explorer (reasoning: %s)",
@@ -103,6 +105,13 @@ class CareerExplorerAgent(Agent):
             metadata = {"grounding_metadata": grounding_metadata.model_dump()} if grounding_metadata else None
 
         all_stats = classifier_stats + explorer_stats
+
+        if sector_name:
+            metadata = metadata or {}
+            metadata["sector_classification"] = {
+                "sector_name": sector_name,
+                "is_priority": is_priority,
+            }
 
         return _construct_output(
             message,

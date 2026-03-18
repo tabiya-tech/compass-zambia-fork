@@ -20,6 +20,10 @@ class IMetricsRepository(ABC):
         """
         raise NotImplementedError()
 
+    @abstractmethod
+    async def get_sector_names_for_user(self, anonymized_user_id: str) -> list[str]:
+        raise NotImplementedError()
+
 
 class MetricsRepository(IMetricsRepository):
     def __init__(self, *, db: AsyncIOMotorDatabase):
@@ -110,6 +114,28 @@ class MetricsRepository(IMetricsRepository):
                         {"$set": self._to_db_doc(event)},
                         upsert=True
                     ))
+                case EventType.SECTOR_ENGAGEMENT:
+                    commands.append(UpdateOne(
+                        {
+                            "event_type": {"$eq": EventType.SECTOR_ENGAGEMENT.value},
+                            "anonymized_user_id": {"$eq": event.anonymized_user_id},
+                            "sector_name": {"$eq": event.sector_name},
+                        },
+                        {
+                            "$set": self._to_db_doc(event),
+                            "$inc": {"inquiry_count": 1},
+                        },
+                        upsert=True,
+                    ))
                 case _:
                     commands.append(InsertOne(self._to_db_doc(event)))
         return await self.collection.bulk_write(commands)
+
+    async def get_sector_names_for_user(self, anonymized_user_id: str) -> list[str]:
+        return await self.collection.distinct(
+            "sector_name",
+            {
+                "event_type": {"$eq": EventType.SECTOR_ENGAGEMENT.value},
+                "anonymized_user_id": {"$eq": anonymized_user_id},
+            },
+        )

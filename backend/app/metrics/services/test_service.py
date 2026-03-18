@@ -17,6 +17,9 @@ def _mock_metrics_repository() -> IMetricsRepository:
         def _to_db_doc(self, event: AbstractCompassMetricEvent):
             raise NotImplementedError()
 
+        async def get_sector_names_for_user(self, anonymized_user_id: str) -> list[str]:
+            raise NotImplementedError()
+
     return MockMetricsRepository()
 
 
