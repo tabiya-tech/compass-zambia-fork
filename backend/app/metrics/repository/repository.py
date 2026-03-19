@@ -24,6 +24,14 @@ class IMetricsRepository(ABC):
     async def get_sector_names_for_user(self, anonymized_user_id: str) -> list[str]:
         raise NotImplementedError()
 
+    @abstractmethod
+    async def get_aggregated_sector_engagement(self) -> list[dict]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def get_sector_engagement_for_user(self, anonymized_user_id: str) -> list[dict]:
+        raise NotImplementedError()
+
 
 class MetricsRepository(IMetricsRepository):
     def __init__(self, *, db: AsyncIOMotorDatabase):
@@ -139,3 +147,39 @@ class MetricsRepository(IMetricsRepository):
                 "anonymized_user_id": {"$eq": anonymized_user_id},
             },
         )
+
+    async def get_aggregated_sector_engagement(self) -> list[dict]:
+        pipeline = [
+            {"$match": {"event_type": {"$eq": EventType.SECTOR_ENGAGEMENT.value}}},
+            {"$group": {
+                "_id": "$sector_name",
+                "is_priority": {"$first": "$is_priority"},
+                "total_inquiries": {"$sum": "$inquiry_count"},
+                "unique_users": {"$addToSet": "$anonymized_user_id"},
+            }},
+            {"$project": {
+                "_id": 0,
+                "sector_name": "$_id",
+                "is_priority": 1,
+                "total_inquiries": 1,
+                "unique_users": {"$size": "$unique_users"},
+            }},
+            {"$sort": {"total_inquiries": -1}},
+        ]
+        return await self.collection.aggregate(pipeline).to_list(length=None)
+
+    async def get_sector_engagement_for_user(self, anonymized_user_id: str) -> list[dict]:
+        cursor = self.collection.find(
+            {
+                "event_type": {"$eq": EventType.SECTOR_ENGAGEMENT.value},
+                "anonymized_user_id": {"$eq": anonymized_user_id},
+            },
+            {
+                "_id": 0,
+                "sector_name": 1,
+                "is_priority": 1,
+                "inquiry_count": 1,
+                "timestamp": 1,
+            },
+        ).sort("inquiry_count", -1)
+        return await cursor.to_list(length=None)

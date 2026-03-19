@@ -20,6 +20,12 @@ def _mock_metrics_repository() -> IMetricsRepository:
         async def get_sector_names_for_user(self, anonymized_user_id: str) -> list[str]:
             raise NotImplementedError()
 
+        async def get_aggregated_sector_engagement(self) -> list[dict]:
+            raise NotImplementedError()
+
+        async def get_sector_engagement_for_user(self, anonymized_user_id: str) -> list[dict]:
+            raise NotImplementedError()
+
     return MockMetricsRepository()
 
 
