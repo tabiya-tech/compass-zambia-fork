@@ -29,6 +29,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({ value, onChange }) => {
             textTransform: "none",
             minHeight: 44,
             fontWeight: 700,
+            fontSize: "1rem",
           },
           "& .MuiTab-root.Mui-selected": {
             color: theme.palette.primary.main,

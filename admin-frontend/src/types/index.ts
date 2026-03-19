@@ -17,3 +17,31 @@ export interface InstitutionRow {
   careerReadinessCompletedPct: number | null;
   careerExplorerStartedPct: number | null;
 }
+
+export interface ModuleSummaryRow {
+  labelKey: string;
+  value: number;
+  total: number;
+  pct: number;
+  showBar: boolean;
+}
+
+export interface ModuleBreakdownItem {
+  labelKey: string;
+  value?: number;
+  total?: number;
+  completed?: number;
+  percentage?: number;
+  color?: string;
+}
+
+export interface ModuleData {
+  id: string;
+  titleKey: string;
+  totalStudents: number;
+  summary: ModuleSummaryRow[];
+  breakdownType: "funnel" | "subModules" | "topSectors";
+  breakdownTitleKey: string;
+  breakdownCaption?: string;
+  breakdownItems: ModuleBreakdownItem[];
+}

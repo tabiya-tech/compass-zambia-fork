@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Box, Container, Grid, Typography, useTheme } from "@mui/material";
+import { Box, Container, FormControl, Grid, MenuItem, Select, Typography, useTheme } from "@mui/material";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import { useTranslation } from "react-i18next";
 import Header from "src/components/Header/Header";
 import Footer from "src/components/Footer/Footer";
@@ -7,8 +8,16 @@ import StatCard from "src/components/StatCard/StatCard";
 import DashboardTabs, { DashboardTabValue } from "src/components/DashboardTabs/DashboardTabs";
 import DailyAdoptionTrendChart from "src/components/DailyAdoptionTrendChart/DailyAdoptionTrendChart";
 import InstitutionsTable from "src/components/InstitutionsTable/InstitutionsTable";
+import ModuleCard from "src/components/ModuleCard/ModuleCard";
+import {
+  MODULE_FILTER_INSTITUTIONS,
+  MODULE_FILTER_PROVINCES,
+  MODULE_FILTER_QUALIFICATIONS,
+  MODULE_FILTER_YEARS,
+} from "src/data/moduleFilterOptions";
 import { useInstitutions } from "src/hooks/useInstitutions";
 import { useDashboardStats } from "src/hooks/useDashboardStats";
+import { useModules } from "src/hooks/useModules";
 
 const uniqueId = "78972cb9-14de-4075-bd34-7fd96d135f5e";
 
@@ -23,8 +32,46 @@ const Dashboard: React.FC = () => {
   const theme = useTheme();
   const { institutions } = useInstitutions();
   const { stats } = useDashboardStats();
+  const { modules } = useModules();
 
   const [tab, setTab] = useState<DashboardTabValue>("institutions");
+  const [moduleFilters, setModuleFilters] = useState({
+    province: "",
+    institution: "",
+    qualification: "",
+    year: "",
+  });
+
+  const handleModuleFilterChange = (field: keyof typeof moduleFilters) => (event: SelectChangeEvent<string>) => {
+    setModuleFilters((prev) => ({ ...prev, [field]: event.target.value }));
+  };
+
+  const moduleFiltersConfig = [
+    {
+      labelKey: "dashboard.modules.filters.allProvinces" as const,
+      value: moduleFilters.province,
+      onChange: handleModuleFilterChange("province"),
+      options: MODULE_FILTER_PROVINCES,
+    },
+    {
+      labelKey: "dashboard.modules.filters.allInstitutions" as const,
+      value: moduleFilters.institution,
+      onChange: handleModuleFilterChange("institution"),
+      options: MODULE_FILTER_INSTITUTIONS,
+    },
+    {
+      labelKey: "dashboard.modules.filters.allQualifications" as const,
+      value: moduleFilters.qualification,
+      onChange: handleModuleFilterChange("qualification"),
+      options: MODULE_FILTER_QUALIFICATIONS,
+    },
+    {
+      labelKey: "dashboard.modules.filters.allYears" as const,
+      value: moduleFilters.year,
+      onChange: handleModuleFilterChange("year"),
+      options: MODULE_FILTER_YEARS,
+    },
+  ];
 
   return (
     <Box
@@ -79,17 +126,59 @@ const Dashboard: React.FC = () => {
           >
             <DashboardTabs value={tab} onChange={setTab} />
 
-            {tab === "institutions" ? (
-              <Box>
+            {tab === "institutions" && (
+              <Box sx={{ paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
                 <Box sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
                   <DailyAdoptionTrendChart />
                 </Box>
                 <InstitutionsTable rows={institutions} />
               </Box>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                {t("dashboard.comingSoon")}
-              </Typography>
+            )}
+            {tab === "modules" && (
+              <Box sx={{ paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
+                <Grid
+                  container
+                  spacing={theme.fixedSpacing(theme.tabiyaSpacing.md)}
+                  sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}
+                >
+                  {moduleFiltersConfig.map((filter) => (
+                    <Grid key={filter.labelKey} size={{ xs: 12, sm: 6, md: 3 }}>
+                      <FormControl size="small" fullWidth>
+                        <Select
+                          value={filter.value}
+                          onChange={filter.onChange}
+                          displayEmpty
+                          aria-label={t(filter.labelKey)}
+                        >
+                          <MenuItem value="">{t(filter.labelKey)}</MenuItem>
+                          {filter.options.map((option) => (
+                            <MenuItem key={option} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  ))}
+                </Grid>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
+                  {modules.map((module) => (
+                    <ModuleCard key={module.id} module={module} />
+                  ))}
+                </Box>
+              </Box>
+            )}
+            {(tab === "skillsAnalytics" || tab === "jobPostings") && (
+              <Box
+                sx={{
+                  paddingX: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+                  paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+                }}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  {t("dashboard.comingSoon")}
+                </Typography>
+              </Box>
             )}
           </Box>
         </Box>
