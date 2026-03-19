@@ -19,3 +19,18 @@ export const Default: Story = {
     sent_at: new Date().toISOString(),
   },
 };
+
+export const WithQuickReplyButtons: Story = {
+  args: {
+    message_id: "msg-2",
+    message: "Which sector would you like to explore first?",
+    sent_at: new Date().toISOString(),
+    quick_reply_options: [
+      { label: "Agriculture" },
+      { label: "Mining" },
+      { label: "Construction" },
+      { label: "Manufacturing" },
+    ],
+    onQuickReplyClick: (label: string) => console.log("Quick reply:", label),
+  },
+};

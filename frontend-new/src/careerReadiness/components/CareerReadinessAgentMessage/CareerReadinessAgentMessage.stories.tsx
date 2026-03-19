@@ -55,3 +55,17 @@ Think about examples from your experience for each category.`,
     sent_at: now,
   },
 };
+
+export const WithQuickReplyButtons: Story = {
+  args: {
+    message_id: "msg-4",
+    message: "Would you like to practice articulating your skills or explore another topic?",
+    sent_at: now,
+    quick_reply_options: [
+      { label: "Practice articulation" },
+      { label: "Explore another topic" },
+      { label: "Take the quiz" },
+    ],
+    onQuickReplyClick: (label: string) => console.log("Quick reply:", label),
+  },
+};

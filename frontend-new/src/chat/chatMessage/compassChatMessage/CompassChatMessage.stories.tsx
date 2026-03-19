@@ -151,3 +151,14 @@ export const ShownWithDislikeReaction: Story = {
     },
   },
 };
+
+export const WithQuickReplyButtons: Story = {
+  args: {
+    message_id: nanoid(),
+    sent_at: new Date().toISOString(),
+    message: "Would you like to explore technical skills, soft skills, or both?",
+    reaction: null,
+    quick_reply_options: [{ label: "Technical skills" }, { label: "Soft skills" }, { label: "Both" }],
+    onQuickReplyClick: (label: string) => console.log("Quick reply clicked:", label),
+  },
+};
