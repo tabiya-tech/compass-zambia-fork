@@ -28,7 +28,7 @@ export default class CareerExplorerService {
     const response = await customFetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      expectedStatusCode: StatusCodes.CREATED,
+      expectedStatusCode: [StatusCodes.OK, StatusCodes.CREATED],
       serviceName: SERVICE_NAME,
       serviceFunction: "getOrCreateConversation",
       failureMessage: "Failed to start career explorer conversation",
