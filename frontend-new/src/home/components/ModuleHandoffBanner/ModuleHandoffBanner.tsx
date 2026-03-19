@@ -1,4 +1,4 @@
-import React from "react";
+import React, { startTransition } from "react";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
@@ -43,7 +43,7 @@ const ModuleHandoffBanner: React.FC<ModuleHandoffBannerProps> = ({ nextModuleLab
       <Button
         variant="contained"
         endIcon={<ArrowForwardIcon />}
-        onClick={() => navigate(nextModuleRoute)}
+        onClick={() => startTransition(() => navigate(nextModuleRoute))}
         data-testid={DATA_TEST_ID.BUTTON}
         sx={{ textTransform: "none" }}
       >
