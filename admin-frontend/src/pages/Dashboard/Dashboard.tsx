@@ -10,6 +10,7 @@ import DailyAdoptionTrendChart from "src/components/DailyAdoptionTrendChart/Dail
 import InstitutionsTable from "src/components/InstitutionsTable/InstitutionsTable";
 import ModuleCard from "src/components/ModuleCard/ModuleCard";
 import SkillsAnalytics from "src/components/SkillsAnalytics/SkillsAnalytics";
+import JobPostings from "src/components/JobPostings/JobPostings";
 import {
   MODULE_FILTER_INSTITUTIONS,
   MODULE_FILTER_PROVINCES,
@@ -127,65 +128,55 @@ const Dashboard: React.FC = () => {
           >
             <DashboardTabs value={tab} onChange={setTab} />
 
-            {tab === "institutions" && (
-              <Box sx={{ paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
-                <Box sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
-                  <DailyAdoptionTrendChart />
-                </Box>
-                <InstitutionsTable rows={institutions} />
-              </Box>
-            )}
-            {tab === "modules" && (
-              <Box sx={{ paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
-                <Grid
-                  container
-                  spacing={theme.fixedSpacing(theme.tabiyaSpacing.md)}
-                  sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}
-                >
-                  {moduleFiltersConfig.map((filter) => (
-                    <Grid key={filter.labelKey} size={{ xs: 12, sm: 6, md: 3 }}>
-                      <FormControl size="small" fullWidth>
-                        <Select
-                          value={filter.value}
-                          onChange={filter.onChange}
-                          displayEmpty
-                          aria-label={t(filter.labelKey)}
-                        >
-                          <MenuItem value="">{t(filter.labelKey)}</MenuItem>
-                          {filter.options.map((option) => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  ))}
-                </Grid>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
-                  {modules.map((module) => (
-                    <ModuleCard key={module.id} module={module} />
-                  ))}
-                </Box>
-              </Box>
-            )}
-            {tab === "skillsAnalytics" && (
-              <Box sx={{ paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
-                <SkillsAnalytics />
-              </Box>
-            )}
-            {tab === "jobPostings" && (
-              <Box
-                sx={{
-                  paddingX: theme.fixedSpacing(theme.tabiyaSpacing.lg),
-                  paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg),
-                }}
-              >
-                <Typography variant="body2" color="text.secondary">
-                  {t("dashboard.comingSoon")}
-                </Typography>
-              </Box>
-            )}
+            <Box sx={{ paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
+              {tab === "institutions" && (
+                <>
+                  <Box sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
+                    <DailyAdoptionTrendChart />
+                  </Box>
+
+                  <InstitutionsTable rows={institutions} />
+                </>
+              )}
+              {tab === "modules" && (
+                <>
+                  <Grid
+                    container
+                    spacing={theme.fixedSpacing(theme.tabiyaSpacing.md)}
+                    sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}
+                  >
+                    {moduleFiltersConfig.map((filter) => (
+                      <Grid key={filter.labelKey} size={{ xs: 12, sm: 6, md: 3 }}>
+                        <FormControl size="small" fullWidth>
+                          <Select
+                            value={filter.value}
+                            onChange={filter.onChange}
+                            displayEmpty
+                            aria-label={t(filter.labelKey)}
+                          >
+                            <MenuItem value="">{t(filter.labelKey)}</MenuItem>
+                            {filter.options.map((option) => (
+                              <MenuItem key={option} value={option}>
+                                {option}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    ))}
+                  </Grid>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}
+                  >
+                    {modules.map((module) => (
+                      <ModuleCard key={module.id} module={module} />
+                    ))}
+                  </Box>
+                </>
+              )}
+              {tab === "skillsAnalytics" && <SkillsAnalytics />}
+              {tab === "jobPostings" && <JobPostings />}
+            </Box>
           </Box>
         </Box>
       </Container>

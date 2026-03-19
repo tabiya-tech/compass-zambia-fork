@@ -201,6 +201,50 @@
         "allSectors": "All Sectors"
       }
     },
+    "jobPostings": {
+      "stats": {
+        "jobsSourced": "Empleos obtenidos",
+        "sectorsCovered": "Sectores cubiertos",
+        "sourcePlatforms": "Plataformas de origen",
+        "lastUpdated": "Actualizado hace 2 dias",
+        "sourcePlatformsList": "GoZ Jobs, BrighterMonday, JobWeb, LinkedIn, Indeed"
+      },
+      "searchPlaceholder": "Buscar titulos de empleo...",
+      "jobsCount": "{{count}} de {{total}} empleos",
+      "moreSkills": "+{{count}} mas",
+      "filters": {
+        "allSectors": "Todos los sectores",
+        "allLocations": "Todas las ubicaciones",
+        "allPlatforms": "Todas las plataformas",
+        "allZqfLevels": "Todos los niveles ZQF"
+      },
+      "table": {
+        "jobTitle": "Titulo del empleo",
+        "sector": "Sector",
+        "location": "Ubicacion",
+        "zqf": "ZQF",
+        "platform": "Plataforma",
+        "skillsExtracted": "Habilidades extraidas",
+        "candidatePool": "Grupo de candidatos",
+        "candidatePoolSubheader": "50%+ coincidencia de habilidades",
+        "link": "Enlace"
+      },
+      "aria": {
+        "search": "Buscar titulos de empleo",
+        "openJob": "Abrir oferta de empleo para {{title}}",
+        "table": "Tabla de ofertas de empleo",
+        "moreSkills": "Mostrar {{count}} habilidades mas",
+        "detailsDialog": "Dialogo de detalles de oferta",
+        "closeDetailsDialog": "Cerrar detalles de oferta"
+      },
+      "modal": {
+        "platform": "Plataforma",
+        "candidatePool": "Grupo de candidatos",
+        "candidatePoolValue": "{{count}} estudiantes (coincidencia de 50%+)",
+        "skillsExtracted": "Habilidades extraidas ({{count}})",
+        "viewOriginalPosting": "Ver oferta original"
+      }
+    },
     "institutionsTable": {
       "headers": {
         "institution": "Institution",

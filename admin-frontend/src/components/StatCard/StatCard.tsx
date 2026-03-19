@@ -19,7 +19,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle }) => {
         border: `1px solid ${theme.palette.divider}`,
       }}
     >
-      <CardContent>
+      <CardContent sx={{ p: 2, "&:last-child": { p: 2 } }}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography variant="overline" color="text.secondary">
             {title}
@@ -30,7 +30,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle }) => {
           </Typography>
 
           {subtitle && (
-            <Typography variant="body2" sx={{ color: theme.palette.secondary.main, fontWeight: 700 }}>
+            <Typography variant="caption" sx={{ color: theme.palette.secondary.main, fontWeight: 600 }}>
               {subtitle}
             </Typography>
           )}

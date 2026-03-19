@@ -201,6 +201,50 @@
         "allSectors": "All Sectors"
       }
     },
+    "jobPostings": {
+      "stats": {
+        "jobsSourced": "Jobs Sourced",
+        "sectorsCovered": "Sectors Covered",
+        "sourcePlatforms": "Source Platforms",
+        "lastUpdated": "Last updated 2 days ago",
+        "sourcePlatformsList": "GoZ Jobs, BrighterMonday, JobWeb, LinkedIn, Indeed"
+      },
+      "searchPlaceholder": "Search job titles...",
+      "jobsCount": "{{count}} of {{total}} jobs",
+      "moreSkills": "+{{count}} more",
+      "filters": {
+        "allSectors": "All Sectors",
+        "allLocations": "All Locations",
+        "allPlatforms": "All Platforms",
+        "allZqfLevels": "All ZQF Levels"
+      },
+      "table": {
+        "jobTitle": "Job Title",
+        "sector": "Sector",
+        "location": "Location",
+        "zqf": "ZQF",
+        "platform": "Platform",
+        "skillsExtracted": "Skills Extracted",
+        "candidatePool": "Candidate Pool",
+        "candidatePoolSubheader": "50%+ skills match",
+        "link": "Link"
+      },
+      "aria": {
+        "search": "Search job titles",
+        "openJob": "Open job posting for {{title}}",
+        "table": "Job postings table",
+        "moreSkills": "Show {{count}} more skills",
+        "detailsDialog": "Job posting details dialog",
+        "closeDetailsDialog": "Close job posting details"
+      },
+      "modal": {
+        "platform": "Platform",
+        "candidatePool": "Candidate Pool",
+        "candidatePoolValue": "{{count}} students (50%+ match)",
+        "skillsExtracted": "Skills Extracted ({{count}})",
+        "viewOriginalPosting": "View Original Posting"
+      }
+    },
     "institutionsTable": {
       "headers": {
         "institution": "Institution",

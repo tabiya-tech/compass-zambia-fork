@@ -58,3 +58,29 @@ export interface SkillsGapSectorData {
   supplyPct: number;
   demandPct: number;
 }
+
+export interface JobPostingStats {
+  jobsSourced: number;
+  sectorsCovered: number;
+  sourcePlatformsCount: number;
+}
+
+export interface JobPostingFilters {
+  search: string;
+  sector: string;
+  location: string;
+  platform: string;
+  zqfLevel: string;
+}
+
+export interface JobPostingRow {
+  id: string;
+  jobTitle: string;
+  sector: string;
+  location: string;
+  zqfLevel: string;
+  platform: string;
+  skills: string[];
+  candidatePool: number;
+  jobUrl: string;
+}
