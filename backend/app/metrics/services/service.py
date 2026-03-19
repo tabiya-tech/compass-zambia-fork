@@ -36,6 +36,12 @@ class IMetricsService(ABC):
         """
         raise NotImplementedError()
 
+    async def get_aggregated_sector_engagement(self) -> list[dict]:
+        raise NotImplementedError()
+
+    async def get_sector_engagement_for_user(self, user_id: str) -> list[dict]:
+        raise NotImplementedError()
+
 
 class MetricsService(IMetricsService):
     """
@@ -102,3 +108,10 @@ class MetricsService(IMetricsService):
     async def get_sector_names_for_user(self, user_id: str) -> list[str]:
         anonymized_user_id = hash_metric_value(user_id)
         return await self._metrics_repository.get_sector_names_for_user(anonymized_user_id)
+
+    async def get_aggregated_sector_engagement(self) -> list[dict]:
+        return await self._metrics_repository.get_aggregated_sector_engagement()
+
+    async def get_sector_engagement_for_user(self, user_id: str) -> list[dict]:
+        anonymized_user_id = hash_metric_value(user_id)
+        return await self._metrics_repository.get_sector_engagement_for_user(anonymized_user_id)

@@ -824,3 +824,84 @@ class TestGetSectorNamesForUser:
         actual_unknown_sectors = await repository.get_sector_names_for_user("unknown_user_id")
         assert actual_unknown_sectors == expected_unknown_sectors
 
+
+class TestGetAggregatedSectorEngagement:
+    @pytest.mark.asyncio
+    async def test_returns_correct_sums_and_unique_user_counts(
+            self,
+            get_metrics_repository: Awaitable[MetricsRepository],
+            setup_application_config: ApplicationConfig
+    ):
+        # GIVEN two sector engagement events for user A on "Agriculture"
+        given_user_a_agri_1 = get_sector_engagement_event(sector_name="Agriculture", is_priority=True)
+        given_user_a_agri_2 = get_sector_engagement_event(sector_name="Agriculture", is_priority=True)
+        given_user_a_agri_2.anonymized_user_id = given_user_a_agri_1.anonymized_user_id
+        # AND one sector engagement event for user B on "Agriculture"
+        given_user_b_agri = get_sector_engagement_event(sector_name="Agriculture", is_priority=True)
+        # AND one sector engagement event for user A on "Tech/ICT"
+        given_user_a_tech = get_sector_engagement_event(sector_name="Tech/ICT", is_priority=False)
+        given_user_a_tech.anonymized_user_id = given_user_a_agri_1.anonymized_user_id
+
+        repository = await get_metrics_repository
+
+        # WHEN all events are recorded
+        await repository.record_event([given_user_a_agri_1, given_user_a_agri_2, given_user_b_agri, given_user_a_tech])
+
+        # AND the aggregated sector engagement is retrieved
+        actual_results = await repository.get_aggregated_sector_engagement()
+
+        # THEN two sectors are returned
+        assert len(actual_results) == 2
+
+        # AND "Agriculture" is first (highest total inquiries: 2 + 1 = 3)
+        expected_agri = actual_results[0]
+        assert expected_agri["sector_name"] == "Agriculture"
+        assert expected_agri["is_priority"] is True
+        assert expected_agri["total_inquiries"] == 3
+        assert expected_agri["unique_users"] == 2
+
+        # AND "Tech/ICT" is second (1 inquiry, 1 user)
+        expected_tech = actual_results[1]
+        assert expected_tech["sector_name"] == "Tech/ICT"
+        assert expected_tech["is_priority"] is False
+        assert expected_tech["total_inquiries"] == 1
+        assert expected_tech["unique_users"] == 1
+
+
+class TestGetSectorEngagementForUser:
+    @pytest.mark.asyncio
+    async def test_returns_only_specified_user_data_sorted_by_inquiry_count(
+            self,
+            get_metrics_repository: Awaitable[MetricsRepository],
+            setup_application_config: ApplicationConfig
+    ):
+        # GIVEN sector engagement events for user A on two sectors
+        given_user_a_tech = get_sector_engagement_event(sector_name="Tech/ICT", is_priority=False)
+        given_user_a_agri_1 = get_sector_engagement_event(sector_name="Agriculture", is_priority=True)
+        given_user_a_agri_1.anonymized_user_id = given_user_a_tech.anonymized_user_id
+        given_user_a_agri_2 = get_sector_engagement_event(sector_name="Agriculture", is_priority=True)
+        given_user_a_agri_2.anonymized_user_id = given_user_a_tech.anonymized_user_id
+        # AND one sector engagement event for user B
+        given_user_b_event = get_sector_engagement_event(sector_name="Healthcare", is_priority=False)
+
+        repository = await get_metrics_repository
+
+        # WHEN all events are recorded
+        await repository.record_event([given_user_a_tech, given_user_a_agri_1, given_user_a_agri_2, given_user_b_event])
+
+        # AND sector engagement for user A is retrieved
+        actual_results = await repository.get_sector_engagement_for_user(given_user_a_tech.anonymized_user_id)
+
+        # THEN only user A's two sectors are returned
+        assert len(actual_results) == 2
+
+        # AND results are sorted by inquiry_count descending (Agriculture=2 first, Tech/ICT=1 second)
+        assert actual_results[0]["sector_name"] == "Agriculture"
+        assert actual_results[0]["inquiry_count"] == 2
+        assert actual_results[0]["is_priority"] is True
+        assert "timestamp" in actual_results[0]
+
+        assert actual_results[1]["sector_name"] == "Tech/ICT"
+        assert actual_results[1]["inquiry_count"] == 1
+        assert actual_results[1]["is_priority"] is False
+
