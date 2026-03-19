@@ -34,10 +34,14 @@ const QuickReplyButtons: React.FC<QuickReplyButtonsProps> = ({ options, onSelect
           key={option.label}
           label={option.label}
           variant="outlined"
+          size="small"
           onClick={() => onSelect(option.label)}
           data-testid={DATA_TEST_ID.QUICK_REPLY_BUTTON}
           sx={{
             cursor: "pointer",
+            "& .MuiChip-label": {
+              fontSize: theme.typography.body2.fontSize,
+            },
             "&:hover": {
               backgroundColor: theme.palette.action.hover,
             },
