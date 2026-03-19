@@ -178,6 +178,29 @@
         "allYears": "All Years"
       }
     },
+    "skillsAnalytics": {
+      "supplyVsDemandTitle": "Skills Supply vs Labour Market Demand",
+      "topSkillsAmongStudents": "Top Skills Among Students",
+      "topSkillsInDemand": "Top Skills In Demand (Job Postings)",
+      "gapBySectorTitle": "Skills Gap by Sector",
+      "avgGapLabel": "Avg. gap between student skills supply and labour market demand",
+      "gapPp": "{{gap}}pp",
+      "legend": {
+        "supply": "Supply",
+        "demand": "Demand",
+        "supplyStudents": "Supply (students)",
+        "demandEmployers": "Demand (employers)"
+      },
+      "aria": {
+        "supplyBar": "Supply for {{skill}}: {{value}}%",
+        "demandBar": "Demand for {{skill}}: {{value}}%",
+        "gapBar": "Skills gap for {{sector}}: supply {{supply}}%, demand {{demand}}%"
+      },
+      "filters": {
+        "allProvinces": "All Provinces",
+        "allSectors": "All Sectors"
+      }
+    },
     "institutionsTable": {
       "headers": {
         "institution": "Institution",

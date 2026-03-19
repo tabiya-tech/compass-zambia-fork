@@ -45,3 +45,16 @@ export interface ModuleData {
   breakdownCaption?: string;
   breakdownItems: ModuleBreakdownItem[];
 }
+
+export interface SkillsDemandSupplyData {
+  [key: string]: string | number;
+  skillName: string;
+  supplyPct: number;
+  demandPct: number;
+}
+
+export interface SkillsGapSectorData {
+  sector: string;
+  supplyPct: number;
+  demandPct: number;
+}

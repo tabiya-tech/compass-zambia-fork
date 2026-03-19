@@ -9,6 +9,7 @@ import DashboardTabs, { DashboardTabValue } from "src/components/DashboardTabs/D
 import DailyAdoptionTrendChart from "src/components/DailyAdoptionTrendChart/DailyAdoptionTrendChart";
 import InstitutionsTable from "src/components/InstitutionsTable/InstitutionsTable";
 import ModuleCard from "src/components/ModuleCard/ModuleCard";
+import SkillsAnalytics from "src/components/SkillsAnalytics/SkillsAnalytics";
 import {
   MODULE_FILTER_INSTITUTIONS,
   MODULE_FILTER_PROVINCES,
@@ -168,7 +169,12 @@ const Dashboard: React.FC = () => {
                 </Box>
               </Box>
             )}
-            {(tab === "skillsAnalytics" || tab === "jobPostings") && (
+            {tab === "skillsAnalytics" && (
+              <Box sx={{ paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
+                <SkillsAnalytics />
+              </Box>
+            )}
+            {tab === "jobPostings" && (
               <Box
                 sx={{
                   paddingX: theme.fixedSpacing(theme.tabiyaSpacing.lg),
