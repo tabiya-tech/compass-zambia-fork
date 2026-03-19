@@ -11,6 +11,9 @@ Usage:
 
     # Create user under a tenant
     python create_admin_user.py --name "John Doe" --email "john@example.com" --role admin --tenant-id "tenant-abc123"
+
+    # Specify project (required when tenant is in a different project than gcloud default)
+    python create_admin_user.py --name "John Doe" --email "john@example.com" --role admin --tenant-id "tenant-abc123" --project-id "compass-dev-njila-awud7b7tl6gw"
 """
 
 import argparse
@@ -44,7 +47,8 @@ class Arguments(BaseModel):
     email: str
     role: Role
     institution_id: str | None
-    tenant_id: str | None
+    tenant_id: str
+    project_id: str
     dry_run: bool
 
 
@@ -103,7 +107,6 @@ def send_password_reset_email(email: str, tenant_id: str | None, dry_run: bool) 
 
     auth_client = get_auth_client(tenant_id)
     link = auth_client.generate_password_reset_link(email)
-    auth.send_password
 
     logger.info("Password reset link generated successfully")
     logger.info("Send this link to the user: %s", link)
@@ -214,6 +217,13 @@ def parse_args() -> Arguments:
     )
 
     parser.add_argument(
+        "--project-id",
+        required=True,
+        type=str,
+        help="The GCP project ID where the tenant exists (usually the Compass environment project)"
+    )
+
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Preview changes without actually creating the user"
@@ -236,6 +246,7 @@ def parse_args() -> Arguments:
         role=role,
         institution_id=parsed.institution_id if role == Role.INSTITUTION_STAFF else None,
         tenant_id=parsed.tenant_id,
+        project_id=parsed.project_id,
         dry_run=parsed.dry_run
     )
 
@@ -243,14 +254,13 @@ def parse_args() -> Arguments:
 def main() -> None:
     """Entry point for the script."""
     try:
-        # args = parse_args()
-
-        # Initialize Firebase Admin SDK
-        cred = credentials.ApplicationDefault()
-        authed_credentials = cred.get_credential()
         args = parse_args()
-        firebase_admin.initialize_app(cred)
-        logger.debug(f"Firebase Admin SDK initialized with credentials {authed_credentials.service_account_email}")
+
+        cred = credentials.ApplicationDefault()
+        firebase_admin.initialize_app(cred, options={"projectId": args.project_id})
+        authed = cred.get_credential()
+        cred_desc = getattr(authed, "service_account_email", None) or "user credentials"
+        logger.debug("Firebase Admin SDK initialized with credentials %s", cred_desc)
 
         create_admin_user(args)
     except  firebase_admin._auth_utils.InsufficientPermissionError as e:
