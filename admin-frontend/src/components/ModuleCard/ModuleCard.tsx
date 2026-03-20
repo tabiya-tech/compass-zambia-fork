@@ -235,11 +235,14 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
                           position: "relative",
                         }}
                       >
+                        {/* started bar (orange) — drawn first, wider */}
                         <LinearProgress
                           variant="determinate"
                           value={Math.min(100, completedPct + startedOnlyPct)}
                           aria-label={t(item.labelKey)}
                           sx={{
+                            position: "absolute",
+                            inset: 0,
                             height: "100%",
                             backgroundColor: "transparent",
                             "& .MuiLinearProgress-bar": {
@@ -247,11 +250,14 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
                             },
                           }}
                         />
+                        {/* completed bar (green) — drawn on top, narrower */}
                         <LinearProgress
                           variant="determinate"
                           value={completedPct}
                           aria-label={t(item.labelKey)}
                           sx={{
+                            position: "absolute",
+                            inset: 0,
                             height: "100%",
                             backgroundColor: "transparent",
                             "& .MuiLinearProgress-bar": {

@@ -41,3 +41,32 @@ export interface AdoptionTrendsResponse {
     interval: string;
   };
 }
+
+export interface SkillGapEntry {
+  skill_id: string;
+  skill_label: string;
+  students_with_gap_count: number;
+  avg_job_unlock_count: number;
+  avg_proximity_score: number;
+}
+
+export interface SkillGapStatsResponse {
+  total_students_with_skill_gaps: number;
+  top_skill_gaps: SkillGapEntry[];
+}
+
+export interface CareerReadinessModuleBreakdown {
+  module_id: string;
+  module_title: string;
+  started_count: number;
+  completed_count: number;
+}
+
+export interface CareerReadinessStatsResponse {
+  total_registered_students: number;
+  started: { count: number; percentage: number };
+  completed_all_modules: { count: number; percentage_of_started: number };
+  avg_modules_completed: number;
+  total_modules: number;
+  module_breakdown: CareerReadinessModuleBreakdown[];
+}

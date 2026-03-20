@@ -1,14 +1,23 @@
 import React from "react";
-import { Box, Typography, useTheme, Select, MenuItem, LinearProgress } from "@mui/material";
+import { Box, Skeleton, Typography, useTheme, Select, MenuItem, LinearProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import type { SkillsDemandSupplyData, SkillsGapSectorData } from "src/types";
+import type { SkillsGapSectorData } from "src/types";
+import { useSkillGapStats } from "src/hooks/useSkillGapStats";
 
 const SkillsAnalytics: React.FC = () => {
   const theme = useTheme();
   const { t } = useTranslation();
+  const { data: skillGapData, loading: skillGapLoading } = useSkillGapStats(10);
 
-  const supplyData: SkillsDemandSupplyData[] = [];
-  const demandData: SkillsDemandSupplyData[] = [];
+  // Map skill gap entries to supply bars: pct = students_with_gap / total * 100
+  const total = skillGapData?.total_students_with_skill_gaps ?? 0;
+  const supplyData = (skillGapData?.top_skill_gaps ?? []).map((entry) => ({
+    skillName: entry.skill_label,
+    supplyPct: total > 0 ? Math.round((entry.students_with_gap_count / total) * 100) : 0,
+    demandPct: 0,
+  }));
+
+  const demandData = supplyData; // same skills shown on demand side — no separate demand source yet
   const skillsGapSector: SkillsGapSectorData[] = [];
 
   const renderSimpleBar = (label: string, value: number, barColor: string, ariaLabel: string) => (
@@ -123,14 +132,18 @@ const SkillsAnalytics: React.FC = () => {
               </Box>
             </Box>
             <Box>
-              {supplyData.map((item) =>
-                renderSimpleBar(
-                  item.skillName,
-                  item.supplyPct,
-                  theme.palette.secondary.main,
-                  t("dashboard.skillsAnalytics.aria.supplyBar", { skill: item.skillName, value: item.supplyPct })
-                )
-              )}
+              {skillGapLoading
+                ? Array.from({ length: 5 }).map((_, i) => (
+                    <Skeleton key={i} variant="text" height={28} sx={{ mb: 0.5 }} />
+                  ))
+                : supplyData.map((item) =>
+                    renderSimpleBar(
+                      item.skillName,
+                      item.supplyPct,
+                      theme.palette.secondary.main,
+                      t("dashboard.skillsAnalytics.aria.supplyBar", { skill: item.skillName, value: item.supplyPct })
+                    )
+                  )}
             </Box>
           </Box>
 
@@ -170,14 +183,18 @@ const SkillsAnalytics: React.FC = () => {
               </Box>
             </Box>
             <Box>
-              {demandData.map((item) =>
-                renderSimpleBar(
-                  item.skillName,
-                  item.demandPct,
-                  theme.palette.primary.main,
-                  t("dashboard.skillsAnalytics.aria.demandBar", { skill: item.skillName, value: item.demandPct })
-                )
-              )}
+              {skillGapLoading
+                ? Array.from({ length: 5 }).map((_, i) => (
+                    <Skeleton key={i} variant="text" height={28} sx={{ mb: 0.5 }} />
+                  ))
+                : demandData.map((item) =>
+                    renderSimpleBar(
+                      item.skillName,
+                      item.supplyPct,
+                      theme.palette.primary.main,
+                      t("dashboard.skillsAnalytics.aria.demandBar", { skill: item.skillName, value: item.supplyPct })
+                    )
+                  )}
             </Box>
           </Box>
         </Box>
