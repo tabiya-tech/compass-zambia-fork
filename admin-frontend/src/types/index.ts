@@ -14,7 +14,6 @@ export interface InstitutionRow {
   skillsDiscoveryCompletedPct: number | null;
   careerReadinessStartedPct: number | null;
   careerReadinessCompletedPct: number | null;
-  careerExplorerStartedPct: number | null;
 }
 
 export interface ModuleSummaryRow {

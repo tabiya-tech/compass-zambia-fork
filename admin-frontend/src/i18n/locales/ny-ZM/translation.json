@@ -72,9 +72,7 @@
       "welcome": "Takulandirani ku Portal ya Woyang'anira"
     },
     "navigation": {
-      "dashboard": "Dashibodi",
-      "users": "Ogwiritsa ntchito",
-      "settings": "Zosintha"
+      "dashboard": "Dashibodi"
     }
   },
   "error": {
@@ -105,15 +103,6 @@
   "i18n": {
     "languageContextMenu": {
       "selector": "Chosankha Chilankhulo"
-    }
-  },
-  "navbar": {
-    "title": "{{appName}} Admin",
-    "profileMenu": "Menyu ya mbiri",
-    "logout": "Tulukani",
-    "role": {
-      "admin": "Woyang'anira",
-      "institutionStaff": "Wantchito wa Bungwe"
     }
   },
   "header": {
@@ -191,6 +180,7 @@
         "other": "Other"
       },
       "filters": {
+        "allLocations": "Mbiri zonse",
         "allProvinces": "All Provinces",
         "allInstitutions": "All Institutions",
         "allQualifications": "All Qualifications",
@@ -284,44 +274,13 @@
       "nextPage": "Tsamba lotsatira",
       "page": "Tsamba {{page}}"
     },
-    "comingSoon": "Coming soon."
-  },
-  "users": {
-    "title": "Users",
-    "addUser": "Add User",
-    "table": {
-      "name": "Name",
-      "email": "Email",
-      "role": "Role",
-      "status": "Status",
-      "lastLogin": "Last Login",
-      "actions": "Actions"
-    }
+    "comingSoon": "No data so far."
   },
   "login": {
     "title": "Admin Login",
     "email": "Email",
     "password": "Password",
     "submit": "Sign In"
-  },
-  "settings": {
-    "title": "Settings",
-    "save": "Save Changes",
-    "general": {
-      "title": "General Settings",
-      "appName": "Application Name",
-      "supportEmail": "Support Email"
-    },
-    "notifications": {
-      "title": "Notifications",
-      "email": "Enable Email Notifications",
-      "push": "Enable Push Notifications"
-    },
-    "advanced": {
-      "title": "Advanced Settings",
-      "maintenanceMode": "Maintenance Mode",
-      "debugMode": "Debug Mode"
-    }
   },
   "notFound": {
     "message": "Page Not Found",

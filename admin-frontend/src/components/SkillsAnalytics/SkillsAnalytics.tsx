@@ -3,32 +3,38 @@ import { Box, Skeleton, Typography, useTheme, Select, MenuItem, LinearProgress }
 import { useTranslation } from "react-i18next";
 import type { SkillsGapSectorData } from "src/types";
 import { useSkillGapStats } from "src/hooks/useSkillGapStats";
+import { useSkillsSupplyStats } from "src/hooks/useSkillsSupplyStats";
 
 const SkillsAnalytics: React.FC = () => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { data: skillGapData, loading: skillGapLoading } = useSkillGapStats(10);
+  const { data: skillGapData, loading: skillGapLoading } = useSkillGapStats(5);
+  const { data: skillSupplyData, loading: skillSupplyLoading } = useSkillsSupplyStats(5);
 
-  // Map skill gap entries to supply bars: pct = students_with_gap / total * 100
-  const total = skillGapData?.total_students_with_skill_gaps ?? 0;
-  const supplyData = (skillGapData?.top_skill_gaps ?? []).map((entry) => ({
+  // Supply: top skills students actually have, as % of students with that skill vs total with any skill
+  const supplyTotal = skillSupplyData?.total_students_with_skills ?? 0;
+  const supplyData = (skillSupplyData?.top_skills ?? []).map((entry) => ({
     skillName: entry.skill_label,
-    supplyPct: total > 0 ? Math.round((entry.students_with_gap_count / total) * 100) : 0,
-    demandPct: 0,
+    supplyPct: supplyTotal > 0 ? Math.round((entry.student_count / supplyTotal) * 100) : 0,
   }));
 
-  const demandData = supplyData; // same skills shown on demand side — no separate demand source yet
+  // Demand: top skill gaps from recommendations
+  const demandTotal = skillGapData?.total_students_with_skill_gaps ?? 0;
+  const demandData = (skillGapData?.top_skill_gaps ?? []).map((entry) => ({
+    skillName: entry.skill_label,
+    demandPct: demandTotal > 0 ? Math.round((entry.students_with_gap_count / demandTotal) * 100) : 0,
+  }));
   const skillsGapSector: SkillsGapSectorData[] = [];
 
   const renderSimpleBar = (label: string, value: number, barColor: string, ariaLabel: string) => (
     <Box
       display="grid"
-      gridTemplateColumns="160px 1fr 40px"
+      gridTemplateColumns="160px 1fr 36px"
       gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
       alignItems="center"
       mb={0.5}
     >
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="caption" color="text.secondary" noWrap>
         {label}
       </Typography>
       <LinearProgress
@@ -36,13 +42,13 @@ const SkillsAnalytics: React.FC = () => {
         value={value}
         aria-label={ariaLabel}
         sx={{
-          height: 16,
+          height: 10,
           borderRadius: theme.fixedSpacing(theme.tabiyaSpacing.xs),
           backgroundColor: theme.palette.divider,
           "& .MuiLinearProgress-bar": { backgroundColor: barColor, borderRadius: "inherit" },
         }}
       />
-      <Typography variant="body2">{value}%</Typography>
+      <Typography variant="caption">{value}%</Typography>
     </Box>
   );
 
@@ -132,18 +138,24 @@ const SkillsAnalytics: React.FC = () => {
               </Box>
             </Box>
             <Box>
-              {skillGapLoading
-                ? Array.from({ length: 5 }).map((_, i) => (
-                    <Skeleton key={i} variant="text" height={28} sx={{ mb: 0.5 }} />
-                  ))
-                : supplyData.map((item) =>
-                    renderSimpleBar(
-                      item.skillName,
-                      item.supplyPct,
-                      theme.palette.secondary.main,
-                      t("dashboard.skillsAnalytics.aria.supplyBar", { skill: item.skillName, value: item.supplyPct })
-                    )
-                  )}
+              {skillSupplyLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} variant="text" height={28} sx={{ mb: 0.5 }} />
+                ))
+              ) : supplyData.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  {t("dashboard.comingSoon")}
+                </Typography>
+              ) : (
+                supplyData.map((item) =>
+                  renderSimpleBar(
+                    item.skillName,
+                    item.supplyPct,
+                    theme.palette.secondary.main,
+                    t("dashboard.skillsAnalytics.aria.supplyBar", { skill: item.skillName, value: item.supplyPct })
+                  )
+                )
+              )}
             </Box>
           </Box>
 
@@ -183,18 +195,24 @@ const SkillsAnalytics: React.FC = () => {
               </Box>
             </Box>
             <Box>
-              {skillGapLoading
-                ? Array.from({ length: 5 }).map((_, i) => (
-                    <Skeleton key={i} variant="text" height={28} sx={{ mb: 0.5 }} />
-                  ))
-                : demandData.map((item) =>
-                    renderSimpleBar(
-                      item.skillName,
-                      item.supplyPct,
-                      theme.palette.primary.main,
-                      t("dashboard.skillsAnalytics.aria.demandBar", { skill: item.skillName, value: item.supplyPct })
-                    )
-                  )}
+              {skillGapLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} variant="text" height={28} sx={{ mb: 0.5 }} />
+                ))
+              ) : demandData.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  {t("dashboard.comingSoon")}
+                </Typography>
+              ) : (
+                demandData.map((item) =>
+                  renderSimpleBar(
+                    item.skillName,
+                    item.demandPct,
+                    theme.palette.primary.main,
+                    t("dashboard.skillsAnalytics.aria.demandBar", { skill: item.skillName, value: item.demandPct })
+                  )
+                )
+              )}
             </Box>
           </Box>
         </Box>
@@ -255,7 +273,7 @@ const SkillsAnalytics: React.FC = () => {
                 gap={theme.fixedSpacing(theme.tabiyaSpacing.md)}
                 alignItems="center"
               >
-                <Typography variant="body2" color="text.primary">
+                <Typography variant="caption" color="text.primary">
                   {row.sector}
                 </Typography>
 
@@ -289,13 +307,13 @@ const SkillsAnalytics: React.FC = () => {
                   textAlign="right"
                   alignItems="center"
                 >
-                  <Typography variant="body2" sx={{ color: theme.palette.secondary.main }}>
+                  <Typography variant="caption" sx={{ color: theme.palette.secondary.main }}>
                     {row.supplyPct}%
                   </Typography>
-                  <Typography variant="body2" sx={{ color: theme.palette.primary.main }}>
+                  <Typography variant="caption" sx={{ color: theme.palette.primary.main }}>
                     {row.demandPct}%
                   </Typography>
-                  <Typography variant="body2" sx={{ color: theme.palette.error.main }}>
+                  <Typography variant="caption" sx={{ color: theme.palette.error.main }}>
                     {t("dashboard.skillsAnalytics.gapPp", { gap: formattedGap })}
                   </Typography>
                 </Box>

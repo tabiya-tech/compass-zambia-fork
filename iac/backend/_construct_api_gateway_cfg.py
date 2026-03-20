@@ -34,8 +34,15 @@ def _convert_open_api_3_to_2(openapi3: dict):
             if 'parameters' in openapi3['paths'][path][method]:
                 for param in openapi3['paths'][path][method]['parameters']:
                     schema = param.pop('schema', {'type': None})
-                    if schema and 'type' in schema:
-                        param['type'] = schema['type']
+                    if schema:
+                        if 'type' in schema:
+                            param['type'] = schema['type']
+                        elif 'anyOf' in schema:
+                            # Handle nullable types (e.g. Optional[str] → anyOf: [{type: string}, {type: null}])
+                            # Pick the first non-null type for Swagger 2.0 compatibility
+                            non_null = [s['type'] for s in schema['anyOf'] if s.get('type') != 'null']
+                            if non_null:
+                                param['type'] = non_null[0]
 
             # Add quota/rate-limiter
             metric_costs = {'metricCosts': {}}  # set the default value

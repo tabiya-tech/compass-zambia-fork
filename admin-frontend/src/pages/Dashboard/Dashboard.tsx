@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Container, FormControl, Grid, MenuItem, Select, Skeleton, Typography, useTheme } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import { useTranslation } from "react-i18next";
@@ -50,7 +50,11 @@ const Dashboard: React.FC = () => {
     year: "",
   });
 
-  const { modules } = useModules({
+  const {
+    modules,
+    loading: modulesLoading,
+    error: modulesError,
+  } = useModules({
     location: moduleFilters.location || undefined,
     institution: moduleFilters.institution || undefined,
     year: moduleFilters.year || undefined,
@@ -63,15 +67,21 @@ const Dashboard: React.FC = () => {
     error: trendError,
   } = useAdoptionTrends(7);
 
+  const hasShownErrorRef = useRef(false);
   useEffect(() => {
-    const err = institutionsError ?? statsError ?? trendError;
-    if (err) {
+    const err = institutionsError ?? statsError ?? trendError ?? modulesError;
+    if (err && !hasShownErrorRef.current) {
+      hasShownErrorRef.current = true;
       const message = err instanceof RestAPIError ? getUserFriendlyErrorMessage(err) : err.message;
       enqueueSnackbar(message, { variant: "error" });
     }
-  }, [institutionsError, statsError, trendError, enqueueSnackbar]);
+    if (!err) {
+      hasShownErrorRef.current = false;
+    }
+  }, [institutionsError, statsError, trendError, modulesError, enqueueSnackbar]);
 
   const [tab, setTab] = useState<DashboardTabValue>("institutions");
+  const displayName = useMemo(() => UserStateService.getInstance().getUserName() ?? undefined, []);
 
   const handleModuleFilterChange = (field: keyof typeof moduleFilters) => (event: SelectChangeEvent<string>) => {
     setModuleFilters((prev) => ({ ...prev, [field]: event.target.value }));
@@ -79,7 +89,7 @@ const Dashboard: React.FC = () => {
 
   const moduleFiltersConfig = [
     {
-      labelKey: "dashboard.modules.filters.allProvinces" as const,
+      labelKey: "dashboard.modules.filters.allLocations" as const,
       value: moduleFilters.location,
       onChange: handleModuleFilterChange("location"),
       options: MODULE_FILTER_LOCATIONS,
@@ -118,7 +128,7 @@ const Dashboard: React.FC = () => {
             </Typography>
             <Typography variant="h3" sx={{ fontWeight: 700 }} data-testid={DATA_TEST_ID.DASHBOARD_PAGE_TITLE}>
               {t("dashboard.header.welcome", {
-                name: UserStateService.getInstance().getUserName() ?? t("header.user"),
+                name: displayName ?? t("header.user"),
               })}
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -212,9 +222,9 @@ const Dashboard: React.FC = () => {
                   <Box
                     sx={{ display: "flex", flexDirection: "column", gap: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}
                   >
-                    {modules.map((module) => (
-                      <ModuleCard key={module.id} module={module} />
-                    ))}
+                    {modulesLoading
+                      ? Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} variant="rounded" height={220} />)
+                      : modules.map((module) => <ModuleCard key={module.id} module={module} />)}
                   </Box>
                 </>
               )}

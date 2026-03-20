@@ -166,8 +166,6 @@ yarn analyze
 |------|------|-------------|
 | `/` | Dashboard | Overview with stats and activity |
 | `/login` | Login | Admin authentication |
-| `/users` | Users | User management table |
-| `/settings` | Settings | System configuration |
 | `*` | NotFound | 404 error page |
 
 ## Theming
