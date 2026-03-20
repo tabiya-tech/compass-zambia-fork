@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import hashlib
 import json
@@ -62,9 +63,12 @@ class InstitutionsRepository:
         self,
         userdata_db: AsyncIOMotorDatabase,
         metrics_db: AsyncIOMotorDatabase,
+        application_db: AsyncIOMotorDatabase,
     ):
         self._collection = userdata_db.get_collection(Collections.PLAIN_PERSONAL_DATA)
         self._metrics_collection = metrics_db.get_collection(Collections.COMPASS_METRICS)
+        self._cr_conversations = application_db.get_collection(Collections.CAREER_READINESS_CONVERSATIONS)
+        self._ce_conversations = application_db.get_collection(Collections.CAREER_EXPLORER_CONVERSATIONS)
 
     async def _get_active_anon_ids_last_7_days(self) -> set[str]:
         """Return the set of anonymized_user_ids active in the last 7 days from metrics."""
@@ -138,7 +142,8 @@ class InstitutionsRepository:
             next_cursor = base64.urlsafe_b64encode(str(next_idx).encode()).decode().rstrip("=")
 
         # Fetch MongoDB counts in parallel
-        counts_by_inst, active_anon_ids = await self._fetch_activity_data()
+        counts_by_inst, active_anon_ids, cr_started_ids, cr_completed_ids, ce_started_ids = \
+            await self._fetch_activity_data()
 
         items = []
         for name in page:
@@ -146,6 +151,15 @@ class InstitutionsRepository:
             student_count, user_ids = counts_by_inst.get(name, (0, set()))
             anon_ids = {_anonymize(uid) for uid in user_ids}
             active_count = len(anon_ids & active_anon_ids)
+
+            def _pct(count: int) -> Optional[float]:
+                if student_count <= 0:
+                    return None
+                return round(count / student_count * 100, 1)
+
+            cr_started_count = len(user_ids & cr_started_ids)
+            cr_completed_count = len(user_ids & cr_completed_ids)
+            ce_started_count = len(user_ids & ce_started_ids)
 
             items.append(Institution(
                 id=inst_id,
@@ -155,19 +169,50 @@ class InstitutionsRepository:
                 active_7_days=active_count if student_count > 0 else None,
                 skills_discovery_started_pct=None,
                 skills_discovery_completed_pct=None,
-                career_readiness_started_pct=None,
-                career_readiness_completed_pct=None,
-                career_explorer_started_pct=None,
+                career_readiness_started_pct=_pct(cr_started_count),
+                career_readiness_completed_pct=_pct(cr_completed_count),
+                career_explorer_started_pct=_pct(ce_started_count),
             ))
 
         return items, next_cursor, has_more
 
-    async def _fetch_activity_data(self) -> tuple[dict[str, tuple[int, set[str]]], set[str]]:
-        import asyncio
+    async def _get_cr_user_ids(self) -> tuple[set[str], set[str]]:
+        """
+        Return (started_user_ids, completed_user_ids) for career readiness.
+        Started = has at least one conversation record.
+        Completed = has at least one conversation record with quiz_passed=True.
+        """
+        pipeline = [
+            {"$group": {
+                "_id": "$user_id",
+                "any_passed": {"$max": {"$cond": [{"$eq": ["$quiz_passed", True]}, 1, 0]}},
+            }},
+        ]
+        docs = await self._cr_conversations.aggregate(pipeline).to_list(length=None)
+        started = {d["_id"] for d in docs if d["_id"]}
+        completed = {d["_id"] for d in docs if d["_id"] and d["any_passed"] == 1}
+        return started, completed
+
+    async def _get_ce_started_user_ids(self) -> set[str]:
+        """Return the set of user_ids that have started career explorer (have any conversation record)."""
+        docs = await self._ce_conversations.distinct("user_id")
+        return {uid for uid in docs if uid}
+
+    async def _fetch_activity_data(self) -> tuple[
+        dict[str, tuple[int, set[str]]],
+        set[str],
+        set[str],
+        set[str],
+        set[str],
+    ]:
         counts_task = self._get_counts_by_institution()
         active_task = self._get_active_anon_ids_last_7_days()
-        counts, active = await asyncio.gather(counts_task, active_task)
-        return counts, active
+        cr_task = self._get_cr_user_ids()
+        ce_task = self._get_ce_started_user_ids()
+        counts, active, (cr_started, cr_completed), ce_started = await asyncio.gather(
+            counts_task, active_task, cr_task, ce_task
+        )
+        return counts, active, cr_started, cr_completed, ce_started
 
     async def count_institutions(
         self,
@@ -184,5 +229,6 @@ InstitutionRepository = InstitutionsRepository
 async def get_institution_repository(
     userdata_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_userdata_db),
     metrics_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_metrics_db),
+    application_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_application_db),
 ) -> InstitutionsRepository:
-    return InstitutionsRepository(userdata_db, metrics_db)
+    return InstitutionsRepository(userdata_db, metrics_db, application_db)

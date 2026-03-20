@@ -8,9 +8,18 @@ import type {
   InstitutionApiItem,
   PaginatedResponse,
   AdoptionTrendsResponse,
+  SkillGapStatsResponse,
+  CareerReadinessStatsResponse,
 } from "./AnalyticsService.types";
 
-export type { DashboardStats, InstitutionApiItem, PaginatedResponse, AdoptionTrendsResponse };
+export type {
+  DashboardStats,
+  InstitutionApiItem,
+  PaginatedResponse,
+  AdoptionTrendsResponse,
+  SkillGapStatsResponse,
+  CareerReadinessStatsResponse,
+};
 
 const SERVICE_NAME = "AnalyticsService";
 
@@ -66,6 +75,60 @@ export default class AnalyticsService {
     });
     try {
       return (await response.json()) as PaginatedResponse<InstitutionApiItem>;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        error: e,
+      });
+    }
+  }
+
+  async getSkillGapStats(limit = 10): Promise<SkillGapStatsResponse> {
+    const params = new URLSearchParams({ limit: String(limit) });
+    const url = `${this.baseUrl}/analytics/skill-gap-stats?${params}`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "getSkillGapStats", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "getSkillGapStats",
+      failureMessage: "Failed to fetch skill gap stats",
+      expectedContentType: "application/json",
+    });
+    try {
+      return (await response.json()) as SkillGapStatsResponse;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        error: e,
+      });
+    }
+  }
+
+  async getCareerReadinessStats(filters?: {
+    institution?: string;
+    location?: string;
+    program?: string;
+    year?: string;
+  }): Promise<CareerReadinessStatsResponse> {
+    const params = new URLSearchParams();
+    if (filters?.institution) params.set("institution", filters.institution);
+    if (filters?.location) params.set("location", filters.location);
+    if (filters?.program) params.set("program", filters.program);
+    if (filters?.year) params.set("year", filters.year);
+    const query = params.toString();
+    const url = `${this.baseUrl}/analytics/career-readiness-stats${query ? `?${query}` : ""}`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "getCareerReadinessStats", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "getCareerReadinessStats",
+      failureMessage: "Failed to fetch career readiness stats",
+      expectedContentType: "application/json",
+    });
+    try {
+      return (await response.json()) as CareerReadinessStatsResponse;
     } catch (e) {
       throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
         error: e,

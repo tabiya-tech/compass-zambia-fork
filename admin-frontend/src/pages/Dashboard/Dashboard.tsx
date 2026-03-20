@@ -15,12 +15,7 @@ import InstitutionsTable from "src/components/InstitutionsTable/InstitutionsTabl
 import ModuleCard from "src/components/ModuleCard/ModuleCard";
 import SkillsAnalytics from "src/components/SkillsAnalytics/SkillsAnalytics";
 import JobPostings from "src/components/JobPostings/JobPostings";
-import {
-  MODULE_FILTER_INSTITUTIONS,
-  MODULE_FILTER_PROVINCES,
-  MODULE_FILTER_QUALIFICATIONS,
-  MODULE_FILTER_YEARS,
-} from "src/data/moduleFilterOptions";
+import { MODULE_FILTER_INSTITUTIONS, MODULE_FILTER_LOCATIONS, MODULE_FILTER_YEARS } from "src/data/moduleFilterOptions";
 import { useInstitutions } from "src/hooks/useInstitutions";
 import { useDashboardStats } from "src/hooks/useDashboardStats";
 import { useModules } from "src/hooks/useModules";
@@ -49,7 +44,17 @@ const Dashboard: React.FC = () => {
     error: institutionsError,
   } = useInstitutions();
   const { stats, loading: statsLoading, error: statsError } = useDashboardStats();
-  const { modules } = useModules();
+  const [moduleFilters, setModuleFilters] = useState({
+    location: "",
+    institution: "",
+    year: "",
+  });
+
+  const { modules } = useModules({
+    location: moduleFilters.location || undefined,
+    institution: moduleFilters.institution || undefined,
+    year: moduleFilters.year || undefined,
+  });
   const {
     labels: trendLabels,
     newRegistrations: trendNewReg,
@@ -67,12 +72,6 @@ const Dashboard: React.FC = () => {
   }, [institutionsError, statsError, trendError, enqueueSnackbar]);
 
   const [tab, setTab] = useState<DashboardTabValue>("institutions");
-  const [moduleFilters, setModuleFilters] = useState({
-    province: "",
-    institution: "",
-    qualification: "",
-    year: "",
-  });
 
   const handleModuleFilterChange = (field: keyof typeof moduleFilters) => (event: SelectChangeEvent<string>) => {
     setModuleFilters((prev) => ({ ...prev, [field]: event.target.value }));
@@ -81,21 +80,15 @@ const Dashboard: React.FC = () => {
   const moduleFiltersConfig = [
     {
       labelKey: "dashboard.modules.filters.allProvinces" as const,
-      value: moduleFilters.province,
-      onChange: handleModuleFilterChange("province"),
-      options: MODULE_FILTER_PROVINCES,
+      value: moduleFilters.location,
+      onChange: handleModuleFilterChange("location"),
+      options: MODULE_FILTER_LOCATIONS,
     },
     {
       labelKey: "dashboard.modules.filters.allInstitutions" as const,
       value: moduleFilters.institution,
       onChange: handleModuleFilterChange("institution"),
       options: MODULE_FILTER_INSTITUTIONS,
-    },
-    {
-      labelKey: "dashboard.modules.filters.allQualifications" as const,
-      value: moduleFilters.qualification,
-      onChange: handleModuleFilterChange("qualification"),
-      options: MODULE_FILTER_QUALIFICATIONS,
     },
     {
       labelKey: "dashboard.modules.filters.allYears" as const,
@@ -197,7 +190,7 @@ const Dashboard: React.FC = () => {
                     sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}
                   >
                     {moduleFiltersConfig.map((filter) => (
-                      <Grid key={filter.labelKey} size={{ xs: 12, sm: 6, md: 3 }}>
+                      <Grid key={filter.labelKey} size={{ xs: 12, sm: 6, md: 4 }}>
                         <FormControl size="small" fullWidth>
                           <Select
                             value={filter.value}
