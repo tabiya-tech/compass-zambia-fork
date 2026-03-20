@@ -14,7 +14,6 @@ export interface InstitutionApiItem {
   skills_discovery_completed_pct: number | null;
   career_readiness_started_pct: number | null;
   career_readiness_completed_pct: number | null;
-  career_explorer_started_pct: number | null;
 }
 
 export interface PaginatedResponse<T> {
@@ -69,4 +68,30 @@ export interface CareerReadinessStatsResponse {
   avg_modules_completed: number;
   total_modules: number;
   module_breakdown: CareerReadinessModuleBreakdown[];
+}
+
+export interface SkillSupplyEntry {
+  skill_id: string;
+  skill_label: string;
+  student_count: number;
+  avg_score: number;
+}
+
+export interface SkillsSupplyStatsResponse {
+  total_students_with_skills: number;
+  top_skills: SkillSupplyEntry[];
+}
+
+export interface SkillsDiscoveryFunnelStage {
+  label: string;
+  count: number;
+  total: number;
+}
+
+export interface SkillsDiscoveryStatsResponse {
+  total_registered_students: number;
+  started: { count: number; percentage: number };
+  completed: { count: number; percentage: number };
+  in_progress_count: number;
+  funnel: SkillsDiscoveryFunnelStage[];
 }

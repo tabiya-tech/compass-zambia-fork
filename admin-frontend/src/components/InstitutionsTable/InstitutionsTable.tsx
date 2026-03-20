@@ -37,7 +37,6 @@ const SKELETON_ROWS = 8;
 const GROUP_COLORS = {
   skillsDiscovery: "#4C9BE8",
   careerReadiness: "#7B61C4",
-  careerExplorer: "#2BA67A",
 };
 
 const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
@@ -92,7 +91,7 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
     whiteSpace: "nowrap" as const,
   };
 
-  const totalCols = 8;
+  const totalCols = 7;
 
   return (
     <>
@@ -185,22 +184,6 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
                   {t("dashboard.institutionsTable.headers.careerReadiness")}
                 </Typography>
               </TableCell>
-
-              {/* Career Explorer group */}
-              <TableCell colSpan={1} sx={groupHeaderCellSx(GROUP_COLORS.careerExplorer)}>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: "0.65rem",
-                    letterSpacing: "0.04em",
-                    textTransform: "uppercase",
-                    color: GROUP_COLORS.careerExplorer,
-                  }}
-                >
-                  {t("dashboard.institutionsTable.headers.careerExplorer")}
-                </Typography>
-              </TableCell>
             </TableRow>
 
             {/* Row 2: sub-headers for metric groups */}
@@ -226,11 +209,6 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
                     key: "careerReadinessCompletedPct",
                     label: t("dashboard.institutionsTable.subHeaders.completed"),
                     caption: t("dashboard.institutionsTable.subHeaders.ofStarted"),
-                  },
-                  {
-                    key: "careerExplorerStartedPct",
-                    label: t("dashboard.institutionsTable.subHeaders.started"),
-                    caption: t("dashboard.institutionsTable.subHeaders.ofReg"),
                   },
                 ] as Array<{ key: keyof InstitutionRow; label: string; caption: string }>
               ).map(({ key, label, caption }) => (
@@ -357,13 +335,6 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
                     <TableCell align="center" sx={{ py: 1, px: 1, borderRight: `1px solid ${borderColor}` }}>
                       <Typography variant="body2" color="text.secondary">
                         {renderPct(studentsAvailable ? r.careerReadinessCompletedPct : null)}
-                      </Typography>
-                    </TableCell>
-
-                    {/* Career Explorer */}
-                    <TableCell align="center" sx={{ py: 1, px: 1 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {renderPct(studentsAvailable ? r.careerExplorerStartedPct : null)}
                       </Typography>
                     </TableCell>
                   </TableRow>

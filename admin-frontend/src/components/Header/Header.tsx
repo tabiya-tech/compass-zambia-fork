@@ -11,6 +11,7 @@ import { routerPaths } from "src/app/routerPaths";
 import { getAppIconUrl, getLogoUrl } from "src/envService";
 import StdFirebaseAuthenticationService from "src/auth/services/FirebaseAuthenticationService/StdFirebaseAuthenticationService";
 import AuthenticationStateService from "src/auth/services/AuthenticationState.service";
+import UserStateService from "src/userState/UserStateService";
 
 const uniqueId = "795432d7-a55d-47a2-93cf-85aeb3de2bde";
 
@@ -30,7 +31,6 @@ const Header: React.FC = () => {
 
   const logoFromEnv = getAppIconUrl() || getLogoUrl();
   const logoSrc = logoFromEnv || `${process.env.PUBLIC_URL}/njila_logo.svg`;
-  console.log(process.env.PUBLIC_URL);
 
   const contextMenuItems: MenuItemConfig[] = useMemo(
     () => [
@@ -42,6 +42,7 @@ const Header: React.FC = () => {
           setAnchorEl(null);
           await StdFirebaseAuthenticationService.getInstance().logout();
           AuthenticationStateService.getInstance().clearUser();
+          UserStateService.getInstance().clearUserState();
           startTransition(() => {
             navigate(routerPaths.LOGIN, { replace: true });
           });

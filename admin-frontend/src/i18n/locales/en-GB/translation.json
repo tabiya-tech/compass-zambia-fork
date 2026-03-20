@@ -72,9 +72,7 @@
       "welcome": "Welcome to the Admin Portal"
     },
     "navigation": {
-      "dashboard": "Dashboard",
-      "users": "Users",
-      "settings": "Settings"
+      "dashboard": "Dashboard"
     }
   },
   "error": {
@@ -105,15 +103,6 @@
   "i18n": {
     "languageContextMenu": {
       "selector": "Language Selector"
-    }
-  },
-  "navbar": {
-    "title": "{{appName}} Admin",
-    "profileMenu": "Profile menu",
-    "logout": "Logout",
-    "role": {
-      "admin": "Admin",
-      "institutionStaff": "Institution Staff"
     }
   },
   "header": {
@@ -191,6 +180,7 @@
         "other": "Other"
       },
       "filters": {
+        "allLocations": "All Locations",
         "allProvinces": "All Provinces",
         "allInstitutions": "All Institutions",
         "allQualifications": "All Qualifications",
@@ -284,44 +274,13 @@
       "nextPage": "Next page",
       "page": "Page {{page}}"
     },
-    "comingSoon": "Coming soon."
-  },
-  "users": {
-    "title": "Users",
-    "addUser": "Add User",
-    "table": {
-      "name": "Name",
-      "email": "Email",
-      "role": "Role",
-      "status": "Status",
-      "lastLogin": "Last Login",
-      "actions": "Actions"
-    }
+    "comingSoon": "No data so far."
   },
   "login": {
     "title": "Admin Login",
     "email": "Email",
     "password": "Password",
     "submit": "Sign In"
-  },
-  "settings": {
-    "title": "Settings",
-    "save": "Save Changes",
-    "general": {
-      "title": "General Settings",
-      "appName": "Application Name",
-      "supportEmail": "Support Email"
-    },
-    "notifications": {
-      "title": "Notifications",
-      "email": "Enable Email Notifications",
-      "push": "Enable Push Notifications"
-    },
-    "advanced": {
-      "title": "Advanced Settings",
-      "maintenanceMode": "Maintenance Mode",
-      "debugMode": "Debug Mode"
-    }
   },
   "notFound": {
     "message": "Page Not Found",
