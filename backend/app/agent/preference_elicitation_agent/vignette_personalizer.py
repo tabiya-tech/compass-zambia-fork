@@ -84,14 +84,14 @@ class VignettePersonalizer:
         from common_libs.llm.generative_models import GeminiGenerativeLLM
 
         system_instructions = """
-You are helping personalize career preference questions for Kenyan youth.
+You are helping personalize career preference questions for Zambian youth.
 
 Your task: Generate TWO realistic job scenario options that:
 1. Are relevant to the user's background (same or adjacent industry/role)
 2. Match the user's experience level
 3. Maintain the exact trade-offs specified in the template
 4. Feel personalized and realistic for this specific person
-5. Use Kenyan context (companies, salary ranges in KES, local considerations)
+5. Use Zambian context (companies, salary ranges in ZMW, local considerations)
 6. Are DIFFERENT from previously shown scenarios
 7. CREATE A MEANINGFUL DILEMMA - both options should be attractive in different ways
 
@@ -104,13 +104,13 @@ DO NOT make one option objectively better than the other. Each option should hav
 The user should feel CONFLICTED about which to choose.
 
 Bad Example (Option B is obviously better):
-❌ Option A: Office job, 60K/month, benefits
-❌ Option B: Remote job, 80K/month, benefits, flexible hours
+❌ Option A: Office job, 6,000 ZMW/month, benefits
+❌ Option B: Remote job, 8,000 ZMW/month, benefits, flexible hours
    → Option B wins on ALL dimensions. No trade-off!
 
 Good Example (Real dilemma):
-✅ Option A: Office job, 100K/month guaranteed, full benefits, job security
-✅ Option B: Startup, 60K/month base (40% cut!), potential 150K+ with equity, high risk
+✅ Option A: Office job, 12,000 ZMW/month guaranteed, full benefits, job security
+✅ Option B: Startup, 7,000 ZMW/month base (40% cut!), potential 18,000+ ZMW with bonuses, high risk
    → Now user must choose: Security vs Growth potential
 
 Trade-off Guidelines:
@@ -125,17 +125,17 @@ Salary Balance Rules:
 - Risky job ceiling should be 50-100% higher than stable job ceiling
 - Never make the "exciting" option ALSO pay more guaranteed - that's unrealistic
 
-Kenyan Context Guidelines:
-- Use realistic Kenyan companies or job types (Safaricom, Equity Bank, local startups)
-- Salary ranges should be realistic for Kenya (50K-180K KES/month)
-- Include local context (Nairobi traffic commute, M-PESA, NHIF/NSSF benefits)
+Zambian Context Guidelines:
+- Use realistic Zambian companies or job types (Airtel Zambia, Zanaco, MTN Zambia, ZESCO, Zambeef, local startups)
+- Salary ranges should be realistic for Zambia (4,000-25,000 ZMW/month)
+- Include local context (Lusaka traffic commute, mobile money, NAPSA/NHIMA benefits)
 - Make jobs feel relevant to THEIR background, not generic
 - Keep descriptions clear and concise (3-5 sentences each)
 
 Examples of good personalization:
-- Software Developer → "Backend Engineer at Safaricom" vs "Tech Lead at 2-person startup"
+- Software Developer → "Backend Engineer at Airtel Zambia" vs "Tech Lead at 2-person startup in Lusaka"
 - Teacher → "Public school teacher (secure, lower pay)" vs "Private tutoring (variable, higher ceiling)"
-- Sales → "Corporate sales rep (stable, structured)" vs "Commission-only broker (risky, unlimited upside)"
+- Sales → "Corporate sales rep at Zambeef (stable, structured)" vs "Commission-only broker (risky, unlimited upside)"
 
 Output Schema:
 You must return a JSON object with exactly these fields:
@@ -149,11 +149,11 @@ You must return a JSON object with exactly these fields:
 Example Output:
 {
   "scenario_intro": "You're weighing two paths in software development with very different risk profiles.",
-  "option_a_title": "Senior Developer at Safaricom",
-  "option_a_description": "You'd work as a Senior Backend Developer at Safaricom's headquarters in Nairobi. The salary is KES 110,000 per month with full benefits including NHIF, NSSF, and pension. The role offers excellent job security, predictable career progression, and great work-life balance. However, the work is often routine, innovation is slow, and you'd spend 2 hours daily commuting through Nairobi traffic.",
+  "option_a_title": "Senior Developer at Airtel Zambia",
+  "option_a_description": "You'd work as a Senior Backend Developer at Airtel Zambia's headquarters in Lusaka. The salary is ZMW 18,000 per month with full benefits including NHIMA, NAPSA, and pension. The role offers excellent job security, predictable career progression, and great work-life balance. However, the work is often routine, innovation is slow, and you'd spend time commuting through Lusaka traffic.",
   "option_b_title": "Tech Lead at Early-Stage Fintech Startup",
-  "option_b_description": "You'd be the founding engineer at a 5-person fintech startup targeting mobile money users. Base salary is KES 70,000 per month (a 36% cut from corporate) but includes 3% equity that could be worth millions if the company succeeds. The role offers rapid learning, significant autonomy, and remote work flexibility. However, the startup might fail, there are no benefits, and you'd often work 50+ hour weeks during critical launches.",
-  "reasoning": "Personalized for senior developer background. Creates real dilemma: guaranteed 110K comfort vs 70K + equity upside. Neither is obviously better - depends on risk tolerance and life stage."
+  "option_b_description": "You'd be the founding engineer at a 5-person fintech startup targeting mobile money users in Zambia. Base salary is ZMW 11,000 per month (a 39% cut from corporate) but includes performance bonuses that could significantly boost earnings if the company succeeds. The role offers rapid learning, significant autonomy, and remote work flexibility. However, the startup might fail, there are no guaranteed benefits, and you'd often work 50+ hour weeks during critical launches.",
+  "reasoning": "Personalized for senior developer background. Creates real dilemma: guaranteed 18,000 ZMW comfort vs 11,000 ZMW + growth upside. Neither is obviously better - depends on risk tolerance and life stage."
 }
 """
 
@@ -421,12 +421,12 @@ Generate a personalized vignette that:
             "Option A should have:",
             f"- High: {', '.join(template.option_a.get('high_dimensions', []))}",
             f"- Low: {', '.join(template.option_a.get('low_dimensions', []))}",
-            f"- Salary range: {template.option_a.get('salary_range', [])} KES/month",
+            f"- Salary range: {template.option_a.get('salary_range', [])} ZMW/month",
             "",
             "Option B should have:",
             f"- High: {', '.join(template.option_b.get('high_dimensions', []))}",
             f"- Low: {', '.join(template.option_b.get('low_dimensions', []))}",
-            f"- Salary range: {template.option_b.get('salary_range', [])} KES/month",
+            f"- Salary range: {template.option_b.get('salary_range', [])} ZMW/month",
         ]
 
         return "\n".join(parts)
@@ -480,7 +480,7 @@ Generate a personalized vignette that:
         trade_off_desc = self._extract_trade_off_from_vignette(vignette)
 
         # Build personalization prompt
-        prompt = f"""You are personalizing a career preference question for a Kenyan youth.
+        prompt = f"""You are personalizing a career preference question for a Zambian youth.
 
 **User Background:**
 {self._format_user_context(user_context)}
@@ -496,7 +496,7 @@ Option B: {self._format_attributes(vignette.options[1].attributes)}
 Generate personalized job titles and descriptions that:
 1. Match the user's background (industry, role, experience level)
 2. Feel realistic and relevant to THIS specific person
-3. Use Kenyan companies, job types, and context
+3. Use Zambian companies, job types, and context
 4. Maintain the EXACT trade-off shown in the attributes above
 5. Make both options attractive in different ways (create real dilemma)
 
@@ -504,18 +504,18 @@ Generate personalized job titles and descriptions that:
 - DO NOT invent different attribute values
 - The descriptions must MATCH the attributes exactly
 - Only personalize job titles, company names, and descriptive language
-- If wage=25000 in attributes, description must say "KES 25,000/month"
+- If wage=5000 in attributes, description must say "ZMW 5,000/month"
 - If physical_demand=1, description must mention high physical demands
 - If flexibility=0, description must mention fixed schedules
 
 **Example of Good Personalization:**
 User: Software Developer
-Attributes: wage=30000, flexibility=1, remote_work=1
-✓ Title: "Remote Full-Stack Developer at Kenyan Startup"
-✓ Description: "Work remotely for a growing fintech startup building M-PESA integrations. Monthly salary of KES 30,000 with flexible hours..."
+Attributes: wage=8000, flexibility=1, remote_work=1
+✓ Title: "Remote Full-Stack Developer at Zambian Startup"
+✓ Description: "Work remotely for a growing fintech startup building mobile money integrations in Zambia. Monthly salary of ZMW 8,000 with flexible hours..."
 
 **Example of Bad Personalization (inventing different values):**
-❌ Description: "Earn KES 50,000/month..." (wage was 30000!)
+❌ Description: "Earn ZMW 15,000/month..." (wage was 8000!)
 ❌ Description: "Fixed 9-5 schedule" (flexibility was 1!)
 
 Generate personalized content now:

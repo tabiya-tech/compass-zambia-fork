@@ -16,8 +16,8 @@
         "income_variability"
       ],
       "salary_range": [
-        95000,
-        115000
+        10000,
+        13000
       ],
       "contract_type": "permanent",
       "benefits": "full",
@@ -35,8 +35,8 @@
         "income_stability"
       ],
       "salary_range": [
-        50000,
-        150000
+        5500,
+        16000
       ],
       "contract_type": "freelance",
       "benefits": "none",
@@ -45,7 +45,7 @@
     },
     "follow_up_prompts": [
       "What was the most important factor in your choice?",
-      "If the stable job paid {salary_difference} KES less, would you still choose it?"
+      "If the stable job paid {salary_difference} ZMW less, would you still choose it?"
     ],
     "targeted_dimensions": [
       "job_security.importance",
@@ -71,8 +71,8 @@
         "commute_tolerance"
       ],
       "salary_range": [
-        90000,
-        110000
+        9500,
+        12000
       ],
       "work_location": "office_far",
       "commute_time_minutes": 90,
@@ -89,8 +89,8 @@
         "salary"
       ],
       "salary_range": [
-        65000,
-        85000
+        7000,
+        9000
       ],
       "work_location": "remote",
       "commute_time_minutes": 0,
@@ -126,8 +126,8 @@
         "immediate_salary"
       ],
       "salary_range": [
-        55000,
-        70000
+        6000,
+        7500
       ],
       "salary_progression": "high",
       "training_provided": true,
@@ -145,8 +145,8 @@
         "learning_opportunities"
       ],
       "salary_range": [
-        95000,
-        110000
+        10000,
+        12000
       ],
       "salary_progression": "none",
       "training_provided": false,
@@ -182,8 +182,8 @@
         "salary"
       ],
       "salary_range": [
-        75000,
-        90000
+        8000,
+        9500
       ],
       "hours_per_week": 40,
       "overtime": "never",
@@ -200,8 +200,8 @@
         "free_time"
       ],
       "salary_range": [
-        110000,
-        150000
+        12000,
+        16000
       ],
       "hours_per_week": 50,
       "overtime": "frequent",
@@ -239,8 +239,8 @@
         "independence"
       ],
       "salary_range": [
-        50000,
-        55000
+        5500,
+        6000
       ],
       "supervision": "close",
       "autonomy": "low",
@@ -258,8 +258,8 @@
         "supervision"
       ],
       "salary_range": [
-        45000,
-        80000
+        5000,
+        9000
       ],
       "supervision": "minimal",
       "autonomy": "very_high",
@@ -295,8 +295,8 @@
         "excitement"
       ],
       "salary_range": [
-        95000,
-        115000
+        10000,
+        13000
       ],
       "contract_type": "permanent",
       "job_security": "very_high",
@@ -314,8 +314,8 @@
         "stability"
       ],
       "salary_range": [
-        60000,
-        180000
+        6500,
+        20000
       ],
       "contract_type": "contract",
       "job_security": "medium",
@@ -355,8 +355,8 @@
         "analytical_work"
       ],
       "salary_range": [
-        80000,
-        95000
+        8500,
+        10000
       ],
       "task_type": "client_facing",
       "collaboration_level": "high",
@@ -377,8 +377,8 @@
         "client_interaction"
       ],
       "salary_range": [
-        75000,
-        90000
+        8000,
+        9500
       ],
       "task_type": "technical_analytical",
       "collaboration_level": "low",
