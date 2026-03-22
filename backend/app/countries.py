@@ -5,6 +5,7 @@ from textwrap import dedent
 class Country(Enum):
     SOUTH_AFRICA = "South Africa"
     KENYA = "Kenya"
+    ZAMBIA = "Zambia"
     FRANCE = "France"
     ARGENTINA = "Argentina"
     UNSPECIFIED = "Unspecified"
@@ -109,6 +110,35 @@ _GLOSSARY = {
         Mtaa - Neighbourhood, refers to a specific area in the city.
         Wathii - Market.
         Mtumba - Second hand clothes.
+        """),
+    Country.ZAMBIA:
+        dedent("""\
+        Hustler - Hard working person who does odd jobs to make ends meet (small and micro businesses).
+        Casual - Works for a day/task and is paid on completion of the task or at the end of the day.
+        Tuntufye / Vendor - A street vendor or informal trader.
+        Kaloba - Informal money lending or borrowing.
+        Kateka - Small business owner / entrepreneur.
+        Minibus conductor - Collects fares on a minibus (similar to matatu conductor in Kenya).
+        Kabaza - A bicycle taxi.
+        Motor bike / Bajaj - A motorcycle or 3-wheeler taxi.
+        Chikanda - A Zambian food made from orchid tubers (local staple).
+        Nshima - The main staple food in Zambia, made from maize flour (similar to ugali).
+        Relish - Any side dish eaten with nshima (vegetables, fish, meat).
+        Garden - A small plot of land used for subsistence farming.
+        Compound - A high-density residential area / township (e.g., Chibolya, Matero in Lusaka).
+        Lusaka - Capital city of Zambia, main economic hub.
+        Copperbelt - Major industrial region in Zambia known for copper mining (cities: Kitwe, Ndola).
+        Shoprite / Game - Major retail chain stores in Zambia.
+        Airtel Money / MTN Money - Mobile money transfer services in Zambia.
+        NAPSA - National Pension Scheme Authority (mandatory pension contributions).
+        NHIMA - National Health Insurance Management Authority (health insurance).
+        TEVETA - Technical Education, Vocational and Entrepreneurship Training Authority (vocational training body).
+        UNZA - University of Zambia (main public university in Lusaka).
+        CBU - Copperbelt University (main public university in the Copperbelt).
+        ZESCO - Zambia Electricity Supply Corporation (national power utility).
+        Zambeef - Major Zambian food and agribusiness company.
+        Fitter - A skilled artisan / maintenance mechanic (common in mining and industry).
+        Piece work / Piece job - Casual or temporary work paid per task completed.
         """),
     Country.ARGENTINA:
         dedent("""\
