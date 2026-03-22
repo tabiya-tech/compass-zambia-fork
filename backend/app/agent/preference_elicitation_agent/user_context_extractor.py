@@ -93,11 +93,12 @@ Extract the following information:
 Be concise and focus on information that would help personalize job scenarios.
 If information is unclear or missing, make reasonable inferences based on what's available.
 
-For Kenyan context, recognize local companies and roles:
-- Safaricom, Equity Bank, KCB, M-PESA = Technology/Finance
+For Zambian context, recognize local companies and roles:
+- Airtel Zambia, MTN Zambia, Zanaco, ZESCO, Zambeef = Technology/Finance/Energy/Agriculture
 - Teaching roles = Education
 - Shop/retail roles = Retail
-- Matatu conductor, driver = Transportation
+- Minibus conductor, driver = Transportation
+- Farming, agriculture roles = Agriculture
 
 Output Schema:
 You must return a JSON object with exactly these fields:
@@ -113,7 +114,7 @@ Example Output:
   "current_role": "Freelance Web Designer",
   "industry": "Technology",
   "experience_level": "junior",
-  "key_experiences": ["TechCorp Kenya", "Freelance Web Designer", "Local Retail Store"],
+  "key_experiences": ["Airtel Zambia", "Freelance Web Designer", "Local Retail Store"],
   "background_summary": "A junior software developer transitioning into freelance web design after initial experience in retail and corporate tech.",
   "all_backgrounds": ["Freelance Web Designer | Technology", "Sales Associate | Retail", "Shop Assistant | Retail"]
 }

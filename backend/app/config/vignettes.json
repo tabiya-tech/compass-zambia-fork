@@ -7,9 +7,9 @@
       {
         "option_id": "A",
         "title": "Customer Service Officer at Bank",
-        "description": "You'd work at a bank as a customer service officer. You'd be at a desk, helping customers with their accounts, following clear procedures. It's a permanent position with a steady 60,000 KES per month salary. You work Monday to Friday, 8:30am to 5pm. There's a dress code - formal office wear. Full benefits included (NHIF, NSSF, paid leave).",
+        "description": "You'd work at a bank as a customer service officer. You'd be at a desk, helping customers with their accounts, following clear procedures. It's a permanent position with a steady 6,500 ZMW per month salary. You work Monday to Friday, 8:30am to 5pm. There's a dress code - formal office wear. Full benefits included (NAPSA, NHIMA, paid leave).",
         "attributes": {
-          "salary": 60000,
+          "salary": 6500,
           "salary_type": "fixed",
           "benefits": "full",
           "contract_type": "permanent",
@@ -23,12 +23,12 @@
       {
         "option_id": "B",
         "title": "Freelance Event Coordinator",
-        "description": "You'd work as a freelance event coordinator. You'd organize weddings, parties, corporate events - different every week. Your income varies - some months 40,000 KES, some months 90,000 KES depending on bookings. You set your own hours but often work evenings and weekends when events happen. You can dress however you like. No benefits, you manage your own insurance.",
+        "description": "You'd work as a freelance event coordinator. You'd organize weddings, parties, corporate events - different every week. Your income varies - some months 4,500 ZMW, some months 9,500 ZMW depending on bookings. You set your own hours but often work evenings and weekends when events happen. You can dress however you like. No benefits, you manage your own insurance.",
         "attributes": {
-          "salary": 65000,
+          "salary": 7000,
           "salary_type": "variable",
-          "salary_range_min": 40000,
-          "salary_range_max": 90000,
+          "salary_range_min": 4500,
+          "salary_range_max": 9500,
           "benefits": "none",
           "contract_type": "freelance",
           "work_location": "varies",
@@ -42,7 +42,7 @@
     ],
     "follow_up_questions": [
       "What was the most important factor in your choice?",
-      "If the stable job paid 10,000 KES less, would you still choose it?"
+      "If the stable job paid 1,000 ZMW less, would you still choose it?"
     ],
     "targeted_dimensions": [
       "job_security.importance",
@@ -61,9 +61,9 @@
       {
         "option_id": "A",
         "title": "Office Administrator at Logistics Company",
-        "description": "Office administrator at a logistics company. 65,000 KES/month. You must be in the office every day, 8am-5pm sharp. The office is in Industrial Area (probably 1.5 hours from where you are). Very structured, clear expectations. Good team, supportive manager.",
+        "description": "Office administrator at a logistics company. 7,000 ZMW/month. You must be in the office every day, 8am-5pm sharp. The office is in the Light Industrial Area in Lusaka (probably 1.5 hours from where you are). Very structured, clear expectations. Good team, supportive manager.",
         "attributes": {
-          "salary": 65000,
+          "salary": 7000,
           "work_location": "office_industrial_area",
           "commute_time": 90,
           "hours": "fixed_8to5",
@@ -75,9 +75,9 @@
       {
         "option_id": "B",
         "title": "Customer Support Specialist (Remote)",
-        "description": "Customer support specialist for an online platform. 55,000 KES/month. You work from home, but you need to be available 9am-6pm on your computer. More independence in how you work, just need to meet response time targets. Permanent position with benefits.",
+        "description": "Customer support specialist for an online platform. 6,000 ZMW/month. You work from home, but you need to be available 9am-6pm on your computer. More independence in how you work, just need to meet response time targets. Permanent position with benefits.",
         "attributes": {
-          "salary": 55000,
+          "salary": 6000,
           "work_location": "remote",
           "commute_time": 0,
           "hours": "fixed_9to6_remote",
@@ -108,10 +108,10 @@
       {
         "option_id": "A",
         "title": "Junior Data Analyst at Tech Company",
-        "description": "Junior data analyst at a tech company, 50,000 KES/month to start. The company will train you in data science, pay for online courses, and has a clear path: junior (50K) → analyst (75K) → senior (110K) over 3 years. Remote work, friendly team. You'll learn Python, SQL, data visualization.",
+        "description": "Junior data analyst at a tech company, 5,500 ZMW/month to start. The company will train you in data science, pay for online courses, and has a clear path: junior (5,500) → analyst (8,000) → senior (12,000) over 3 years. Remote work, friendly team. You'll learn Python, SQL, data visualization.",
         "attributes": {
-          "salary": 50000,
-          "salary_progression": [50000, 75000, 110000],
+          "salary": 5500,
+          "salary_progression": [5500, 8000, 12000],
           "progression_timeline": "3_years",
           "training_provided": true,
           "learning_opportunities": "high",
@@ -122,10 +122,10 @@
       {
         "option_id": "B",
         "title": "Data Entry Specialist at Bank",
-        "description": "Data entry specialist at established bank, 65,000 KES/month. The work is repetitive but easy. No training provided, and there's not really a promotion path - you'd likely stay at this level. Remote 3 days/week. Very stable position.",
+        "description": "Data entry specialist at established bank, 7,000 ZMW/month. The work is repetitive but easy. No training provided, and there's not really a promotion path - you'd likely stay at this level. Remote 3 days/week. Very stable position.",
         "attributes": {
-          "salary": 65000,
-          "salary_progression": [65000],
+          "salary": 7000,
+          "salary_progression": [7000],
           "progression_timeline": "none",
           "training_provided": false,
           "learning_opportunities": "low",
@@ -136,7 +136,7 @@
       }
     ],
     "follow_up_questions": [
-      "What if the junior data analyst role started at only 40,000 KES - would you still choose it?",
+      "What if the junior data analyst role started at only 4,500 ZMW - would you still choose it?",
       "How important is it to you to learn new skills in your work?"
     ],
     "targeted_dimensions": [
@@ -155,9 +155,9 @@
       {
         "option_id": "A",
         "title": "Accounts Assistant (Standard Hours)",
-        "description": "Accounts assistant role, 55,000 KES/month. Monday to Friday, 9am-5pm, strict boundaries - you never work past 5pm or on weekends. Near your home (30 minute commute). Relaxed pace, enough time to do your work without stress.",
+        "description": "Accounts assistant role, 6,000 ZMW/month. Monday to Friday, 9am-5pm, strict boundaries - you never work past 5pm or on weekends. Near your home (30 minute commute). Relaxed pace, enough time to do your work without stress.",
         "attributes": {
-          "salary": 55000,
+          "salary": 6000,
           "hours_per_week": 40,
           "overtime": "never",
           "weekend_work": "never",
@@ -169,9 +169,9 @@
       {
         "option_id": "B",
         "title": "Senior Accounts Officer",
-        "description": "Senior accounts officer role, 80,000 KES/month. Monday to Friday typically 7:30am-6pm, and you often work 1-2 Saturdays per month during busy periods (month-end, audits). Same commute. Fast-paced, high responsibility, but good career progression.",
+        "description": "Senior accounts officer role, 8,500 ZMW/month. Monday to Friday typically 7:30am-6pm, and you often work 1-2 Saturdays per month during busy periods (month-end, audits). Same commute. Fast-paced, high responsibility, but good career progression.",
         "attributes": {
-          "salary": 80000,
+          "salary": 8500,
           "hours_per_week": 50,
           "overtime": "frequent",
           "weekend_work": "1-2_saturdays_monthly",
@@ -202,9 +202,9 @@
       {
         "option_id": "A",
         "title": "Retail Sales (Structured)",
-        "description": "Sales associate at a phone shop in a mall. 50,000 KES/month base + small commission. You work in the shop, manager is always there watching and helping. Clear scripts for what to say to customers. Scheduled breaks. Team of 4 people, you work together.",
+        "description": "Sales associate at a phone shop in a mall. 5,500 ZMW/month base + small commission. You work in the shop, manager is always there watching and helping. Clear scripts for what to say to customers. Scheduled breaks. Team of 4 people, you work together.",
         "attributes": {
-          "salary": 50000,
+          "salary": 5500,
           "commission": "low",
           "supervision": "close",
           "autonomy": "low",
@@ -216,11 +216,11 @@
       {
         "option_id": "B",
         "title": "Field Sales Representative",
-        "description": "Field sales representative for business services. 45,000 KES/month base + high commission (can reach 70-80K total). You travel to meet clients on your own schedule. Your manager checks in once a week. You figure out your own approach. Must meet monthly targets but how you do it is up to you.",
+        "description": "Field sales representative for business services. 5,000 ZMW/month base + high commission (can reach 8,000-9,000 ZMW total). You travel to meet clients on your own schedule. Your manager checks in once a week. You figure out your own approach. Must meet monthly targets but how you do it is up to you.",
         "attributes": {
-          "salary": 45000,
+          "salary": 5000,
           "commission": "high",
-          "total_earnings_potential": 75000,
+          "total_earnings_potential": 8500,
           "supervision": "minimal",
           "autonomy": "very_high",
           "structure": "low",
@@ -249,9 +249,9 @@
       {
         "option_id": "A",
         "title": "Government Administrative Officer",
-        "description": "Administrative officer at a government ministry. 70,000 KES/month, permanent and pensionable. Almost impossible to lose this job. The work is slow-paced, somewhat bureaucratic. Salary increases slowly (maybe 3-5K every few years). You'll likely do similar work for many years.",
+        "description": "Administrative officer at a government ministry. 7,500 ZMW/month, permanent and pensionable. Almost impossible to lose this job. The work is slow-paced, somewhat bureaucratic. Salary increases slowly (maybe 300-500 ZMW every few years). You'll likely do similar work for many years.",
         "attributes": {
-          "salary": 70000,
+          "salary": 7500,
           "contract_type": "permanent_pensionable",
           "job_security": "very_high",
           "salary_growth": "slow",
@@ -263,9 +263,9 @@
       {
         "option_id": "B",
         "title": "Operations Manager at Startup",
-        "description": "Operations manager at a growing startup. 75,000 KES/month + equity. Contract renewed yearly. The company is growing fast - if it succeeds, you could be earning 150K+ in 2 years and have valuable equity. But there's a risk the company could fail. Fast-paced, exciting, lots of learning.",
+        "description": "Operations manager at a growing startup. 8,000 ZMW/month + equity. Contract renewed yearly. The company is growing fast - if it succeeds, you could be earning 16,000+ ZMW in 2 years and have valuable equity. But there's a risk the company could fail. Fast-paced, exciting, lots of learning.",
         "attributes": {
-          "salary": 75000,
+          "salary": 8000,
           "equity": true,
           "contract_type": "contract_annual",
           "job_security": "medium",
