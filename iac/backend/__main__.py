@@ -41,6 +41,7 @@ def main():
 
     backend_url = getstackref(env_reference, "backend_url")
     frontend_url = getstackref(env_reference, "frontend_url")
+    admin_frontend_url = getstackref(env_reference, "admin_frontend_url")
 
     # Get backend service configuration
     backend_service_cfg = BackendServiceConfig(
@@ -62,6 +63,7 @@ def main():
         target_environment_type=environment_type,
         backend_url=backend_url,
         frontend_url=frontend_url,
+        admin_frontend_url=admin_frontend_url,
         sentry_dsn=getenv("BACKEND_SENTRY_DSN", True, False),
         sentry_config=getenv("BACKEND_SENTRY_CONFIG", True, False),
         enable_sentry=getenv("BACKEND_ENABLE_SENTRY"),
@@ -98,6 +100,7 @@ def main():
 
         # Career Explorer unified config (optional JSON: sectors, country)
         career_explorer_config=getenv("CAREER_EXPLORER_CONFIG", False, False),
+        plain_personal_data_fields=getenv("PLAIN_PERSONAL_DATA_FIELDS", False, False),
     )
 
     # version of the artifacts to deploy

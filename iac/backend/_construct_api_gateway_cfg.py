@@ -58,6 +58,27 @@ def _convert_open_api_3_to_2(openapi3: dict):
             if 'requestBody' in openapi3['paths'][path][method]:
                 openapi3['paths'][path][method].pop('requestBody')
 
+    # Add OPTIONS method to every path so the API Gateway passes CORS preflight
+    # requests through to Cloud Run, which handles CORS via CORSMiddleware.
+    # Path parameters must be declared on OPTIONS too or the gateway rejects the config.
+    for path in openapi3['paths']:
+        # Collect path parameters from any existing method on this path
+        path_params = []
+        for method in openapi3['paths'][path]:
+            params = openapi3['paths'][path][method].get('parameters', [])
+            for param in params:
+                if param.get('in') == 'path' and not any(p['name'] == param['name'] for p in path_params):
+                    path_params.append({'name': param['name'], 'in': 'path', 'required': True, 'type': param.get('type', 'string')})
+        options_entry = {
+            'operationId': f"cors_preflight_{path.replace('/', '_').strip('_')}",
+            'summary': 'CORS preflight',
+            'x-google-quota': {'metricCosts': {'request-metric': 1}},
+            'responses': {'200': {'description': 'CORS preflight response'}},
+        }
+        if path_params:
+            options_entry['parameters'] = path_params
+        openapi3['paths'][path]['options'] = options_entry
+
     openapi2['paths'].update(openapi3['paths'])
 
     return openapi2

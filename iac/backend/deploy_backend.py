@@ -39,6 +39,7 @@ class BackendServiceConfig:
     target_environment_type: str | pulumi.Output[str]
     backend_url: str | pulumi.Output[str]
     frontend_url: str | pulumi.Output[str]
+    admin_frontend_url: str | pulumi.Output[str]
     sentry_dsn: str
     sentry_config: Optional[str]
     enable_sentry: str
@@ -63,6 +64,7 @@ class BackendServiceConfig:
     matching_service_api_key: Optional[str]
     inline_phase_transition: Optional[str]
     career_explorer_config: Optional[str]
+    plain_personal_data_fields: Optional[str]
 
 
 """
@@ -393,6 +395,9 @@ def _deploy_cloud_run_service(
                             name="FRONTEND_URL",
                             value=backend_service_cfg.frontend_url),
                         gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
+                            name="ADMIN_FRONTEND_URL",
+                            value=backend_service_cfg.admin_frontend_url),
+                        gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
                             name="BACKEND_SENTRY_DSN",
                             value=backend_service_cfg.sentry_dsn),
                         gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
@@ -444,6 +449,9 @@ def _deploy_cloud_run_service(
                         gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
                             name="CAREER_EXPLORER_CONFIG",
                             value=backend_service_cfg.career_explorer_config or "{}"),
+                        gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
+                            name="PLAIN_PERSONAL_DATA_FIELDS",
+                            value=backend_service_cfg.plain_personal_data_fields or "{}"),
                         # Add more environment variables here
                     ],
                 )
