@@ -13,6 +13,7 @@ import FirebaseEmailAuthenticationService from "src/auth/services/FirebaseAuthen
 import UserStateService from "src/userState/UserStateService";
 import { getFirebaseErrorFactory } from "src/error/FirebaseError/firebaseError";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import InstructorDashboard from "src/pages/InstructorDashboard";
 
 // Wrap the createHashRouter function with Sentry to capture errors that occur during router initialization
 const sentryCreateHashRouter = Sentry.wrapCreateBrowserRouterV6(createHashRouter);
@@ -31,6 +32,14 @@ const router = sentryCreateHashRouter([
     element: (
       <ProtectedRoute>
         <Login />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: routerPaths.INSTRUCTOR,
+    element: (
+      <ProtectedRoute>
+        <InstructorDashboard />
       </ProtectedRoute>
     ),
   },

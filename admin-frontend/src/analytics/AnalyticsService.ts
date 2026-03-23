@@ -6,6 +6,7 @@ import ErrorConstants from "src/error/restAPIError/RestAPIError.constants";
 import type {
   DashboardStats,
   InstitutionApiItem,
+  StudentApiItem,
   PaginatedResponse,
   AdoptionTrendsResponse,
   SkillGapStatsResponse,
@@ -17,6 +18,7 @@ import type {
 export type {
   DashboardStats,
   InstitutionApiItem,
+  StudentApiItem,
   PaginatedResponse,
   AdoptionTrendsResponse,
   SkillGapStatsResponse,
@@ -79,6 +81,48 @@ export default class AnalyticsService {
     });
     try {
       return (await response.json()) as PaginatedResponse<InstitutionApiItem>;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        error: e,
+      });
+    }
+  }
+
+  async listStudents(filters?: {
+    active?: boolean;
+    institution?: string;
+    province?: string;
+    programme?: string;
+    year?: string;
+    search?: string;
+    cursor?: string;
+    limit?: number;
+    include?: string;
+  }): Promise<PaginatedResponse<StudentApiItem>> {
+    const params = new URLSearchParams();
+    if (filters?.active !== undefined) params.set("active", String(filters.active));
+    if (filters?.institution) params.set("institution", filters.institution);
+    if (filters?.province) params.set("province", filters.province);
+    if (filters?.programme) params.set("programme", filters.programme);
+    if (filters?.year) params.set("year", filters.year);
+    if (filters?.search) params.set("search", filters.search);
+    if (filters?.cursor) params.set("cursor", filters.cursor);
+    params.set("limit", String(filters?.limit ?? 20));
+    if (filters?.include) params.set("include", filters.include);
+
+    const url = `${this.baseUrl}/students?${params}`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "listStudents", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "listStudents",
+      failureMessage: "Failed to fetch students",
+      expectedContentType: "application/json",
+    });
+    try {
+      return (await response.json()) as PaginatedResponse<StudentApiItem>;
     } catch (e) {
       throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
         error: e,
