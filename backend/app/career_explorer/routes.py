@@ -9,6 +9,8 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.app_config import get_application_config
 from app.career_explorer.repository import CareerExplorerConversationRepository
 from app.career_explorer.service import CareerExplorerService
+from app.user_profile.repository import UserProfileRepository
+from app.user_profile.service import UserProfileService
 from app.career_explorer.types import (
     CareerExplorerConversationInput,
     CareerExplorerConversationResponse,
@@ -36,6 +38,8 @@ async def get_career_explorer_service(
     career_explorer_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_career_explorer_db),
     embedding_service: EmbeddingService = Depends(get_embeddings_service),
     metrics_service: IMetricsService = Depends(get_metrics_service),
+    application_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_application_db),
+    userdata_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_userdata_db),
 ) -> CareerExplorerService:
     global _service_singleton
     if _service_singleton is None:
@@ -49,10 +53,13 @@ async def get_career_explorer_service(
                     index_name="sector_chunks_embedding_index",
                 )
                 agent_factory = lambda: CareerExplorerAgent(sector_search_service=sector_search)
+                user_profile_repository = UserProfileRepository(application_db, userdata_db)
+                user_profile_service = UserProfileService(user_profile_repository)
                 _service_singleton = CareerExplorerService(
                     repository=CareerExplorerConversationRepository(career_explorer_db),
                     agent_factory=agent_factory,
                     metrics_service=metrics_service,
+                    user_profile_service=user_profile_service,
                 )
     return _service_singleton
 

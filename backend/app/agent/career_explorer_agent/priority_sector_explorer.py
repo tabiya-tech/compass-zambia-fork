@@ -122,11 +122,14 @@ class PrioritySectorExplorer:
         user_input: str,
         context,
         pending_sectors: list[dict] | None = None,
+        user_profile_context: str | None = None,
     ) -> tuple[str, bool, str, list[LLMStats], dict | None]:
         chunks = await self._sector_search.search(query=user_input, k=5)
         retrieved = _format_chunks(chunks)
         full_instructions = _build_base_instructions(retrieved)
         full_instructions += _build_pending_sectors_section(pending_sectors)
+        if user_profile_context:
+            full_instructions = user_profile_context + "\n\n" + full_instructions
 
         self._logger.info(
             "Priority sector RAG for query '%s': found %d chunks",
