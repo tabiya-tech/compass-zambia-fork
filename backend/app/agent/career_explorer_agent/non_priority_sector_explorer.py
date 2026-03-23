@@ -107,9 +107,12 @@ class NonPrioritySectorExplorer:
         user_input: str,
         context,
         pending_sectors: list[dict] | None = None,
+        user_profile_context: str | None = None,
     ) -> tuple[str, bool, str, list[LLMStats], GroundingMetadata | None]:
         full_instructions = _build_non_priority_instructions()
         full_instructions += _build_pending_sectors_section(pending_sectors)
+        if user_profile_context:
+            full_instructions = user_profile_context + "\n\n" + full_instructions
         example_response = ModelResponse(
             reasoning="The user asked about a non-priority sector, so I used Google Search to find current information and provided a substantive answer.",
             finished=False,

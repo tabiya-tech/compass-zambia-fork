@@ -72,7 +72,11 @@ class CareerExplorerAgent(Agent):
         self._classifier = SectorRelevanceClassifier()
         self._priority_explorer = PrioritySectorExplorer(sector_search_service)
         self._non_priority_explorer = NonPrioritySectorExplorer()
+        self._user_profile_context: str | None = None
         self._logger = logging.getLogger(self.__class__.__name__)
+
+    def set_user_profile_context(self, context: str | None) -> None:
+        self._user_profile_context = context
 
     async def execute(self, user_input: AgentInput, context, existing_sectors: list[str] | None = None, pending_sectors: list[dict] | None = None) -> AgentOutput:
         agent_start = time.time()
@@ -105,11 +109,11 @@ class CareerExplorerAgent(Agent):
 
         if relevance == SectorRelevance.PRIORITY_SECTOR:
             message, finished, reasoning, explorer_stats, metadata = await self._priority_explorer.explore(
-                msg, context, pending_sectors=effective_pending or None
+                msg, context, pending_sectors=effective_pending or None, user_profile_context=self._user_profile_context
             )
         else:
             message, finished, reasoning, explorer_stats, grounding_metadata = await self._non_priority_explorer.explore(
-                msg, context, pending_sectors=effective_pending or None
+                msg, context, pending_sectors=effective_pending or None, user_profile_context=self._user_profile_context
             )
             metadata = {"grounding_metadata": grounding_metadata.model_dump()} if grounding_metadata else None
 

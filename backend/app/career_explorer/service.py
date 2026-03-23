@@ -17,6 +17,7 @@ from app.career_explorer.types import (
 )
 from app.metrics.services.service import IMetricsService
 from app.metrics.types import SectorEngagementEvent
+from app.user_profile.service import IUserProfileService
 
 
 class CareerExplorerService:
@@ -25,10 +26,12 @@ class CareerExplorerService:
         repository: ICareerExplorerConversationRepository,
         agent_factory: Callable[[], CareerExplorerAgent],
         metrics_service: IMetricsService,
+        user_profile_service: IUserProfileService,
     ):
         self._repository = repository
         self._agent_factory = agent_factory
         self._metrics_service = metrics_service
+        self._user_profile_service = user_profile_service
         self._logger = logging.getLogger(self.__class__.__name__)
 
     async def get_or_create_conversation(self, user_id: str) -> CareerExplorerConversationResponse:
@@ -66,7 +69,16 @@ class CareerExplorerService:
             if ps.sector_name not in all_known_sectors:
                 all_known_sectors.append(ps.sector_name)
 
+        profile = await self._user_profile_service.get_user_profile(user_id)
+        user_profile_context = self._user_profile_service.format_for_prompt(profile) if profile else None
+
+        if user_profile_context:
+            self._logger.info("User profile context injected for user %s:\n%s", user_id, user_profile_context)
+        else:
+            self._logger.info("No user profile data found for user %s", user_id)
+
         agent = self._agent_factory()
+        agent.set_user_profile_context(user_profile_context)
         agent_input = AgentInput(message=user_input, sent_at=now)
         agent_output = await agent.execute(
             agent_input,
