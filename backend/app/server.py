@@ -355,10 +355,16 @@ app.add_middleware(CorrelationIdMiddleware)
 # Setup the CORS policy
 ############################################
 
+admin_frontend_url = os.getenv("ADMIN_FRONTEND_URL")
+logger.info(f"Admin Frontend URL: {admin_frontend_url}")
+
 origins = [
     frontend_url,
     backend_url + "/docs",
 ]
+
+if admin_frontend_url:
+    origins.append(admin_frontend_url)
 
 if target_environment_type == "dev" or target_environment_type == "local":
     logger.info(f"Setting CORS to allow all origins for the {target_environment_type} environment.")
