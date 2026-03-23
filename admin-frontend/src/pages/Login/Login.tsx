@@ -8,6 +8,7 @@ import { FirebaseError } from "src/error/FirebaseError/firebaseError";
 import { FirebaseErrorCodes } from "src/error/FirebaseError/firebaseError.constants";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import { getLogoUrl } from "src/envService";
+import UserStateService from "src/userState/UserStateService";
 
 const uniqueId = "login-page-5a8f3b2c-1d4e-4f6a-9b8c-7e2d1f0a3b5c";
 
@@ -67,7 +68,10 @@ const Login: React.FC<LoginProps> = () => {
     try {
       const authService = FirebaseEmailAuthenticationService.getInstance();
       await authService.login(email, password);
-      navigate(routerPaths.ROOT);
+      const redirectPath = UserStateService.getInstance().isInstitutionStaff()
+        ? routerPaths.INSTRUCTOR
+        : routerPaths.ROOT;
+      navigate(redirectPath);
     } catch (error) {
       console.error("Login error:", error);
       if (error instanceof FirebaseError) {

@@ -16,6 +16,22 @@ export interface InstitutionApiItem {
   career_readiness_completed_pct: number | null;
 }
 
+export interface StudentApiItem {
+  id: string;
+  name: string | null;
+  institution: string | null;
+  province: string | null;
+  programme: string | null;
+  year: string | null;
+  gender: string | null;
+  active: boolean;
+  modules_explored: number | null;
+  career_readiness_modules_explored: number | null;
+  skills_interests_explored: number | null;
+  last_login: string | null;
+  last_active_module: string | null;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   meta: {
