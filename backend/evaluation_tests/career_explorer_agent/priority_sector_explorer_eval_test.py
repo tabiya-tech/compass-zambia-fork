@@ -93,7 +93,7 @@ async def test_priority_sector_explorer_rag_content(
     mock_search = MockSectorSearchService()
     explorer = PrioritySectorExplorer(sector_search_service=mock_search)
 
-    message, _, _, _ = await explorer.explore(user_input=test_case.user_input, context=context)
+    message, _, _, _, _ = await explorer.explore(user_input=test_case.user_input, context=context)
 
     response_lower = message.lower()
     found = any(phrase.lower() in response_lower for phrase in test_case.expected_phrases)

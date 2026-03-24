@@ -89,6 +89,8 @@ def _build_pending_sectors_section(pending_sectors: list[dict] | None) -> str:
 
         # Pending Sectors
             The user has also expressed interest in these sectors (not yet explored): {formatted}
+            IMPORTANT: Do not redirect the user away from these sectors — they explicitly asked about them.
+            Acknowledge ALL of them in your first response, then explore the current sector first.
             When the current topic reaches a natural pause (user's question has been answered, they say "ok"/"thanks",
             or the conversation on this sector winds down), proactively transition to the next pending sector.
             Example: "Now, you also mentioned interest in {next_sector}. Let me tell you about opportunities there..."
