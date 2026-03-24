@@ -386,6 +386,8 @@ class _ConversationLLM:
                 until we have finished exploring all work types.
                 When you do provide a recap, use ONLY the stored fields (title, company, location, start date, end date).
                 Do NOT add duties, skills, responsibilities, or any details not explicitly stored in '#Collected Experience Data'.
+                When you do provide a recap, use ONLY the stored fields (title, company, location, start date, end date).
+                Do NOT add duties, skills, responsibilities, or any details not explicitly stored in '#Collected Experience Data'.
 
             #Mid-Conversation Recall
                 If the user asks mid-conversation what you have collected so far (e.g. "what did I tell you?",
