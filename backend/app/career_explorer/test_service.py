@@ -23,6 +23,7 @@ from app.conversation_memory.conversation_memory_types import (
 )
 from app.metrics.services.service import IMetricsService
 from app.metrics.types import SectorEngagementEvent
+from app.user_profile.service import IUserProfileService
 
 
 # ---------------------------------------------------------------------------
@@ -103,12 +104,15 @@ def _make_service(
     """Create a CareerExplorerService with mocked dependencies."""
     repo = repository or AsyncMock(spec=ICareerExplorerConversationRepository)
     metrics = metrics_service or AsyncMock(spec=IMetricsService)
+    user_profile = AsyncMock(spec=IUserProfileService)
+    user_profile.get_user_profile.return_value = None
     agent = agent_mock or AsyncMock()
     agent_factory = MagicMock(return_value=agent)
     return CareerExplorerService(
         repository=repo,
         agent_factory=agent_factory,
         metrics_service=metrics,
+        user_profile_service=user_profile,
     )
 
 
