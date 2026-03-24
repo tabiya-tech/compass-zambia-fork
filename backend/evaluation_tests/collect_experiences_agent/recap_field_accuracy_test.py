@@ -176,4 +176,4 @@ async def test_recap_contains_only_structured_fields(
     )
 
     conversation_manager, collect_experiences_exec = await setup_collect_experiences_agent
-    await collect_experiences_exec(caplog, given_test_case, Country.UNSPECIFIED)
+    await collect_experiences_exec(caplog, given_test_case, Country.ZAMBIA)

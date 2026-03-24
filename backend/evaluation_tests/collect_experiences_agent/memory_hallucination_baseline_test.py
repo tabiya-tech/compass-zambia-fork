@@ -201,4 +201,4 @@ async def test_memory_recall_accuracy_after_summarization(
     )
 
     conversation_manager, collect_experiences_exec = await setup_collect_experiences_agent
-    await collect_experiences_exec(caplog, given_test_case, Country.UNSPECIFIED)
+    await collect_experiences_exec(caplog, given_test_case, Country.ZAMBIA)
