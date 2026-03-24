@@ -31,9 +31,18 @@ class Institution(BaseModel):
 
 class User(BaseModel):
     id: str
+    name: Optional[str] = None
     institution: Optional[str] = None
     province: Optional[str] = None
+    programme: Optional[str] = None
+    year: Optional[str] = None
+    gender: Optional[str] = None
     active: bool = True
+    modules_explored: Optional[int] = None
+    career_readiness_modules_explored: Optional[int] = None
+    skills_interests_explored: Optional[int] = None
+    last_login: Optional[str] = None
+    last_active_module: Optional[str] = None
 
 
 class AdoptionTrendPoint(BaseModel):
