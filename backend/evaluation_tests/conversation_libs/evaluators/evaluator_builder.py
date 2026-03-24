@@ -18,5 +18,9 @@ def create_evaluator(evaluations_type: EvaluationType) -> BaseEvaluator:
             return CriteriaEvaluator(EvaluationType.SINGLE_LANGUAGE)
         case EvaluationType.NON_PRIORITY_SECTOR_RESPONSE_QUALITY:
             return CriteriaEvaluator(EvaluationType.NON_PRIORITY_SECTOR_RESPONSE_QUALITY)
+        case EvaluationType.MEMORY_RECALL_ACCURACY:
+            return CriteriaEvaluator(EvaluationType.MEMORY_RECALL_ACCURACY)
+        case EvaluationType.RECAP_FIELD_ACCURACY:
+            return CriteriaEvaluator(EvaluationType.RECAP_FIELD_ACCURACY)
         case _:
             raise NotImplementedError()
