@@ -20,6 +20,7 @@ def main():
 
     # get the config values
     location = getconfig(name="region", config="gcp")
+    app_name = getconfig(name="app_name")
 
     # Get stack reference for environment
     env_reference = pulumi.StackReference(f"tabiya-tech/compass-environment/{stack_name}")
@@ -48,7 +49,8 @@ def main():
         auth_domain=auth_domain,
         frontend_domain=frontend_domain,
         gcp_oauth_client_id=gcp_oauth_client_id,
-        gcp_oauth_client_secret=gcp_oauth_client_secret
+        gcp_oauth_client_secret=gcp_oauth_client_secret,
+        app_name=app_name,
     )
 
 
