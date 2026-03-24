@@ -5,6 +5,9 @@ dns:
 auth:
   config:
     gcp:region: <region>
+    # The public-facing app name shown in Firebase auth emails (%APP_NAME% placeholder)
+    # and on the Google sign-in consent screen.  Change this per deployment/realm.
+    app_name: <app_name>
 backend:
   config:
     # The region where resources will be deployed
