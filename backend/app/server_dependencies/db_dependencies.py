@@ -39,56 +39,54 @@ async def _get_database_connection_info(database: AsyncIOMotorDatabase) -> str:
     return connection_info
 
 
-def _get_application_db(mongodb_uri: str, db_name: str) -> AsyncIOMotorDatabase:
+def _get_or_create_client(mongodb_uri: str, clients: dict) -> AsyncIOMotorClient:
+    """
+    Returns an existing AsyncIOMotorClient for the given URI, or creates one.
+    Sharing a client across databases on the same URI reuses the connection pool,
+    reducing the total number of connections opened against the MongoDB cluster.
+    """
+    if mongodb_uri not in clients:
+        clients[mongodb_uri] = AsyncIOMotorClient(
+            mongodb_uri,
+            tlsAllowInvalidCertificates=True
+        )
+    return clients[mongodb_uri]
+
+
+def _get_application_db(mongodb_uri: str, db_name: str, clients: dict) -> AsyncIOMotorDatabase:
     """
     Decouples the database creation from the database provider.
     This allows to mock the database creation in tests, instead of mocking the database provider.
     """
-    return AsyncIOMotorClient(
-        mongodb_uri,
-        tlsAllowInvalidCertificates=True
-    ).get_database(db_name)
+    return _get_or_create_client(mongodb_uri, clients).get_database(db_name)
 
 
-def _get_userdata_db(userdata_mongodb_uri: str, userdata_db_name: str) -> AsyncIOMotorDatabase:
+def _get_userdata_db(userdata_mongodb_uri: str, userdata_db_name: str, clients: dict) -> AsyncIOMotorDatabase:
     """
     Decouples the database creation from the database provider.
     This allows to mock the database creation in tests, instead of mocking the database provider.
     """
-
-    return AsyncIOMotorClient(
-        userdata_mongodb_uri,
-        tlsAllowInvalidCertificates=True
-    ).get_database(userdata_db_name)
+    return _get_or_create_client(userdata_mongodb_uri, clients).get_database(userdata_db_name)
 
 
-def _get_taxonomy_db(mongodb_uri: str, db_name: str) -> AsyncIOMotorDatabase:
+def _get_taxonomy_db(mongodb_uri: str, db_name: str, clients: dict) -> AsyncIOMotorDatabase:
     """
     Decouples the database creation from the database provider.
     This allows to mock the database creation in tests, instead of mocking the database provider.
     """
-    return AsyncIOMotorClient(
-        mongodb_uri,
-        tlsAllowInvalidCertificates=True
-    ).get_database(db_name)
+    return _get_or_create_client(mongodb_uri, clients).get_database(db_name)
 
 
-def _get_career_explorer_db(mongodb_uri: str, db_name: str) -> AsyncIOMotorDatabase:
-    return AsyncIOMotorClient(
-        mongodb_uri,
-        tlsAllowInvalidCertificates=True
-    ).get_database(db_name)
+def _get_career_explorer_db(mongodb_uri: str, db_name: str, clients: dict) -> AsyncIOMotorDatabase:
+    return _get_or_create_client(mongodb_uri, clients).get_database(db_name)
 
 
-def _get_metrics_db(mongodb_uri: str, db_name: str) -> AsyncIOMotorDatabase:
+def _get_metrics_db(mongodb_uri: str, db_name: str, clients: dict) -> AsyncIOMotorDatabase:
     """
     Decouples the database creation from the database provider.
     This allows to mock the database creation in tests, instead of mocking the database provider.
     """
-    return AsyncIOMotorClient(
-        mongodb_uri,
-        tlsAllowInvalidCertificates=True
-    ).get_database(db_name)
+    return _get_or_create_client(mongodb_uri, clients).get_database(db_name)
 
 
 async def check_mongo_health(client: AsyncIOMotorClient) -> bool:
@@ -108,6 +106,8 @@ class CompassDBProvider:
     _userdata_mongo_db: Optional[AsyncIOMotorDatabase] = None
     _metrics_mongo_db: Optional[AsyncIOMotorDatabase] = None
     _career_explorer_mongo_db: Optional[AsyncIOMotorDatabase] = None
+    # Shared clients keyed by URI — databases on the same URI reuse one connection pool
+    _clients: dict[str, AsyncIOMotorClient] = {}
     _lock = asyncio.Lock()
     _logger = logging.getLogger(__qualname__)
 
@@ -309,7 +309,8 @@ class CompassDBProvider:
                     cls._logger.info("Connecting to Application MongoDB")
                     # Create the database instance
                     cls._application_mongo_db = _get_application_db(cls._get_settings().application_mongodb_uri,
-                                                                    cls._get_settings().application_database_name)
+                                                                    cls._get_settings().application_database_name,
+                                                                    cls._clients)
                     cls._logger.info("Connected to Application MongoDB database: %s",
                                      await _get_database_connection_info(cls._application_mongo_db))
                     if not await check_mongo_health(cls._application_mongo_db.client):
@@ -331,7 +332,8 @@ class CompassDBProvider:
                     # Create the database instance
                     cls._userdata_mongo_db = _get_userdata_db(
                         cls._get_settings().userdata_mongodb_uri,
-                        cls._get_settings().userdata_database_name
+                        cls._get_settings().userdata_database_name,
+                        cls._clients
                     )
                     cls._logger.info("Connected to Userdata MongoDB database: %s",
                                      await _get_database_connection_info(cls._userdata_mongo_db))
@@ -348,7 +350,8 @@ class CompassDBProvider:
                     cls._logger.info("Connecting to Taxonomy MongoDB")
                     # Create the database instance
                     cls._taxonomy_mongo_db = _get_taxonomy_db(cls._get_settings().taxonomy_mongodb_uri,
-                                                              cls._get_settings().taxonomy_database_name)
+                                                              cls._get_settings().taxonomy_database_name,
+                                                              cls._clients)
                     cls._logger.info("Connected to Taxonomy MongoDB database: %s",
                                      await _get_database_connection_info(cls._taxonomy_mongo_db))
                     if not await check_mongo_health(cls._taxonomy_mongo_db.client):
@@ -365,6 +368,7 @@ class CompassDBProvider:
                     cls._career_explorer_mongo_db = _get_career_explorer_db(
                         cls._get_settings().career_explorer_mongodb_uri,
                         cls._get_settings().career_explorer_database_name,
+                        cls._clients,
                     )
                     cls._logger.info("Connected to Career Explorer MongoDB database: %s",
                                      await _get_database_connection_info(cls._career_explorer_mongo_db))
@@ -381,7 +385,8 @@ class CompassDBProvider:
                     cls._logger.info("Connecting to Metrics MongoDB")
                     # Create the database instance
                     cls._metrics_mongo_db = _get_metrics_db(cls._get_settings().metrics_mongodb_uri,
-                                                            cls._get_settings().metrics_database_name)
+                                                            cls._get_settings().metrics_database_name,
+                                                            cls._clients)
                     cls._logger.info("Connected to Metrics MongoDB database: %s",
                                      await _get_database_connection_info(cls._metrics_mongo_db))
                     if not await check_mongo_health(cls._metrics_mongo_db.client):
@@ -401,5 +406,6 @@ class CompassDBProvider:
         CompassDBProvider._userdata_mongo_db = None
         CompassDBProvider._metrics_mongo_db = None
         CompassDBProvider._career_explorer_mongo_db = None
+        CompassDBProvider._clients = {}
 
         CompassDBProvider._logger.info("Cleared cached database instances")
