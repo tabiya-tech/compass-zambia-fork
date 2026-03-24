@@ -72,11 +72,6 @@ class CareerExplorerService:
         profile = await self._user_profile_service.get_user_profile(user_id)
         user_profile_context = self._user_profile_service.format_for_prompt(profile) if profile else None
 
-        if user_profile_context:
-            self._logger.info("User profile context injected for user %s:\n%s", user_id, user_profile_context)
-        else:
-            self._logger.info("No user profile data found for user %s", user_id)
-
         agent = self._agent_factory()
         agent.set_user_profile_context(user_profile_context)
         agent_input = AgentInput(message=user_input, sent_at=now)
