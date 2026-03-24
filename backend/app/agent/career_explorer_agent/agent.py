@@ -96,13 +96,20 @@ class CareerExplorerAgent(Agent):
             reasoning or "(none)",
         )
 
+        effective_pending = list(pending_sectors or [])
+        if all_sectors and sector_name:
+            existing_pending_names = {p["sector_name"] for p in effective_pending}
+            for s in all_sectors:
+                if s.sector_name != sector_name and s.sector_name not in existing_pending_names:
+                    effective_pending.append({"sector_name": s.sector_name, "is_priority": s.is_priority})
+
         if relevance == SectorRelevance.PRIORITY_SECTOR:
             message, finished, reasoning, explorer_stats, metadata = await self._priority_explorer.explore(
-                msg, context, pending_sectors=pending_sectors
+                msg, context, pending_sectors=effective_pending or None
             )
         else:
             message, finished, reasoning, explorer_stats, grounding_metadata = await self._non_priority_explorer.explore(
-                msg, context, pending_sectors=pending_sectors
+                msg, context, pending_sectors=effective_pending or None
             )
             metadata = {"grounding_metadata": grounding_metadata.model_dump()} if grounding_metadata else None
 
