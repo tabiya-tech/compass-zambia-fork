@@ -88,6 +88,22 @@ def _format_chunks(chunks: list[SectorChunkEntity]) -> str:
     return "\n\n---\n\n".join(parts)
 
 
+def _build_pending_sectors_section(pending_sectors: list[dict] | None) -> str:
+    if not pending_sectors:
+        return ""
+    formatted = ", ".join(s["sector_name"] for s in pending_sectors)
+    next_sector = pending_sectors[0]["sector_name"]
+    return dedent(f"""\
+
+        # Pending Sectors
+            The user has also expressed interest in these sectors (not yet explored): {formatted}
+            When the current topic reaches a natural pause (user's question has been answered, they say "ok"/"thanks",
+            or the conversation on this sector winds down), proactively transition to the next pending sector.
+            Example: "Now, you also mentioned interest in {next_sector}. Let me tell you about opportunities there..."
+            Do NOT rush — finish the current topic first, then transition naturally.
+    """)
+
+
 class PrioritySectorExplorer:
     def __init__(self, sector_search_service: SectorSearchService):
         self._sector_search = sector_search_service
@@ -103,10 +119,12 @@ class PrioritySectorExplorer:
         self,
         user_input: str,
         context,
+        pending_sectors: list[dict] | None = None,
     ) -> tuple[str, bool, str, list[LLMStats], dict | None]:
         chunks = await self._sector_search.search(query=user_input, k=5)
         retrieved = _format_chunks(chunks)
         full_instructions = _build_base_instructions(retrieved)
+        full_instructions += _build_pending_sectors_section(pending_sectors)
 
         self._logger.info(
             "Priority sector RAG for query '%s': found %d chunks",

@@ -45,6 +45,7 @@ CLASSIFIER_TEST_CASES = [
     ClassifierTestCase("it_software", "What about software development careers?", SectorRelevance.NON_PRIORITY_SECTOR, "Tech/ICT"),
     ClassifierTestCase("healthcare", "Careers in nursing or healthcare?", SectorRelevance.NON_PRIORITY_SECTOR, "Healthcare"),
     ClassifierTestCase("general_career", "How do I find a job?", SectorRelevance.NON_PRIORITY_SECTOR, None),
+    ClassifierTestCase("multi_agriculture_mining", "I'm interested in agriculture and mining", SectorRelevance.PRIORITY_SECTOR, "Agriculture"),
 ]
 
 
@@ -76,7 +77,7 @@ async def test_sector_relevance_classifier(
 
     # WHEN the classifier is called with the user's input
     classifier = SectorRelevanceClassifier()
-    actual_relevance, actual_sector_name, actual_is_priority, _reasoning, _ = await classifier.classify(
+    actual_relevance, actual_sector_name, actual_is_priority, _reasoning, _, _all_sectors = await classifier.classify(
         user_input=test_case.user_input, context=given_context
     )
 
@@ -102,3 +103,39 @@ async def test_sector_relevance_classifier(
         f"For '{test_case.user_input}' expected is_priority={expected_is_priority} but got {actual_is_priority}"
     )
     logging.info("Classifier test %s: %s -> %s, sector=%s (correct)", test_case.name, test_case.user_input[:40], actual_relevance.value, actual_sector_name)
+
+
+@pytest.mark.asyncio
+@pytest.mark.evaluation_test("gemini-2.5-flash-lite/")
+async def test_classifier_extracts_multiple_sectors(
+    evals_setup,
+    career_explorer_config_with_sectors,
+):
+    """The classifier should extract all mentioned sectors into all_sectors."""
+    # GIVEN the i18n locale is set
+    get_i18n_manager().set_locale(Locale.EN_US)
+
+    # AND a conversation context with a multi-sector user input
+    given_context = FakeConversationContext()
+    given_context.add_turn("", "Welcome! Which sector interests you?")
+    given_user_input = "I'm interested in agriculture and mining"
+    given_context.add_turn(given_user_input, "")
+
+    # WHEN the classifier is called
+    classifier = SectorRelevanceClassifier()
+    _relevance, _sector_name, _is_priority, _reasoning, _, actual_all_sectors = await classifier.classify(
+        user_input=given_user_input, context=given_context
+    )
+
+    # THEN all_sectors contains at least 2 entries
+    assert len(actual_all_sectors) >= 2, (
+        f"Expected at least 2 sectors for multi-sector input, got {len(actual_all_sectors)}: {actual_all_sectors}"
+    )
+    # AND the sector names include Agriculture and Mining
+    actual_sector_names = [s.sector_name.lower() for s in actual_all_sectors]
+    assert any("agriculture" in name for name in actual_sector_names), (
+        f"Expected 'Agriculture' in all_sectors but got: {actual_sector_names}"
+    )
+    assert any("mining" in name for name in actual_sector_names), (
+        f"Expected 'Mining' in all_sectors but got: {actual_sector_names}"
+    )

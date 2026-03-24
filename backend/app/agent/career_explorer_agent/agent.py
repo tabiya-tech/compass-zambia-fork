@@ -74,7 +74,7 @@ class CareerExplorerAgent(Agent):
         self._non_priority_explorer = NonPrioritySectorExplorer()
         self._logger = logging.getLogger(self.__class__.__name__)
 
-    async def execute(self, user_input: AgentInput, context, existing_sectors: list[str] | None = None) -> AgentOutput:
+    async def execute(self, user_input: AgentInput, context, existing_sectors: list[str] | None = None, pending_sectors: list[dict] | None = None) -> AgentOutput:
         agent_start = time.time()
 
         msg = (user_input.message or "").strip()
@@ -86,7 +86,7 @@ class CareerExplorerAgent(Agent):
                 metadata=_get_welcome_metadata(),
             )
 
-        relevance, sector_name, is_priority, reasoning, classifier_stats = await self._classifier.classify(
+        relevance, sector_name, is_priority, reasoning, classifier_stats, all_sectors = await self._classifier.classify(
             user_input=msg, context=context, existing_sectors=existing_sectors
         )
 
@@ -97,10 +97,12 @@ class CareerExplorerAgent(Agent):
         )
 
         if relevance == SectorRelevance.PRIORITY_SECTOR:
-            message, finished, reasoning, explorer_stats, metadata = await self._priority_explorer.explore(msg, context)
+            message, finished, reasoning, explorer_stats, metadata = await self._priority_explorer.explore(
+                msg, context, pending_sectors=pending_sectors
+            )
         else:
             message, finished, reasoning, explorer_stats, grounding_metadata = await self._non_priority_explorer.explore(
-                msg, context
+                msg, context, pending_sectors=pending_sectors
             )
             metadata = {"grounding_metadata": grounding_metadata.model_dump()} if grounding_metadata else None
 
@@ -112,6 +114,12 @@ class CareerExplorerAgent(Agent):
                 "sector_name": sector_name,
                 "is_priority": is_priority,
             }
+        if all_sectors:
+            metadata = metadata or {}
+            metadata["all_mentioned_sectors"] = [
+                {"sector_name": s.sector_name, "is_priority": s.is_priority}
+                for s in all_sectors
+            ]
 
         return _construct_output(
             message,
