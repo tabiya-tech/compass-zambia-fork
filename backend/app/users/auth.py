@@ -44,6 +44,18 @@ class UserInfo(BaseModel):
     Sign in Provider
     """
 
+    role: Optional[str] = None
+    """
+    The user's access role, sourced from Firebase custom claims.
+    e.g. 'admin' or 'institution_staff'. None for regular (student) users.
+    """
+
+    institution_id: Optional[str] = None
+    """
+    The institution ID, sourced from Firebase custom claims.
+    Only set for institution_staff users.
+    """
+
     class Config:
         extra = "forbid"
 
@@ -60,7 +72,9 @@ def _get_user_info(decoded_token: Any, token: str) -> UserInfo:
         name=decoded_token["name"] if "name" in decoded_token else None,  # Anon user will not have a name
         email=decoded_token["email"] if "email" in decoded_token else None,  # Anon user will not have an email
         token=token,
-        sign_in_provider=decoded_token["firebase"]["sign_in_provider"]
+        sign_in_provider=decoded_token["firebase"]["sign_in_provider"],
+        role=decoded_token.get("role"),
+        institution_id=decoded_token.get("institutionId"),
     )
 
 

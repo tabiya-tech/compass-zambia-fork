@@ -34,24 +34,53 @@ class DashboardStatsRepository:
         result = await self._plain_data_collection.aggregate(pipeline).to_list(length=1)
         return result[0]["total"] if result else 0
 
-    async def count_total_users(self) -> int:
-        """Count all registered users."""
-        return await self._prefs_collection.count_documents({})
+    async def count_total_users(self, institution_name: str | None = None) -> int:
+        """Count registered users, optionally scoped to an institution."""
+        if institution_name is None:
+            return await self._prefs_collection.count_documents({})
+        # Find user_ids belonging to this institution
+        ppd = await self._plain_data_collection.find(
+            {"data.school": institution_name}, {"user_id": 1}
+        ).to_list(length=None)
+        user_ids = [d["user_id"] for d in ppd if d.get("user_id")]
+        if not user_ids:
+            return 0
+        return await self._prefs_collection.count_documents({"user_id": {"$in": user_ids}})
 
-    async def count_active_users_last_7_days(self) -> int:
-        """Count distinct users who had any metric event in the last 7 days."""
+    async def count_active_users_last_7_days(self, institution_name: str | None = None) -> int:
+        """Count distinct users who had any metric event in the last 7 days, optionally scoped to an institution."""
+        import hashlib
         now = datetime.now(tz=timezone.utc)
         seven_days_ago = now - timedelta(days=7)
         start_mongo = datetime_to_mongo_date(seven_days_ago)
 
-        pipeline = [
-            {"$match": {
-                "timestamp": {"$gte": start_mongo},
-                "anonymized_user_id": {"$exists": True, "$ne": None},
-            }},
-            {"$group": {"_id": "$anonymized_user_id"}},
-            {"$count": "total"},
-        ]
+        if institution_name is not None:
+            # Resolve user_ids for this institution, then anonymize for metrics lookup
+            ppd = await self._plain_data_collection.find(
+                {"data.school": institution_name}, {"user_id": 1}
+            ).to_list(length=None)
+            user_ids = [d["user_id"] for d in ppd if d.get("user_id")]
+            if not user_ids:
+                return 0
+            anon_ids = [hashlib.md5(uid.encode(), usedforsecurity=False).hexdigest() for uid in user_ids]
+            pipeline = [
+                {"$match": {
+                    "timestamp": {"$gte": start_mongo},
+                    "anonymized_user_id": {"$in": anon_ids},
+                }},
+                {"$group": {"_id": "$anonymized_user_id"}},
+                {"$count": "total"},
+            ]
+        else:
+            pipeline = [
+                {"$match": {
+                    "timestamp": {"$gte": start_mongo},
+                    "anonymized_user_id": {"$exists": True, "$ne": None},
+                }},
+                {"$group": {"_id": "$anonymized_user_id"}},
+                {"$count": "total"},
+            ]
+
         result = await self._metrics_collection.aggregate(pipeline).to_list(length=1)
         return result[0]["total"] if result else 0
 

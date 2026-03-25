@@ -16,6 +16,7 @@ from app.analytics.skills_discovery.types import SkillsDiscoveryStatsResponse
 from app.constants.errors import HTTPErrorResponse
 from app.server_dependencies.db_dependencies import CompassDBProvider
 from app.users.auth import Authentication
+from app.users.access_role import AccessRole, get_access_role_dependency, decode_institution_id
 
 logger = logging.getLogger(__name__)
 
@@ -47,9 +48,11 @@ def add_skills_discovery_analytics_routes(router: APIRouter, auth: Authenticatio
         location: Optional[str] = Query(default=None, description="Filter by province/location (data.location)"),
         program: Optional[str] = Query(default=None, description="Filter by program/qualification (data.program)"),
         year: Optional[str] = Query(default=None, description="Filter by academic year (data.year)"),
-        _user_info=Depends(auth.get_user_info()),
+        access_role: AccessRole = Depends(get_access_role_dependency(auth)),
         repo: ISkillsDiscoveryAnalyticsRepository = Depends(_get_skills_discovery_analytics_repository),
     ) -> SkillsDiscoveryStatsResponse:
+        if access_role.is_institution_staff and access_role.institution_id:
+            institution = decode_institution_id(access_role.institution_id)
         try:
             user_ids = await repo._resolve_user_ids(
                 institution=institution,

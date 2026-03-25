@@ -20,6 +20,7 @@ import { useInstructorStudents } from "src/hooks/useInstructorStudents";
 import { useDashboardStats } from "src/hooks/useDashboardStats";
 import UserStateService from "src/userState/UserStateService";
 import { MODULE_FILTER_INSTITUTIONS, MODULE_FILTER_LOCATIONS, MODULE_FILTER_YEARS } from "src/data/moduleFilterOptions";
+import { decodeInstitutionId } from "src/utils/institutionUtils";
 
 const InstructorDashboard: React.FC = () => {
   const { t } = useTranslation();
@@ -57,6 +58,15 @@ const InstructorDashboard: React.FC = () => {
     () => UserStateService.getInstance().getUserName() ?? t("instructorDashboard.header.defaultName"),
     [t]
   );
+  const institutionName = useMemo(() => {
+    const institutionId = UserStateService.getInstance().getInstitutionId();
+    if (!institutionId) return t("instructorDashboard.header.institutionFallback");
+    try {
+      return decodeInstitutionId(institutionId);
+    } catch {
+      return t("instructorDashboard.header.institutionFallback");
+    }
+  }, [t]);
   const [moduleFilters, setModuleFilters] = useState({
     location: "",
     institution: "",
@@ -70,7 +80,8 @@ const InstructorDashboard: React.FC = () => {
     error: modulesError,
   } = useModules({
     location: moduleFilters.location || undefined,
-    institution: moduleFilters.institution || undefined,
+    // Always scope to the instructor's own institution
+    institution: institutionName,
     year: moduleFilters.year || undefined,
   });
   const hasShownErrorRef = useRef(false);
@@ -133,7 +144,7 @@ const InstructorDashboard: React.FC = () => {
               {t("instructorDashboard.header.welcome", { name: displayName })}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {t("instructorDashboard.header.school")}
+              {institutionName}
             </Typography>
           </Box>
 
@@ -215,7 +226,7 @@ const InstructorDashboard: React.FC = () => {
                 </>
               )}
 
-              {tab === "skillsAnalytics" && <SkillsAnalytics />}
+              {tab === "skillsAnalytics" && <SkillsAnalytics institution={institutionName} />}
             </Box>
           </Box>
         </Box>

@@ -3,6 +3,7 @@ Repository for skill gap analytics aggregation queries.
 """
 import logging
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
@@ -16,8 +17,8 @@ class ISkillGapAnalyticsRepository(ABC):
     """Interface for skill gap analytics aggregation queries."""
 
     @abstractmethod
-    async def get_skill_gap_stats(self, limit: int) -> SkillGapStatsResponse:
-        """Return aggregated skill gap stats across all students."""
+    async def get_skill_gap_stats(self, limit: int, user_ids: Optional[list[str]] = None) -> SkillGapStatsResponse:
+        """Return aggregated skill gap stats, optionally scoped to a set of user_ids."""
         raise NotImplementedError()
 
 
@@ -27,20 +28,22 @@ class SkillGapAnalyticsRepository(ISkillGapAnalyticsRepository):
     def __init__(self, db: AsyncIOMotorDatabase):
         self._db = db
 
-    async def get_skill_gap_stats(self, limit: int) -> SkillGapStatsResponse:
+    async def get_skill_gap_stats(self, limit: int, user_ids: Optional[list[str]] = None) -> SkillGapStatsResponse:
         """
-        Aggregate skill gap recommendations across all users to find the most
-        commonly missing skills platform-wide.
+        Aggregate skill gap recommendations to find the most commonly missing skills.
 
         :param limit: Maximum number of top skill gaps to return.
+        :param user_ids: If provided, restrict results to these user_ids.
         """
         collection = self._db.get_collection(Collections.USER_RECOMMENDATIONS)
-        total_with_gaps = await collection.count_documents(
-            {"skill_gap_recommendations": {"$exists": True, "$ne": []}}
-        )
+        base_match: dict = {"skill_gap_recommendations": {"$exists": True, "$ne": []}}
+        if user_ids is not None:
+            base_match["user_id"] = {"$in": user_ids}
+
+        total_with_gaps = await collection.count_documents(base_match)
 
         results = await collection.aggregate([
-            {"$match": {"skill_gap_recommendations": {"$exists": True, "$ne": []}}},
+            {"$match": base_match},
             {"$unwind": "$skill_gap_recommendations"},
             {
                 "$group": {

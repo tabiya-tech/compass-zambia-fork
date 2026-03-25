@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import AnalyticsService from "src/analytics/AnalyticsService";
 import { PLACEHOLDER_SYMBOL } from "src/constants";
 import type { InstructorStudentRow } from "src/types";
+import UserStateService from "src/userState/UserStateService";
+import { decodeInstitutionId } from "src/utils/institutionUtils";
 
 export interface UseInstructorStudentsResult {
   students: InstructorStudentRow[];
@@ -89,9 +91,12 @@ export function useInstructorStudents(): UseInstructorStudentsResult {
     setLoading(true);
 
     try {
+      const institutionId = UserStateService.getInstance().getInstitutionId();
+      const institution = institutionId ? decodeInstitutionId(institutionId) : undefined;
       const result = await AnalyticsService.getInstance().listStudents({
         limit: FETCH_BATCH_SIZE,
         cursor,
+        institution,
       });
 
       const mappedStudents = result.data
