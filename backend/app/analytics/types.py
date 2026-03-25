@@ -27,6 +27,7 @@ class Institution(BaseModel):
     skills_discovery_completed_pct: Optional[float] = None
     career_readiness_started_pct: Optional[float] = None
     career_readiness_completed_pct: Optional[float] = None
+    career_explorer_started_pct: Optional[float] = None
 
 
 class User(BaseModel):

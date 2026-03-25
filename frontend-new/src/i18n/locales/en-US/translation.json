@@ -844,7 +844,10 @@
       "year": "Year",
       "notProvided": "Not provided",
       "notAvailable": "Not available",
-      "noSkillsYet": "No skills discovered yet. Start a conversation to discover your skills!"
+      "noSkillsYet": "No skills discovered yet. Start a conversation to discover your skills!",
+      "careerExplorer": "Career Explorer",
+      "noSectorsYet": "No sectors explored yet. Start the Career Explorer to explore sectors!",
+      "sectorsExplored": "You've explored {{count}} sector(s)"
     },
     "modules": {
       "skillsDiscovery": "My Skills & Interests",

@@ -65,11 +65,16 @@ class InstitutionsRepository:
         userdata_db: AsyncIOMotorDatabase,
         metrics_db: AsyncIOMotorDatabase,
         application_db: AsyncIOMotorDatabase,
+        career_explorer_db: Optional[AsyncIOMotorDatabase] = None,
     ):
         self._collection = userdata_db.get_collection(Collections.PLAIN_PERSONAL_DATA)
         self._metrics_collection = metrics_db.get_collection(Collections.COMPASS_METRICS)
         self._cr_conversations = application_db.get_collection(Collections.CAREER_READINESS_CONVERSATIONS)
         self._sd_repo = SkillsDiscoveryAnalyticsRepository(application_db, userdata_db)
+        self._ce_conversations = (
+            career_explorer_db.get_collection(Collections.CAREER_EXPLORER_CONVERSATIONS)
+            if career_explorer_db is not None else None
+        )
 
     async def _get_active_anon_ids_last_7_days(self) -> set[str]:
         """Return the set of anonymized_user_ids active in the last 7 days from metrics."""
@@ -143,7 +148,7 @@ class InstitutionsRepository:
             next_cursor = base64.urlsafe_b64encode(str(next_idx).encode()).decode().rstrip("=")
 
         # Fetch MongoDB counts in parallel
-        counts_by_inst, active_anon_ids, cr_started_ids, cr_completed_ids, sd_started_ids, sd_completed_ids = \
+        counts_by_inst, active_anon_ids, cr_started_ids, cr_completed_ids, sd_started_ids, sd_completed_ids, ce_started_ids = \
             await self._fetch_activity_data()
 
         items = []
@@ -162,6 +167,7 @@ class InstitutionsRepository:
             cr_completed_count = len(user_ids & cr_completed_ids)
             sd_started_count = len(user_ids & sd_started_ids)
             sd_completed_count = len(user_ids & sd_completed_ids)
+            ce_started_count = len(user_ids & ce_started_ids)
 
             items.append(Institution(
                 id=inst_id,
@@ -173,9 +179,17 @@ class InstitutionsRepository:
                 skills_discovery_completed_pct=_pct(sd_completed_count),
                 career_readiness_started_pct=_pct(cr_started_count),
                 career_readiness_completed_pct=_pct(cr_completed_count),
+                career_explorer_started_pct=_pct(ce_started_count),
             ))
 
         return items, next_cursor, has_more
+
+    async def _get_ce_started_user_ids(self) -> set[str]:
+        """Return user_ids that have at least one career explorer conversation."""
+        if self._ce_conversations is None:
+            return set()
+        docs = await self._ce_conversations.distinct("user_id")
+        return {uid for uid in docs if uid}
 
     async def _get_cr_user_ids(self) -> tuple[set[str], set[str]]:
         """
@@ -201,14 +215,16 @@ class InstitutionsRepository:
         set[str],
         set[str],
         set[str],
+        set[str],
     ]:
-        counts, active, (cr_started, cr_completed), (sd_started, sd_completed) = await asyncio.gather(
+        counts, active, (cr_started, cr_completed), (sd_started, sd_completed), ce_started = await asyncio.gather(
             self._get_counts_by_institution(),
             self._get_active_anon_ids_last_7_days(),
             self._get_cr_user_ids(),
             self._sd_repo.get_started_and_completed_user_ids(),
+            self._get_ce_started_user_ids(),
         )
-        return counts, active, cr_started, cr_completed, sd_started, sd_completed
+        return counts, active, cr_started, cr_completed, sd_started, sd_completed, ce_started
 
     async def count_institutions(
         self,
@@ -226,5 +242,6 @@ async def get_institution_repository(
     userdata_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_userdata_db),
     metrics_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_metrics_db),
     application_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_application_db),
+    career_explorer_db: AsyncIOMotorDatabase = Depends(CompassDBProvider.get_career_explorer_db),
 ) -> InstitutionsRepository:
-    return InstitutionsRepository(userdata_db, metrics_db, application_db)
+    return InstitutionsRepository(userdata_db, metrics_db, application_db, career_explorer_db)

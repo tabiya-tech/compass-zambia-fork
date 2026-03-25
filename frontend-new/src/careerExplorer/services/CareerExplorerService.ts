@@ -5,6 +5,18 @@ import { getRestAPIErrorFactory } from "src/error/restAPIError/RestAPIError";
 import ErrorConstants from "src/error/restAPIError/RestAPIError.constants";
 import type { CareerExplorerConversationResponse, CareerExplorerConversationInput } from "src/careerExplorer/types";
 
+export interface UserSectorEngagementItem {
+  sector_name: string;
+  is_priority: boolean;
+  inquiry_count: number;
+  last_asked_at: string | null;
+}
+
+export interface UserSectorEngagementResponse {
+  data: UserSectorEngagementItem[];
+  meta: { total_sectors: number };
+}
+
 const SERVICE_NAME = "CareerExplorerService";
 
 export default class CareerExplorerService {
@@ -65,6 +77,29 @@ export default class CareerExplorerService {
     } catch (e) {
       throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
         responseBody,
+        error: e,
+      });
+    }
+  }
+
+  async getSectorEngagementForUser(): Promise<UserSectorEngagementResponse> {
+    const url = `${getBackendUrl()}/analytics/sector-engagement/me`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "getSectorEngagementForUser", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "getSectorEngagementForUser",
+      failureMessage: "Failed to fetch sector engagement",
+      expectedContentType: "application/json",
+    });
+    const body = await response.text();
+    try {
+      return JSON.parse(body) as UserSectorEngagementResponse;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        responseBody: body,
         error: e,
       });
     }

@@ -6,9 +6,11 @@ import { SecurityCard } from "./components/SecurityCard/SecurityCard";
 import { PreferencesCard } from "./components/PreferencesCard/PreferencesCard";
 import { ProfileCard } from "./components/ProfileCard/ProfileCard";
 import { SkillsDiscoveredCard } from "./components/SkillsDiscoveredCard/SkillsDiscoveredCard";
+import { CareerExplorerCard } from "./components/CareerExplorerCard/CareerExplorerCard";
 import { ModuleProgressCard } from "./components/ModuleProgressCard/ModuleProgressCard";
 import CareerReadinessProgressBanner from "src/careerReadiness/components/CareerReadinessProgressBanner/CareerReadinessProgressBanner";
 import type { ModuleSummary } from "src/careerReadiness/types";
+import type { UserSectorEngagementItem } from "src/careerExplorer/services/CareerExplorerService";
 
 const uniqueId = "a7f8e4b2-9c3d-4a1e-8f6b-2d3e4a5b6c7d";
 
@@ -28,10 +30,12 @@ export interface ProfileProps {
   skills: Skill[];
   modules: ModuleSummary[];
   skillsInterestsProgress: number;
+  careerExplorerSectors: UserSectorEngagementItem[];
   isLoadingSecurity: boolean;
   isLoadingPreferences: boolean;
   isLoadingProfile: boolean;
   isLoadingSkills: boolean;
+  isLoadingCareerExplorer: boolean;
 }
 
 /**
@@ -65,10 +69,12 @@ export const Profile: React.FC<ProfileProps> = ({
   skills,
   modules,
   skillsInterestsProgress,
+  careerExplorerSectors,
   isLoadingSecurity,
   isLoadingPreferences,
   isLoadingProfile,
   isLoadingSkills,
+  isLoadingCareerExplorer,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
@@ -100,6 +106,8 @@ export const Profile: React.FC<ProfileProps> = ({
         />
 
         <CareerReadinessProgressBanner modules={modules} />
+
+        <CareerExplorerCard sectors={careerExplorerSectors} isLoading={isLoadingCareerExplorer} />
 
         <SkillsDiscoveredCard skills={skills} isLoading={isLoadingSkills} />
 

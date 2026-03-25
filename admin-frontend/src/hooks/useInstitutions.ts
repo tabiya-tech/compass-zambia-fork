@@ -26,6 +26,7 @@ function mapApiItemToRow(item: InstitutionApiItem): InstitutionRow {
     skillsDiscoveryCompletedPct: item.skills_discovery_completed_pct,
     careerReadinessStartedPct: item.career_readiness_started_pct,
     careerReadinessCompletedPct: item.career_readiness_completed_pct,
+    careerExplorerStartedPct: item.career_explorer_started_pct,
   };
 }
 
