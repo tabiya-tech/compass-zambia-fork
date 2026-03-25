@@ -5,11 +5,15 @@ import type { SkillsGapSectorData } from "src/types";
 import { useSkillGapStats } from "src/hooks/useSkillGapStats";
 import { useSkillsSupplyStats } from "src/hooks/useSkillsSupplyStats";
 
-const SkillsAnalytics: React.FC = () => {
+interface SkillsAnalyticsProps {
+  institution?: string;
+}
+
+const SkillsAnalytics: React.FC<SkillsAnalyticsProps> = ({ institution }) => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { data: skillGapData, loading: skillGapLoading } = useSkillGapStats(5);
-  const { data: skillSupplyData, loading: skillSupplyLoading } = useSkillsSupplyStats(5);
+  const { data: skillGapData, loading: skillGapLoading } = useSkillGapStats(5, institution);
+  const { data: skillSupplyData, loading: skillSupplyLoading } = useSkillsSupplyStats(5, institution);
 
   // Supply: top skills students actually have, as % of students with that skill vs total with any skill
   const supplyTotal = skillSupplyData?.total_students_with_skills ?? 0;

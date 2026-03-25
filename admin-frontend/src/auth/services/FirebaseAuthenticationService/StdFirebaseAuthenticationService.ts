@@ -1,5 +1,5 @@
 import firebase from "firebase/compat/app";
-import { firebaseAuth, firebaseFirestore } from "src/auth/firebaseConfig";
+import { firebaseAuth } from "src/auth/firebaseConfig";
 import { AdminUser, Token } from "src/auth/auth.types";
 import AuthenticationStateService from "src/auth/services/AuthenticationState.service";
 import { FirebaseError, FirebaseErrorFactory } from "src/error/FirebaseError/firebaseError";
@@ -21,6 +21,9 @@ export interface FirebaseToken extends Token {
     sign_in_provider: string;
     tenant?: string;
   };
+  // Custom claims set by create_admin_user.py
+  role?: string;
+  institutionId?: string;
 }
 
 export enum FirebaseTokenProvider {
@@ -206,47 +209,24 @@ class StdFirebaseAuthenticationService {
     }
   }
 
-  public async getUserRole(userId: string): Promise<AccessRole | null> {
-    try {
-      const accessRoleDoc = await firebaseFirestore.collection("access_role").doc(userId).get();
-
-      if (!accessRoleDoc.exists) {
-        return null;
-      }
-
-      const document = accessRoleDoc.data();
-      if (!document?.enabled) {
-        return null;
-      }
-
-      return buildAccessRole(document);
-    } catch (error) {
-      console.error("Error checking user access:", error);
-      return null;
-    }
-  }
-
   /**
-   * Retrieves the user's access profile from Firestore and verifies they are enabled.
-   * @param userId - The user's ID to check access for.
+   * Retrieves the user's access role from their Firebase ID token custom claims.
+   * @param firebaseUser - The Firebase user object after sign-in.
    * @param errorFactory - Factory function to create FirebaseError instances.
    * @returns The user's access role.
-   * @throws FirebaseError if the user's access is disabled or profile cannot be retrieved.
+   * @throws FirebaseError if the token claims don't contain a valid role.
    */
-  public async getProfile(userId: string, errorFactory: FirebaseErrorFactory): Promise<AccessRole> {
+  public async getProfile(firebaseUser: firebase.User, errorFactory: FirebaseErrorFactory): Promise<AccessRole> {
     try {
-      const accessRoleDoc = await firebaseFirestore.collection("access_roles").doc(userId).get();
+      // Force-refresh to ensure we have the latest custom claims
+      const tokenResult = await firebaseUser.getIdTokenResult(true);
+      const claims = tokenResult.claims as { role?: string; institutionId?: string };
 
-      console.debug("accessRoleDoc", accessRoleDoc);
-
-      if (!accessRoleDoc.exists) {
-        throw errorFactory(FirebaseErrorCodes.USER_ACCESS_DISABLED, "User access role not found", { userId });
-      }
-
-      const accessRoleData = accessRoleDoc.data();
-      const accessRole = accessRoleData ? buildAccessRole(accessRoleData) : null;
+      const accessRole = buildAccessRole(claims);
       if (!accessRole) {
-        throw errorFactory(FirebaseErrorCodes.USER_ACCESS_DISABLED, "Invalid access role configuration", { userId });
+        throw errorFactory(FirebaseErrorCodes.USER_ACCESS_DISABLED, "Invalid access role configuration", {
+          userId: firebaseUser.uid,
+        });
       }
 
       return accessRole;

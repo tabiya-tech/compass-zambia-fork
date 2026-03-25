@@ -24,7 +24,7 @@ from enum import Enum
 
 import firebase_admin
 from dotenv import load_dotenv
-from firebase_admin import credentials, firestore, tenant_mgt, auth
+from firebase_admin import credentials, tenant_mgt, auth
 
 from pydantic import BaseModel
 
@@ -112,29 +112,22 @@ def send_password_reset_email(email: str, tenant_id: str | None, dry_run: bool) 
     logger.info("Send this link to the user: %s", link)
 
 
-def save_access_role_to_firestore(user_id: str, role: Role, institution_id: str | None, dry_run: bool) -> None:
-    """Save the user's access role to Firestore."""
-    access_role_data = {
-        "role": role.value,
-        "enabled": True,
-    }
-
+def set_custom_claims(user_id: str, role: Role, institution_id: str | None, tenant_id: str, dry_run: bool) -> None:
+    """Set custom claims on the Firebase user to encode role and institution."""
+    claims: dict = {"role": role.value}
     if role == Role.INSTITUTION_STAFF and institution_id:
-        access_role_data["institutionId"] = institution_id
+        claims["institutionId"] = institution_id
 
     if dry_run:
-        logger.info("[DRY RUN] Would save to Firestore collection 'access_role', document '%s':", user_id)
-        for key, value in access_role_data.items():
+        logger.info("[DRY RUN] Would set custom claims on user '%s':", user_id)
+        for key, value in claims.items():
             logger.info("[DRY RUN]   %s: %s", key, value)
         return
 
-    logger.info("Saving access role to Firestore for user: %s", user_id)
-    logger.debug("Adding institution ID: %s", institution_id)
-
-    db = firestore.client()
-    db.collection("access_roles").document(user_id).set(access_role_data)
-
-    logger.info("Successfully saved access role to Firestore")
+    logger.info("Setting custom claims for user: %s", user_id)
+    auth_client = get_auth_client(tenant_id)
+    auth_client.set_custom_user_claims(user_id, claims)
+    logger.info("Successfully set custom claims")
 
 
 def create_admin_user(args: Arguments) -> None:
@@ -159,8 +152,8 @@ def create_admin_user(args: Arguments) -> None:
     # Create the Firebase user
     user_id = create_firebase_user(args.name, args.email, password, args.tenant_id, args.dry_run)
 
-    # Save the access role to Firestore
-    save_access_role_to_firestore(user_id, args.role, args.institution_id, args.dry_run)
+    # Set custom claims on the Firebase user
+    set_custom_claims(user_id, args.role, args.institution_id, args.tenant_id, args.dry_run)
 
     # Send password reset email
     send_password_reset_email(args.email, args.tenant_id, args.dry_run)

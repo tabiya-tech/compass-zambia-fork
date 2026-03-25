@@ -281,8 +281,7 @@
     "header": {
       "welcome": "Welcome, {{name}}",
       "institutionFallback": "Your Institution",
-      "defaultName": "Instructor",
-      "school": "Evelyn Hone College of Applied Art and Commerce"
+      "defaultName": "Instructor"
     },
     "tabs": {
       "ariaLabel": "Instructor dashboard tabs",

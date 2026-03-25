@@ -8,6 +8,7 @@ Uses user_preferences.sessions to map session_id -> user_id.
 """
 import logging
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class ISkillsSupplyAnalyticsRepository(ABC):
     @abstractmethod
-    async def get_skills_supply_stats(self, limit: int) -> SkillsSupplyStatsResponse:
+    async def get_skills_supply_stats(self, limit: int, user_ids: Optional[list[str]] = None) -> SkillsSupplyStatsResponse:
         raise NotImplementedError()
 
 
@@ -27,19 +28,22 @@ class SkillsSupplyAnalyticsRepository(ISkillsSupplyAnalyticsRepository):
     def __init__(self, application_db: AsyncIOMotorDatabase):
         self._db = application_db
 
-    async def get_skills_supply_stats(self, limit: int) -> SkillsSupplyStatsResponse:
+    async def get_skills_supply_stats(self, limit: int, user_ids: Optional[list[str]] = None) -> SkillsSupplyStatsResponse:
         """
-        Aggregate the most common skills across all students who have completed
+        Aggregate the most common skills across students who have completed
         skills discovery (at least one experience with dive_in_phase == PROCESSED).
 
         Skills come from experiences_state[*].experience.top_skills in
         explore_experiences_director_state. We deduplicate by user (via
         user_preferences.sessions) so each user is counted once per skill.
+
+        :param user_ids: If provided, restrict results to these user_ids.
         """
         # Build session_id -> user_id map from user_preferences
+        prefs_filter = {"user_id": {"$in": user_ids}} if user_ids is not None else {}
         prefs = await self._db.get_collection(
             Collections.USER_PREFERENCES
-        ).find({}, {"user_id": 1, "sessions": 1, "_id": 0}).to_list(length=None)
+        ).find(prefs_filter, {"user_id": 1, "sessions": 1, "_id": 0}).to_list(length=None)
 
         session_to_user: dict = {}
         for doc in prefs:
@@ -51,9 +55,14 @@ class SkillsSupplyAnalyticsRepository(ISkillsSupplyAnalyticsRepository):
                 session_to_user[str(s)] = uid
 
         # Aggregate skills from explore_experiences_director_state
+        # If we have a restricted session set, only query those sessions
+        known_session_ids = list(session_to_user.keys()) if user_ids is not None else None
+        base_session_match: dict = {"conversation_phase": "DIVE_IN"}
+        if known_session_ids is not None:
+            base_session_match["session_id"] = {"$in": known_session_ids}
+
         pipeline = [
-            # Only sessions that have reached DIVE_IN (have processed experiences)
-            {"$match": {"conversation_phase": "DIVE_IN"}},
+            {"$match": base_session_match},
             # Convert experiences_state object to array of {k, v} pairs
             {"$addFields": {
                 "exp_array": {"$objectToArray": "$experiences_state"}
@@ -101,7 +110,9 @@ class SkillsSupplyAnalyticsRepository(ISkillsSupplyAnalyticsRepository):
             sid = doc["_id"]["session_id"]
             uid = session_to_user.get(sid) or session_to_user.get(str(sid))
             if not uid:
-                # Fall back to using session_id as user identifier
+                # Session not mapped to a known user — skip when filtering by institution
+                if user_ids is not None:
+                    continue
                 uid = str(sid)
 
             skill_uuid = doc["_id"]["skill_uuid"]
@@ -134,12 +145,13 @@ class SkillsSupplyAnalyticsRepository(ISkillsSupplyAnalyticsRepository):
         entries.sort(key=lambda e: (-e.student_count, -e.avg_score))
         top = entries[:limit]
 
-        total_students = len({
-            session_to_user.get(doc["_id"]["session_id"])
-            or session_to_user.get(str(doc["_id"]["session_id"]))
-            or str(doc["_id"]["session_id"])
-            for doc in docs
-        })
+        resolved_users = set()
+        for doc in docs:
+            sid = doc["_id"]["session_id"]
+            uid = session_to_user.get(sid) or session_to_user.get(str(sid)) or (None if user_ids is not None else str(sid))
+            if uid:
+                resolved_users.add(uid)
+        total_students = len(resolved_users)
 
         return SkillsSupplyStatsResponse(
             total_students_with_skills=total_students,
