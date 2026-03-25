@@ -22,6 +22,7 @@ const storyInstitutionsFixture: InstitutionRow[] = [
     skillsDiscoveryCompletedPct: 64,
     careerReadinessStartedPct: 71,
     careerReadinessCompletedPct: 42,
+    careerExplorerStartedPct: 55,
   },
   {
     id: "inst-2",
@@ -32,6 +33,7 @@ const storyInstitutionsFixture: InstitutionRow[] = [
     skillsDiscoveryCompletedPct: 59,
     careerReadinessStartedPct: 66,
     careerReadinessCompletedPct: 37,
+    careerExplorerStartedPct: 48,
   },
 ];
 

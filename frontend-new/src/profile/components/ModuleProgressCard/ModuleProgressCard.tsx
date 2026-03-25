@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Card, CardContent, Typography, LinearProgress, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import CheckCircleOutlined from "@mui/icons-material/CheckCircleOutlined";
 import { TranslationKey } from "src/react-i18next";
 
 const uniqueId = "module-progress-card-b7e3f4a5-8c9d-1e2f-3a4b-5c6d7e8f9a1b";
@@ -23,76 +24,74 @@ export interface ModuleProgressCardProps {
   modules: ModuleData[];
 }
 
-/**
- * ModuleProgressCard displays learning module progress with progress bars.
- * Uses module constants from modulesService.ts with translations.
- *
- * @param modules - Array of module data with IDs, translation keys, and progress percentages
- */
 export const ModuleProgressCard: React.FC<ModuleProgressCardProps> = ({ modules }) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
+  const module = modules[0];
+  const progress = module?.progress ?? 0;
+
   return (
     <Card
-      sx={{
-        border: `1px solid ${theme.palette.divider}`,
-        boxShadow: "none",
-      }}
+      sx={{ border: `1px solid ${theme.palette.divider}`, boxShadow: "none" }}
       data-testid={DATA_TEST_ID.MODULE_PROGRESS_CARD}
     >
       <CardContent
         sx={{
-          padding: theme.spacing(theme.tabiyaSpacing.lg),
+          padding: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+          "&:last-child": { paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) },
+          display: "flex",
+          flexDirection: "column",
+          gap: theme.fixedSpacing(theme.tabiyaSpacing.sm),
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: "bold",
-          }}
-          data-testid={DATA_TEST_ID.MODULE_PROGRESS_TITLE}
-        >
-          {t("home.profile.skillsInterestsProgressTitle")}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ marginBottom: theme.spacing(theme.tabiyaSpacing.md) }}>
-          {t("home.profile.skillsInterestsProgressDescription")}
-        </Typography>
-
-        {modules.map((module, index) => (
-          <Box
-            key={module.id}
-            sx={{ marginBottom: theme.spacing(theme.tabiyaSpacing.md) }}
-            data-testid={DATA_TEST_ID.MODULE_ITEM(index)}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: theme.spacing(theme.tabiyaSpacing.xs),
-              }}
+        {/* Header row: title+description left, percentage right */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Box>
+            <Typography
+              variant="subtitle1"
+              fontWeight="bold"
+              color="text.primary"
+              data-testid={DATA_TEST_ID.MODULE_PROGRESS_TITLE}
             >
-              <Typography variant="body2" data-testid={DATA_TEST_ID.MODULE_NAME(index)}>
-                {t(module.labelKey as TranslationKey)}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {module.progress}%
-              </Typography>
-            </Box>
-            <LinearProgress
-              variant="determinate"
-              aria-label={"Progress for " + t(module.labelKey as TranslationKey)}
-              value={module.progress}
-              data-testid={DATA_TEST_ID.MODULE_PROGRESS(index)}
-              sx={{
-                height: 8,
-                borderRadius: theme.rounding(theme.tabiyaRounding.sm),
-                backgroundColor: theme.palette.grey[200],
-              }}
-            />
+              {t("home.profile.skillsInterestsProgressTitle")}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {t("home.profile.skillsInterestsProgressDescription")}
+            </Typography>
           </Box>
-        ))}
+          <Typography variant="body2" fontWeight="bold" color="primary.main" sx={{ flexShrink: 0, ml: 1 }}>
+            {progress}%
+          </Typography>
+        </Box>
+
+        {/* Progress bar */}
+        {module && (
+          <LinearProgress
+            variant="determinate"
+            aria-label={t(module.labelKey as TranslationKey)}
+            value={progress}
+            data-testid={DATA_TEST_ID.MODULE_PROGRESS(0)}
+            sx={{
+              height: 8,
+              borderRadius: theme.rounding(theme.tabiyaRounding.sm),
+              backgroundColor: theme.palette.grey[200],
+            }}
+          />
+        )}
+
+        {/* Stats */}
+        <Box sx={{ display: "flex", gap: theme.fixedSpacing(theme.tabiyaSpacing.lg), flexWrap: "wrap" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <CheckCircleOutlined sx={{ fontSize: 18, color: theme.palette.secondary.main }} />
+            <Typography variant="body2" color="text.secondary">
+              <Typography component="span" variant="body2" fontWeight="bold" color="text.primary">
+                {progress}%
+              </Typography>{" "}
+              {t("home.profile.moduleCompleted")}
+            </Typography>
+          </Box>
+        </Box>
       </CardContent>
     </Card>
   );

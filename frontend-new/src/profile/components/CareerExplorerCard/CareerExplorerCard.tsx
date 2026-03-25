@@ -18,74 +18,71 @@ export interface CareerExplorerCardProps {
   isLoading: boolean;
 }
 
-/**
- * CareerExplorerCard displays the sectors the user has explored in the Career Explorer.
- */
 export const CareerExplorerCard: React.FC<CareerExplorerCardProps> = ({ sectors, isLoading }) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
   return (
-    <Card
-      sx={{
-        border: `1px solid ${theme.palette.divider}`,
-        boxShadow: "none",
-      }}
-      data-testid={DATA_TEST_ID.CARD}
-    >
+    <Card sx={{ border: `1px solid ${theme.palette.divider}`, boxShadow: "none" }} data-testid={DATA_TEST_ID.CARD}>
       <CardContent
         sx={{
-          padding: theme.spacing(theme.tabiyaSpacing.lg),
+          padding: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+          "&:last-child": { paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) },
         }}
       >
-        <Typography
-          variant="h6"
+        <Box
           sx={{
-            marginBottom: theme.spacing(theme.tabiyaSpacing.md),
-            fontWeight: "bold",
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.sm),
           }}
-          data-testid={DATA_TEST_ID.TITLE}
         >
-          {t("home.profile.careerExplorer")}
-        </Typography>
+          <Typography variant="subtitle1" fontWeight="bold" color="text.primary" data-testid={DATA_TEST_ID.TITLE}>
+            {t("home.profile.careerExplorer")}
+          </Typography>
+          {!isLoading && sectors.length > 0 && (
+            <Typography variant="body2" color="text.secondary" data-testid={DATA_TEST_ID.SUMMARY}>
+              {t("home.profile.sectorsExplored", { count: sectors.length })}
+            </Typography>
+          )}
+        </Box>
 
         {isLoading ? (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: theme.spacing(theme.tabiyaSpacing.sm) }}>
-            <Skeleton variant="rectangular" width={110} height={32} sx={{ borderRadius: 16 }} />
-            <Skeleton variant="rectangular" width={90} height={32} sx={{ borderRadius: 16 }} />
-            <Skeleton variant="rectangular" width={130} height={32} sx={{ borderRadius: 16 }} />
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: theme.fixedSpacing(theme.tabiyaSpacing.xs) }}>
+            {[110, 90, 130].map((w, i) => (
+              <Skeleton
+                key={i}
+                variant="rectangular"
+                width={w}
+                height={28}
+                sx={{ borderRadius: theme.rounding(theme.tabiyaRounding.sm) }}
+              />
+            ))}
           </Box>
         ) : sectors.length === 0 ? (
-          <Typography variant="body2" color="text.secondary" data-testid={DATA_TEST_ID.EMPTY}>
+          <Typography variant="body2" color="text.disabled" data-testid={DATA_TEST_ID.EMPTY}>
             {t("home.profile.noSectorsYet")}
           </Typography>
         ) : (
-          <>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ marginBottom: theme.spacing(theme.tabiyaSpacing.sm) }}
-              data-testid={DATA_TEST_ID.SUMMARY}
-            >
-              {t("home.profile.sectorsExplored", { count: sectors.length })}
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: theme.spacing(theme.tabiyaSpacing.sm) }}>
-              {sectors.map((sector, index) => (
-                <Chip
-                  key={sector.sector_name}
-                  label={`${sector.sector_name}${sector.is_priority ? " ★" : ""}`}
-                  data-testid={DATA_TEST_ID.SECTOR_ITEM(index)}
-                  sx={{
-                    borderRadius: theme.rounding(theme.tabiyaRounding.md),
-                    ...(sector.is_priority && {
-                      borderColor: theme.palette.primary.main,
-                      border: "1px solid",
-                    }),
-                  }}
-                />
-              ))}
-            </Box>
-          </>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: theme.fixedSpacing(theme.tabiyaSpacing.xs) }}>
+            {sectors.map((sector, index) => (
+              <Chip
+                key={sector.sector_name}
+                label={sector.sector_name}
+                size="small"
+                variant={sector.is_priority ? "outlined" : "filled"}
+                data-testid={DATA_TEST_ID.SECTOR_ITEM(index)}
+                sx={{
+                  borderRadius: theme.rounding(theme.tabiyaRounding.sm),
+                  ...(sector.is_priority && {
+                    borderColor: theme.palette.primary.main,
+                    color: theme.palette.primary.main,
+                  }),
+                }}
+              />
+            ))}
+          </Box>
         )}
       </CardContent>
     </Card>

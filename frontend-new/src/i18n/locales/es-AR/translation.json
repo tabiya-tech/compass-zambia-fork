@@ -856,6 +856,8 @@
       "notAvailable": "No disponible",
       "skillsInterestsProgressTitle": "Progreso en Habilidades e Intereses",
       "skillsInterestsProgressDescription": "Hasta dónde has avanzado en tu conversación de descubrimiento de habilidades",
+      "moduleCompleted": "completado",
+      "moduleRemaining": "restante",
       "noSkillsYet": "¡Aún no se descubrieron habilidades. Comenzá una conversación para descubrir tus habilidades!",
       "careerExplorer": "Explorador de Carreras",
       "noSectorsYet": "Aún no se han explorado sectores.",

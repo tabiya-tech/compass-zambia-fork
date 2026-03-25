@@ -849,6 +849,8 @@
       "notAvailable": "Haipatikani",
       "skillsInterestsProgressTitle": "Maendeleo ya Ujuzi na Maslahi",
       "skillsInterestsProgressDescription": "Umbali uliofika katika mazungumzo yako ya kugundua ujuzi",
+      "moduleCompleted": "imekamilika",
+      "moduleRemaining": "imebaki",
       "noSkillsYet": "Hakuna ujuzi uliogundulika bado. Anza mazungumzo ili kugundua ujuzi wako!",
       "careerExplorer": "Career Explorer",
       "noSectorsYet": "Hakuna sekta zilizochunguzwa bado.",

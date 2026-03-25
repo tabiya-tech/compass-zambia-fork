@@ -145,7 +145,7 @@ export function useModules(filters?: CareerReadinessFilters): UseModulesResult {
           value: s.unique_users,
           total: totalUsers,
           percentage: Math.round((s.unique_users / totalUsers) * 100),
-          color: s.is_priority ? "#4C9BE8" : undefined,
+          color: s.is_priority ? "primary" : "secondary",
         }));
       })(),
     });

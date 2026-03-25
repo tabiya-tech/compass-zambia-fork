@@ -14,7 +14,14 @@ export const DATA_TEST_ID = {
 
 const ProfileContainer: React.FC = () => {
   const navigate = useNavigate();
-  const { profileData, isLoadingSecurity, isLoadingPreferences, isLoadingProfile, isLoadingSkills, isLoadingCareerExplorer } = useUserProfile();
+  const {
+    profileData,
+    isLoadingSecurity,
+    isLoadingPreferences,
+    isLoadingProfile,
+    isLoadingSkills,
+    isLoadingCareerExplorer,
+  } = useUserProfile();
 
   return (
     <Box

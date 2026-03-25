@@ -832,6 +832,8 @@
       "profileSection": "Profile",
       "skillsInterestsProgressTitle": "Skills & Interests Progress",
       "skillsInterestsProgressDescription": "How far you have progressed in your skills discovery conversation",
+      "moduleCompleted": "completed",
+      "moduleRemaining": "remaining",
       "moduleProgress": "Module Progress",
       "skillsDiscovered": "Skills Discovered",
       "name": "Name",
