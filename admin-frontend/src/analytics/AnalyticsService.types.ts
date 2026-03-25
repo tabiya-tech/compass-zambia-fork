@@ -14,6 +14,7 @@ export interface InstitutionApiItem {
   skills_discovery_completed_pct: number | null;
   career_readiness_started_pct: number | null;
   career_readiness_completed_pct: number | null;
+  career_explorer_started_pct: number | null;
 }
 
 export interface StudentApiItem {
@@ -96,6 +97,22 @@ export interface SkillSupplyEntry {
 export interface SkillsSupplyStatsResponse {
   total_students_with_skills: number;
   top_skills: SkillSupplyEntry[];
+}
+
+export interface CareerExplorerSectorStat {
+  sector_name: string;
+  is_priority: boolean;
+  unique_users: number;
+  total_inquiries: number;
+}
+
+export interface CareerExplorerStatsResponse {
+  total_registered_students: number;
+  started: { count: number; percentage: number };
+  returned_2_plus: { count: number; percentage: number };
+  priority_sector_users: number;
+  non_priority_sector_users: number;
+  top_sectors: CareerExplorerSectorStat[];
 }
 
 export interface SkillsDiscoveryFunnelStage {

@@ -76,10 +76,12 @@ const getDefaultProps = (overrides?: Partial<ProfileProps>): ProfileProps => ({
   skills: [],
   modules: [],
   skillsInterestsProgress: 0,
+  careerExplorerSectors: [],
   isLoadingSecurity: false,
   isLoadingPreferences: false,
   isLoadingProfile: false,
   isLoadingSkills: false,
+  isLoadingCareerExplorer: false,
   ...overrides,
 });
 

@@ -17,6 +17,7 @@ export interface InstitutionsTableProps {
 const GROUP_COLORS = {
   skillsDiscovery: "#4C9BE8",
   careerReadiness: "#7B61C4",
+  careerExplorer: "#2ECC71",
 };
 
 const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
@@ -141,6 +142,12 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
       colSpan: 2,
       color: GROUP_COLORS.careerReadiness,
     },
+    {
+      key: "careerExplorer",
+      label: t("dashboard.institutionsTable.headers.careerExplorer"),
+      colSpan: 2,
+      color: GROUP_COLORS.careerExplorer,
+    }
   ];
 
   return (

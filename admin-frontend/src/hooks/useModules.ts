@@ -2,6 +2,7 @@ import type { ModuleData } from "src/types";
 import { useCareerReadinessStats } from "src/hooks/useCareerReadinessStats";
 import type { CareerReadinessFilters } from "src/hooks/useCareerReadinessStats";
 import { useSkillsDiscoveryStats } from "src/hooks/useSkillsDiscoveryStats";
+import { useCareerExplorerStats } from "src/hooks/useCareerExplorerStats";
 
 export interface UseModulesResult {
   modules: ModuleData[];
@@ -12,9 +13,10 @@ export interface UseModulesResult {
 export function useModules(filters?: CareerReadinessFilters): UseModulesResult {
   const { data: crData, loading: crLoading, error: crError } = useCareerReadinessStats(filters);
   const { data: sdData, loading: sdLoading, error: sdError } = useSkillsDiscoveryStats(filters);
+  const { data: ceData, loading: ceLoading, error: ceError } = useCareerExplorerStats(filters);
 
-  const loading = crLoading || sdLoading;
-  const error = crError || sdError;
+  const loading = crLoading || sdLoading || ceLoading;
+  const error = crError || sdError || ceError;
 
   const modules: ModuleData[] = [];
 
@@ -98,6 +100,54 @@ export function useModules(filters?: CareerReadinessFilters): UseModulesResult {
         value: m.completed_count,
         total: m.started_count,
       })),
+    });
+  }
+
+  // Career Explorer card
+  if (ceData) {
+    const totalStudents = ceData.total_registered_students;
+    const started = ceData.started.count;
+    const returned = ceData.returned_2_plus.count;
+
+    modules.push({
+      id: "career-explorer",
+      titleKey: "dashboard.modules.titles.careerExplorer",
+      totalStudents,
+      summary: [
+        {
+          labelKey: "dashboard.modules.started",
+          value: started,
+          total: totalStudents,
+          pct: totalStudents > 0 ? Math.round((started / totalStudents) * 100) : 0,
+          showBar: true,
+        },
+        {
+          labelKey: "dashboard.modules.returned2Plus",
+          value: returned,
+          total: started,
+          pct: started > 0 ? Math.round((returned / started) * 100) : 0,
+          showBar: true,
+        },
+        {
+          labelKey: "dashboard.modules.prioritySectors",
+          value: ceData.priority_sector_users,
+          total: 0,
+          pct: 0,
+          showBar: false,
+        },
+      ],
+      breakdownType: "topSectors",
+      breakdownTitleKey: "dashboard.modules.topSectorsExplored",
+      breakdownItems: (() => {
+        const totalUsers = ceData.top_sectors.reduce((sum, s) => sum + s.unique_users, 0) || 1;
+        return ceData.top_sectors.map((s) => ({
+          labelKey: s.sector_name,
+          value: s.unique_users,
+          total: totalUsers,
+          percentage: Math.round((s.unique_users / totalUsers) * 100),
+          color: s.is_priority ? "#4C9BE8" : undefined,
+        }));
+      })(),
     });
   }
 
