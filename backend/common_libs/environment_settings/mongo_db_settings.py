@@ -55,3 +55,18 @@ class MongoDbSettings(BaseSettings):
     """
     The name of the Career Explorer database (conversations + sector chunks).
     """
+
+    zambia_mongodb_uri: str = ""
+    """
+    The URI of the Zambia jobs MongoDB instance.
+    """
+
+    zambia_database_name: str = ""
+    """
+    The name of the Zambia jobs database.
+    """
+
+    zambia_collection_name: str = ""
+    """
+    The collection name storing scraped Zambia jobs.
+    """

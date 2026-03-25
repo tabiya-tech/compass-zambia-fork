@@ -89,6 +89,13 @@ def _get_metrics_db(mongodb_uri: str, db_name: str, clients: dict) -> AsyncIOMot
     return _get_or_create_client(mongodb_uri, clients).get_database(db_name)
 
 
+def _get_zambia_jobs_db(mongodb_uri: str, db_name: str, clients: dict) -> AsyncIOMotorDatabase:
+    """
+    Decouples the Zambia jobs database creation from the provider.
+    """
+    return _get_or_create_client(mongodb_uri, clients).get_database(db_name)
+
+
 async def check_mongo_health(client: AsyncIOMotorClient) -> bool:
     try:
         result = await client.admin.command("ping")
@@ -106,6 +113,7 @@ class CompassDBProvider:
     _userdata_mongo_db: Optional[AsyncIOMotorDatabase] = None
     _metrics_mongo_db: Optional[AsyncIOMotorDatabase] = None
     _career_explorer_mongo_db: Optional[AsyncIOMotorDatabase] = None
+    _zambia_jobs_mongo_db: Optional[AsyncIOMotorDatabase] = None
     # Shared clients keyed by URI — databases on the same URI reuse one connection pool
     _clients: dict[str, AsyncIOMotorClient] = {}
     _lock = asyncio.Lock()
@@ -394,6 +402,25 @@ class CompassDBProvider:
                     cls._logger.info("Successfully pinged Metrics MongoDB")
         return cls._metrics_mongo_db
 
+    @classmethod
+    async def get_zambia_jobs_db(cls) -> AsyncIOMotorDatabase:
+        if cls._zambia_jobs_mongo_db is None:
+            async with cls._lock:
+                if cls._zambia_jobs_mongo_db is None:
+                    cls._logger.info("Connecting to Zambia Jobs MongoDB")
+                    settings = cls._get_settings()
+                    cls._zambia_jobs_mongo_db = _get_zambia_jobs_db(
+                        settings.zambia_mongodb_uri,
+                        settings.zambia_database_name,
+                        cls._clients
+                    )
+                    cls._logger.info("Connected to Zambia Jobs MongoDB database: %s",
+                                     await _get_database_connection_info(cls._zambia_jobs_mongo_db))
+                    if not await check_mongo_health(cls._zambia_jobs_mongo_db.client):
+                        raise RuntimeError("MongoDB health check failed for Zambia Jobs database")
+                    cls._logger.info("Successfully pinged Zambia Jobs MongoDB")
+        return cls._zambia_jobs_mongo_db
+
     @staticmethod
     def clear_cache():
         """
@@ -406,6 +433,7 @@ class CompassDBProvider:
         CompassDBProvider._userdata_mongo_db = None
         CompassDBProvider._metrics_mongo_db = None
         CompassDBProvider._career_explorer_mongo_db = None
+        CompassDBProvider._zambia_jobs_mongo_db = None
         CompassDBProvider._clients = {}
 
         CompassDBProvider._logger.info("Cleared cached database instances")

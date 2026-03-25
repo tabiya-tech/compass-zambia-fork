@@ -239,6 +239,7 @@ class TestLoaderIntegrationTests:
                               in_memory_userdata_database: Awaitable[AsyncIOMotorDatabase],
                               in_memory_metrics_database: Awaitable[AsyncIOMotorDatabase],
                               in_memory_career_explorer_database: Awaitable[AsyncIOMotorDatabase],
+                              in_memory_zambia_jobs_database: Awaitable[AsyncIOMotorDatabase],
                               mocker: pytest_mock.MockFixture,
                               enable_test_feature: None
                               ):
@@ -267,6 +268,8 @@ class TestLoaderIntegrationTests:
                                           return_value=await in_memory_metrics_database)
         mocker.patch('app.server_dependencies.db_dependencies._get_career_explorer_db',
                      return_value=await in_memory_career_explorer_database)
+        mocker.patch('app.server_dependencies.db_dependencies._get_zambia_jobs_db',
+                     return_value=await in_memory_zambia_jobs_database)
 
         feature_module = Mock()
         feature_module.TestFeature = _TestFeature
