@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CAREER_MODULE_LABELS, PLACEHOLDER_SYMBOL } from "src/constants";
 import { MODULE_FILTER_PROGRAMMES } from "src/data/moduleFilterOptions";
+import { lastLoginDisplayMatchesFilter } from "src/hooks/instructorStudentsLastLoginFilter";
 import type { InstructorStudentRow } from "src/types";
 
 export type StudentsSortKey = "modulesExplored" | "careerReady" | "skillsInterestsExplored";
@@ -87,17 +88,7 @@ export function useInstructorStudentsTableState(
       if (lastModuleFilter !== "all" && row.lastActiveModuleId !== lastModuleFilter) return false;
 
       if (lastLoginFilter === "all") return true;
-      const lastLoginValue = row.lastLogin.trim();
-      const recent = lastLoginValue === "Today" || lastLoginValue === "Yesterday";
-      const dayMatch = lastLoginValue.match(/^(\d+)\s*days?\s*ago$/i);
-      const daysAgo = dayMatch ? Number(dayMatch[1]) : null;
-
-      if (lastLoginFilter === "today") return recent;
-      if (lastLoginFilter === "week") return recent || (daysAgo != null && daysAgo >= 1 && daysAgo <= 6);
-      if (lastLoginFilter === "older") {
-        return !recent && (daysAgo == null || daysAgo >= 7 || /week/i.test(lastLoginValue));
-      }
-      return true;
+      return lastLoginDisplayMatchesFilter(row.lastLogin, lastLoginFilter);
     });
   }, [debouncedNameSearch, gender, lastLoginFilter, lastModuleFilter, programme, rows, yearFilter]);
 

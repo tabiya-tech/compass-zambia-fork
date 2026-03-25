@@ -52,8 +52,8 @@ def deploy_admin_frontend(*,
     _bucket_content = BucketContent(
         get_resource_name(resource="admin-frontend-artifacts", resource_type="bucket-content"),
         bucket_name=bucket.name,
-        # do not cache these files
-        no_cache_paths=["index.html", "data/version.json"],
+        # do not cache these files (env.js must stay fresh; same as main frontend)
+        no_cache_paths=["index.html", "data/version.json", "data/env.js"],
         target_dir="",  # On the target bucket, they will be saved at the root directory.
         source_dir_path=admin_frontend_artifacts_dir,
         opts=pulumi.ResourceOptions(depends_on=bucket, provider=basic_config.provider))
