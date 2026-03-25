@@ -118,7 +118,7 @@ def _construct_env_js_content(*, artifacts_dir: str, stack_name: str):
     default_locale = getenv("FRONTEND_DEFAULT_LOCALE", False, True)
 
     # Branding
-    global_product_name: Optional[str] = getenv("FRONTEND_PRODUCT_NAME", False, False)
+    global_product_name: Optional[str] = getenv("GLOBAL_PRODUCT_NAME", False, False)
     frontend_browser_tab_title: Optional[str] = getenv("FRONTEND_BROWSER_TAB_TITLE", False, False)
     frontend_meta_description: Optional[str] = getenv("FRONTEND_META_DESCRIPTION", False, False)
     frontend_logo_url: Optional[str] = getenv("FRONTEND_LOGO_URL", False, False)

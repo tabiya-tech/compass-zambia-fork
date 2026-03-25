@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, CircularProgress, Container, TextField, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +34,13 @@ const Login: React.FC<LoginProps> = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const logoUrl = getLogoUrl() || "/logo.svg";
+  const preferredLocal = `${process.env.PUBLIC_URL}/logo.svg`;
+  const preferredSrc = getLogoUrl() || preferredLocal;
+  const [logoSrc, setLogoSrc] = useState(preferredSrc);
+
+  useEffect(() => {
+    setLogoSrc(preferredSrc);
+  }, [preferredSrc]);
 
   const getErrorMessage = (error: FirebaseError): string => {
     switch (error.code) {
@@ -114,9 +120,12 @@ const Login: React.FC<LoginProps> = () => {
           >
             <Box
               component="img"
-              src={logoUrl}
+              src={logoSrc}
               alt={t("login.logoAlt", "Logo")}
               data-testid={DATA_TEST_ID.LOGIN_PAGE_LOGO}
+              onError={() => {
+                setLogoSrc((prev) => (prev === preferredLocal ? prev : preferredLocal));
+              }}
               sx={{
                 height: 64,
                 width: "auto",
