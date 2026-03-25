@@ -2,7 +2,7 @@ import React from "react";
 import { Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useTranslation } from "react-i18next";
-import { getModuleLabel, PLACEHOLDER_SYMBOL, isPlaceholderValue } from "src/constants";
+import { getModuleLabel } from "src/constants";
 import { useInstructorStudentsTableState, type StudentsSortKey } from "src/hooks/useInstructorStudentsTableState";
 import type { InstructorStudentRow } from "src/types";
 import DataTable, { type ColumnDef } from "src/components/DataTable/DataTable";
@@ -69,8 +69,14 @@ const InstructorStudentsTable: React.FC<InstructorStudentsTableProps> = ({
       key: "studentName",
       label: t("instructorDashboard.studentsTable.headers.studentName").toUpperCase(),
       sortable: false,
+      align: "center",
       render: (val) => (
-        <Typography variant="body2" noWrap title={val as string} sx={{ fontWeight: 700, color: "info.main" }}>
+        <Typography
+          variant="body2"
+          noWrap
+          title={val as string}
+          sx={{ fontWeight: 700, color: "info.main", textAlign: "center", width: "100%" }}
+        >
           {val as string}
         </Typography>
       ),
@@ -79,18 +85,14 @@ const InstructorStudentsTable: React.FC<InstructorStudentsTableProps> = ({
       key: "programme",
       label: t("instructorDashboard.studentsTable.headers.programme").toUpperCase(),
       sortable: false,
+      align: "center",
       filter: {
         options: programmes.map((p) => ({ value: p, label: p === "all" ? allLabel : p })),
         value: programme,
         onChange: setProgramme,
       },
       render: (val, row) => (
-        <Typography
-          variant="body2"
-          noWrap
-          title={row.programme}
-          sx={{ textAlign: isPlaceholderValue(row.programme) ? "center" : undefined }}
-        >
+        <Typography variant="body2" noWrap title={row.programme} sx={{ textAlign: "center", width: "100%" }}>
           {row.programme}
         </Typography>
       ),
@@ -99,36 +101,31 @@ const InstructorStudentsTable: React.FC<InstructorStudentsTableProps> = ({
       key: "year",
       label: t("instructorDashboard.studentsTable.headers.year").toUpperCase(),
       sortable: false,
+      align: "center",
       filter: {
         options: years.map((y) => ({ value: y, label: y === "all" ? allLabel : y })),
         value: yearFilter,
         onChange: setYearFilter,
       },
-      render: (val, row) => (
-        <span style={{ textAlign: isPlaceholderValue(row.year) ? "center" : undefined, display: "block" }}>
-          {row.year}
-        </span>
-      ),
+      render: (val, row) => <span style={{ textAlign: "center", display: "block", width: "100%" }}>{row.year}</span>,
     },
     {
       key: "gender",
       label: t("instructorDashboard.studentsTable.headers.gender").toUpperCase(),
       sortable: false,
+      align: "center",
       filter: {
         options: genders.map((g) => ({ value: g, label: g === "all" ? allLabel : g })),
         value: gender,
         onChange: setGender,
       },
-      render: (val, row) => (
-        <span style={{ textAlign: isPlaceholderValue(row.gender) ? "center" : undefined, display: "block" }}>
-          {row.gender}
-        </span>
-      ),
+      render: (val, row) => <span style={{ textAlign: "center", display: "block", width: "100%" }}>{row.gender}</span>,
     },
     {
       key: "lastLogin",
       label: t("instructorDashboard.studentsTable.headers.lastLogin").toUpperCase(),
       sortable: false,
+      align: "center",
       filter: {
         options: [
           { value: "all", label: allLabel },
@@ -140,7 +137,7 @@ const InstructorStudentsTable: React.FC<InstructorStudentsTableProps> = ({
         onChange: setLastLoginFilter,
       },
       render: (val) => (
-        <Typography variant="body2" noWrap title={val as string}>
+        <Typography variant="body2" noWrap title={val as string} sx={{ textAlign: "center", width: "100%" }}>
           {val as string}
         </Typography>
       ),
@@ -149,6 +146,7 @@ const InstructorStudentsTable: React.FC<InstructorStudentsTableProps> = ({
       key: "lastActiveModuleId",
       label: t("instructorDashboard.studentsTable.headers.lastActiveModule").toUpperCase(),
       sortable: false,
+      align: "center",
       filter: {
         options: modules.map((m) => ({
           value: m,
@@ -160,12 +158,7 @@ const InstructorStudentsTable: React.FC<InstructorStudentsTableProps> = ({
       render: (val, row) => {
         const label = getModuleLabel(row.lastActiveModuleId);
         return (
-          <Typography
-            variant="body2"
-            noWrap
-            title={label}
-            sx={{ textAlign: label === PLACEHOLDER_SYMBOL ? "center" : undefined }}
-          >
+          <Typography variant="body2" noWrap title={label} sx={{ textAlign: "center", width: "100%" }}>
             {label}
           </Typography>
         );

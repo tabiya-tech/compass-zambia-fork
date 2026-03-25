@@ -294,7 +294,12 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
                       borderRadius: theme.fixedSpacing(theme.tabiyaSpacing.xs),
                       backgroundColor: theme.palette.divider,
                       "& .MuiLinearProgress-bar": {
-                        backgroundColor: item.color || theme.palette.primary.main,
+                        backgroundColor:
+                          item.color === "primary"
+                            ? theme.palette.primary.main
+                            : item.color === "secondary"
+                              ? theme.palette.secondary.main
+                              : theme.palette.primary.main,
                         borderRadius: "inherit",
                       },
                     }}

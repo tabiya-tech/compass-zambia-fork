@@ -281,11 +281,14 @@ function DataTable<T extends { id: string }>({
     });
   }
 
-  // Shared header cell padding using theme spacing
-  const headerPx = theme.fixedSpacing(theme.tabiyaSpacing.sm); // 8px
-  const headerPxGroup = theme.fixedSpacing(theme.tabiyaSpacing.xs); // 4px
-  const headerPy = theme.fixedSpacing(theme.tabiyaSpacing.sm);
-  const headerPyGroup = theme.fixedSpacing(theme.tabiyaSpacing.xs);
+  // Shared cell padding (slightly roomier than raw sm/xs so tables feel less cramped)
+  const headerPx = theme.fixedSpacing(1.5); // 12px
+  const headerPxGroup = theme.fixedSpacing(1); // 8px (grouped metric columns)
+  const headerPy = theme.fixedSpacing(1.25); // 10px
+  const headerPyGroup = theme.fixedSpacing(0.75); // 6px
+
+  const headerJustifyContent = (align: ColumnDef<T>["align"]) =>
+    align === "right" ? "flex-end" : align === "left" ? "flex-start" : "center";
 
   // ── Header cell content ───────────────────────────────────────────────────
 
@@ -302,7 +305,7 @@ function DataTable<T extends { id: string }>({
           onClick={() => handleSortClick(col.key)}
           sx={{
             width: "100%",
-            justifyContent: col.align === "right" ? "flex-end" : col.align === "center" ? "center" : "flex-start",
+            justifyContent: headerJustifyContent(col.align),
             "& .MuiTableSortLabel-icon": { fontSize: "0.72rem" },
             color: "text.secondary",
           }}
@@ -331,7 +334,7 @@ function DataTable<T extends { id: string }>({
           display: "flex",
           alignItems: "center",
           gap: theme.fixedSpacing(theme.tabiyaSpacing.xxs),
-          justifyContent: col.align === "right" ? "flex-end" : col.align === "center" ? "center" : "flex-start",
+          justifyContent: headerJustifyContent(col.align),
         }}
       >
         <Typography
@@ -475,7 +478,7 @@ function DataTable<T extends { id: string }>({
                       <TableCell
                         key={String(col.key)}
                         rowSpan={2}
-                        align={col.align ?? "left"}
+                        align={col.align ?? "center"}
                         sx={{
                           py: headerPy,
                           px: headerPx,
@@ -545,7 +548,7 @@ function DataTable<T extends { id: string }>({
                 {columns.map((col, i) => (
                   <TableCell
                     key={String(col.key)}
-                    align={col.align ?? "left"}
+                    align={col.align ?? "center"}
                     sx={{
                       verticalAlign: "bottom",
                       minWidth: col.minWidth,
@@ -599,7 +602,7 @@ function DataTable<T extends { id: string }>({
                     return (
                       <TableCell
                         key={String(col.key)}
-                        align={col.align ?? "left"}
+                        align={col.align ?? "center"}
                         sx={{
                           py: headerPy,
                           px: col.group ? headerPxGroup : headerPx,

@@ -849,6 +849,8 @@
       "notAvailable": "Sichipezeka",
       "skillsInterestsProgressTitle": "Kupita kwa Luso ndi Zokonda",
       "skillsInterestsProgressDescription": "Motali mwafika m'kukambirana kwanu kwa kupeza luso",
+      "moduleCompleted": "yathera",
+      "moduleRemaining": "yotsala",
       "noSkillsYet": "Palibe luso lopezeka mpaka pano. Yambani kukambirana kuti mupeze luso lanu!",
       "careerExplorer": "Career Explorer",
       "noSectorsYet": "Palibe gawo lopezeka mpaka pano.",

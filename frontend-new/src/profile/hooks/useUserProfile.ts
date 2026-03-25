@@ -276,7 +276,12 @@ export const useUserProfile = (): UseUserProfileResult => {
   };
 
   const isLoading =
-    isLoadingSecurity || isLoadingPreferences || isLoadingProfile || isLoadingSkills || isLoadingModules || isLoadingCareerExplorer;
+    isLoadingSecurity ||
+    isLoadingPreferences ||
+    isLoadingProfile ||
+    isLoadingSkills ||
+    isLoadingModules ||
+    isLoadingCareerExplorer;
 
   return {
     profileData,

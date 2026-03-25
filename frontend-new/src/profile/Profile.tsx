@@ -38,25 +38,6 @@ export interface ProfileProps {
   isLoadingCareerExplorer: boolean;
 }
 
-/**
- * Profile presentation component - Pure UI component for displaying user profile
- * This component only handles rendering and does not manage any state or side effects.
- *
- * @param email - User's email
- * @param language - User's preferred language
- * @param termsAcceptedDate - Date when user accepted terms and conditions
- * @param name - User's name
- * @param location - User's location
- * @param school - User's school
- * @param program - User's program
- * @param year - User's year
- * @param skills - Array of skills discovered by the user
- * @param modules - Array of module progress data
- * @param isLoadingSecurity - Loading state for security data
- * @param isLoadingPreferences - Loading state for preferences data
- * @param isLoadingProfile - Loading state for profile data
- * @param isLoadingSkills - Loading state for skills data
- */
 export const Profile: React.FC<ProfileProps> = ({
   email,
   language,
@@ -82,14 +63,15 @@ export const Profile: React.FC<ProfileProps> = ({
   return (
     <Box
       sx={{
-        paddingX: theme.spacing(isMobile ? theme.tabiyaSpacing.md : theme.tabiyaSpacing.lg),
-        paddingY: theme.spacing(theme.tabiyaSpacing.xl),
-        maxWidth: "800px",
+        paddingX: theme.fixedSpacing(isMobile ? theme.tabiyaSpacing.md : theme.tabiyaSpacing.lg),
+        paddingY: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+        maxWidth: 900,
         margin: "0 auto",
       }}
       data-testid={DATA_TEST_ID.PROFILE_CONTENT}
     >
-      <Stack spacing={theme.spacing(theme.tabiyaSpacing.md)}>
+      <Stack spacing={theme.fixedSpacing(theme.tabiyaSpacing.md)}>
+        {/* Identity */}
         <ProfileCard
           name={name}
           location={location}
@@ -99,22 +81,39 @@ export const Profile: React.FC<ProfileProps> = ({
           isLoading={isLoadingProfile}
         />
 
-        <ModuleProgressCard
-          modules={[
-            { id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: skillsInterestsProgress },
-          ]}
-        />
+        {/* Progress — two columns on md+ */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+            gap: theme.fixedSpacing(theme.tabiyaSpacing.md),
+          }}
+        >
+          <ModuleProgressCard
+            modules={[
+              { id: "skills_discovery", labelKey: "home.modules.skillsDiscovery", progress: skillsInterestsProgress },
+            ]}
+          />
+          <CareerReadinessProgressBanner modules={modules} />
+        </Box>
 
-        <CareerReadinessProgressBanner modules={modules} />
-
+        {/* Career Explorer sectors */}
         <CareerExplorerCard sectors={careerExplorerSectors} isLoading={isLoadingCareerExplorer} />
 
+        {/* Skills discovered */}
         <SkillsDiscoveredCard skills={skills} isLoading={isLoadingSkills} />
 
-        <Stack direction={{ md: "row", sm: "column" }} gap={theme.spacing(theme.tabiyaSpacing.md)}>
+        {/* Account info */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            gap: theme.fixedSpacing(theme.tabiyaSpacing.md),
+          }}
+        >
           <SecurityCard email={email} isLoading={isLoadingSecurity} />
           <PreferencesCard language={language} acceptedTcDate={termsAcceptedDate} isLoading={isLoadingPreferences} />
-        </Stack>
+        </Box>
       </Stack>
     </Box>
   );

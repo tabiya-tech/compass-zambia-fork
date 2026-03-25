@@ -15,44 +15,33 @@ export interface SecurityCardProps {
   isLoading: boolean;
 }
 
-/**
- * SecurityCard displays user security information (email address).
- * Shows skeleton loaders while data is loading.
- *
- * @param email - User's email address from Firebase Auth
- * @param isLoading - Whether data is currently being loaded
- */
 export const SecurityCard: React.FC<SecurityCardProps> = ({ email, isLoading }) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
   return (
     <Card
-      sx={{
-        border: `1px solid ${theme.palette.divider}`,
-        boxShadow: "none",
-        width: "100%",
-      }}
+      sx={{ border: `1px solid ${theme.palette.divider}`, boxShadow: "none", width: "100%" }}
       data-testid={DATA_TEST_ID.SECURITY_CARD}
     >
       <CardContent
         sx={{
-          padding: theme.spacing(theme.tabiyaSpacing.lg),
+          padding: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+          "&:last-child": { paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) },
         }}
       >
         <Typography
-          variant="h6"
-          sx={{
-            marginBottom: theme.spacing(theme.tabiyaSpacing.md),
-            fontWeight: "bold",
-          }}
+          variant="subtitle1"
+          fontWeight="bold"
+          color="text.primary"
+          sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.sm) }}
           data-testid={DATA_TEST_ID.SECURITY_TITLE}
         >
           {t("home.profile.security")}
         </Typography>
 
         {isLoading ? (
-          <Fieldset label={t("home.profile.email")} isLoading={true} />
+          <Fieldset label={t("home.profile.email")} isLoading />
         ) : (
           <Fieldset label={t("home.profile.email")} value={email || t("home.profile.notAvailable")} />
         )}

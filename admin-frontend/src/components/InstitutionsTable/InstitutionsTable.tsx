@@ -35,7 +35,7 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
   const renderPct = (val: InstitutionRow[keyof InstitutionRow]) => {
     const n = val as number | null | undefined;
     return (
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", width: "100%" }}>
         {n === null || n === undefined ? "—" : `${n}%`}
       </Typography>
     );
@@ -43,11 +43,15 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
 
   const renderNum = (val: InstitutionRow[keyof InstitutionRow]) => {
     const n = val as number | null | undefined;
-    return <Typography variant="body2">{n === null || n === undefined ? "—" : n.toLocaleString()}</Typography>;
+    return (
+      <Typography variant="body2" sx={{ textAlign: "center", width: "100%" }}>
+        {n === null || n === undefined ? "—" : n.toLocaleString()}
+      </Typography>
+    );
   };
 
   const renderInstitution = (val: InstitutionRow[keyof InstitutionRow]) => (
-    <Typography variant="body2" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+    <Typography variant="body2" sx={{ fontWeight: 600, color: theme.palette.text.primary, textAlign: "center" }}>
       {val as string}
     </Typography>
   );
@@ -66,7 +70,7 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
       key: "institution",
       label: t("dashboard.institutionsTable.headers.institution"),
       sortable: true,
-      align: "left",
+      align: "center",
       minWidth: 180,
       render: renderInstitution,
       cellSx: { borderRight: `1px solid ${colDividerColor}` },
@@ -75,7 +79,7 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
       key: "students",
       label: t("dashboard.institutionsTable.headers.students"),
       sortable: true,
-      align: "right",
+      align: "center",
       minWidth: 76,
       render: renderNum,
       cellSx: { fontVariantNumeric: "tabular-nums" },
@@ -84,7 +88,7 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
       key: "active7Days",
       label: t("dashboard.institutionsTable.headers.active7Days"),
       sortable: true,
-      align: "right",
+      align: "center",
       minWidth: 90,
       render: renderNum,
       cellSx: { fontVariantNumeric: "tabular-nums", borderRight: `1px solid ${colDividerColor}` },
@@ -127,6 +131,15 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
       render: renderGroupedPct("careerReadinessCompletedPct"),
       cellSx: { borderRight: `1px solid ${colDividerColor}` },
     },
+    {
+      key: "careerExplorerStartedPct",
+      label: `${t("dashboard.institutionsTable.subHeaders.started")}\n${t("dashboard.institutionsTable.subHeaders.ofReg")}`,
+      sortable: true,
+      align: "center",
+      minWidth: 80,
+      group: "careerExplorer",
+      render: renderGroupedPct("careerExplorerStartedPct"),
+    },
   ];
 
   const columnGroups: ColumnGroup[] = [
@@ -145,9 +158,9 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({
     {
       key: "careerExplorer",
       label: t("dashboard.institutionsTable.headers.careerExplorer"),
-      colSpan: 2,
+      colSpan: 1,
       color: GROUP_COLORS.careerExplorer,
-    }
+    },
   ];
 
   return (
