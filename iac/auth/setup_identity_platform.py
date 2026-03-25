@@ -231,7 +231,6 @@ def deploy_auth(*,
                 location: str,
                 environment_type: pulumi.Output[str],
                 project: pulumi.Output[str],
-                project_number: pulumi.Output[str],
                 dns_zone_name: pulumi.Output[str],
                 domain_name: pulumi.Output[str],
                 auth_domain: pulumi.Output[str],
@@ -285,13 +284,3 @@ def deploy_auth(*,
         dependencies=[idp_cfg]  # Wait for the identity platform to be setup first
     )
 
-    # Set the GCP project's displayName, which is what Firebase uses to populate
-    # %APP_NAME% in Authentication email templates (password reset, email verification, etc.).
-    # The Identity Platform REST API documents %APP_NAME% as "The Google Cloud project's
-    # display name", set via the Resource Manager v3 API.
-    GcpProjectDisplayName(
-        get_resource_name(resource="gcp-project-display-name", resource_type="display-name"),
-        project_number=project_number,
-        display_name=app_name,
-        opts=pulumi.ResourceOptions(provider=_basic_config.provider, depends_on=[idp_cfg]),
-    )
