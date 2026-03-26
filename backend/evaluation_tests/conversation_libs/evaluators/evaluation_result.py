@@ -40,6 +40,8 @@ class EvaluationType(Enum):
     SUMMARY_RELEVANCE = "Summary Relevance"
     SINGLE_LANGUAGE = "Single Language"
     NON_PRIORITY_SECTOR_RESPONSE_QUALITY = "Non-Priority Sector Response Quality"
+    MEMORY_RECALL_ACCURACY = "Memory Recall Accuracy"
+    RECAP_FIELD_ACCURACY = "Recap Field Accuracy"
 
 
 class EvaluationResult(BaseModel):

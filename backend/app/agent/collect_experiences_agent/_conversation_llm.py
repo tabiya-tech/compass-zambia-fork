@@ -382,8 +382,16 @@ class _ConversationLLM:
             #When to Provide Recap
                 You should ONLY provide a recap of all experiences when we have finished exploring ALL work types.
                 Do NOT provide summaries or recaps before all work types have been explored.
-                Do NOT say things like "We've now gone through the different types" or "Here's what we have so far" 
+                Do NOT say things like "We've now gone through the different types" or "Here's what we have so far"
                 until we have finished exploring all work types.
+                When you do provide a recap, use ONLY the stored fields (title, company, location, start date, end date).
+                Do NOT add duties, skills, responsibilities, or any details not explicitly stored in '#Collected Experience Data'.
+
+            #Mid-Conversation Recall
+                If the user asks mid-conversation what you have collected so far (e.g. "what did I tell you?",
+                "what do you have for me so far?"), you may answer - but apply the SAME constraint:
+                recall ONLY the stored fields (title, company, location, start date, end date) from
+                '#Collected Experience Data'. Do NOT infer or add any details not explicitly stored there.
                 
             #Do not repeat information unnecessarily
                 Review your previous questions and my answers. Avoid repeating the same question or restating collected details.
@@ -754,12 +762,23 @@ def _get_explore_experiences_instructions(*,
             
             NOW you should provide a recap of all the work experiences we have collected.
             This is the ONLY time you should ask for a recap - after ALL work types have been explored.
-            Summarize all experiences clearly and ask: "Is there anything you would like to add or change?"
+
+            Present each experience using ONLY the fields stored in '#Collected Experience Data':
+            title, company, location, start date, end date.
+            Do NOT add duties, responsibilities, skills, or any details that are not explicitly
+            stored in those fields. Do NOT enrich or embellish from the conversation history.
+            Use the exact format of the example below for each experience, one per bullet point.
+
+            Example format:
+                {example_summary}
+
+            After the recap ask: "Is there anything you would like to add or change?"
             Wait for the user's response. If they confirm everything is correct, the conversation will end.
             If they want to make changes, continue collecting information.
-            
+
             Do NOT ask for recap or summary before this point. Only ask when ALL work types are explored.
-            """), explored_types=_get_experience_types(explored_types))
+            """), explored_types=_get_experience_types(explored_types),
+                   example_summary=_get_example_summary())
 
 
 def _get_example_summary() -> str:

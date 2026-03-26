@@ -84,6 +84,71 @@ class PromptGenerator:
                 - Gives a generic error or placeholder response
                 - Provides no useful career-specific information
                 """)
+            case EvaluationType.MEMORY_RECALL_ACCURACY:
+                return textwrap.dedent("""
+                Evaluation Criteria:
+                Memory Recall Accuracy - did the EVALUATED_AGENT accurately recall the specific details
+                of a past experience when asked by the user, without hallucinating or blending details
+                from a different experience?
+
+                The conversation contains TWO distinct experiences:
+                  1. A PAID experience: Data Entry Clerk at a telecom company.
+                     Duties: entering customer data into systems, filing forms, organizing records.
+                  2. A VOLUNTEERING experience: Survey Enumerator at an NGO.
+                     Duties: asking questions to respondents, recording answers, occasionally
+                     convincing hesitant respondents to participate.
+
+                After summarization has occurred, the user asks the EVALUATED_AGENT to recall
+                what they said they volunteered for.
+
+                A CORRECT response:
+                  - Describes the Survey Enumerator / NGO volunteering role accurately
+                  - Does NOT mention telecom, data entry, filing forms, or customer records
+                  - May mention "asking questions", "recording answers", "convincing respondents"
+
+                A HALLUCINATED / BLENDED response:
+                  - Mixes in details from the paid Data Entry Clerk role (telecom, filing, data entry)
+                  - Invents duties not mentioned in the conversation
+                  - Describes the wrong experience entirely
+
+                Evaluation Steps:
+                1. Find the turn where the user asks to be reminded about their volunteering experience.
+                2. Read the EVALUATED_AGENT's response to that question.
+                3. Check if the response accurately describes the Survey Enumerator / NGO role only.
+                4. Penalise any blending of paid experience details into the volunteering recall.
+                5. Assign a score from 0 to 100:
+                   - 0–30: full hallucination or complete blend of the wrong experience
+                   - 31–60: partial blend (some correct details, some from the wrong experience)
+                   - 61–85: mostly correct with minor inaccuracies
+                   - 86–100: fully accurate recall with no hallucinated or blended details
+                """)
+            case EvaluationType.RECAP_FIELD_ACCURACY:
+                return textwrap.dedent("""\
+                Evaluation Criteria:
+                Recap Field Accuracy - when the EVALUATED_AGENT provides a final recap of collected
+                work experiences, it must include ONLY the five structured fields:
+                  title, work_type, company, location, start_date / end_date.
+
+                The recap must NOT include any of the following:
+                  - duties, responsibilities, or tasks described during the conversation
+                  - skills, competencies, or achievements
+                  - any information that was mentioned in the conversation but is NOT one of the five fields
+
+                The conversation contains experiences where the user explicitly described duties
+                (e.g. "entering data", "filing forms", "asking questions"). A compliant recap
+                omits all of these and only lists the five structured fields per experience.
+
+                Evaluation Steps:
+                1. Find the turn(s) where the EVALUATED_AGENT provides the final recap.
+                2. For each experience in the recap, check whether the agent included anything
+                   beyond title, work_type, company, location, and date range.
+                3. Penalise every duty, skill, or responsibility that appears in the recap.
+                4. Assign a score from 0 to 100:
+                   - 0–30: recap contains extensive duties/skills — clear embellishment
+                   - 31–60: recap contains some duties/skills mixed with structured fields
+                   - 61–85: recap is mostly clean with one or two stray details
+                   - 86–100: recap contains ONLY the five structured fields, no duties or skills
+                """)
             case _:
                 raise NotImplementedError()
 
@@ -121,6 +186,17 @@ class PromptGenerator:
                 return textwrap.dedent("""
                 The response provides useful career information about the non-priority sector, including roles,
                 pathways, and context, without deflecting to priority sectors.
+                """)
+            case EvaluationType.MEMORY_RECALL_ACCURACY:
+                return textwrap.dedent("""
+                The agent correctly recalled the volunteering experience as Survey Enumerator at an NGO,
+                mentioning asking questions and recording answers, without mixing in any details from
+                the paid Data Entry Clerk role at the telecom company.
+                """)
+            case EvaluationType.RECAP_FIELD_ACCURACY:
+                return textwrap.dedent("""\
+                The agent's recap listed only title, work type, dates, company, and location for each
+                experience. No duties, responsibilities, or skills were included in the recap.
                 """)
             case _:
                 raise NotImplementedError()
