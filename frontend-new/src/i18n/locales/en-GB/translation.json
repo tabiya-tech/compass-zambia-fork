@@ -887,5 +887,9 @@
     "documentNotFound": "Document not found",
     "introduction": "These are Zambia's priority sectors for TEVET graduates. Each profile gives you an overview of what the industry looks like, what roles exist, and what you can expect to earn. Explore the sectors that interest you to make more informed decisions about your career path.",
     "noDocumentsAvailable": "No documents available yet."
+  },
+  "jobMatching": {
+    "pageTitle": "Job Matching",
+    "pageDescription": "Explore real job openings and see how your skills match opportunities across Zambia."
   }
 }

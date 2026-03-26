@@ -167,6 +167,14 @@ async def in_memory_metrics_database(in_memory_mongo_server) -> AsyncIOMotorData
     return metrics_db
 
 
+@pytest.fixture(scope='function')
+async def in_memory_jobs_database(in_memory_mongo_server) -> AsyncIOMotorDatabase:
+    jobs_db = AsyncIOMotorClient(in_memory_mongo_server.connection_string,
+                                        tlsAllowInvalidCertificates=True).get_database(random_db_name())
+    logging.info(f"Created jobs database: {jobs_db.name}")
+    return jobs_db
+
+
 @pytest.fixture(scope="function")
 def setup_application_config() -> Generator[ApplicationConfig, Any, None]:
     """

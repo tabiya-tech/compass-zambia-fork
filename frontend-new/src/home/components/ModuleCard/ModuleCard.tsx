@@ -55,21 +55,22 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) =
 
   const icon = MODULE_ICONS[module.id] || <HelpOutlineOutlined sx={{ fontSize: 40 }} />;
   const isDisabled = module.disabled === true;
+  const accentColor = module.color ?? theme.palette.primary.main;
 
   return (
     <Card
       sx={{
         borderRadius: theme.rounding(theme.tabiyaRounding.sm),
         border: `1px solid ${theme.palette.common.black}`,
+        borderTop: `4px solid ${isDisabled ? theme.palette.text.disabled : accentColor}`,
         boxShadow: "none",
         height: "100%",
         position: "relative",
         opacity: isDisabled ? 0.6 : 1,
         "&:hover": {
-          borderColor: isDisabled ? theme.palette.common.black : theme.palette.primary.main,
-          backgroundColor: isDisabled
-            ? "transparent"
-            : `color-mix(in srgb, ${theme.palette.primary.light} 16%, transparent)`,
+          borderColor: isDisabled ? theme.palette.common.black : accentColor,
+          borderTopColor: isDisabled ? theme.palette.text.disabled : accentColor,
+          backgroundColor: isDisabled ? "transparent" : `color-mix(in srgb, ${accentColor} 8%, transparent)`,
         },
       }}
       data-testid={DATA_TEST_ID.MODULE_CARD}
@@ -139,7 +140,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, badgeStatus = null }) =
           {/* Icon */}
           <Box
             sx={{
-              color: isDisabled ? theme.palette.text.disabled : theme.palette.text.primary,
+              color: isDisabled ? theme.palette.text.disabled : accentColor,
             }}
             data-testid={DATA_TEST_ID.MODULE_CARD_ICON}
           >

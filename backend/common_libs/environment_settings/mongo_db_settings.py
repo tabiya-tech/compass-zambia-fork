@@ -55,3 +55,18 @@ class MongoDbSettings(BaseSettings):
     """
     The name of the Career Explorer database (conversations + sector chunks).
     """
+
+    jobs_mongodb_uri: str = ""
+    """
+    The URI of the jobs MongoDB instance.
+    """
+
+    jobs_database_name: str = ""
+    """
+    The name of the jobs database.
+    """
+
+    jobs_collection_name: str = ""
+    """
+    The collection name storing scraped jobs.
+    """
