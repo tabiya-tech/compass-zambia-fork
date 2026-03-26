@@ -20,7 +20,6 @@ from app.career_readiness.errors import (
     ConversationModuleMismatchError,
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
-    ModuleNotUnlockedError,
     QuizAlreadyPassedError,
     QuizNotAvailableError,
 )
@@ -120,36 +119,27 @@ def _derive_module_statuses(
     user_conversations: list[CareerReadinessConversationDocument],
 ) -> dict[str, ModuleStatus]:
     """
-    Derive the status of all modules based on sequential unlock logic.
+    Derive the status of all modules.
 
-    Rules:
-    - First module is always UNLOCKED (if no conversation exists)
-    - Subsequent modules unlock when the previous module is COMPLETED (quiz passed)
-    - A module with a conversation is IN_PROGRESS (unless quiz passed → COMPLETED)
-    - Only one module can be UNLOCKED at a time (the next eligible one)
+    All modules are accessible from the start (no sequential gating).
+    - A module with a completed quiz is COMPLETED.
+    - A module with an active conversation is IN_PROGRESS.
+    - A module with no conversation is NOT_STARTED.
     """
     conv_by_module = {c.module_id: c for c in user_conversations}
-    sorted_modules = sorted(all_modules, key=lambda m: m.sort_order)
 
     statuses: dict[str, ModuleStatus] = {}
-    previous_completed = True  # First module is always unlocked
 
-    for module in sorted_modules:
+    for module in all_modules:
         conversation = conv_by_module.get(module.id)
 
         if conversation is not None:
             if conversation.quiz_passed:
                 statuses[module.id] = ModuleStatus.COMPLETED
-                previous_completed = True
             else:
                 statuses[module.id] = ModuleStatus.IN_PROGRESS
-                previous_completed = False
-        elif previous_completed:
-            statuses[module.id] = ModuleStatus.UNLOCKED
-            previous_completed = False
         else:
             statuses[module.id] = ModuleStatus.NOT_STARTED
-            previous_completed = False
 
     return statuses
 
@@ -295,16 +285,8 @@ class CareerReadinessService(ICareerReadinessService):
     async def create_conversation(self, user_id: str, module_id: str) -> CareerReadinessConversationResponse:
         module = self._get_module_or_raise(module_id)
 
-        # Check sequential unlock
-        all_modules = self._module_registry.get_all_modules()
-        user_conversations = await self._repository.find_all_by_user(user_id)
-        statuses = _derive_module_statuses(all_modules, user_conversations)
-        module_status = statuses.get(module_id, ModuleStatus.NOT_STARTED)
-
-        if module_status == ModuleStatus.NOT_STARTED:
-            raise ModuleNotUnlockedError(module_id)
-
         # Check for existing conversation
+        user_conversations = await self._repository.find_all_by_user(user_id)
         existing = next((c for c in user_conversations if c.module_id == module_id), None)
         if existing is not None:
             raise ConversationAlreadyExistsError(module_id, user_id)

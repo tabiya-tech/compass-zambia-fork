@@ -29,7 +29,7 @@ topics: Topic One, Topic Two, Topic Three
 | `title` | Display name shown to the user. |
 | `description` | Short summary shown in the module list. |
 | `icon` | Icon identifier used by the frontend. |
-| `sort_order` | Integer controlling module progression order. Modules unlock sequentially by this value. |
+| `sort_order` | Integer controlling the display order of modules in the list. |
 | `input_placeholder` | Placeholder text in the chat input box. |
 | `topics` | Comma-separated list of topics the AI tutor must cover before the quiz is triggered. |
 
@@ -68,9 +68,9 @@ Answer: C
 - Include at least 5 questions; we recommend 10.
 - Each question has exactly 4 options (A–D) and one correct `Answer:` line.
 
-## Module Ordering & Sequential Unlock
+## Module Ordering
 
-Modules unlock sequentially based on `sort_order`. The first module (lowest `sort_order`) is always unlocked. Subsequent modules unlock only after the previous one is completed (quiz passed).
+All modules are accessible from the start — there is no sequential unlock. The `sort_order` field controls the display order in the module list.
 
 ## Checklist Before Deploying
 
