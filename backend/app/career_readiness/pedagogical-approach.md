@@ -107,7 +107,7 @@ The quiz is delivered within the chat conversation (not as a separate UI compone
 
 - 10 multiple-choice questions per module
 - 70% pass threshold (placeholder — to be confirmed by TEVET)
-- On pass: module marked completed, next module unlocked, module remains accessible in support mode
+- On pass: module marked completed, module remains accessible in support mode
 - On fail: module stays in instruction mode, student can retry
 
 ### Supporting Evidence

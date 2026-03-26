@@ -145,7 +145,7 @@ const completedHistory: CareerReadinessConversationResponse = {
     {
       message_id: "m3",
       message:
-        "Well done! You've passed the quiz for this module. The next module is now unlocked. You can continue to ask me follow-up questions here.",
+        "Well done! You've passed the quiz for this module. You can continue to ask me follow-up questions here.",
       sent_at: new Date(Date.now() - 1 * 60 * 1000).toISOString(),
       sender: "AGENT",
     },

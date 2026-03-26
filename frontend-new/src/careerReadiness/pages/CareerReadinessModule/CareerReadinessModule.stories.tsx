@@ -42,7 +42,7 @@ const moduleDetailBase: ModuleDetail = {
   title: "Workplace Readiness",
   description: "Learn workplace communication and expectations.",
   icon: "workplace",
-  status: "UNLOCKED",
+  status: "NOT_STARTED",
   sort_order: 4,
   input_placeholder: "Ask about workplace readiness...",
   scope: "Workplace communication and collaboration",
@@ -114,7 +114,8 @@ const completedHistoryResponse: CareerReadinessConversationResponse = {
     },
     {
       message_id: "c4",
-      message: "Well done! You've passed the quiz for this module. The next module is now unlocked.",
+      message:
+        "Well done! You've passed the quiz for this module. You can continue to ask me follow-up questions here.",
       sent_at: getTimestamp(0),
       sender: "AGENT",
     },

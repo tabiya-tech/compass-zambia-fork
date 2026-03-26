@@ -15,7 +15,6 @@ from app.career_readiness.errors import (
     ConversationAlreadyExistsError,
     ConversationModuleMismatchError,
     ConversationNotFoundError,
-    ModuleNotUnlockedError,
     QuizAlreadyPassedError,
     QuizNotAvailableError,
 )
@@ -114,7 +113,6 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
         response_model=CareerReadinessConversationResponse,
         responses={
             HTTPStatus.NOT_FOUND: {"model": HTTPErrorResponse},
-            HTTPStatus.FORBIDDEN: {"model": HTTPErrorResponse},
             HTTPStatus.CONFLICT: {"model": HTTPErrorResponse},
             HTTPStatus.INTERNAL_SERVER_ERROR: {"model": HTTPErrorResponse},
         },
@@ -129,8 +127,6 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
             return await service.create_conversation(user_info.user_id, module_id)
         except CareerReadinessModuleNotFoundError as exc:
             raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Module not found: {module_id}") from exc
-        except ModuleNotUnlockedError as exc:
-            raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail=str(exc)) from exc
         except ConversationAlreadyExistsError as exc:
             raise HTTPException(status_code=HTTPStatus.CONFLICT,
                                 detail=f"A conversation already exists for module {module_id}") from exc
@@ -205,7 +201,7 @@ def add_career_readiness_routes(app: FastAPI, authentication: Authentication):
             HTTPStatus.FORBIDDEN: {"model": HTTPErrorResponse},
             HTTPStatus.INTERNAL_SERVER_ERROR: {"model": HTTPErrorResponse},
         },
-        description="Delete a career readiness conversation and reset the module status to NOT_STARTED.",
+        description="Delete a career readiness conversation. The module returns to the unlocked (ready to start) state.",
     )
     async def _delete_conversation(
         module_id: Annotated[str, Path(description="The module identifier slug.", examples=["cv-resume-creation"])],

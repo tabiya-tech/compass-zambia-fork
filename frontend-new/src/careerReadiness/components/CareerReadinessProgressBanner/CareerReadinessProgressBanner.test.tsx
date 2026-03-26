@@ -24,7 +24,7 @@ describe("CareerReadinessProgressBanner", () => {
       makeModule("m2", "COMPLETED"),
       makeModule("m3", "COMPLETED"),
       makeModule("m4", "IN_PROGRESS"),
-      makeModule("m5", "UNLOCKED"),
+      makeModule("m5", "NOT_STARTED"),
       makeModule("m6", "NOT_STARTED"),
     ];
 
@@ -46,7 +46,7 @@ describe("CareerReadinessProgressBanner", () => {
 
   test("should show 0% when no modules are completed", () => {
     // GIVEN modules with none completed
-    const modules = [makeModule("m1", "NOT_STARTED"), makeModule("m2", "UNLOCKED")];
+    const modules = [makeModule("m1", "NOT_STARTED"), makeModule("m2", "NOT_STARTED")];
 
     // WHEN rendered
     render(<CareerReadinessProgressBanner modules={modules} />);

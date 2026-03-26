@@ -29,7 +29,7 @@ const mockModules: ModuleSummary[] = [
     title: "CV Development",
     description: "Build a strong CV that highlights your skills and experience effectively.",
     icon: "cv",
-    status: "UNLOCKED",
+    status: "NOT_STARTED",
     sort_order: 2,
     input_placeholder: "Ask about CV writing…",
   },

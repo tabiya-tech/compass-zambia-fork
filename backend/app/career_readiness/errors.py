@@ -38,13 +38,6 @@ class ConversationModuleMismatchError(Exception):
         super().__init__(f"Conversation {conversation_id} does not belong to module {module_id}")
 
 
-class ModuleNotUnlockedError(Exception):
-    """Raised when attempting to start a conversation for a locked module."""
-
-    def __init__(self, module_id: str):
-        super().__init__(f"Module {module_id} is not yet unlocked")
-
-
 class QuizNotAvailableError(Exception):
     """Raised when the quiz is not available for this conversation."""
 

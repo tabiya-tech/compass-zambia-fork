@@ -36,7 +36,7 @@ const baseModules: ModuleSummary[] = [
     title: "Cover Letter & Motivation Statement",
     description: "",
     icon: "letter",
-    status: "UNLOCKED",
+    status: "NOT_STARTED",
     sort_order: 3,
     input_placeholder: "",
   },
@@ -68,7 +68,7 @@ export const NoneCompleted: Story = {
   args: {
     modules: baseModules.map((m) => ({
       ...m,
-      status: m.sort_order === 1 ? ("UNLOCKED" as const) : ("NOT_STARTED" as const),
+      status: "NOT_STARTED" as const,
     })),
   },
 };
