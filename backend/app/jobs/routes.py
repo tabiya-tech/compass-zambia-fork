@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Response
 from app.analytics.types import PaginatedListResponse
 from app.constants.errors import HTTPErrorResponse
 from app.jobs.get_job_service import get_job_service
-from app.jobs.service import IJobService, JobDocument
+from app.jobs.service import IJobService, JobDocument, JobStats
 
 
 def add_jobs_routes(app: FastAPI):
@@ -16,6 +16,25 @@ def add_jobs_routes(app: FastAPI):
     :param app: FastAPI: The FastAPI app to add the routes to.
     """
     router = APIRouter(prefix="/jobs", tags=["jobs"])
+
+    @router.get(
+        "/stats",
+        response_model=JobStats,
+        responses={HTTPStatus.INTERNAL_SERVER_ERROR: {"model": HTTPErrorResponse}},
+        description="Get aggregate stats for jobs: total count, distinct sectors, distinct source platforms.",
+    )
+    async def get_job_stats(
+        response: Response,
+        job_service: IJobService = Depends(get_job_service),
+    ):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        try:
+            return await job_service.get_job_stats()
+        except Exception as exc:
+            raise HTTPException(
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+                detail="Failed to fetch job stats",
+            ) from exc
 
     @router.get(
         "",

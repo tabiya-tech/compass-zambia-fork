@@ -128,3 +128,22 @@ export interface SkillsDiscoveryStatsResponse {
   in_progress_count: number;
   funnel: SkillsDiscoveryFunnelStage[];
 }
+
+export interface JobApiItem {
+  title?: string;
+  employer?: string;
+  category?: string;
+  employment_type?: string;
+  location?: string;
+  posted_date?: string;
+  closing_date?: string;
+  application_url?: string;
+  source_platform?: string;
+  skills?: string[];
+}
+
+export interface JobStatsResponse {
+  total: number;
+  sectors: number;
+  platforms: number;
+}

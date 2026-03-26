@@ -23,6 +23,10 @@ class IJobRepository(ABC):
     async def count_jobs(self, filter_query: Dict[str, Any]) -> int:
         pass
 
+    @abstractmethod
+    async def distinct_values(self, field: str, filter_query: Dict[str, Any]) -> List[str]:
+        pass
+
 
 class JobRepository(IJobRepository):
     """
@@ -47,3 +51,7 @@ class JobRepository(IJobRepository):
 
     async def count_jobs(self, filter_query: Dict[str, Any]) -> int:
         return await self._collection.count_documents(filter_query)
+
+    async def distinct_values(self, field: str, filter_query: Dict[str, Any]) -> List[str]:
+        values = await self._collection.distinct(field, filter_query)
+        return [str(v) for v in values if v]
