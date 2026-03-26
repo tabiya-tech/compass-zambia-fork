@@ -161,6 +161,9 @@ async def test_recap_contains_only_structured_fields(
             "we went door to door asking people questions and recording their answers",
             # Turn 12: any more volunteering?
             "no that is the only volunteering I did",
+            # Turn 13: explicitly request recap to guarantee it fires regardless of
+            # how many remaining work-type loops the agent runs
+            "I have no other experiences. Can you summarise everything you have collected?",
         ],
         evaluations=[
             Evaluation(
@@ -173,4 +176,4 @@ async def test_recap_contains_only_structured_fields(
     )
 
     conversation_manager, collect_experiences_exec = await setup_collect_experiences_agent
-    await collect_experiences_exec(caplog, given_test_case, Country.ZAMBIA)
+    await collect_experiences_exec(caplog, given_test_case, Country.UNSPECIFIED)
