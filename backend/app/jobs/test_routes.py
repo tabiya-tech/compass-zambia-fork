@@ -7,11 +7,14 @@ from fastapi.testclient import TestClient
 
 from app.jobs.get_job_service import get_job_service
 from app.jobs.routes import add_jobs_routes
-from app.jobs.service import IJobService, JobDocument
+from app.jobs.service import IJobService, JobDocument, JobStats
 from app.analytics.types import PaginatedListMeta, PaginatedListResponse
 
 
 class _MockJobService(IJobService):
+    async def get_job_stats(self) -> JobStats:
+        return JobStats(total=0, sectors=0, platforms=0)
+
     async def list_jobs(
         self,
         category: Optional[str],

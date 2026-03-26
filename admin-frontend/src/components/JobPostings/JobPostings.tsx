@@ -1,132 +1,176 @@
 import React, { useMemo, useState } from "react";
 import OpenInNewOutlinedIcon from "@mui/icons-material/OpenInNewOutlined";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import {
-  Box,
-  Button,
-  Chip,
-  FormControl,
-  Grid,
-  InputAdornment,
-  MenuItem,
-  Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import type { SelectChangeEvent } from "@mui/material/Select";
+import { Box, Button, Chip, Grid, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import JobPostingDetailsDialog from "src/components/JobPostings/JobPostingDetailsDialog";
 import StatCard from "src/components/StatCard/StatCard";
-import CustomLink from "src/theme/CustomLink/CustomLink";
-import type { JobPostingFilters, JobPostingRow, JobPostingStats } from "src/types";
-import { useSortableData } from "src/hooks/useSortableData";
+import DataTable from "src/components/DataTable/DataTable";
+import type { ColumnDef } from "src/components/DataTable/DataTable";
+import type { JobPostingRow } from "src/types";
+import { useJobPostings } from "src/hooks/useJobPostings";
 
 const MAX_VISIBLE_SKILLS = 2;
 
-const jobPostings: JobPostingRow[] = [];
-const jobPostingStats: JobPostingStats = { jobsSourced: 0, sectorsCovered: 0, sourcePlatformsCount: 0 };
+const capitalize = (s: string) =>
+  s
+    .toLowerCase()
+    .split(" ")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+
+const uniqueOptions = (rows: JobPostingRow[], key: keyof JobPostingRow) => {
+  const values = Array.from(new Set(rows.map((r) => String(r[key] ?? "")).filter(Boolean))).sort();
+  return [{ value: "all", label: "All" }, ...values.map((v) => ({ value: v, label: capitalize(v) }))];
+};
 
 const JobPostings: React.FC = () => {
   const theme = useTheme();
   const { t } = useTranslation();
+  const {
+    rows: jobPostings,
+    stats: jobPostingStats,
+    loading,
+    error,
+    hasNextPage,
+    hasPrevPage,
+    page,
+    goToNextPage,
+    goToPrevPage,
+  } = useJobPostings();
 
-  const [filters, setFilters] = useState<JobPostingFilters>({
-    search: "",
-    sector: "",
-    location: "",
-    platform: "",
-    zqfLevel: "",
-  });
+  const [search, setSearch] = useState("");
+  const [sectorFilter, setSectorFilter] = useState("all");
+  const [locationFilter, setLocationFilter] = useState("all");
+  const [platformFilter, setPlatformFilter] = useState("all");
   const [selectedJob, setSelectedJob] = useState<JobPostingRow | null>(null);
 
-  const sectors = useMemo(() => Array.from(new Set(jobPostings.map((item) => item.sector))), []);
-  const locations = useMemo(() => Array.from(new Set(jobPostings.map((item) => item.location))), []);
-  const platforms = useMemo(() => Array.from(new Set(jobPostings.map((item) => item.platform))), []);
-  const zqfLevels = useMemo(() => Array.from(new Set(jobPostings.map((item) => item.zqfLevel))), []);
-
   const filteredRows = useMemo(() => {
-    const search = filters.search.trim().toLowerCase();
+    const q = search.trim().toLowerCase();
     return jobPostings.filter((row) => {
-      const matchesSearch = row.jobTitle.toLowerCase().includes(search);
-      const matchesSector = !filters.sector || row.sector === filters.sector;
-      const matchesLocation = !filters.location || row.location === filters.location;
-      const matchesPlatform = !filters.platform || row.platform === filters.platform;
-      const matchesZqf = !filters.zqfLevel || row.zqfLevel === filters.zqfLevel;
-      return matchesSearch && matchesSector && matchesLocation && matchesPlatform && matchesZqf;
+      const matchesSearch = !q || row.jobTitle.toLowerCase().includes(q);
+      const matchesSector = sectorFilter === "all" || row.sector === sectorFilter;
+      const matchesLocation = locationFilter === "all" || row.location === locationFilter;
+      const matchesPlatform = platformFilter === "all" || row.platform === platformFilter;
+      return matchesSearch && matchesSector && matchesLocation && matchesPlatform;
     });
-  }, [filters]);
+  }, [jobPostings, search, sectorFilter, locationFilter, platformFilter]);
 
-  const {
-    sorted: sortedRows,
-    sortKey,
-    sortDir,
-    handleSort,
-  } = useSortableData<JobPostingRow>(filteredRows, "jobTitle", "asc");
-
-  const handleFilterChange = (field: keyof JobPostingFilters) => (event: SelectChangeEvent<string>) => {
-    setFilters((prev) => ({ ...prev, [field]: event.target.value }));
-  };
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters((prev) => ({ ...prev, search: event.target.value }));
-  };
-
-  const renderSkills = (skills: string[], row: JobPostingRow) => {
-    const visibleSkills = skills.slice(0, MAX_VISIBLE_SKILLS);
-    const extraCount = Math.max(0, skills.length - MAX_VISIBLE_SKILLS);
-
-    return (
-      <Box display="flex" flexDirection="column" gap={0.5}>
-        <Box display="flex" flexWrap="wrap" gap={0.5}>
-          {visibleSkills.map((skill) => (
-            <Chip
-              key={skill}
-              label={skill}
+  const columns: ColumnDef<JobPostingRow>[] = useMemo(
+    () => [
+      {
+        key: "jobTitle",
+        label: t("dashboard.jobPostings.table.jobTitle"),
+        align: "left",
+        minWidth: 180,
+        render: (val) => <span style={{ fontWeight: 700 }}>{capitalize(val as string)}</span>,
+      },
+      {
+        key: "sector",
+        label: t("dashboard.jobPostings.table.sector"),
+        align: "left",
+        minWidth: 130,
+        filter: {
+          options: uniqueOptions(jobPostings, "sector"),
+          value: sectorFilter,
+          onChange: setSectorFilter,
+        },
+        render: (val) => capitalize(val as string),
+      },
+      {
+        key: "location",
+        label: t("dashboard.jobPostings.table.location"),
+        align: "left",
+        minWidth: 110,
+        filter: {
+          options: uniqueOptions(jobPostings, "location"),
+          value: locationFilter,
+          onChange: setLocationFilter,
+        },
+        render: (val) => capitalize(val as string),
+      },
+      {
+        key: "platform",
+        label: t("dashboard.jobPostings.table.platform"),
+        align: "left",
+        minWidth: 110,
+        filter: {
+          options: uniqueOptions(jobPostings, "platform"),
+          value: platformFilter,
+          onChange: setPlatformFilter,
+        },
+        render: (val) => capitalize(val as string),
+      },
+      {
+        key: "skills",
+        label: t("dashboard.jobPostings.table.skillsExtracted"),
+        align: "left",
+        minWidth: 160,
+        sortable: false,
+        render: (val, row) => {
+          const skills = val as string[];
+          if (!skills || skills.length === 0) return null;
+          const visible = skills.slice(0, MAX_VISIBLE_SKILLS);
+          const extra = skills.length - MAX_VISIBLE_SKILLS;
+          return (
+            <Box display="flex" flexWrap="wrap" gap={0.5} alignItems="center">
+              {visible.map((s) => (
+                <Chip
+                  key={s}
+                  label={capitalize(s)}
+                  size="small"
+                  sx={{
+                    backgroundColor: theme.palette.grey[100],
+                    border: `1px solid ${theme.palette.divider}`,
+                    fontSize: "0.72rem",
+                    height: 20,
+                  }}
+                />
+              ))}
+              {extra > 0 && (
+                <Box
+                  component="span"
+                  onClick={() => setSelectedJob(row)}
+                  sx={{
+                    fontSize: "0.72rem",
+                    color: "primary.main",
+                    cursor: "pointer",
+                    "&:hover": { textDecoration: "underline" },
+                  }}
+                >
+                  {t("dashboard.jobPostings.moreSkills", { count: extra })}
+                </Box>
+              )}
+            </Box>
+          );
+        },
+      },
+      {
+        key: "jobUrl",
+        label: t("dashboard.jobPostings.table.link"),
+        align: "center",
+        minWidth: 60,
+        sortable: false,
+        render: (val, row) =>
+          val ? (
+            <Button
+              component="a"
+              href={val as string}
+              target="_blank"
+              rel="noopener noreferrer"
+              color="primary"
+              variant="text"
               size="small"
-              sx={{
-                backgroundColor: theme.palette.grey[100],
-                border: `1px solid ${theme.palette.divider}`,
-                color: theme.palette.text.secondary,
-                "& .MuiChip-label": {
-                  fontSize: "0.75rem",
-                  px: 1,
-                },
-              }}
-            />
-          ))}
-        </Box>
-        {extraCount > 0 && (
-          <CustomLink
-            aria-label={t("dashboard.jobPostings.aria.moreSkills", { count: extraCount })}
-            onClick={() => setSelectedJob(row)}
-            sx={{
-              fontSize: "0.75rem",
-              textDecoration: "none",
-              "&&": { color: "primary.main", textDecoration: "none" },
-              "&:hover": { textDecoration: "underline" },
-            }}
-          >
-            {t("dashboard.jobPostings.moreSkills", { count: extraCount })}
-          </CustomLink>
-        )}
-      </Box>
-    );
-  };
+              sx={{ minWidth: 0, p: 0.5 }}
+              aria-label={t("dashboard.jobPostings.aria.openJob", { title: row.jobTitle })}
+            >
+              <OpenInNewOutlinedIcon fontSize="small" />
+            </Button>
+          ) : null,
+      },
+    ],
+    [jobPostings, sectorFilter, locationFilter, platformFilter, theme, t]
+  );
 
-  const filterConfig: Array<{ field: keyof JobPostingFilters; label: string; options: string[] }> = [
-    { field: "sector", label: t("dashboard.jobPostings.filters.allSectors"), options: sectors },
-    { field: "location", label: t("dashboard.jobPostings.filters.allLocations"), options: locations },
-    { field: "platform", label: t("dashboard.jobPostings.filters.allPlatforms"), options: platforms },
-    { field: "zqfLevel", label: t("dashboard.jobPostings.filters.allZqfLevels"), options: zqfLevels },
-  ];
   return (
     <Box sx={{ paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}>
       <Grid container spacing={theme.fixedSpacing(theme.tabiyaSpacing.md)} sx={{ marginBottom: 2 }}>
@@ -149,183 +193,29 @@ const JobPostings: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "1.3fr repeat(4, minmax(140px, 1fr))" },
-          gap: theme.fixedSpacing(theme.tabiyaSpacing.md),
-          marginBottom: 1.5,
-        }}
-      >
-        <TextField
-          size="small"
-          value={filters.search}
-          onChange={handleSearchChange}
-          placeholder={t("dashboard.jobPostings.searchPlaceholder")}
-          aria-label={t("dashboard.jobPostings.aria.search")}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchOutlinedIcon fontSize="small" />
-              </InputAdornment>
-            ),
-          }}
-        />
-        {filterConfig.map((filter) => (
-          <FormControl key={filter.field} size="small" fullWidth>
-            <Select
-              value={filters[filter.field]}
-              onChange={handleFilterChange(filter.field)}
-              displayEmpty
-              aria-label={filter.label}
-            >
-              <MenuItem value="">{filter.label}</MenuItem>
-              {filter.options.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        ))}
-      </Box>
+      {error && <Box sx={{ color: "error.main", mb: 1, fontSize: "0.85rem" }}>{error.message}</Box>}
 
-      <Typography variant="caption" color="text.secondary">
-        {t("dashboard.jobPostings.jobsCount", { count: filteredRows.length, total: jobPostings.length })}
-      </Typography>
-
-      <TableContainer
-        sx={{
-          borderRadius: theme.rounding(theme.tabiyaRounding.sm),
-          overflowX: "auto",
-          border: `1px solid ${theme.palette.divider}`,
-          boxShadow: "0 1px 4px 0 rgba(0,0,0,0.06)",
+      <DataTable<JobPostingRow>
+        rows={filteredRows}
+        columns={columns}
+        loading={loading}
+        skeletonRows={8}
+        ariaLabel={t("dashboard.jobPostings.aria.table")}
+        emptyMessage={t("dashboard.jobPostings.jobsCount", { count: 0, total: 0 })}
+        tableMinWidth={750}
+        search={{
+          placeholder: t("dashboard.jobPostings.searchPlaceholder"),
+          ariaLabel: t("dashboard.jobPostings.aria.search"),
+          value: search,
+          onChange: setSearch,
         }}
-      >
-        <Table
-          size="small"
-          aria-label={t("dashboard.jobPostings.aria.table")}
-          sx={{
-            "& .MuiTableCell-root": {
-              color: theme.palette.text.secondary,
-            },
-            "& .MuiTypography-root": {
-              color: "inherit",
-            },
-          }}
-        >
-          {(() => {
-            const headBg = theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[50];
-            const headerCellSx = {
-              backgroundColor: headBg,
-              borderBottom: `1px solid ${theme.palette.divider}`,
-              py: 1,
-              px: 1.5,
-              whiteSpace: "nowrap" as const,
-              verticalAlign: "bottom" as const,
-            };
-            const sortLabelSx = { "& .MuiTableSortLabel-icon": { fontSize: "0.75rem" } };
-            const labelTypoSx = {
-              fontWeight: 700,
-              fontSize: "0.68rem",
-              letterSpacing: "0.04em",
-              textTransform: "uppercase" as const,
-            };
-            return (
-              <TableHead>
-                <TableRow>
-                  {(["jobTitle", "sector", "location", "zqfLevel", "platform"] as Array<keyof JobPostingRow>).map(
-                    (key) => (
-                      <TableCell key={key} sx={headerCellSx}>
-                        <TableSortLabel
-                          active={sortKey === key}
-                          direction={sortKey === key ? sortDir : "asc"}
-                          onClick={() => handleSort(key)}
-                          sx={sortLabelSx}
-                        >
-                          <Typography variant="caption" sx={labelTypoSx}>
-                            {t(`dashboard.jobPostings.table.${key === "zqfLevel" ? "zqf" : key}`)}
-                          </Typography>
-                        </TableSortLabel>
-                      </TableCell>
-                    )
-                  )}
-                  <TableCell sx={headerCellSx}>
-                    <Typography variant="caption" sx={labelTypoSx}>
-                      {t("dashboard.jobPostings.table.skillsExtracted")}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right" sx={headerCellSx}>
-                    <Box display="flex" flexDirection="column" alignItems="flex-end">
-                      <TableSortLabel
-                        active={sortKey === "candidatePool"}
-                        direction={sortKey === "candidatePool" ? sortDir : "asc"}
-                        onClick={() => handleSort("candidatePool")}
-                        sx={{ ...sortLabelSx, justifyContent: "flex-end" }}
-                      >
-                        <Typography variant="caption" sx={labelTypoSx}>
-                          {t("dashboard.jobPostings.table.candidatePool")}
-                        </Typography>
-                      </TableSortLabel>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          fontSize: "0.58rem",
-                          color: "text.disabled",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.02em",
-                          mt: 0.25,
-                        }}
-                      >
-                        {t("dashboard.jobPostings.table.candidatePoolSubheader")}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell align="right" sx={headerCellSx}>
-                    <Typography variant="caption" sx={labelTypoSx}>
-                      {t("dashboard.jobPostings.table.link")}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-            );
-          })()}
-          <TableBody>
-            {sortedRows.map((row: JobPostingRow) => (
-              <TableRow key={row.id} hover>
-                <TableCell>
-                  <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                    {row.jobTitle}
-                  </Typography>
-                </TableCell>
-                <TableCell>{row.sector}</TableCell>
-                <TableCell>{row.location}</TableCell>
-                <TableCell sx={{ whiteSpace: "nowrap" }}>{row.zqfLevel}</TableCell>
-                <TableCell>{row.platform}</TableCell>
-                <TableCell>{renderSkills(row.skills, row)}</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 400 }}>
-                  {row.candidatePool}
-                </TableCell>
-                <TableCell align="right">
-                  <Button
-                    component="a"
-                    href={row.jobUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    color="primary"
-                    variant="text"
-                    size="small"
-                    sx={{ minWidth: 0, p: 0.5 }}
-                    aria-label={t("dashboard.jobPostings.aria.openJob", { title: row.jobTitle })}
-                  >
-                    <OpenInNewOutlinedIcon fontSize="small" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        page={page}
+        hasNextPage={hasNextPage}
+        hasPrevPage={hasPrevPage}
+        onNextPage={goToNextPage}
+        onPrevPage={goToPrevPage}
+        pageLabel={`Page ${page}`}
+      />
 
       <JobPostingDetailsDialog job={selectedJob} isOpen={Boolean(selectedJob)} onClose={() => setSelectedJob(null)} />
     </Box>

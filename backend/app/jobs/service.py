@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, timezone
@@ -10,11 +11,21 @@ from app.jobs.repository import IJobRepository
 from pydantic import BaseModel
 
 
+class JobStats(BaseModel):
+    total: int
+    sectors: int
+    platforms: int
+
+
 class IJobService(ABC):
     """
     Interface for the Job Service.
     Allows to mock the service in tests.
     """
+
+    @abstractmethod
+    async def get_job_stats(self) -> JobStats:
+        pass
 
     @abstractmethod
     async def list_jobs(
@@ -86,6 +97,33 @@ class JobService(IJobService):
     def _include_total(include: Optional[str]) -> bool:
         return include is not None and "count" in include.split(",")
 
+    async def get_job_stats(self) -> JobStats:
+        total, sectors, platforms = await asyncio.gather(
+            self._repository.count_jobs({}),
+            self._repository.distinct_values("category", {}),
+            self._repository.distinct_values("source_platform", {}),
+        )
+        return JobStats(total=total, sectors=len(sectors), platforms=len(platforms))
+
+    @staticmethod
+    def _extract_skills(doc: Dict[str, Any]) -> Optional[list[str]]:
+        """Extract unique skill labels from classification.entities."""
+        try:
+            entities = doc.get("classification", {}).get("entities", [])
+            seen: set[str] = set()
+            skills: list[str] = []
+            for entity in entities:
+                if entity.get("entity_type") != "skill":
+                    continue
+                linked = entity.get("linked_entities", [])
+                label = linked[0]["label"] if linked else entity.get("surface_form", "")
+                if label and label not in seen:
+                    seen.add(label)
+                    skills.append(label)
+            return skills if skills else None
+        except Exception:
+            return None
+
     async def list_jobs(
         self,
         category: Optional[str],
@@ -103,8 +141,15 @@ class JobService(IJobService):
         docs = await self._repository.list_jobs(filter_query=filter_query, offset=offset, limit=limit)
 
         has_more = len(docs) > limit
-        page = docs[:limit]
+        page_docs = docs[:limit]
         next_cursor = str(offset + limit) if has_more else None
+
+        job_documents = []
+        for doc in page_docs:
+            job_doc = JobDocument.model_validate(doc)
+            if job_doc.skills is None:
+                job_doc.skills = self._extract_skills(doc)
+            job_documents.append(job_doc)
 
         total = await self._repository.count_jobs(filter_query) if include_count else None
         meta = PaginatedListMeta(
@@ -113,4 +158,4 @@ class JobService(IJobService):
             has_more=has_more,
             total=total if include_count else None,
         )
-        return PaginatedListResponse(data=page, meta=meta)
+        return PaginatedListResponse(data=job_documents, meta=meta)

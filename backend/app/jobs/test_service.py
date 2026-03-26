@@ -27,6 +27,9 @@ class _FakeJobRepository(IJobRepository):
         self.count_called = True
         return self._total
 
+    async def distinct_values(self, field: str, filter_query: Dict[str, Any]) -> List[str]:
+        return []
+
 
 class TestJobService:
     @pytest.mark.asyncio

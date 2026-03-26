@@ -6,6 +6,8 @@ import ErrorConstants from "src/error/restAPIError/RestAPIError.constants";
 import type {
   DashboardStats,
   InstitutionApiItem,
+  JobApiItem,
+  JobStatsResponse,
   StudentApiItem,
   PaginatedResponse,
   AdoptionTrendsResponse,
@@ -19,6 +21,8 @@ import type {
 export type {
   DashboardStats,
   InstitutionApiItem,
+  JobApiItem,
+  JobStatsResponse,
   StudentApiItem,
   PaginatedResponse,
   AdoptionTrendsResponse,
@@ -267,6 +271,62 @@ export default class AnalyticsService {
     });
     try {
       return (await response.json()) as CareerExplorerStatsResponse;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        error: e,
+      });
+    }
+  }
+
+  async getJobStats(): Promise<JobStatsResponse> {
+    const url = `${this.baseUrl}/jobs/stats`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "getJobStats", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "getJobStats",
+      failureMessage: "Failed to fetch job stats",
+      expectedContentType: "application/json",
+    });
+    try {
+      return (await response.json()) as JobStatsResponse;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        error: e,
+      });
+    }
+  }
+
+  async listJobs(
+    params: {
+      category?: string;
+      employment_type?: string;
+      location?: string;
+      cursor?: string;
+      limit?: number;
+    } = {}
+  ): Promise<PaginatedResponse<JobApiItem>> {
+    const query = new URLSearchParams();
+    if (params.category) query.set("category", params.category);
+    if (params.employment_type) query.set("employment_type", params.employment_type);
+    if (params.location) query.set("location", params.location);
+    if (params.cursor) query.set("cursor", params.cursor);
+    query.set("limit", String(params.limit ?? 20));
+    const url = `${this.baseUrl}/jobs?${query}`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "listJobs", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "listJobs",
+      failureMessage: "Failed to fetch jobs",
+      expectedContentType: "application/json",
+    });
+    try {
+      return (await response.json()) as PaginatedResponse<JobApiItem>;
     } catch (e) {
       throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
         error: e,
