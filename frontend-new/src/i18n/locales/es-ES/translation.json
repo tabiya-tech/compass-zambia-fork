@@ -887,5 +887,9 @@
     "documentNotFound": "Documento no encontrado",
     "introduction": "Estos son los sectores prioritarios de Zambia para graduados de TEVET. Cada perfil te ofrece una descripción general de cómo es la industria, qué roles existen y qué puedes esperar ganar. Explora los sectores que te interesen para tomar decisiones más informadas sobre tu trayectoria profesional.",
     "noDocumentsAvailable": "Aún no hay documentos disponibles."
+  },
+  "jobMatching": {
+    "pageTitle": "Búsqueda de Empleo",
+    "pageDescription": "Explora ofertas de trabajo reales y descubre cómo tus habilidades se adaptan a las oportunidades."
   }
 }

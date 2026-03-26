@@ -887,5 +887,9 @@
       "contact": "Contacto",
       "collaboration": "{{appName}} es una colaboración entre el Grupo del Banco Mundial y Tabiya."
     }
+  },
+  "jobMatching": {
+    "pageTitle": "Búsqueda de Empleo",
+    "pageDescription": "Explora ofertas de trabajo reales y descubre cómo tus habilidades se adaptan a las oportunidades."
   }
 }

@@ -887,5 +887,9 @@
     "documentNotFound": "Waraka haujapatikana",
     "introduction": "Hizi ni sekta za kipaumbele za Zambia kwa wanaomaliza TEVET. Kila wasifu unakupa muhtasari wa jinsi tasnia inavyoonekana, nafasi zilizopo, na unachoweza kutarajia kupata. Chunguza sekta zinazokuvutia ili kufanya maamuzi sahihi zaidi kuhusu njia yako ya kazi.",
     "noDocumentsAvailable": "Bado hakuna waraka zinazopatikana."
+  },
+  "jobMatching": {
+    "pageTitle": "Kuoanisha Kazi",
+    "pageDescription": "Gundua nafasi za kazi halisi na uone jinsi ujuzi wako unavyooanisha fursa nchini Zambia."
   }
 }
