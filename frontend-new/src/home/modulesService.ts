@@ -1,5 +1,4 @@
 import { routerPaths } from "src/app/routerPaths";
-import { TabiyaBasicColors } from "src/theme/applicationTheme/applicationTheme";
 
 export interface Module {
   id: string;
@@ -7,8 +6,6 @@ export interface Module {
   descriptionKey: string;
   route: string;
   disabled?: boolean;
-  /** Accent color used for the card icon and top border. */
-  color?: string;
   /**
    * The id of the next top-level module to suggest when this module completes.
    * Leave undefined if there is no automatic handoff.
@@ -25,7 +22,6 @@ const DEFAULT_MODULES: Module[] = [
     labelKey: "home.modules.skillsDiscovery",
     descriptionKey: "home.modules.skillsDiscoveryDesc",
     route: routerPaths.SKILLS_INTERESTS,
-    color: TabiyaBasicColors.LightBlue,
     nextModuleId: "career_explorer",
   },
   {
@@ -33,14 +29,12 @@ const DEFAULT_MODULES: Module[] = [
     labelKey: "home.modules.careerExplorer",
     descriptionKey: "home.modules.careerExplorerDesc",
     route: routerPaths.CAREER_EXPLORER,
-    color: TabiyaBasicColors.DarkGreen,
   },
   {
     id: "job_readiness",
     labelKey: "home.modules.jobReadiness",
     descriptionKey: "home.modules.jobReadinessDesc",
     route: routerPaths.CAREER_READINESS,
-    color: TabiyaBasicColors.Yellow,
     nextModuleId: "knowledge_hub",
   },
   {
@@ -48,14 +42,12 @@ const DEFAULT_MODULES: Module[] = [
     labelKey: "home.modules.knowledgeHub",
     descriptionKey: "home.modules.knowledgeHubDesc",
     route: routerPaths.KNOWLEDGE_HUB,
-    color: TabiyaBasicColors.DarkRed,
   },
   {
     id: "job_matching",
     labelKey: "home.modules.jobMatching",
     descriptionKey: "home.modules.jobMatchingDesc",
     route: routerPaths.JOB_MATCHING,
-    color: TabiyaBasicColors.Green,
   },
 ];
 

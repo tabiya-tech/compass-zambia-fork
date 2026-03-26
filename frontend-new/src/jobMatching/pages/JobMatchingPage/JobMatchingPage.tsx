@@ -217,7 +217,7 @@ const JobMatchingPage: React.FC = () => {
       <Box
         sx={{
           flex: 1,
-          width: { xs: "100%", md: "90%", lg: "80%" },
+          width: { xs: "100%", md: "60%" },
           margin: { xs: "0", md: "0 auto" },
           paddingX: theme.spacing(theme.tabiyaSpacing.md),
           paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.md),
