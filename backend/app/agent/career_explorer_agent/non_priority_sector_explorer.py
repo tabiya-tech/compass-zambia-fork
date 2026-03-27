@@ -216,8 +216,8 @@ class NonPrioritySectorExplorer:
                 inner = extract_json.extract_json(message, ModelResponse)
                 if inner.message:
                     message = inner.message.strip('"').strip()
-            except Exception:  # pylint: disable=broad-except
-                pass  # Not parseable — use the original message as-is
+            except Exception as unwrap_err:  # pylint: disable=broad-except
+                self._logger.debug("Message field is not a nested JSON blob, using as-is: %s", unwrap_err)
 
         if not message:
             self._logger.warning("Model returned empty message, using fallback")
