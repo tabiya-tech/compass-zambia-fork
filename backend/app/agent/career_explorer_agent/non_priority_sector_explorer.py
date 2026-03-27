@@ -195,6 +195,17 @@ class NonPrioritySectorExplorer:
             return error_msg, False, "", llm_stats, None
 
         message = model_response.message.strip('"').strip() if model_response.message else ""
+
+        # Guard: if the message field itself contains a JSON blob (the LLM echoed its own
+        # response format inside the message), unwrap the inner message value.
+        if message.startswith("{") and '"message"' in message:
+            try:
+                inner = extract_json.extract_json(message, ModelResponse)
+                if inner.message:
+                    message = inner.message.strip('"').strip()
+            except Exception:  # pylint: disable=broad-except
+                pass  # Not parseable — use the original message as-is
+
         if not message:
             self._logger.warning("Model returned empty message, using fallback")
             error_msg = t("messages", "careerExplorer.errorRetry", "I'm having trouble right now. Could you try again?")
