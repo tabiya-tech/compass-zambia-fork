@@ -16,7 +16,7 @@ const meta: Meta<typeof PrimaryIconButton> = {
 export default meta;
 type Story = StoryObj<typeof PrimaryIconButton>;
 
-export const Shown: Story = {
+export const Default: Story = {
   args: {
     children: (
       <Box sx={{ padding: "5px" }}>
@@ -24,5 +24,56 @@ export const Shown: Story = {
       </Box>
     ),
     title: "Copy to clipboard",
+  },
+};
+
+export const Filled: Story = {
+  args: {
+    children: (
+      <Box sx={{ padding: "5px" }}>
+        <ContentCopy />
+      </Box>
+    ),
+    filled: true,
+    title: "Copy to clipboard",
+  },
+};
+
+export const FilledSecondary: Story = {
+  args: {
+    children: (
+      <Box sx={{ padding: "5px" }}>
+        <ContentCopy />
+      </Box>
+    ),
+    filled: true,
+    color: "secondary",
+    title: "Copy to clipboard",
+  },
+};
+
+export const FilledBrandAction: Story = {
+  args: {
+    children: (
+      <Box sx={{ padding: "5px" }}>
+        <ContentCopy />
+      </Box>
+    ),
+    filled: true,
+    color: "brandAction",
+    title: "Copy to clipboard",
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    children: (
+      <Box sx={{ padding: "5px" }}>
+        <ContentCopy />
+      </Box>
+    ),
+    filled: true,
+    disabled: true,
+    title: "Disabled",
   },
 };

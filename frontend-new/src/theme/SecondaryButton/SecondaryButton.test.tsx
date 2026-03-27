@@ -36,11 +36,8 @@ describe("Secondary Button tests", () => {
     // AND the component should be called with the correct props
     expect(PrimaryButton).toHaveBeenCalledWith(
       expect.objectContaining({
-        variant: "text",
+        variant: "outlined",
         style: undefined,
-        sx: expect.objectContaining({
-          color: expect.any(Function),
-        }),
         disabled: false,
         children: givenText,
       }),

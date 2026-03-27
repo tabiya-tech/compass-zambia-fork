@@ -15,17 +15,17 @@
       "appIcon": "/nijra_logo.svg"
     },
     "theme": {
-      "brand-primary": "239 123 0",
-      "brand-primary-light": "250 166 39",
-      "brand-primary-dark": "233 108 0",
-      "brand-primary-contrast-text": "0 0 0",
-      "brand-secondary": "25 138 0",
-      "brand-secondary-light": "87 183 69",
-      "brand-secondary-dark": "1 121 0",
+      "brand-primary": "10 92 74",
+      "brand-primary-light": "232 244 240",
+      "brand-primary-dark": "8 61 49",
+      "brand-primary-contrast-text": "255 255 255",
+      "brand-secondary": "232 160 32",
+      "brand-secondary-light": "254 246 228",
+      "brand-secondary-dark": "230 142 22",
       "brand-secondary-contrast-text": "255 255 255",
-      "text-primary": "0 33 71",
-      "text-secondary": "65 64 61",
-      "text-accent": "38 94 167"
+      "text-primary": "26 18 8",
+      "text-secondary": "125 116 105",
+      "text-accent": "92 191 191"
     }
   },
   "auth": {

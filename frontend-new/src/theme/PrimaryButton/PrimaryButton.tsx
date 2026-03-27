@@ -1,11 +1,13 @@
-import { Button, ButtonProps } from "@mui/material";
+import { Button, ButtonProps, Box, useTheme } from "@mui/material";
+import { PaletteColor } from "@mui/material/styles";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import React, { useContext } from "react";
 import { IsOnlineContext } from "src/app/isOnlineProvider/IsOnlineProvider";
 import { ComponentError } from "src/error/commonErrors";
 
 interface PrimaryButtonProps extends ButtonProps {
-  // Add additional props specific to PrimaryButton Button here
   disableWhenOffline?: boolean;
+  showCircle?: boolean;
 }
 
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({
@@ -13,32 +15,79 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   disabled,
   children,
   disableWhenOffline,
+  showCircle = false,
+  color = "primary",
+  variant = "contained",
   sx,
   ...props
 }: Readonly<PrimaryButtonProps>) => {
   const isOnline = useContext(IsOnlineContext);
+  const theme = useTheme();
 
   if (!children) {
     throw new ComponentError("Children are required for PrimaryButton component");
   }
 
+  const cream = theme.palette.common.cream;
+  const paletteColor = theme.palette[color as keyof typeof theme.palette] as PaletteColor;
+  const isOutlined = variant === "outlined";
+
   return (
-    // props are passed to the component last, so that they can override the default values
     <Button
-      variant={"contained"}
-      color={"primary"}
+      variant={variant}
+      color={color}
       style={style}
       sx={{
-        borderRadius: (theme) => theme.tabiyaRounding.xl,
-        paddingY: (theme) => theme.fixedSpacing(theme.tabiyaSpacing.xs),
-        paddingX: (theme) => theme.fixedSpacing(theme.tabiyaSpacing.md),
+        borderRadius: "999px",
+        fontWeight: 600,
+        fontSize: "1rem",
+        lineHeight: 1,
+        gap: 1.5,
+        ...(isOutlined && { border: `2px solid ${paletteColor.main}` }),
+        padding: showCircle ? "6px 6px 6px 22px" : "12px 24px",
+        "&:active:not(:disabled)": { transform: "scale(0.97)" },
+        "&:focus-visible": {
+          outline: `3px solid ${theme.palette.brandAccent.main}`,
+          outlineOffset: "2px",
+        },
+        ...(isOutlined && {
+          "&:hover:not(:disabled)": {
+            bgcolor: paletteColor.light,
+            border: `2px solid ${paletteColor.main}`,
+          },
+        }),
+        "&.Mui-disabled": {
+          opacity: 0.38,
+          color: isOutlined ? paletteColor.main : paletteColor.contrastText,
+          bgcolor: isOutlined ? "transparent" : paletteColor.main,
+          ...(isOutlined && { border: `2px solid ${paletteColor.main}` }),
+        },
         ...sx,
       }}
       disableElevation
       disabled={Boolean(disabled || (disableWhenOffline && !isOnline))}
       {...props}
     >
-      {children ?? "Click here"}
+      {children}
+      {showCircle && (
+        <Box
+          sx={{
+            width: 36,
+            height: 36,
+            borderRadius: "50%",
+            bgcolor: isOutlined ? paletteColor.main : cream,
+            color: isOutlined ? cream : paletteColor.main,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            transition: "transform 0.2s ease",
+            "button:hover:not(:disabled) &": { transform: "translateX(3px)" },
+          }}
+        >
+          <ArrowForwardIcon sx={{ fontSize: 18 }} />
+        </Box>
+      )}
     </Button>
   );
 };

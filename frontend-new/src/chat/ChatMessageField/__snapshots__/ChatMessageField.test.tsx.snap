@@ -9,10 +9,10 @@ exports[`ChatMessageField should render correctly 1`] = `
     class="MuiBox-root css-zeiu9o"
   >
     <div
-      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1at3x7m-MuiFormControl-root-MuiTextField-root"
+      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1khqetv-MuiFormControl-root-MuiTextField-root"
     >
       <div
-        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused MuiInputBase-formControl MuiInputBase-multiline MuiInputBase-adornedStart MuiInputBase-adornedEnd css-1g477uk-MuiInputBase-root-MuiOutlinedInput-root"
+        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused MuiInputBase-formControl MuiInputBase-multiline MuiInputBase-adornedStart MuiInputBase-adornedEnd css-csgncd-MuiInputBase-root-MuiOutlinedInput-root"
       >
         <div
           class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-navhnp-MuiInputAdornment-root"
@@ -50,7 +50,7 @@ exports[`ChatMessageField should render correctly 1`] = `
                   />
                 </svg>
                 <span
-                  class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightCircular MuiBadge-overlapCircular css-1bw2ep1-MuiBadge-badge"
+                  class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightCircular MuiBadge-overlapCircular css-ipx39r-MuiBadge-badge"
                 />
               </span>
             </button>
@@ -85,7 +85,7 @@ exports[`ChatMessageField should render correctly 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-j0qjdl-MuiSvgIcon-root"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1p4a2ac-MuiSvgIcon-root"
               data-testid="chat-message-field-send-icon-2a76494f-351d-409d-ba58-e1b2cfaf2a53"
               focusable="false"
               viewBox="0 0 24 24"

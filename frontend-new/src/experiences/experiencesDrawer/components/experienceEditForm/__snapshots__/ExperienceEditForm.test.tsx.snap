@@ -6,10 +6,10 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
   data-testid="experience-edit-form-container-0ddc6b92-eca6-472b-8e5f-fdce9abfec3b"
 >
   <div
-    class="MuiBox-root css-quwgsm"
+    class="MuiBox-root css-1uywo0i"
   >
     <h5
-      class="MuiTypography-root MuiTypography-h5 css-xaask8-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h5 css-4lkl0k-MuiTypography-root"
     >
       Edit Experience
     </h5>
@@ -17,7 +17,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
       class="MuiBox-root css-1rf73am"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-2a1kq0-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-1aidgs9-MuiButtonBase-root-MuiButton-root"
         data-testid="experience-edit-form-cancel-button-0ddc6b92-eca6-472b-8e5f-fdce9abfec3b"
         tabindex="0"
         type="button"
@@ -25,7 +25,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
         Cancel
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-1c68ceu-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-119bxks-MuiButtonBase-root-MuiButton-root"
         data-testid="experience-edit-form-save-button-0ddc6b92-eca6-472b-8e5f-fdce9abfec3b"
         disabled=""
         tabindex="-1"
@@ -42,7 +42,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
       class="MuiBox-root css-70qvj9"
     >
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1c35wu1-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 css-13y9ohf-MuiTypography-root"
       >
         <b>
           Experience info
@@ -50,7 +50,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
       </p>
       <button
         aria-label="help"
-        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-qpnlj3-MuiButtonBase-root-MuiIconButton-root"
+        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-qa2dlw-MuiButtonBase-root-MuiIconButton-root"
         data-mui-internal-clone-element="true"
         data-testid="help-icon-4b757f12-fb67-4a59-94b1-b8a2498a7a49"
         tabindex="0"
@@ -73,10 +73,10 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
       class="MuiBox-root css-yd8sa2"
     >
       <span
-        class="MuiBadge-root css-mihu29-MuiBadge-root"
+        class="MuiBadge-root css-131ph5k-MuiBadge-root"
       >
         <div
-          class="MuiBox-root css-6b1g0m"
+          class="MuiBox-root css-1crffqs"
           data-testid="experience-edit-form-work-type-title-0ddc6b92-eca6-472b-8e5f-fdce9abfec3b"
         >
           <div
@@ -94,7 +94,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
               />
             </svg>
             <p
-              class="MuiTypography-root MuiTypography-body1 css-nseo62-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 css-nnkc57-MuiTypography-root"
             >
               Unpaid Work
             </p>
@@ -112,7 +112,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
           </svg>
         </div>
         <span
-          class="MuiBadge-badge MuiBadge-dot MuiBadge-invisible MuiBadge-anchorOriginTopLeft MuiBadge-anchorOriginTopLeftRectangular MuiBadge-overlapRectangular css-1ijjroq-MuiBadge-badge"
+          class="MuiBadge-badge MuiBadge-dot MuiBadge-invisible MuiBadge-anchorOriginTopLeft MuiBadge-anchorOriginTopLeftRectangular MuiBadge-overlapRectangular css-5vx1mp-MuiBadge-badge"
         />
       </span>
       <div
@@ -190,7 +190,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
         class="MuiBox-root css-70qvj9"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1c35wu1-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-13y9ohf-MuiTypography-root"
         >
           <b>
             Top Skills
@@ -198,7 +198,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
         </p>
         <button
           aria-label="help"
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-qpnlj3-MuiButtonBase-root-MuiIconButton-root"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-qa2dlw-MuiButtonBase-root-MuiIconButton-root"
           data-mui-internal-clone-element="true"
           data-testid="help-icon-4b757f12-fb67-4a59-94b1-b8a2498a7a49"
           tabindex="0"
@@ -222,10 +222,10 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
         data-testid="experience-edit-form-skills-container-0ddc6b92-eca6-472b-8e5f-fdce9abfec3b"
       >
         <span
-          class="MuiBadge-root css-z9yoek-MuiBadge-root"
+          class="MuiBadge-root css-1bfoz1g-MuiBadge-root"
         >
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-filledDefault css-siwtx8-MuiButtonBase-root-MuiChip-root"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-filledDefault css-1a5wb9i-MuiButtonBase-root-MuiChip-root"
             data-testid="experience-edit-form-skill-chip-0ddc6b92-eca6-472b-8e5f-fdce9abfec3b"
             role="button"
             tabindex="0"
@@ -237,7 +237,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
                 class="MuiBox-root css-70qvj9"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ep6hqk-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 css-1sar1q8-MuiTypography-root"
                 >
                   Management
                 </p>
@@ -267,14 +267,14 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
             </span>
           </div>
           <span
-            class="MuiBadge-badge MuiBadge-dot MuiBadge-invisible MuiBadge-anchorOriginTopLeft MuiBadge-anchorOriginTopLeftRectangular MuiBadge-overlapRectangular css-1ijjroq-MuiBadge-badge"
+            class="MuiBadge-badge MuiBadge-dot MuiBadge-invisible MuiBadge-anchorOriginTopLeft MuiBadge-anchorOriginTopLeftRectangular MuiBadge-overlapRectangular css-5vx1mp-MuiBadge-badge"
           />
         </span>
         <span
-          class="MuiBadge-root css-z9yoek-MuiBadge-root"
+          class="MuiBadge-root css-1bfoz1g-MuiBadge-root"
         >
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-filledDefault css-siwtx8-MuiButtonBase-root-MuiChip-root"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-filledDefault css-1a5wb9i-MuiButtonBase-root-MuiChip-root"
             data-testid="experience-edit-form-skill-chip-0ddc6b92-eca6-472b-8e5f-fdce9abfec3b"
             role="button"
             tabindex="0"
@@ -286,7 +286,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
                 class="MuiBox-root css-70qvj9"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ep6hqk-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 css-1sar1q8-MuiTypography-root"
                 >
                   Communication
                 </p>
@@ -316,12 +316,12 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
             </span>
           </div>
           <span
-            class="MuiBadge-badge MuiBadge-dot MuiBadge-invisible MuiBadge-anchorOriginTopLeft MuiBadge-anchorOriginTopLeftRectangular MuiBadge-overlapRectangular css-1ijjroq-MuiBadge-badge"
+            class="MuiBadge-badge MuiBadge-dot MuiBadge-invisible MuiBadge-anchorOriginTopLeft MuiBadge-anchorOriginTopLeftRectangular MuiBadge-overlapRectangular css-5vx1mp-MuiBadge-badge"
           />
         </span>
         <div
           aria-disabled="true"
-          class="MuiButtonBase-root Mui-disabled MuiChip-root MuiChip-filled Mui-disabled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-filledDefault css-nmnd5z-MuiButtonBase-root-MuiChip-root"
+          class="MuiButtonBase-root Mui-disabled MuiChip-root MuiChip-filled Mui-disabled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-filledDefault css-1x334ut-MuiButtonBase-root-MuiChip-root"
           data-testid="experience-edit-form-add-skill-button-0ddc6b92-eca6-472b-8e5f-fdce9abfec3b"
           role="button"
           tabindex="-1"
@@ -533,7 +533,7 @@ exports[`ExperienceEditForm should render ExperienceEditForm correctly 1`] = `
               class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
             >
               <h6
-                class="MuiTypography-root MuiTypography-h6 css-j3d3zm-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-h6 css-65dhei-MuiTypography-root"
                 data-testid="message-91b57774-d50c-4350-882d-363f80ac10e8"
               >
                 Updating experience...

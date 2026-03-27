@@ -14,22 +14,46 @@ const meta: Meta<typeof SecondaryButton> = {
 export default meta;
 type Story = StoryObj<typeof SecondaryButton>;
 
-export const Shown: Story = {
+export const Default: Story = {
   args: {
-    children: "Click here",
+    children: "View Full Course",
+    showCircle: true,
+  },
+};
+
+export const WithoutCircle: Story = {
+  args: {
+    children: "Learn More",
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    children: "View Matches",
+    color: "secondary",
+    showCircle: true,
+  },
+};
+
+export const BrandAction: Story = {
+  args: {
+    children: "Learn More",
+    color: "brandAction",
+    showCircle: true,
   },
 };
 
 export const Disabled: Story = {
   args: {
-    children: "Click here",
+    children: "Continue",
+    showCircle: true,
     disabled: true,
   },
 };
 
 export const DisabledWhenOffline: Story = {
   args: {
-    children: "Click here",
+    children: "Continue",
     disableWhenOffline: true,
   },
 };
