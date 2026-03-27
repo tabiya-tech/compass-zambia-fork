@@ -14,13 +14,21 @@ export default meta;
 type Story = StoryObj;
 
 const groupedColorCategories = [
-  ["primary", "secondary"],
+  ["primary", "secondary", "brandAction", "brandAccent"],
   ["error", "warning", "info", "success"],
   ["tabiyaYellow", "tabiyaBlue"],
   ["containerBackground"],
 ] as const;
 const colorCategories = groupedColorCategories.flat();
 type ColorCategory = (typeof colorCategories)[number];
+
+const semanticColorNames: Partial<Record<ColorCategory, string>> = {
+  primary: "emerald",
+  secondary: "amber",
+  brandAction: "rust",
+  brandAccent: "teal",
+  containerBackground: "linen/surface context",
+};
 
 // Resolves CSS variable colors to their computed values
 const resolveCssColor = (value: string): string => {
@@ -44,7 +52,7 @@ const PaletteElements = () => {
         gap: theme.tabiyaSpacing.lg,
       }}
     >
-      <Typography variant="h4"> Basic Colors</Typography>
+      <Typography variant="h1"> Basic Colors</Typography>
       <Box
         sx={{
           display: "flex",
@@ -74,8 +82,8 @@ const PaletteElements = () => {
                   gap: theme.tabiyaSpacing.lg,
                 }}
               >
-                <Typography alignSelf="flex-start" variant={"subtitle1"}>
-                  {category}
+                <Typography alignSelf="flex-start" variant="body1" fontWeight="bold">
+                  {category} {semanticColorNames[category] && `- ${semanticColorNames[category]}`}
                 </Typography>
                 <Box>
                   <ColorBox theme={theme} category={category} variant={"main"} />
@@ -88,7 +96,7 @@ const PaletteElements = () => {
         ))}
       </Box>
       <Box>
-        <Typography variant="h4">GreyScale</Typography>
+        <Typography variant="h2">GreyScale</Typography>
         <Box sx={{ padding: theme.tabiyaSpacing.lg, gap: theme.tabiyaSpacing.md }}>
           {Object.entries(theme.palette.grey).map(([shade, color]) => (
             <ColorBox key={shade} shade={shade as keyof Palette["grey"]} theme={theme} color={color} />
@@ -96,18 +104,16 @@ const PaletteElements = () => {
         </Box>
       </Box>
       <Box>
-        <Typography variant="h4">Text Colors</Typography>
+        <Typography variant="h2">Text Colors</Typography>
         <Box sx={{ padding: theme.tabiyaSpacing.lg, gap: theme.tabiyaSpacing.md }}>
           {Object.entries(theme.palette.text).map(([variant, color]) => {
             const resolved = resolveCssColor(color);
+            const needsDarkBg = variant === "white" || variant === "accent";
+            const boxBg = needsDarkBg ? theme.palette.common.black : theme.palette.common.white;
 
             return (
-              <ColorBox
-                theme={theme}
-                color={variant === "textWhite" ? theme.palette.primary.main : theme.palette.common.white}
-                key={variant}
-              >
-                <Typography variant="subtitle1" color={color}>
+              <ColorBox theme={theme} color={boxBg} key={variant}>
+                <Typography component="p" sx={{ color, fontWeight: "bold" }}>
                   {variant} : {resolved}
                 </Typography>
               </ColorBox>
@@ -116,7 +122,7 @@ const PaletteElements = () => {
         </Box>
       </Box>
       <Box>
-        <Typography variant="h4">Common Colors</Typography>
+        <Typography variant="h2">Common Colors</Typography>
         <Box sx={{ padding: theme.tabiyaSpacing.lg, gap: theme.tabiyaSpacing.md }}>
           {Object.entries(theme.palette.common).map(([variant, color]) => (
             <ColorBox
@@ -124,7 +130,7 @@ const PaletteElements = () => {
               color={variant === "white" ? theme.palette.common.black : theme.palette.common.white}
               key={variant}
             >
-              <Typography variant="subtitle1" color={color}>
+              <Typography component="p" sx={{ color, fontWeight: "bold" }}>
                 {variant} : {color}
               </Typography>
             </ColorBox>

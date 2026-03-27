@@ -107,6 +107,7 @@ const BugReportButton: React.FC<BugReportButtonProps> = ({ bottomAlign, classNam
             title={t("feedback.bugReport.reportBug") + "."}
             data-testid={DATA_TEST_ID.BUG_REPORT_BUTTON}
             onClick={handleOpenBugReport}
+            sx={{ "& .MuiButton-startIcon": { margin: 0 } }}
           >
             {t("feedback.bugReport.reportBug")}
           </PrimaryButton>

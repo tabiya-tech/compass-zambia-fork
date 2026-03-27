@@ -12,7 +12,7 @@ exports[`Testing Register component it should show register form successfully 1`
       data-testid="auth-header-container-40374529-6e2c-49d8-81d7-93f01603a648"
     />
     <h6
-      class="MuiTypography-root MuiTypography-subtitle2 css-ggg0vy-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-subtitle2 css-r245rg-MuiTypography-root"
     >
       Enter your registration code
     </h6>
@@ -20,7 +20,7 @@ exports[`Testing Register component it should show register form successfully 1`
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-yk5tdh-MuiFormControl-root-MuiTextField-root"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined css-ezse26-MuiFormLabel-root-MuiInputLabel-root"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined css-st6o5v-MuiFormLabel-root-MuiInputLabel-root"
         data-shrink="true"
         for=":r1:"
         id=":r1:-label"
@@ -35,7 +35,7 @@ exports[`Testing Register component it should show register form successfully 1`
         </span>
       </label>
       <div
-        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-11ub2sa-MuiInputBase-root-MuiOutlinedInput-root"
+        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1nrrg6d-MuiInputBase-root-MuiOutlinedInput-root"
       >
         <input
           aria-invalid="false"
@@ -72,7 +72,7 @@ exports[`Testing Register component it should show register form successfully 1`
         class="MuiDivider-wrapper css-ijin0t-MuiDivider-wrapper"
       >
         <h6
-          class="MuiTypography-root MuiTypography-subtitle2 css-1xbqiv2-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-subtitle2 css-ew0dyz-MuiTypography-root"
         >
           and either continue with
         </h6>
@@ -85,14 +85,14 @@ exports[`Testing Register component it should show register form successfully 1`
       data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
     />
     <span
-      class="MuiTypography-root MuiTypography-caption css-1q1mrxw-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
       data-testid="register-login-link-ab02918f-d559-47ba-9662-ea6b3a3606d0"
     >
       Already have an account?
        
       <a
         aria-disabled="false"
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-179zpik-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kqozpc-MuiTypography-root-MuiLink-root"
       >
         Login
       </a>
@@ -266,7 +266,7 @@ exports[`Testing Register component it should show register form successfully 1`
               class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
             >
               <h6
-                class="MuiTypography-root MuiTypography-h6 css-j3d3zm-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-h6 css-65dhei-MuiTypography-root"
                 data-testid="message-91b57774-d50c-4350-882d-363f80ac10e8"
               >
                 Registering you...
@@ -323,14 +323,14 @@ exports[`Testing Register component should handle application registration code 
       data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
     />
     <span
-      class="MuiTypography-root MuiTypography-caption css-1q1mrxw-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
       data-testid="register-login-link-ab02918f-d559-47ba-9662-ea6b3a3606d0"
     >
       Already have an account?
        
       <a
         aria-disabled="false"
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-179zpik-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kqozpc-MuiTypography-root-MuiLink-root"
       >
         Login
       </a>
@@ -501,7 +501,7 @@ exports[`Testing Register component should handle application registration code 
               class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
             >
               <h6
-                class="MuiTypography-root MuiTypography-h6 css-j3d3zm-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-h6 css-65dhei-MuiTypography-root"
                 data-testid="message-91b57774-d50c-4350-882d-363f80ac10e8"
               >
                 Registering you...

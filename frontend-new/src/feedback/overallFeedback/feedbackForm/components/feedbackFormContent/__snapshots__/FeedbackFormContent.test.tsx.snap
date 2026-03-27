@@ -18,7 +18,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
       variants="[object Object]"
     >
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-b6s7mk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-dhajdd-MuiTypography-root"
         data-testid="feedback-form-content-title-07d1ed9d-6ced-4a24-912a-9b89199df67f"
       >
         Bias & Experience Accuracy
@@ -39,11 +39,11 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
               data-testid="yes-no-question-form-control-9803f91b-499a-41b3-9348-795de9e399a9"
             >
               <legend
-                class="MuiFormLabel-root MuiFormLabel-colorPrimary css-vdbahr-MuiFormLabel-root"
+                class="MuiFormLabel-root MuiFormLabel-colorPrimary css-atq0ox-MuiFormLabel-root"
                 data-testid="yes-no-question-form-label-9803f91b-499a-41b3-9348-795de9e399a9"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-1pejuyu-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 css-1hviizo-MuiTypography-root"
                   data-testid="question-text-bf2b8e40-5a77-4eac-a0ea-ba8af97a5d67"
                 >
                   Did you feel that {{appName}} treated you unfairly by making assumptions about your background, language, or other personal characteristics? If so, please describe your experience.
@@ -95,7 +95,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
                     </span>
                   </span>
                   <span
-                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-19s6r5h-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-l8pgdq-MuiTypography-root"
                   >
                     No
                   </span>
@@ -141,7 +141,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
                     </span>
                   </span>
                   <span
-                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-19s6r5h-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-l8pgdq-MuiTypography-root"
                   >
                     Yes
                   </span>
@@ -157,11 +157,11 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
               data-testid="checkbox-with-textarea-form-control-989402f0-9fda-4400-958c-2d6c7bce9821"
             >
               <legend
-                class="MuiFormLabel-root MuiFormLabel-colorPrimary css-vdbahr-MuiFormLabel-root"
+                class="MuiFormLabel-root MuiFormLabel-colorPrimary css-atq0ox-MuiFormLabel-root"
                 data-testid="checkbox-with-textarea-form-label-989402f0-9fda-4400-958c-2d6c7bce9821"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-1pejuyu-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 css-1hviizo-MuiTypography-root"
                   data-testid="question-text-bf2b8e40-5a77-4eac-a0ea-ba8af97a5d67"
                 >
                   Were there any aspects of your work experience information identified by {{appName}} that were inaccurate?
@@ -195,7 +195,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-19s6r5h-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-l8pgdq-MuiTypography-root"
                   >
                     Incorrect Experience title
                   </span>
@@ -225,7 +225,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-19s6r5h-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-l8pgdq-MuiTypography-root"
                   >
                     Incorrect start/end dates
                   </span>
@@ -255,7 +255,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-19s6r5h-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-l8pgdq-MuiTypography-root"
                   >
                     Incorrect location
                   </span>
@@ -285,7 +285,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-19s6r5h-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-l8pgdq-MuiTypography-root"
                   >
                     Duplicate Experiences
                   </span>
@@ -315,7 +315,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-19s6r5h-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-l8pgdq-MuiTypography-root"
                   >
                     Missing Experiences
                   </span>
@@ -345,7 +345,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-19s6r5h-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-l8pgdq-MuiTypography-root"
                   >
                     Other
                   </span>
@@ -367,7 +367,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
     style="--Paper-shadow: var(--mui-shadows-0);"
   >
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-disableElevation Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-2a1kq0-MuiButtonBase-root-MuiButton-root"
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation Mui-disabled MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-1aidgs9-MuiButtonBase-root-MuiButton-root"
       data-testid="feedback-form-back-button-07d1ed9d-6ced-4a24-912a-9b89199df67f"
       disabled=""
       tabindex="-1"
@@ -389,7 +389,7 @@ exports[`FeedbackFormContent should render component successfully 1`] = `
       />
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-1c68ceu-MuiButtonBase-root-MuiButton-root"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-119bxks-MuiButtonBase-root-MuiButton-root"
       data-testid="feedback-form-next-button-07d1ed9d-6ced-4a24-912a-9b89199df67f"
       style="width: 100px;"
       tabindex="0"

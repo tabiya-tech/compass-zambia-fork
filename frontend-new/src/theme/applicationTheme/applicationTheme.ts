@@ -33,11 +33,11 @@ const augmentedThemeColor = (color: string, contrastColor?: string) => {
 };
 
 /**
- * Creates a grey scale palette between the DarkBlue and Gray colors
+ * Creates a grey scale palette between a primary text and linen.
  */
 const createGreyScale = () => {
-  const startColor = new Color(TabiyaBasicColors.DarkBlue);
-  const greyAnchor = new Color(TabiyaBasicColors.Gray);
+  const startColor = new Color("#1A1208"); // black
+  const greyAnchor = new Color("#F9F6F0"); // linen
   const lightColor = new Color("white");
 
   const mixColor = (color: Color, mix: number) => {
@@ -53,7 +53,7 @@ const createGreyScale = () => {
     400: mixColor(startColor, 5 / 8),
     300: mixColor(startColor, 6 / 8),
     200: mixColor(startColor, 7 / 8),
-    100: TabiyaBasicColors.Gray, // The greyAnchor color is [100]
+    100: "#F2F1F0", // cloud
     50: mixColor(lightColor, 0.5),
   };
 };
@@ -69,6 +69,7 @@ export const TabiyaBasicColors = {
   Gray: "#F3F1EE",
   GrayDark: "#41403D",
 };
+
 export const TabiyaIconStyles = {
   fontSizeSmall: {
     fontSize: "1rem",
@@ -98,15 +99,25 @@ const lightPalette: PaletteOptions = {
     dark: "rgb(var(--brand-secondary-dark))",
     contrastText: "rgb(var(--brand-secondary-contrast-text))",
   },
+  brandAction: {
+    ...augmentedThemeColor("#D44B1A", "#FFFFFF"),
+    dark: "#B03A12",
+    light: "#FDF0EB",
+  },
+  brandAccent: {
+    ...augmentedThemeColor("#5CBFBF", "#1A1208"),
+    dark: "#4EA2A2",
+    light: "#EAF8F8",
+  },
   tabiyaYellow: augmentedThemeColor(TabiyaBasicColors.Yellow),
   tabiyaBlue: augmentedThemeColor(TabiyaBasicColors.DarkBlue),
   tabiyaGreen: augmentedThemeColor(TabiyaBasicColors.DarkGreen),
   tabiyaRed: augmentedThemeColor(TabiyaBasicColors.DarkRed),
   containerBackground: {
     light: "#FFFFFF",
-    dark: "#DFDDD9",
-    main: TabiyaBasicColors.Gray,
-    contrastText: TabiyaBasicColors.GrayDark,
+    dark: "#EDE9E6",
+    main: "#F9F6F0",
+    contrastText: "#6A6359",
   },
   error: {
     ...augmentedThemeColor("#FF5449"),
@@ -134,13 +145,19 @@ const lightPalette: PaletteOptions = {
     secondary: "rgb(var(--text-secondary))",
     textAccent: "rgb(var(--text-accent))",
     textWhite: "#FFFFFF",
-    textBlack: "#000000",
-    disabled: "#000000",
+    textBlack: "rgb(var(--text-primary))",
+    disabled: "rgb(var(--text-secondary))",
   },
   common: {
-    white: "#ffffff",
-    black: "#000000",
+    white: "#FFFFFF",
+    black: "#1A1208",
+    cream: "#FBF0D8",
   },
+  background: {
+    default: "#F9F6F0",
+    paper: "#FFFFFF",
+  },
+  divider: "#E1DFDD",
 };
 
 const darkPalette: PaletteOptions = {
@@ -217,92 +234,97 @@ export const applicationTheme = (theme: ThemeMode) => {
     },
     typography: {
       htmlFontSize: TabiyaBaseSizes.font, // Set the base font size
-      fontFamily: "Inter, sans-serif", // Set the desired font family
+      fontFamily: '"Plus Jakarta Sans", sans-serif', // Set the desired font family
       fontSize: TabiyaBaseSizes.font, // Set the base font size
       fontWeightLight: 300,
       fontWeightRegular: 400,
       fontWeightMedium: 500,
       fontWeightBold: 700,
       h1: {
-        fontFamily: "IBM Plex Mono",
-        fontWeight: "700",
-        fontSize: CSSClampFnCalculatorRem(1.45, 2.125, screenSizeRem),
+        fontFamily: '"Bricolage Grotesque", sans-serif',
+        fontWeight: "800",
+        fontSize: CSSClampFnCalculatorRem(1.875, 3, screenSizeRem),
+        letterSpacing: "-0.02em",
         color: activePalette.text!!.primary,
       },
       h2: {
-        fontFamily: "IBM Plex Mono",
+        fontFamily: '"Bricolage Grotesque", sans-serif',
         fontWeight: "700",
-        fontSize: CSSClampFnCalculatorRem(1.4, 1.975, screenSizeRem),
+        fontSize: CSSClampFnCalculatorRem(1.5, 2.25, screenSizeRem),
+        letterSpacing: "-0.02em",
         color: activePalette.text!!.primary,
       },
       h3: {
-        fontFamily: "IBM Plex Mono",
+        fontFamily: '"Bricolage Grotesque", sans-serif',
         fontWeight: "700",
-        fontSize: CSSClampFnCalculatorRem(1.35, 1.825, screenSizeRem),
+        fontSize: CSSClampFnCalculatorRem(1.25, 1.875, screenSizeRem),
+        letterSpacing: "-0.01em",
         color: activePalette.text!!.primary,
       },
       h4: {
-        fontFamily: "IBM Plex Mono",
-        fontWeight: "700",
-        fontSize: CSSClampFnCalculatorRem(1.3, 1.675, screenSizeRem),
+        fontFamily: '"Bricolage Grotesque", sans-serif',
+        fontWeight: "600",
+        fontSize: CSSClampFnCalculatorRem(1.25, 1.5, screenSizeRem),
         color: activePalette.text!!.primary,
       },
       h5: {
-        fontFamily: "IBM Plex Mono",
-        fontWeight: "700",
-        fontSize: CSSClampFnCalculatorRem(1.25, 1.525, screenSizeRem),
+        fontFamily: '"Bricolage Grotesque", sans-serif',
+        fontWeight: "600",
+        fontSize: CSSClampFnCalculatorRem(1.125, 1.25, screenSizeRem),
         color: activePalette.text!!.primary,
       },
       h6: {
-        fontFamily: "IBM Plex Mono",
-        fontWeight: "700",
-        fontSize: CSSClampFnCalculatorRem(1.2, 1.375, screenSizeRem),
+        fontFamily: '"Bricolage Grotesque", sans-serif',
+        fontWeight: "600",
+        fontSize: CSSClampFnCalculatorRem(1, 1.125, screenSizeRem),
         color: activePalette.text!!.primary,
       },
       subtitle1: {
-        fontFamily: "Inter",
-        fontWeight: "500",
-        fontSize: CSSClampFnCalculatorRem(1, 1.125, screenSizeRem),
-
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
+        fontWeight: "600",
+        fontSize: CSSClampFnCalculatorRem(1.125, 1.25, screenSizeRem),
         color: activePalette.text!!.textAccent,
       },
       subtitle2: {
-        fontFamily: "Inter",
-        fontWeight: "500",
-        fontSize: CSSClampFnCalculatorRem(0.75, 1, screenSizeRem),
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
+        fontWeight: "600",
+        fontSize: CSSClampFnCalculatorRem(1, 1.125, screenSizeRem),
         color: activePalette.text!!.textAccent,
       },
       body1: {
-        fontFamily: "Inter",
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
         fontWeight: "400",
-        fontSize: CSSClampFnCalculatorRem(0.875, 1, screenSizeRem),
-        color: activePalette.text!!.secondary,
+        fontSize: CSSClampFnCalculatorRem(1, 1.125, screenSizeRem),
+        color: activePalette.text!!.primary,
       },
       body2: {
-        fontFamily: "Inter",
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
         fontWeight: "400",
-        fontSize: CSSClampFnCalculatorRem(0.75, 1, screenSizeRem),
-        color: activePalette.text!!.secondary,
+        fontSize: CSSClampFnCalculatorRem(0.875, 1, screenSizeRem),
+        color: activePalette.text!!.primary,
       },
       button: {
-        fontFamily: "Inter",
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
         fontWeight: "500",
-        fontSize: CSSClampFnCalculatorRem(1, 1.125, screenSizeRem),
+        fontSize: CSSClampFnCalculatorRem(0.875, 1, screenSizeRem),
         color: activePalette.text!!.primary,
         textTransform: "none",
       },
       caption: {
-        fontFamily: "Inter",
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
         fontWeight: "400",
         fontSize: CSSClampFnCalculatorRem(0.75, 0.875, screenSizeRem),
+        color: activePalette.text!!.secondary,
       },
       overline: {
-        fontFamily: "Inter",
-        fontWeight: "400",
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
+        fontWeight: "600",
         fontSize: CSSClampFnCalculatorRem(0.75, 0.875, screenSizeRem),
+        textTransform: "uppercase",
+        color: activePalette.text!!.secondary,
       },
       progressBarText: {
-        fontFamily: "IBM Plex Mono",
+        fontFamily: '"Bricolage Grotesque", sans-serif',
         fontWeight: "700",
         fontSize: CSSClampFnCalculatorRem(0.75, 0.875, screenSizeRem),
         color: activePalette.text!!.primary,
@@ -398,7 +420,7 @@ export const applicationTheme = (theme: ThemeMode) => {
             color: activePalette.text!.secondary,
             opacity: 0.7,
             "&.Mui-focused": {
-              color: activePalette.text!.textBlack,
+              color: activePalette.text!.primary,
             },
           },
         },

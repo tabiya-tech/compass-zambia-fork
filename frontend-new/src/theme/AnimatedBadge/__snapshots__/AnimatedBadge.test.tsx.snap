@@ -28,10 +28,10 @@ exports[`AnimatedBadge should render the badge for a large number 1`] = `
     />
   </svg>
   <span
-    class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-d3zjg8-MuiBadge-badge"
+    class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-1wr26as-MuiBadge-badge"
   >
     <span
-      class="css-vty5v8"
+      class="css-baxna5"
     >
       99+
     </span>
@@ -67,10 +67,10 @@ exports[`AnimatedBadge should render the badge with provided content 1`] = `
     />
   </svg>
   <span
-    class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-d3zjg8-MuiBadge-badge"
+    class="MuiBadge-badge MuiBadge-standard MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular css-1wr26as-MuiBadge-badge"
   >
     <span
-      class="css-vty5v8"
+      class="css-baxna5"
     >
       2
     </span>

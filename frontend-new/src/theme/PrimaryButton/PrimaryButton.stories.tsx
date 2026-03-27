@@ -14,22 +14,46 @@ const meta: Meta<typeof PrimaryButton> = {
 export default meta;
 type Story = StoryObj<typeof PrimaryButton>;
 
-export const Shown: Story = {
+export const Default: Story = {
   args: {
-    children: "Click here",
+    children: "Get Started",
+    showCircle: true,
+  },
+};
+
+export const WithoutCircle: Story = {
+  args: {
+    children: "Get Started",
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    children: "See Your Matches",
+    color: "secondary",
+    showCircle: true,
+  },
+};
+
+export const BrandAction: Story = {
+  args: {
+    children: "Explore Pathways",
+    color: "brandAction",
+    showCircle: true,
   },
 };
 
 export const Disabled: Story = {
   args: {
-    children: "Click here",
+    children: "Continue",
+    showCircle: true,
     disabled: true,
   },
 };
 
 export const DisabledWhenOffline: Story = {
   args: {
-    children: "Click here",
+    children: "Continue",
     disableWhenOffline: true,
   },
 };
