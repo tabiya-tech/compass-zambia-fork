@@ -1,8 +1,5 @@
 import React, { useState, useMemo } from "react";
 import { Box, Tabs, Tab, Typography, useTheme, Chip, Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { routerPaths } from "src/app/routerPaths";
-import PageHeader from "src/home/components/PageHeader/PageHeader";
 import Footer from "src/home/components/Footer/Footer";
 import DataTable from "src/jobMatching/components/DataTable/DataTable";
 import type { ColumnDef } from "src/jobMatching/components/DataTable/DataTable";
@@ -37,7 +34,6 @@ export const DATA_TEST_ID = {
 
 const JobMatchingPage: React.FC = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState(0);
   const [browseFilters, setBrowseFilters] = useState<JobFilters>(EMPTY_FILTERS);
@@ -207,13 +203,6 @@ const JobMatchingPage: React.FC = () => {
       sx={{ backgroundColor: theme.palette.containerBackground.light }}
       data-testid={DATA_TEST_ID.JOB_MATCHING_CONTAINER}
     >
-      <PageHeader
-        title="jobMatching.pageTitle"
-        subtitle="jobMatching.pageDescription"
-        backLinkLabel="home.backToDashboard"
-        onBackClick={() => navigate(routerPaths.ROOT)}
-      />
-
       <Box
         sx={{
           flex: 1,

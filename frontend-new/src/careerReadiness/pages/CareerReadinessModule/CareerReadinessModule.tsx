@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import PageHeader from "src/home/components/PageHeader/PageHeader";
 import { routerPaths } from "src/app/routerPaths";
 import CareerReadinessChat from "src/careerReadiness/components/CareerReadinessChat/CareerReadinessChat";
 import CareerReadinessService from "src/careerReadiness/services/CareerReadinessService";
@@ -12,6 +11,7 @@ import { StatusCodes } from "http-status-codes";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import ModuleHandoffBanner from "src/home/components/ModuleHandoffBanner/ModuleHandoffBanner";
 import { useNextModule } from "src/home/useNextModule";
+import SubNavBar from "src/navigation/SubNavBar/SubNavBar";
 
 const uniqueId = "e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b";
 
@@ -31,14 +31,21 @@ const CareerReadinessModule: React.FC = () => {
   const [siblingModules, setSiblingModules] = useState<ModuleSummary[]>([]);
   const topLevelNextModule = useNextModule("job_readiness");
 
-  // The next CR topic by sort_order, or null if this is the last one.
+  const sortedSiblings = useMemo(
+    () => [...siblingModules].sort((a, b) => a.sort_order - b.sort_order),
+    [siblingModules]
+  );
+
+  const moduleNumber = useMemo(() => {
+    if (!moduleDetail) return 0;
+    const idx = sortedSiblings.findIndex((m) => m.id === moduleDetail.id);
+    return idx >= 0 ? idx + 1 : moduleDetail.sort_order;
+  }, [sortedSiblings, moduleDetail]);
+
   const nextCRModule = useMemo(() => {
     if (!moduleDetail) return null;
-    const sorted = [...siblingModules].sort((a, b) => a.sort_order - b.sort_order);
-    return sorted.find((m) => m.sort_order > moduleDetail.sort_order) ?? null;
-  }, [siblingModules, moduleDetail]);
-
-  const handleBackToModules = () => navigate(routerPaths.CAREER_READINESS);
+    return sortedSiblings.find((m) => m.sort_order > moduleDetail.sort_order) ?? null;
+  }, [sortedSiblings, moduleDetail]);
 
   const handleModuleCompleted = useCallback(() => {
     enqueueSnackbar(t("careerReadiness.moduleComplete"), { variant: "success" });
@@ -82,6 +89,8 @@ const CareerReadinessModule: React.FC = () => {
     void loadModuleAndConversation();
   }, [loadModuleAndConversation]);
 
+  const subNavTitle = moduleDetail ? t("careerReadiness.subNavTitle", { number: moduleNumber }) : "";
+
   return (
     <Box
       sx={{
@@ -93,13 +102,9 @@ const CareerReadinessModule: React.FC = () => {
       }}
       data-testid={DATA_TEST_ID.CAREER_READINESS_MODULE_CONTAINER}
     >
-      <PageHeader
-        title="careerReadiness.pageTitle"
-        subtitle="careerReadiness.pageDescription"
-        backLinkLabel="careerReadiness.backToModules"
-        onBackClick={handleBackToModules}
-      />
-
+      {moduleDetail && (
+        <SubNavBar title={subNavTitle} subtitle={moduleDetail.title} headerColor="secondary" labelAbove />
+      )}
       <Box
         sx={{
           flex: 1,

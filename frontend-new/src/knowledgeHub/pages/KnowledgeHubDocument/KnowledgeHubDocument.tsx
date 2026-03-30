@@ -6,7 +6,6 @@ import MarkdownReader from "src/knowledgeHub/components/MarkdownReader";
 import { getDocumentById } from "src/knowledgeHub/documentLoader";
 import { routerPaths } from "src/app/routerPaths";
 import ErrorPage from "src/error/errorPage/ErrorPage";
-import KnowledgeHubPageHeader from "src/knowledgeHub/components/KnowledgeHubPageHeader";
 import BackButton from "src/knowledgeHub/components/BackButton";
 
 const uniqueId = "d5e6f7a8-90bc-def1-2345-678901234567";
@@ -46,8 +45,6 @@ const KnowledgeHubDocument: React.FC = () => {
       height="100%"
       data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_DOCUMENT_CONTAINER}
     >
-      <KnowledgeHubPageHeader />
-
       <Container
         maxWidth="md"
         sx={{

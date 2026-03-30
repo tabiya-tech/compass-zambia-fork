@@ -69,7 +69,7 @@ function ContextMenu(props: Readonly<ContextMenuProps>) {
             }}
             data-testid={DATA_TEST_ID.MENU_HEADER_MESSAGE}
           >
-            <Typography variant="caption" fontWeight="bold" color={theme.palette.text.secondary}>
+            <Typography variant="caption" fontWeight="bold" color={theme.palette.text.primary}>
               {props.headerMessage}
             </Typography>
           </Box>
@@ -104,11 +104,11 @@ function ContextMenu(props: Readonly<ContextMenuProps>) {
           >
             {item.icon && (
               <ListItemIcon data-testid={DATA_TEST_ID.MENU_ITEM_ICON}>
-                <Icon sx={{ color: theme.palette.text.secondary }}>{item.icon}</Icon>
+                <Icon sx={{ color: theme.palette.text.primary }}>{item.icon}</Icon>
               </ListItemIcon>
             )}
             <ListItemText data-testid={DATA_TEST_ID.MENU_ITEM_TEXT}>
-              <Typography variant="caption" color={item.textColor ?? "secondary"}>
+              <Typography variant="caption" color={item.textColor ?? "primary"}>
                 {item.text}
               </Typography>
               {item.description && (
@@ -119,7 +119,7 @@ function ContextMenu(props: Readonly<ContextMenuProps>) {
             </ListItemText>
             {item.trailingIcon && (
               <ListItemIcon data-testid={DATA_TEST_ID.MENU_ITEM_TRAILING_ICON} sx={{ justifyContent: "flex-end" }}>
-                <Icon sx={{ color: theme.palette.text.secondary }}>{item.trailingIcon}</Icon>
+                <Icon sx={{ color: theme.palette.text.primary }}>{item.trailingIcon}</Icon>
               </ListItemIcon>
             )}
           </MenuItem>

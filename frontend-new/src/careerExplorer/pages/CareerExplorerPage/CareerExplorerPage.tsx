@@ -1,8 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import PageHeader from "src/home/components/PageHeader/PageHeader";
-import { routerPaths } from "src/app/routerPaths";
 import CareerExplorerChat from "src/careerExplorer/components/CareerExplorerChat/CareerExplorerChat";
 import CareerExplorerService from "src/careerExplorer/services/CareerExplorerService";
 import type { CareerExplorerMessage } from "src/careerExplorer/types";
@@ -15,7 +12,6 @@ export const DATA_TEST_ID = {
 
 const CareerExplorerPage: React.FC = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const [messages, setMessages] = useState<CareerExplorerMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,11 +43,6 @@ const CareerExplorerPage: React.FC = () => {
       sx={{ backgroundColor: theme.palette.containerBackground.light }}
       data-testid={DATA_TEST_ID.CONTAINER}
     >
-      <PageHeader
-        title="careerExplorer.title"
-        backLinkLabel="home.backToDashboard"
-        onBackClick={() => navigate(routerPaths.ROOT)}
-      />
       {error && (
         <Box sx={{ paddingX: theme.spacing(theme.tabiyaSpacing.md), pt: 1 }}>
           <Typography variant="body2" color="error">

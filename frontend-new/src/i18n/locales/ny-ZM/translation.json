@@ -784,7 +784,8 @@
     "previous": "Zomwe zidadza"
   },
   "careerExplorer": {
-    "title": "Kufufuza Ntchito",
+    "title": "Njira za ntchito",
+    "subtitle": "Dziwani magawo amene akulemba ntchito komanso ndalama zimene mungapeze.",
     "placeholder": "Funsani za gawo...",
     "send": "Tumizani"
   },
@@ -794,6 +795,7 @@
     "introduction": "Gwirani ntchito module iliyonse mokwanira. Iliyonse ndi mabwenzi otsogoleredwa ndi AI omwe amasokoneza gawo lina la luso. Pitirizani kuchokera kumalo omwe mwanaika kapena yambani module yatsopano.",
     "pageTitle": "Kukonzekera Ntchito",
     "pageDescription": "Pangani luso omwe olemba ntchito akufuna kuposa maphunziro anu aukadaulo",
+    "subNavTitle": "Konzekerani — Gawo {{number}}",
     "listError": "Sitingathe kutsitsa ma module. Chonde yesani kachiwiri.",
     "statusDone": "Zatha",
     "statusInProgress": "Ikupitilira",
@@ -851,15 +853,15 @@
       "moduleCompleted": "yathera",
       "moduleRemaining": "yotsala",
       "noSkillsYet": "Palibe luso lopezeka mpaka pano. Yambani kukambirana kuti mupeze luso lanu!",
-      "careerExplorer": "Career Explorer",
+      "careerExplorer": "Njira za ntchito",
       "noSectorsYet": "Palibe gawo lopezeka mpaka pano.",
       "sectorsExplored": "Mwafufuza magawo {{count}}"
     },
     "modules": {
-      "skillsDiscovery": "Luso ndi Zomwe Ndimakonda",
-      "skillsDiscoverySubtitle": "Pezani luso lanu ndi zomwe mumakonda",
+      "skillsDiscovery": "Pangani mbiri yanu",
+      "skillsDiscoverySubtitle": "Chezani ndi {{appName}} kuti mudziwe luso lanu kuchokera kuntchito ndi pa moyo.",
       "jobReadiness": "Kukonzekera Ntchito",
-      "careerExplorer": "Kufufuza Ntchito",
+      "careerExplorer": "Njira za ntchito",
       "knowledgeHub": "Malo Ophunzirira",
       "jobMatching": "Kufanana kwa Ntchito",
       "skillsDiscoveryDesc": "Lankhulani ndi {{appName}} kuti mupeze luso lanu ndi zomwe mumakonda — kuchokera ku maphunziro anu, ntchito, ndi moyo wa tsiku ndi tsiku.",
@@ -890,5 +892,10 @@
   "jobMatching": {
     "pageTitle": "Kufunana Ntchito",
     "pageDescription": "Onani mwayi wa ntchito zenizeni ndikuona momwe luso lanu likugwirizana ndi mwayi uzambezi."
+  },
+  "nav": {
+    "search": "Sakani...",
+    "dashboard": "Dashibodi",
+    "pathways": "Njira"
   }
 }

@@ -1,5 +1,6 @@
 import React, { startTransition, useEffect, useState } from "react";
-import { createHashRouter, RouterProvider, Outlet, useRouteError } from "react-router-dom";
+import { createHashRouter, Outlet, RouterProvider, useRouteError } from "react-router-dom";
+import Layout from "src/app/Layout";
 import Login from "src/auth/pages/Login/Login";
 import ErrorPage from "src/error/errorPage/ErrorPage";
 import Register from "src/auth/pages/Register/Register";
@@ -283,22 +284,114 @@ const App = () => {
       element: <Outlet />,
       errorElement: <RouterErrorBoundary />,
       children: [
+        // Authenticated routes with Layout (NavBar + SubNavBar)
         {
-          index: true,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.ROOT}>
-              <Home />
-            </ProtectedRoute>
-          ),
+          element: <Layout />,
+          children: [
+            {
+              index: true,
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.ROOT}>
+                  <Home />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: routerPaths.SKILLS_INTERESTS,
+              handle: {
+                title: "home.modules.skillsDiscovery",
+                subtitle: "home.modules.skillsDiscoverySubtitle",
+                headerColor: "primary",
+              },
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.SKILLS_INTERESTS}>
+                  <LazyLoadedChat />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: routerPaths.KNOWLEDGE_HUB,
+              handle: {
+                title: "home.modules.knowledgeHub",
+                subtitle: "home.modules.knowledgeHubDesc",
+              },
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB}>
+                  <LazyLoadedKnowledgeHubList />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: routerPaths.KNOWLEDGE_HUB_DOCUMENT,
+              handle: {
+                title: "home.modules.knowledgeHub",
+                subtitle: "home.modules.knowledgeHubDesc",
+              },
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB_DOCUMENT}>
+                  <LazyLoadedKnowledgeHubDocument />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: routerPaths.CAREER_EXPLORER,
+              handle: {
+                title: "careerExplorer.title",
+                subtitle: "careerExplorer.subtitle",
+              },
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.CAREER_EXPLORER}>
+                  <LazyLoadedCareerExplorer />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: routerPaths.CAREER_READINESS,
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS}>
+                  <LazyLoadedCareerReadinessList />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: routerPaths.CAREER_READINESS_MODULE,
+              handle: {
+                headerColor: "secondary",
+              },
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS_MODULE}>
+                  <LazyLoadedCareerReadinessModule />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: routerPaths.PROFILE,
+              handle: {
+                title: "home.profile.title",
+                subtitle: "home.profile.subtitle",
+                headerColor: "primary",
+              },
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.PROFILE}>
+                  <LazyLoadedProfile />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: routerPaths.JOB_MATCHING,
+              handle: {
+                title: "jobMatching.pageTitle",
+                subtitle: "jobMatching.pageDescription",
+              },
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.JOB_MATCHING}>
+                  <LazyLoadedJobMatching />
+                </ProtectedRoute>
+              ),
+            },
+          ],
         },
-        {
-          path: routerPaths.SKILLS_INTERESTS,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.SKILLS_INTERESTS}>
-              <LazyLoadedChat />
-            </ProtectedRoute>
-          ),
-        },
+        // Unauthenticated routes (no Layout)
         {
           path: routerPaths.LANDING,
           element: (
@@ -307,7 +400,6 @@ const App = () => {
             </ProtectedRoute>
           ),
         },
-        // Only include register route if registration is not disabled
         ...(isRegistrationDisabled
           ? []
           : [
@@ -349,62 +441,6 @@ const App = () => {
           element: (
             <ProtectedRoute key={ProtectedRouteKeys.SENSITIVE_DATA}>
               <LazyLoadedSensitiveDataForm />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: routerPaths.KNOWLEDGE_HUB,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB}>
-              <LazyLoadedKnowledgeHubList />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: routerPaths.KNOWLEDGE_HUB_DOCUMENT,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB_DOCUMENT}>
-              <LazyLoadedKnowledgeHubDocument />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: routerPaths.CAREER_EXPLORER,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.CAREER_EXPLORER}>
-              <LazyLoadedCareerExplorer />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: routerPaths.CAREER_READINESS,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS}>
-              <LazyLoadedCareerReadinessList />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: routerPaths.CAREER_READINESS_MODULE,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.CAREER_READINESS_MODULE}>
-              <LazyLoadedCareerReadinessModule />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: routerPaths.PROFILE,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.PROFILE}>
-              <LazyLoadedProfile />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: routerPaths.JOB_MATCHING,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.JOB_MATCHING}>
-              <LazyLoadedJobMatching />
             </ProtectedRoute>
           ),
         },

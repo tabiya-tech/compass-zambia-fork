@@ -8,7 +8,6 @@ import { getEnabledModules } from "src/home/modulesService";
 import { useModuleProgress } from "src/home/hooks/useModuleProgress";
 import ProgressBar from "src/home/components/ProgressBar/ProgressBar";
 import ModuleCard from "src/home/components/ModuleCard/ModuleCard";
-import PageHeader from "src/home/components/PageHeader/PageHeader";
 import Footer from "src/home/components/Footer/Footer";
 import { getProductName } from "src/envService";
 import { BADGE_STATUS } from "src/home/constants";
@@ -46,9 +45,6 @@ const Home: React.FC = () => {
       }}
       data-testid={DATA_TEST_ID.HOME_CONTAINER}
     >
-      {/* Page Header */}
-      <PageHeader title="home.dashboard" />
-
       {/* Page Content */}
       <Box
         sx={{
