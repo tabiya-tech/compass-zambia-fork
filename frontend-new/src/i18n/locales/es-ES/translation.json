@@ -784,7 +784,8 @@
     "previous": "Anterior"
   },
   "careerExplorer": {
-    "title": "Explorador de carreras",
+    "title": "Rutas profesionales",
+    "subtitle": "Descubre qué sectores están contratando y cuánto puedes ganar.",
     "placeholder": "Pregunta sobre un sector...",
     "send": "Enviar"
   },
@@ -794,6 +795,7 @@
     "introduction": "Trabaja cada módulo a tu ritmo. Cada uno es una conversación guiada por IA centrada en un área de habilidades concreta. Retoma donde lo dejaste o empieza un módulo nuevo.",
     "pageTitle": "Preparación profesional",
     "pageDescription": "Desarrolla las habilidades que buscan los empleadores más allá de tu formación técnica",
+    "subNavTitle": "Prepárate — Módulo {{number}}",
     "listError": "No se pudieron cargar los módulos. Inténtalo de nuevo.",
     "statusDone": "Hecho",
     "statusInProgress": "En progreso",
@@ -851,15 +853,15 @@
       "moduleCompleted": "completado",
       "moduleRemaining": "restante",
       "noSkillsYet": "¡Aún no se han descubierto habilidades. Comienza una conversación para descubrir tus habilidades!",
-      "careerExplorer": "Explorador de Carreras",
+      "careerExplorer": "Rutas profesionales",
       "noSectorsYet": "Aún no se han explorado sectores.",
       "sectorsExplored": "Has explorado {{count}} sector(es)"
     },
     "modules": {
-      "skillsDiscovery": "Mis habilidades e intereses",
-      "skillsDiscoverySubtitle": "Descubre tus habilidades e intereses",
+      "skillsDiscovery": "Construye tu perfil",
+      "skillsDiscoverySubtitle": "Chatea con {{appName}} para descubrir tus habilidades del trabajo y de la vida.",
       "jobReadiness": "Preparación profesional",
-      "careerExplorer": "Explorador de carreras",
+      "careerExplorer": "Rutas profesionales",
       "knowledgeHub": "Centro de conocimiento",
       "jobMatching": "Coincidencia de trabajos",
       "skillsDiscoveryDesc": "Chatea con {{appName}} para descubrir tus habilidades e intereses — desde tus estudios, trabajo y vida cotidiana.",
@@ -890,5 +892,10 @@
   "jobMatching": {
     "pageTitle": "Búsqueda de Empleo",
     "pageDescription": "Explora ofertas de trabajo reales y descubre cómo tus habilidades se adaptan a las oportunidades."
+  },
+  "nav": {
+    "search": "Buscar...",
+    "dashboard": "Panel",
+    "pathways": "Rutas"
   }
 }

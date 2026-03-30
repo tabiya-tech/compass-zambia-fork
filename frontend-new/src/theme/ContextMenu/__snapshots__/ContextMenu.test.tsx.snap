@@ -37,7 +37,7 @@ exports[`ContextMenu render tests renders correctly the menu open 1`] = `
         >
           <span
             aria-hidden="true"
-            class="material-icons notranslate MuiIcon-root MuiIcon-fontSizeMedium css-8exgcq-MuiIcon-root"
+            class="material-icons notranslate MuiIcon-root MuiIcon-fontSizeMedium css-r81pdf-MuiIcon-root"
           >
             <div />
           </span>
@@ -50,7 +50,7 @@ exports[`ContextMenu render tests renders correctly the menu open 1`] = `
             class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-l8pgdq-MuiTypography-root"
           >
             <span
-              class="MuiTypography-root MuiTypography-caption css-1b7ud4e-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-caption css-1pjznql-MuiTypography-root"
             >
               foo
             </span>
@@ -71,7 +71,7 @@ exports[`ContextMenu render tests renders correctly the menu open 1`] = `
             class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-l8pgdq-MuiTypography-root"
           >
             <span
-              class="MuiTypography-root MuiTypography-caption css-1b7ud4e-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-caption css-1pjznql-MuiTypography-root"
             >
               bar
             </span>
@@ -91,7 +91,7 @@ exports[`ContextMenu render tests renders correctly the menu open 1`] = `
         >
           <span
             aria-hidden="true"
-            class="material-icons notranslate MuiIcon-root MuiIcon-fontSizeMedium css-8exgcq-MuiIcon-root"
+            class="material-icons notranslate MuiIcon-root MuiIcon-fontSizeMedium css-r81pdf-MuiIcon-root"
           >
             <div />
           </span>
@@ -104,7 +104,7 @@ exports[`ContextMenu render tests renders correctly the menu open 1`] = `
             class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-l8pgdq-MuiTypography-root"
           >
             <span
-              class="MuiTypography-root MuiTypography-caption css-1b7ud4e-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-caption css-1pjznql-MuiTypography-root"
             >
               baz
             </span>
@@ -123,7 +123,7 @@ exports[`ContextMenu render tests renders correctly the menu open 1`] = `
         >
           <span
             aria-hidden="true"
-            class="material-icons notranslate MuiIcon-root MuiIcon-fontSizeMedium css-8exgcq-MuiIcon-root"
+            class="material-icons notranslate MuiIcon-root MuiIcon-fontSizeMedium css-r81pdf-MuiIcon-root"
           >
             <div />
           </span>
@@ -136,7 +136,7 @@ exports[`ContextMenu render tests renders correctly the menu open 1`] = `
             class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-l8pgdq-MuiTypography-root"
           >
             <span
-              class="MuiTypography-root MuiTypography-caption css-1b7ud4e-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-caption css-1pjznql-MuiTypography-root"
             >
               qux
             </span>
@@ -148,7 +148,7 @@ exports[`ContextMenu render tests renders correctly the menu open 1`] = `
         >
           <span
             aria-hidden="true"
-            class="material-icons notranslate MuiIcon-root MuiIcon-fontSizeMedium css-8exgcq-MuiIcon-root"
+            class="material-icons notranslate MuiIcon-root MuiIcon-fontSizeMedium css-r81pdf-MuiIcon-root"
           >
             <div />
           </span>

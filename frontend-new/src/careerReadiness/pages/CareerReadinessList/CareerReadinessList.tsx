@@ -1,9 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import PageHeader from "src/home/components/PageHeader/PageHeader";
-import { routerPaths } from "src/app/routerPaths";
 import { mapModuleStatusToDisplay } from "src/careerReadiness/types";
 import CareerReadinessModuleCard from "src/careerReadiness/components/CareerReadinessModuleCard/CareerReadinessModuleCard";
 import CareerReadinessModuleCardSkeleton from "src/careerReadiness/components/CareerReadinessModuleCardSkeleton/CareerReadinessModuleCardSkeleton";
@@ -29,26 +26,22 @@ const SKELETON_COUNT = 6;
 
 const CareerReadinessList: React.FC = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const [modules, setModules] = useState<ModuleSummary[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadModules = useCallback(() => {
+  const loadModules = useCallback(async () => {
     setLoading(true);
-    CareerReadinessService.getInstance()
-      .listModules()
-      .then((res) => {
-        const sorted = [...res.modules].sort((a, b) => a.sort_order - b.sort_order);
-        setModules(sorted);
-      })
-      .catch((e) => {
-        enqueueSnackbar(e?.message ?? t("careerReadiness.listError"), { variant: "error" });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const res = await CareerReadinessService.getInstance().listModules();
+      const sorted = [...res.modules].sort((a, b) => a.sort_order - b.sort_order);
+      setModules(sorted);
+    } catch (e: any) {
+      enqueueSnackbar(e?.message ?? t("careerReadiness.listError"), { variant: "error" });
+    } finally {
+      setLoading(false);
+    }
   }, [t, enqueueSnackbar]);
 
   useEffect(() => {
@@ -63,13 +56,6 @@ const CareerReadinessList: React.FC = () => {
       sx={{ backgroundColor: theme.palette.containerBackground.light }}
       data-testid={DATA_TEST_ID.CAREER_READINESS_LIST_CONTAINER}
     >
-      <PageHeader
-        title="careerReadiness.pageTitle"
-        subtitle="careerReadiness.pageDescription"
-        backLinkLabel="home.backToDashboard"
-        onBackClick={() => navigate(routerPaths.ROOT)}
-      />
-
       <Box
         sx={{
           flex: 1,

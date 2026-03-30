@@ -789,6 +789,7 @@
     "introduction": "Work through each module at your own pace. Each one is an AI-guided conversation focused on a specific skill area. Pick up where you left off, or start a new module.",
     "pageTitle": "Career Readiness",
     "pageDescription": "Build the skills employers look for beyond your technical training",
+    "subNavTitle": "Get job ready — Module {{number}}",
     "listError": "Unable to load modules. Please try again.",
     "statusDone": "Done",
     "statusInProgress": "In Progress",
@@ -846,15 +847,15 @@
       "notProvided": "Not provided",
       "notAvailable": "Not available",
       "noSkillsYet": "No skills discovered yet. Start a conversation to discover your skills!",
-      "careerExplorer": "Career Explorer",
+      "careerExplorer": "Career Paths",
       "noSectorsYet": "No sectors explored yet. Start the Career Explorer to explore sectors!",
       "sectorsExplored": "You've explored {{count}} sector(s)"
     },
     "modules": {
-      "skillsDiscovery": "My Skills & Interests",
-      "skillsDiscoverySubtitle": "Uncover your skills and interests",
+      "skillsDiscovery": "Build your profile",
+      "skillsDiscoverySubtitle": "Chat with {{appName}} to discover your skills from work and life.",
       "jobReadiness": "Career Readiness",
-      "careerExplorer": "Career Explorer",
+      "careerExplorer": "Career Paths",
       "knowledgeHub": "Knowledge Hub",
       "jobMatching": "Job Matching",
       "skillsDiscoveryDesc": "Chat with {{appName}} to uncover your skills and interests — from your studies, work, and everyday life.",
@@ -876,7 +877,8 @@
     }
   },
   "careerExplorer": {
-    "title": "Career Explorer",
+    "title": "Career Paths",
+    "subtitle": "Discover which sectors are hiring and what you can earn.",
     "placeholder": "Ask about a sector...",
     "send": "Send"
   },
@@ -890,5 +892,10 @@
   "jobMatching": {
     "pageTitle": "Job Matching",
     "pageDescription": "Explore real job openings and see how your skills match opportunities across Zambia."
+  },
+  "nav": {
+    "search": "Search...",
+    "dashboard": "Dashboard",
+    "pathways": "Pathways"
   }
 }

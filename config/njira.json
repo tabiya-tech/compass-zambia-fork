@@ -10,9 +10,9 @@
       "description": "Njira is an AI-powered conversational tool that helps jobseekers discover and articulate their skills. Through natural dialogue, Njira guides users to identify abilities gained through all types of work."
     },
     "assets": {
-      "logo": "/nijra_logo.svg",
-      "favicon": "/nijra_logo.svg",
-      "appIcon": "/nijra_logo.svg"
+      "logo": "/njila_logo.svg",
+      "favicon": "/njila_logo.svg",
+      "appIcon": "/njila_logo.svg"
     },
     "theme": {
       "brand-primary": "10 92 74",

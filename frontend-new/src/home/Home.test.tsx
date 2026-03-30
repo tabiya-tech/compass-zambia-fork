@@ -7,7 +7,6 @@ import { render, screen } from "src/_test_utilities/test-utils";
 import Home, { DATA_TEST_ID } from "./Home";
 import { getEnabledModules } from "src/home/modulesService";
 import { DATA_TEST_ID as MODULE_CARD_DATA_TEST_ID } from "src/home/components/ModuleCard/ModuleCard";
-import { DATA_TEST_ID as PAGE_HEADER_DATA_TEST_ID } from "src/home/components/PageHeader/PageHeader";
 import { DATA_TEST_ID as FOOTER_DATA_TEST_ID } from "src/home/components/Footer/Footer";
 import { DATA_TEST_ID as PROGRESS_BAR_DATA_TEST_ID } from "src/home/components/ProgressBar/ProgressBar";
 import { BadgeStatus } from "src/home/constants";
@@ -46,8 +45,6 @@ describe("Home", () => {
 
       // THEN the home container is in the document
       expect(screen.getByTestId(DATA_TEST_ID.HOME_CONTAINER)).toBeInTheDocument();
-      // AND the page header is present
-      expect(screen.getByTestId(PAGE_HEADER_DATA_TEST_ID.PAGE_HEADER_CONTAINER)).toBeInTheDocument();
       // AND the welcome title and subtitle are present
       expect(screen.getByTestId(DATA_TEST_ID.HOME_WELCOME_TITLE)).toBeInTheDocument();
       expect(screen.getByTestId(DATA_TEST_ID.HOME_WELCOME_SUBTITLE)).toHaveTextContent("mockProduct");

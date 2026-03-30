@@ -1,6 +1,5 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import ChatService from "src/chat/ChatService/ChatService";
 import ChatList from "src/chat/chatList/ChatList";
 import { IChatMessage } from "src/chat/Chat.types";
@@ -20,7 +19,6 @@ import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import { Box, useTheme } from "@mui/material";
 import ChatMessageField from "./ChatMessageField/ChatMessageField";
 import ChatHeader from "src/chat/ChatHeader/ChatHeader";
-import PageHeader from "src/home/components/PageHeader/PageHeader";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
 import { ConversationMessage, ConversationMessageSender, ConversationResponse } from "./ChatService/ChatService.types";
 import { Backdrop } from "src/theme/Backdrop/Backdrop";
@@ -50,7 +48,6 @@ import {
 import { getCvUploadErrorMessageFromErrorCode } from "./CVUploadErrorHandling";
 import type { UploadStatus } from "./Chat.types";
 import { nanoid } from "nanoid";
-import { routerPaths } from "src/app/routerPaths";
 import { useExperiencesDrawer } from "src/experiences/ExperiencesDrawerProvider";
 import ModuleHandoffBanner from "src/home/components/ModuleHandoffBanner/ModuleHandoffBanner";
 import { useNextModule } from "src/home/useNextModule";
@@ -111,7 +108,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
   const theme = useTheme();
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   const [messages, setMessages] = useState<IChatMessage<any>[]>([]);
   const [conversationCompleted, setConversationCompleted] = useState<boolean>(false);
   const nextModule = useNextModule("skills_discovery");
@@ -1081,16 +1077,6 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
           // This technique can solve the "Warning: An update to Chat inside a test was not wrapped in act(...)" warning.
           is-initialized={`${initialized}`}
         >
-          <PageHeader
-            title="home.modules.skillsDiscovery"
-            subtitle="home.modules.skillsDiscoverySubtitle"
-            backLinkLabel="home.backToDashboard"
-            onBackClick={() => navigate(routerPaths.ROOT)}
-            showExperiencesButton={true}
-            showExperiencesBadge={true}
-            experiencesExplored={exploredExperiencesCount.length}
-            exploredExperiencesNotification={exploredExperiencesNotification}
-          />
           <ChatHeader
             experiencesExplored={exploredExperiencesCount.length}
             exploredExperiencesNotification={exploredExperiencesNotification}

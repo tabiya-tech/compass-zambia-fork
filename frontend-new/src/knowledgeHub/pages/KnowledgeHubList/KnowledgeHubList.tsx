@@ -5,8 +5,6 @@ import { useTranslation } from "react-i18next";
 import DocumentCard from "src/knowledgeHub/components/DocumentCard";
 import { getAllDocuments } from "src/knowledgeHub/documentLoader";
 import { routerPaths } from "src/app/routerPaths";
-import KnowledgeHubPageHeader from "src/knowledgeHub/components/KnowledgeHubPageHeader";
-import BackButton from "src/knowledgeHub/components/BackButton";
 
 const uniqueId = "b3d4e5f6-7890-abcd-ef12-345678901234";
 
@@ -14,7 +12,6 @@ export const DATA_TEST_ID = {
   KNOWLEDGE_HUB_LIST_CONTAINER: `knowledge-hub-list-container-${uniqueId}`,
   KNOWLEDGE_HUB_LIST_CONTENT: `knowledge-hub-list-content-${uniqueId}`,
   KNOWLEDGE_HUB_LIST_GRID: `knowledge-hub-list-grid-${uniqueId}`,
-  KNOWLEDGE_HUB_BACK_BUTTON: `knowledge-hub-back-button-${uniqueId}`,
   KNOWLEDGE_HUB_INTRODUCTION: `knowledge-hub-introduction-${uniqueId}`,
 };
 
@@ -31,16 +28,8 @@ const KnowledgeHubList: React.FC = () => {
     });
   };
 
-  const handleBackToDashboard = () => {
-    startTransition(() => {
-      navigate(routerPaths.ROOT);
-    });
-  };
-
   return (
     <Box display="flex" flexDirection="column" height="100%" data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_LIST_CONTAINER}>
-      <KnowledgeHubPageHeader />
-
       <Container
         maxWidth="md"
         sx={{
@@ -51,15 +40,6 @@ const KnowledgeHubList: React.FC = () => {
         }}
         data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_LIST_CONTENT}
       >
-        {/* Back to Dashboard button */}
-        <Box mb={theme.spacing(theme.tabiyaSpacing.lg)}>
-          <BackButton
-            onClick={handleBackToDashboard}
-            labelKey="knowledgeHub.backToDashboard"
-            dataTestId={DATA_TEST_ID.KNOWLEDGE_HUB_BACK_BUTTON}
-          />
-        </Box>
-
         {/* Introduction paragraph */}
         <Box mb={theme.spacing(theme.tabiyaSpacing.lg)} data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_INTRODUCTION}>
           <Typography variant="body1" color="text.secondary">

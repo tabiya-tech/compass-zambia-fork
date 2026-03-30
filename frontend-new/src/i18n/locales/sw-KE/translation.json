@@ -784,7 +784,8 @@
     "previous": "Iliyotangulia"
   },
   "careerExplorer": {
-    "title": "Kuchunguza Kazi",
+    "title": "Njia za kazi",
+    "subtitle": "Gundua ni sekta zipi zinaajiri na kiasi unachoweza kupata.",
     "placeholder": "Uliza kuhusu sekta...",
     "send": "Tuma"
   },
@@ -794,6 +795,7 @@
     "introduction": "Fanya kazi kila moduli kwa kasi yako. Kila moduli ni mazungumzo yanayoongozwa na AI yanayolenga eneo maalum la ujuzi. Endelea ulipoacha au anza moduli mpya.",
     "pageTitle": "Kujiandaa kwa Kazi",
     "pageDescription": "Jenga ujuzi unaotafutwa na waajiri zaidi ya mafunzo yako ya kiufundi",
+    "subNavTitle": "Jiandae — Moduli {{number}}",
     "listError": "Imeshindwa kupakia moduli. Tafadhali jaribu tena.",
     "statusDone": "Imekamilika",
     "statusInProgress": "Inaendelea",
@@ -851,15 +853,15 @@
       "moduleCompleted": "imekamilika",
       "moduleRemaining": "imebaki",
       "noSkillsYet": "Hakuna ujuzi uliogundulika bado. Anza mazungumzo ili kugundua ujuzi wako!",
-      "careerExplorer": "Career Explorer",
+      "careerExplorer": "Njia za kazi",
       "noSectorsYet": "Hakuna sekta zilizochunguzwa bado.",
       "sectorsExplored": "Umechunguza sekta {{count}}"
     },
     "modules": {
-      "skillsDiscovery": "Ujuzi na Mapendeleo Yangu",
-      "skillsDiscoverySubtitle": "Gundua ujuzi na mapendeleo yako",
+      "skillsDiscovery": "Jenga wasifu wako",
+      "skillsDiscoverySubtitle": "Zungumza na {{appName}} kugundua ujuzi wako kutoka kazini na maisha.",
       "jobReadiness": "Kujiandaa kwa Kazi",
-      "careerExplorer": "Kuchunguza Kazi",
+      "careerExplorer": "Njia za kazi",
       "knowledgeHub": "Kituo cha Maarifa",
       "jobMatching": "Kufanana kwa Kazi",
       "skillsDiscoveryDesc": "Zungumza na {{appName}} ili kugundua ujuzi na mapendeleo yako — kutoka masomo yako, kazi, na maisha ya kila siku.",
@@ -890,5 +892,10 @@
   "jobMatching": {
     "pageTitle": "Kuoanisha Kazi",
     "pageDescription": "Gundua nafasi za kazi halisi na uone jinsi ujuzi wako unavyooanisha fursa nchini Zambia."
+  },
+  "nav": {
+    "search": "Tafuta...",
+    "dashboard": "Dashibodi",
+    "pathways": "Njia"
   }
 }
