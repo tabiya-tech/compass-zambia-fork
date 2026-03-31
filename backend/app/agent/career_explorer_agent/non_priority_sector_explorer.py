@@ -210,12 +210,18 @@ class NonPrioritySectorExplorer:
         message = model_response.message.strip('"').strip() if model_response.message else ""
 
         # Guard: if the message field itself contains a JSON blob (the LLM echoed its own
-        # response format inside the message), unwrap the inner message value.
+        # response format inside the message), unwrap and replace the full model_response.
         if message.startswith("{") and '"message"' in message:
             try:
                 inner = extract_json.extract_json(message, ModelResponse)
                 if inner.message:
+                    model_response = inner
                     message = inner.message.strip('"').strip()
+                else:
+                    # Inner JSON parsed but has no message — return error fallback
+                    self._logger.warning("Inner JSON has no message field, using fallback")
+                    error_msg = t("messages", "careerExplorer.errorRetry", "I'm having trouble right now. Could you try again?")
+                    return error_msg, False, "", llm_stats, None
             except Exception as unwrap_err:  # pylint: disable=broad-except
                 self._logger.debug("Message field is not a nested JSON blob, using as-is: %s", unwrap_err)
 

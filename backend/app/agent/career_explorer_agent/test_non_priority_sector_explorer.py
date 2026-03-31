@@ -8,7 +8,7 @@ field.
 
 import json
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 
 from app.agent.career_explorer_agent.non_priority_sector_explorer import NonPrioritySectorExplorer
 from app.conversation_memory.conversation_memory_types import ConversationContext
@@ -384,13 +384,13 @@ class TestNonPrioritySectorExplorer:
         mock_response.usage_metadata.prompt_token_count = 100
         mock_response.usage_metadata.candidates_token_count = 0
         mock_response.candidates = []
-        # Simulate the SDK raising ValueError on .text access
-        type(mock_response).text = property(lambda self: (_ for _ in ()).throw(
-            ValueError("Multiple content parts — cannot access .text directly")
-        ))
 
         with patch("app.agent.career_explorer_agent.non_priority_sector_explorer.get_application_config",
                    return_value=mock_app_config), \
+             patch.object(type(mock_response), 'text',
+                          new_callable=PropertyMock,
+                          create=True,
+                          side_effect=ValueError("Multiple content parts — cannot access .text directly")), \
              patch("app.agent.career_explorer_agent.non_priority_sector_explorer.genai") as mock_genai, \
              patch("app.agent.career_explorer_agent.non_priority_sector_explorer."
                    "extract_grounding_metadata_from_genai_response", return_value=None):
