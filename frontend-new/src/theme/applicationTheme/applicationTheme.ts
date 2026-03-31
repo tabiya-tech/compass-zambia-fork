@@ -107,7 +107,7 @@ const lightPalette: PaletteOptions = {
   brandAccent: {
     ...augmentedThemeColor("#5CBFBF", "#1A1208"),
     dark: "#4EA2A2",
-    light: "#EAF8F8",
+    light: "#D8EFF0",
   },
   tabiyaYellow: augmentedThemeColor(TabiyaBasicColors.Yellow),
   tabiyaBlue: augmentedThemeColor(TabiyaBasicColors.DarkBlue),
@@ -151,7 +151,7 @@ const lightPalette: PaletteOptions = {
   common: {
     white: "#FFFFFF",
     black: "#1A1208",
-    cream: "#FBF0D8",
+    cream: "#FAF0D8",
   },
   background: {
     default: "#F9F6F0",

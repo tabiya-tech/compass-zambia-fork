@@ -1,0 +1,136 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Box, Typography, useTheme } from "@mui/material";
+import Sidebar from "src/theme/Sidebar/Sidebar";
+import SidebarService from "src/home/components/Sidebar/SidebarService";
+import type { SectorData, SectorItem } from "src/home/components/Sidebar/SidebarService";
+
+const uniqueId = "c2d3e4f5-a6b7-8901-cdef-234567890123";
+
+export const DATA_TEST_ID = {
+  CAREER_EXPLORER_SIDEBAR_SECTOR_CARD: `career-explorer-sidebar-sector-card-${uniqueId}`,
+  CAREER_EXPLORER_SIDEBAR_SECTOR_NAME: `career-explorer-sidebar-sector-name-${uniqueId}`,
+  CAREER_EXPLORER_SIDEBAR_SECTOR_SALARY: `career-explorer-sidebar-sector-salary-${uniqueId}`,
+  CAREER_EXPLORER_SIDEBAR_SECTOR_DESCRIPTION: `career-explorer-sidebar-sector-description-${uniqueId}`,
+  CAREER_EXPLORER_SIDEBAR_EMPTY: `career-explorer-sidebar-empty-${uniqueId}`,
+};
+
+const POLL_INTERVAL_MS = 30_000;
+
+interface SectorCardProps {
+  sector: SectorItem;
+  accentColor: string;
+}
+
+const SectorCard: React.FC<SectorCardProps> = ({ sector, accentColor }) => {
+  const theme = useTheme();
+
+  return (
+    <Box
+      data-testid={DATA_TEST_ID.CAREER_EXPLORER_SIDEBAR_SECTOR_CARD}
+      sx={{
+        paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.sm * 1.25),
+        paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.sm * 1.25),
+        borderTop: `1px solid ${theme.palette.divider}`,
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: theme.fixedSpacing(theme.tabiyaSpacing.xs * 1.5),
+          marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.xs),
+          flexWrap: "wrap",
+        }}
+      >
+        <Box component="span" sx={{ fontSize: "16px", lineHeight: 1 }}>
+          {sector.emoji}
+        </Box>
+        <Box
+          component="span"
+          data-testid={DATA_TEST_ID.CAREER_EXPLORER_SIDEBAR_SECTOR_NAME}
+          sx={{ ...theme.typography.body2, fontWeight: 700, color: theme.palette.common.black }}
+        >
+          {sector.name}
+        </Box>
+        {sector.salaryRange && (
+          <Box
+            component="span"
+            data-testid={DATA_TEST_ID.CAREER_EXPLORER_SIDEBAR_SECTOR_SALARY}
+            sx={{
+              ...theme.typography.caption,
+              fontWeight: 700,
+              padding: `1px ${theme.fixedSpacing(theme.tabiyaSpacing.sm)}`,
+              borderRadius: theme.rounding(theme.tabiyaRounding.full),
+              border: `1px solid ${accentColor}40`,
+              backgroundColor: `${accentColor}0F`,
+              color: accentColor,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {sector.salaryRange}
+          </Box>
+        )}
+      </Box>
+      <Typography
+        data-testid={DATA_TEST_ID.CAREER_EXPLORER_SIDEBAR_SECTOR_DESCRIPTION}
+        sx={{
+          ...theme.typography.caption,
+          color: theme.palette.text.secondary,
+          lineHeight: 1.5,
+        }}
+      >
+        {sector.description}
+      </Typography>
+    </Box>
+  );
+};
+
+const CareerExplorerSidebar: React.FC = () => {
+  const theme = useTheme();
+  const [data, setData] = useState<SectorData | null>(null);
+  const cancelledRef = useRef(false);
+
+  const accentColor = theme.palette.brandAction.main;
+
+  const load = useCallback(async () => {
+    const result = await SidebarService.getInstance().getSectorData();
+    if (!cancelledRef.current) setData(result);
+  }, []);
+
+  useEffect(() => {
+    cancelledRef.current = false;
+    void load();
+    const timer = setInterval(() => void load(), POLL_INTERVAL_MS);
+    return () => {
+      cancelledRef.current = true;
+      clearInterval(timer);
+    };
+  }, [load]);
+
+  const sectors = data?.sectors ?? [];
+
+  return (
+    <Sidebar title="Sectors Explored" width={300}>
+      {sectors.length === 0 ? (
+        <Box
+          data-testid={DATA_TEST_ID.CAREER_EXPLORER_SIDEBAR_EMPTY}
+          sx={{
+            ...theme.typography.caption,
+            lineHeight: 1.5,
+            color: theme.palette.text.secondary,
+          }}
+        >
+          Sectors will appear here as you explore careers with Njila.
+        </Box>
+      ) : (
+        <Box>
+          {sectors.map((sector, i) => (
+            <SectorCard key={sector.id ?? i} sector={sector} accentColor={accentColor} />
+          ))}
+        </Box>
+      )}
+    </Sidebar>
+  );
+};
+
+export default CareerExplorerSidebar;
