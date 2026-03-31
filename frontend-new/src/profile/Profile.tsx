@@ -28,6 +28,7 @@ export interface ProfileProps {
   program: string | null;
   year: string | null;
   skills: Skill[];
+  educationSkills: Skill[];
   modules: ModuleSummary[];
   skillsInterestsProgress: number;
   careerExplorerSectors: UserSectorEngagementItem[];
@@ -48,6 +49,7 @@ export const Profile: React.FC<ProfileProps> = ({
   program,
   year,
   skills,
+  educationSkills,
   modules,
   skillsInterestsProgress,
   careerExplorerSectors,
@@ -101,7 +103,7 @@ export const Profile: React.FC<ProfileProps> = ({
         <CareerExplorerCard sectors={careerExplorerSectors} isLoading={isLoadingCareerExplorer} />
 
         {/* Skills discovered */}
-        <SkillsDiscoveredCard skills={skills} isLoading={isLoadingSkills} />
+        <SkillsDiscoveredCard skills={skills} educationSkills={educationSkills} isLoading={isLoadingSkills} />
 
         {/* Account info */}
         <Box
