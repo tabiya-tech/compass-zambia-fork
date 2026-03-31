@@ -831,6 +831,42 @@
     "seeProfile": "See profile →",
     "whatToDo": "What would you like to do today?",
     "whatToDoSubtitle": "Each module is an AI-guided conversation or resource to help you on your career journey.",
+    "hero": {
+      "headline1": "Let's discover",
+      "headline2": "Your skills & strengths.",
+      "body": "Your guided path from skills to your first job. Start by discovering what you bring to the table — then explore careers, build your CV, and find real opportunities in Zambia.",
+      "illustrationAlt": "Person at a signpost on a path, exploring career directions"
+    },
+    "cta": {
+      "buildProfileTitle": "Build your profile",
+      "buildProfileDesc": "Your guided path from skills to your first job. Start by discovering what you bring to the table, build a CV, and find real opportunities.",
+      "buildProfileCta": "Start Profile Chat",
+      "explorePathsTitle": "Explore Career Paths",
+      "explorePathsDesc": "See which careers match your skills — salaries, qualifications, top employers.",
+      "explorePathsCta": "Explore Pathways",
+      "jobMatchesTitle": "Job Matches",
+      "jobMatchesDesc": "Real openings across Zambia, matched to what you can do right now.",
+      "jobMatchesCta": "See Your Matches"
+    },
+    "jobReadySection": {
+      "title": "Get Job Ready",
+      "description": "Need help job hunting? Work through these modules and build confidence for your CV, interviews, and everything in between.",
+      "seeFullCourse": "See full course →",
+      "startLearning": "START LEARNING",
+      "continueLearning": "CONTINUE LEARNING",
+      "chat": "Chat",
+      "startChat": "Start Profile Chat",
+      "locked": "Locked",
+      "empty": "No course modules are available yet.",
+      "loadError": "We couldn't load your course progress. Try again later.",
+      "loading": "Loading course modules",
+      "durationHint": "Takes about 30–40 min"
+    },
+    "myExperience": {
+      "sectionTitle": "My experience",
+      "cardTitle": "View My CV",
+      "cardSubtitle": "Download and share your personalized CV."
+    },
     "profile": {
       "title": "My Profile",
       "subtitle": "View and manage your profile information",

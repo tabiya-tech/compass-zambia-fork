@@ -1,39 +1,29 @@
 import React from "react";
 
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import type { Theme } from "@mui/material/styles";
-import Grid from "@mui/material/Grid";
-import { useTranslation } from "react-i18next";
-import { getEnabledModules } from "src/home/modulesService";
-import { useModuleProgress } from "src/home/hooks/useModuleProgress";
-import ProgressBar from "src/home/components/ProgressBar/ProgressBar";
-import ModuleCard from "src/home/components/ModuleCard/ModuleCard";
 import Footer from "src/home/components/Footer/Footer";
-import { getProductName } from "src/envService";
-import { BADGE_STATUS } from "src/home/constants";
+import HomeHero from "src/home/components/HomeHero/HomeHero";
+import HomeCtaGrid from "src/home/components/HomeCtaGrid/HomeCtaGrid";
+import HomeJobReadyList from "src/home/components/HomeJobReadyList/HomeJobReadyList";
+import HomeSidebar from "src/home/components/Sidebar/HomeSidebar";
 import { useUserProfile } from "src/profile/hooks/useUserProfile";
 
 const uniqueId = "f1a2b3c4-5d6e-7f8a-9b0c-1d2e3f4a5b6c";
 
 export const DATA_TEST_ID = {
   HOME_CONTAINER: `home-container-${uniqueId}`,
-  HOME_WELCOME_TITLE: `home-welcome-title-${uniqueId}`,
-  HOME_WELCOME_SUBTITLE: `home-welcome-subtitle-${uniqueId}`,
-  HOME_MODULES_TITLE: `home-modules-title-${uniqueId}`,
-  HOME_MODULES_SUBTITLE: `home-modules-subtitle-${uniqueId}`,
-  HOME_MODULES_GRID: `home-modules-grid-${uniqueId}`,
+  HOME_MAIN_COLUMN: `home-main-column-${uniqueId}`,
+  HOME_DASHBOARD_GRID: `home-dashboard-grid-${uniqueId}`,
 };
 
 const Home: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
-  const { t } = useTranslation();
-  const modules = getEnabledModules();
-  const { overallProgress, getBadgeStatus } = useModuleProgress();
-  const { profileData } = useUserProfile();
+  const { profileData, isLoadingModules, errors } = useUserProfile();
 
-  const userName = profileData.name && profileData.name !== "Not available" ? profileData.name : "";
-  const appName = getProductName() || "";
+  const modulesLoadError = Boolean(errors?.modules);
+  const careerReadinessModules = profileData?.modules ?? [];
 
   return (
     <Box
@@ -41,88 +31,88 @@ const Home: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        backgroundColor: theme.palette.containerBackground.light,
+        backgroundColor: theme.palette.containerBackground.main,
+        overflowX: "hidden",
       }}
       data-testid={DATA_TEST_ID.HOME_CONTAINER}
     >
-      {/* Page Content */}
       <Box
+        data-testid={DATA_TEST_ID.HOME_MAIN_COLUMN}
         sx={{
-          paddingTop: isMobile
-            ? theme.fixedSpacing(theme.tabiyaSpacing.lg)
-            : theme.fixedSpacing(theme.tabiyaSpacing.md),
-          paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.md),
-          paddingX: theme.spacing(theme.tabiyaSpacing.md),
           flex: 1,
-          width: { xs: "100%", md: "60%" },
-          margin: { xs: "0", md: "0 auto" },
+          minWidth: 0,
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: isMobile ? theme.fixedSpacing(theme.tabiyaSpacing.md) : theme.spacing(theme.tabiyaSpacing.xl),
+            backgroundColor: theme.palette.common.white,
+            paddingTop: isMobile
+              ? theme.fixedSpacing(theme.tabiyaSpacing.lg)
+              : theme.fixedSpacing(theme.tabiyaSpacing.md),
+            paddingBottom: { xs: theme.fixedSpacing(theme.tabiyaSpacing.sm), md: 0 },
+            paddingX: "var(--layout-gutter-x)",
+            overflow: "visible",
           }}
         >
-          {/* Welcome, Section */}
-          <Box>
-            <Typography
-              variant={isMobile ? "h5" : "h4"}
-              color="text.primary"
-              sx={{ fontWeight: "bold", marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.sm) }}
-              data-testid={DATA_TEST_ID.HOME_WELCOME_TITLE}
-            >
-              {t("home.welcomeBack", { name: userName })}
-            </Typography>
-            <Typography variant="body1" color="text.secondary" data-testid={DATA_TEST_ID.HOME_WELCOME_SUBTITLE}>
-              {t("home.subtitle", { appName: appName })}
-            </Typography>
-          </Box>
+          <HomeHero />
+        </Box>
 
-          {/* Progress Section */}
-          <ProgressBar progress={overallProgress} />
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 1,
+            marginTop: {
+              xs: 0,
+              md: theme.spacing(-4),
+              lg: theme.spacing(-6),
+            },
+            paddingX: "var(--layout-gutter-x)",
+            paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+          }}
+        >
+          <HomeCtaGrid />
+        </Box>
 
-          {/* Modules Section */}
-          <Box>
-            <Typography
-              variant="body1"
-              fontWeight="bold"
-              color="text.primary"
-              sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.sm) }}
-              data-testid={DATA_TEST_ID.HOME_MODULES_TITLE}
-            >
-              {t("home.whatToDo")}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}
-              data-testid={DATA_TEST_ID.HOME_MODULES_SUBTITLE}
-            >
-              {t("home.whatToDoSubtitle")}
-            </Typography>
-            <Grid
-              container
-              spacing={theme.fixedSpacing(theme.tabiyaSpacing.md)}
-              justifyContent="center"
-              data-testid={DATA_TEST_ID.HOME_MODULES_GRID}
-            >
-              {modules.map((module) => {
-                const progressBadgeStatus = getBadgeStatus(module.id);
-                const badgeStatus = module.disabled ? BADGE_STATUS.SOON : progressBadgeStatus;
-                return (
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={module.id}>
-                    <ModuleCard module={module} badgeStatus={badgeStatus} />
-                  </Grid>
-                );
-              })}
-            </Grid>
+        <Box
+          data-testid={DATA_TEST_ID.HOME_DASHBOARD_GRID}
+          sx={{
+            width: "100%",
+            flex: 1,
+            backgroundColor: theme.palette.containerBackground.main,
+            paddingX: "var(--layout-gutter-x)",
+            paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.xl),
+            paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.xl),
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              alignItems: "flex-start",
+              gap: {
+                xs: theme.fixedSpacing(theme.tabiyaSpacing.xl),
+                md: theme.spacing(6),
+                lg: theme.spacing(10),
+              },
+            }}
+          >
+            <Box sx={{ flex: { md: "1 1 56%" }, minWidth: 0, width: "100%" }}>
+              <HomeJobReadyList
+                modules={careerReadinessModules}
+                isLoading={isLoadingModules}
+                loadError={modulesLoadError}
+              />
+            </Box>
+            <Box sx={{ flex: { md: "1 1 36%" }, minWidth: 0, width: "100%", maxWidth: { md: 420 } }}>
+              <HomeSidebar />
+            </Box>
           </Box>
         </Box>
       </Box>
 
-      {/* Footer */}
       <Footer />
     </Box>
   );

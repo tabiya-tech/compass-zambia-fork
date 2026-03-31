@@ -837,6 +837,42 @@
     "seeProfile": "Tazama wasifu →",
     "whatToDo": "Ungependa kufanya nini leo?",
     "whatToDoSubtitle": "Kila moduli ni mazungumzo yanayoongozwa na AI au rasilimali kukusaidia katika safari yako ya kazi.",
+    "hero": {
+      "headline1": "Hebu tugundue",
+      "headline2": "Ujuzi wako na nguvu zako.",
+      "body": "Njia yako iliyoongozwa kutoka kwa ujuzi hadi kazi yako ya kwanza. Anza kwa kugundua unachokileta — kisha chunguza kazi, unda CV yako, na upate fursa halisi nchini Zambia.",
+      "illustrationAlt": "Mtu kwenye kigango cha njia, akichunguza mwelekeo wa kazi"
+    },
+    "cta": {
+      "buildProfileTitle": "Jenga wasifu wako",
+      "buildProfileDesc": "Njia yako ya mwongozo kutoka kwenye ujuzi hadi kazi yako ya kwanza. Anza kwa kugundua kile unacholeta, tengeneza CV, na upate fursa halisi.",
+      "buildProfileCta": "Anza mazungumzo ya wasifu",
+      "explorePathsTitle": "Chunguza njia za kazi",
+      "explorePathsDesc": "Ona ni kazi zipi zinaendana na ujuzi wako — mishahara, sifa na waajiri wakuu.",
+      "explorePathsCta": "Chunguza njia",
+      "jobMatchesTitle": "Kazi zinazolingana",
+      "jobMatchesDesc": "Nafasi halisi kote Zambia, zinalingana na unachoweza kufanya sasa hivi.",
+      "jobMatchesCta": "Ona zinazokufaa"
+    },
+    "jobReadySection": {
+      "title": "Jiandae kwa ajira",
+      "description": "Unahitaji msaada kutafuta kazi? Kamilisha moduli hizi na ujenge ujasiri kwa CV yako, mahojiano, na mengineyo.",
+      "seeFullCourse": "Ona kozi kamili →",
+      "startLearning": "ANZA KUJIFUNZA",
+      "continueLearning": "ENDELEA KUJIFUNZA",
+      "chat": "Mazungumzo",
+      "startChat": "Anza mazungumzo ya wasifu",
+      "locked": "Imefungwa",
+      "empty": "Hakuna moduli za kozi bado.",
+      "loadError": "Hatukuweza kupakia maendeleo ya kozi yako. Jaribu tena baadaye.",
+      "loading": "Inapakia moduli za kozi",
+      "durationHint": "Inachukua dakika 30–40 hivi"
+    },
+    "myExperience": {
+      "sectionTitle": "Uzoefu wangu",
+      "cardTitle": "Tazama CV Yangu",
+      "cardSubtitle": "Pakua na ushiriki CV yako binafsi."
+    },
     "profile": {
       "title": "Wasifu Wangu",
       "subtitle": "Tazama na dhibiti taarifa za wasifu wako",
