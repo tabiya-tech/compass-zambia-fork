@@ -44,7 +44,14 @@ const Layout: React.FC = () => {
   }, [matches]);
 
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
+    <Box
+      display="flex"
+      flexDirection="column"
+      minHeight="100vh"
+      sx={(theme) => ({
+        "--layout-gutter-x": { xs: theme.spacing(theme.tabiyaSpacing.sm), md: theme.spacing(theme.tabiyaSpacing.xl) },
+      })}
+    >
       <NavBar headerColor={headerColor} />
       {currentHandle?.title && currentHandle?.subtitle && (
         <SubNavBar

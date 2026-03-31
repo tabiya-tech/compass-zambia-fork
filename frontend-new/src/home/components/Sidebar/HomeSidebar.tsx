@@ -28,7 +28,7 @@ const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     <Box
       sx={{
         ...theme.typography.caption,
-        fontWeight: 600,
+        fontWeight: 700,
         color: theme.palette.text.secondary,
         letterSpacing: "0.06em",
         textTransform: "uppercase",
@@ -139,10 +139,9 @@ const ChipList: React.FC<ChipListProps> = ({
 
 interface ViewCVCardProps {
   onClick: () => void;
-  accentColor: string;
 }
 
-const ViewCVCard: React.FC<ViewCVCardProps> = ({ onClick, accentColor }) => {
+const ViewCVCard: React.FC<ViewCVCardProps> = ({ onClick }) => {
   const theme = useTheme();
 
   return (
@@ -154,7 +153,7 @@ const ViewCVCard: React.FC<ViewCVCardProps> = ({ onClick, accentColor }) => {
         display: "flex",
         alignItems: "center",
         gap: theme.fixedSpacing(theme.tabiyaSpacing.sm * 1.5),
-        width: "100%",
+        width: 300,
         padding: theme.fixedSpacing(theme.tabiyaSpacing.sm * 1.5),
         borderRadius: theme.rounding(theme.tabiyaRounding.sm * 1.25),
         border: `1px solid ${theme.palette.divider}`,
@@ -169,7 +168,7 @@ const ViewCVCard: React.FC<ViewCVCardProps> = ({ onClick, accentColor }) => {
           width: theme.fixedSpacing(theme.tabiyaSpacing.xl * 1.25),
           height: theme.fixedSpacing(theme.tabiyaSpacing.xl * 1.25),
           borderRadius: theme.rounding(theme.tabiyaRounding.sm),
-          backgroundColor: accentColor,
+          backgroundColor: theme.palette.secondary.main,
           flexShrink: 0,
           display: "flex",
           alignItems: "center",
@@ -198,7 +197,7 @@ const ViewCVCard: React.FC<ViewCVCardProps> = ({ onClick, accentColor }) => {
           sx={{
             ...theme.typography.body2,
             fontWeight: 700,
-            color: theme.palette.common.black,
+            color: theme.palette.secondary.main,
             lineHeight: 1.3,
           }}
         >
@@ -235,7 +234,7 @@ const HomeSidebar: React.FC = () => {
   const handleViewCV = () => void openExperiencesDrawer();
 
   return (
-    <Sidebar title="My Skills" width={300}>
+    <Sidebar title="My Skills" width="100%">
       <Box>
         <SectionTitle>Skills From Work</SectionTitle>
         <ChipList
@@ -264,7 +263,7 @@ const HomeSidebar: React.FC = () => {
       </Box>
       <Box>
         <SectionTitle>My Experience</SectionTitle>
-        <ViewCVCard onClick={handleViewCV} accentColor={accentColor} />
+        <ViewCVCard onClick={handleViewCV} />
       </Box>
     </Sidebar>
   );

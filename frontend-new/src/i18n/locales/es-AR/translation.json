@@ -865,6 +865,42 @@
     "seeProfile": "Ver perfil →",
     "whatToDo": "¿Qué te gustaría hacer hoy?",
     "whatToDoSubtitle": "Cada módulo es una conversación guiada por IA o un recurso para ayudarte en tu camino profesional.",
+    "hero": {
+      "headline1": "Descubramos",
+      "headline2": "Tus habilidades y fortalezas.",
+      "body": "Tu camino guiado desde las habilidades hasta tu primer empleo. Empezá descubriendo lo que aportás: después explorá carreras, creá tu CV y encontrá oportunidades reales en Zambia.",
+      "illustrationAlt": "Persona en un poste de señales en un camino, explorando direcciones profesionales"
+    },
+    "cta": {
+      "buildProfileTitle": "Creá tu perfil",
+      "buildProfileDesc": "Tu camino guiado desde tus habilidades hasta tu primer trabajo. Empezá descubriendo lo que aportás, armá un CV y encontrá oportunidades reales.",
+      "buildProfileCta": "Iniciar chat de perfil",
+      "explorePathsTitle": "Explorá trayectorias profesionales",
+      "explorePathsDesc": "Descubrí qué carreras se ajustan a tus habilidades: salarios, calificaciones y principales empleadores.",
+      "explorePathsCta": "Explorar trayectorias",
+      "jobMatchesTitle": "Coincidencias de empleo",
+      "jobMatchesDesc": "Vacantes reales en Zambia, ajustadas a lo que podés hacer ahora mismo.",
+      "jobMatchesCta": "Ver tus coincidencias"
+    },
+    "jobReadySection": {
+      "title": "Preparate para el empleo",
+      "description": "¿Necesitás ayuda para buscar trabajo? Completá estos módulos y ganá confianza para tu CV, entrevistas y mucho más.",
+      "seeFullCourse": "Ver curso completo →",
+      "startLearning": "EMPEZAR A APRENDER",
+      "continueLearning": "SEGUIR APRENDIENDO",
+      "chat": "Chat",
+      "startChat": "Iniciar chat del perfil",
+      "locked": "Bloqueado",
+      "empty": "Todavía no hay módulos del curso disponibles.",
+      "loadError": "No pudimos cargar tu progreso del curso. Intentá más tarde.",
+      "loading": "Cargando módulos del curso",
+      "durationHint": "Tarda unos 30–40 min"
+    },
+    "myExperience": {
+      "sectionTitle": "Mi experiencia",
+      "cardTitle": "Ver mi CV",
+      "cardSubtitle": "Descargá y compartí tu CV personalizado."
+    },
     "profile": {
       "title": "Mi Perfil",
       "subtitle": "Ver y gestionar tu información de perfil",

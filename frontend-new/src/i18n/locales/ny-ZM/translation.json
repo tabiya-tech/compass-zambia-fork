@@ -837,6 +837,42 @@
     "seeProfile": "Onani mbiri →",
     "whatToDo": "Mungakonde kuchita chiyani lero?",
     "whatToDoSubtitle": "Module iliyonse ndi kukambirana kotsogoleredwa ndi AI kapena chinthu chothandiza pa ulendo wanu wa ntchito.",
+    "hero": {
+      "headline1": "Let's discover",
+      "headline2": "Your skills & strengths.",
+      "body": "Your guided path from skills to your first job. Start by discovering what you bring to the table — then explore careers, build your CV, and find real opportunities in Zambia.",
+      "illustrationAlt": "Person at a signpost on a path, exploring career directions"
+    },
+    "cta": {
+      "buildProfileTitle": "Pangani mbiri yanu",
+      "buildProfileDesc": "Njira yanu yotsogozedwa kuchokera ku luso mpaka ntchito yanu yoyamba. Yambani pozindikira zomwe mumabweretsa, pangani CV, ndipo pezani mwayi weniweni.",
+      "buildProfileCta": "Yambani kucheza pa mbiri",
+      "explorePathsTitle": "Fufuzani njira za ntchito",
+      "explorePathsDesc": "Onani ntchito zomwe zikugwirizana ndi luso lanu — malipiro, ziyeneretso, ndi olemba ntchito akuluakulu.",
+      "explorePathsCta": "Fufuzani njira",
+      "jobMatchesTitle": "Ntchito zogwirizana",
+      "jobMatchesDesc": "Mwayi weniweni ku Zambia yonse, wogwirizana ndi zomwe mungathe kuchita pano.",
+      "jobMatchesCta": "Onani zogwirizana zanu"
+    },
+    "jobReadySection": {
+      "title": "Get Job Ready",
+      "description": "Need help job hunting? Work through these modules and build confidence for your CV, interviews, and everything in between.",
+      "seeFullCourse": "See full course →",
+      "startLearning": "YAMBANI KUPHUNZIRA",
+      "continueLearning": "CONTINUE LEARNING",
+      "chat": "Chat",
+      "startChat": "Start Profile Chat",
+      "locked": "Locked",
+      "empty": "No course modules are available yet.",
+      "loadError": "We couldn't load your course progress. Try again later.",
+      "loading": "Loading course modules",
+      "durationHint": "Takes about 30–40 min"
+    },
+    "myExperience": {
+      "sectionTitle": "My experience",
+      "cardTitle": "Onani CV Yanga",
+      "cardSubtitle": "Tsitsani ndi kugawana CV yanu yokonzedwa payekha."
+    },
     "profile": {
       "title": "Mbiri Yanga",
       "subtitle": "Onani ndikuyang'anira zomwe zili mu mbiri yanu",

@@ -5,119 +5,86 @@ import "src/_test_utilities/sentryMock";
 import React from "react";
 import { render, screen } from "src/_test_utilities/test-utils";
 import Home, { DATA_TEST_ID } from "./Home";
-import { getEnabledModules } from "src/home/modulesService";
-import { DATA_TEST_ID as MODULE_CARD_DATA_TEST_ID } from "src/home/components/ModuleCard/ModuleCard";
 import { DATA_TEST_ID as FOOTER_DATA_TEST_ID } from "src/home/components/Footer/Footer";
-import { DATA_TEST_ID as PROGRESS_BAR_DATA_TEST_ID } from "src/home/components/ProgressBar/ProgressBar";
-import { BadgeStatus } from "src/home/constants";
+import { DATA_TEST_ID as HERO_DATA_TEST_ID } from "src/home/components/HomeHero/HomeHero";
+import { DATA_TEST_ID as CTA_DATA_TEST_ID } from "src/home/components/HomeCtaGrid/HomeCtaGrid";
+import { DATA_TEST_ID as JOB_READY_DATA_TEST_ID } from "src/home/components/HomeJobReadyList/HomeJobReadyList";
 
-// Mock useModuleProgress
-const mockOverallProgress = 40;
-const mockGetBadgeStatus = jest.fn((_moduleId: string): BadgeStatus => null);
-const mockProfileData = { name: "Test User" };
+jest.mock("src/experiences/ExperiencesDrawerProvider", () => ({
+  useExperiencesDrawer: () => ({
+    openExperiencesDrawer: jest.fn(),
+    closeExperiencesDrawer: jest.fn(),
+    experiences: [],
+  }),
+}));
+
+const mockProfileData = {
+  name: "Test User",
+  modules: [] as { id: string; title: string; description: string; icon: string; status: string; sort_order: number }[],
+  skills: [] as {
+    UUID: string;
+    preferredLabel: string;
+    description: string;
+    altLabels: string[];
+    orderIndex: number;
+  }[],
+};
 
 jest.mock("src/profile/hooks/useUserProfile", () => ({
   useUserProfile: () => ({
     profileData: mockProfileData,
-  }),
-}));
-
-jest.mock("src/home/hooks/useModuleProgress", () => ({
-  useModuleProgress: () => ({
-    overallProgress: mockOverallProgress,
-    getBadgeStatus: mockGetBadgeStatus,
-    isModuleStarted: false,
+    isLoadingModules: false,
+    isLoadingSkills: false,
+    errors: { modules: null },
   }),
 }));
 
 describe("Home", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockGetBadgeStatus.mockImplementation((_moduleId: string) => null);
     mockProfileData.name = "Test User";
+    mockProfileData.modules = [];
+    mockProfileData.skills = [];
   });
 
   describe("render", () => {
-    test("should render full layout with container, header, welcome section, progress bar, modules grid, and footer", () => {
-      // GIVEN default user and mocked useModuleProgress
+    test("should render dashboard layout with hero, CTA grid, job-ready section, and footer", () => {
+      // GIVEN default mocked profile data
       // WHEN the Home page is rendered
       render(<Home />);
 
-      // THEN the home container is in the document
+      // THEN the main home layout containers are present
       expect(screen.getByTestId(DATA_TEST_ID.HOME_CONTAINER)).toBeInTheDocument();
-      // AND the welcome title and subtitle are present
-      expect(screen.getByTestId(DATA_TEST_ID.HOME_WELCOME_TITLE)).toBeInTheDocument();
-      expect(screen.getByTestId(DATA_TEST_ID.HOME_WELCOME_SUBTITLE)).toHaveTextContent("mockProduct");
-      // AND the progress bar shows the value from useModuleProgress
-      expect(screen.getByTestId(PROGRESS_BAR_DATA_TEST_ID.PROGRESS_BAR)).toHaveAttribute("aria-valuenow", "40");
-      // AND the module grid is present
-      expect(screen.getByTestId(DATA_TEST_ID.HOME_MODULES_GRID)).toBeInTheDocument();
-      // AND the footer is present
+      expect(screen.getByTestId(DATA_TEST_ID.HOME_MAIN_COLUMN)).toBeInTheDocument();
+      // AND the hero and CTA sections are rendered
+      expect(screen.getByTestId(HERO_DATA_TEST_ID.HOME_HERO)).toBeInTheDocument();
+      expect(screen.getByTestId(CTA_DATA_TEST_ID.HOME_CTA_GRID)).toBeInTheDocument();
+      // AND the dashboard/job-ready area is rendered
+      expect(screen.getByTestId(DATA_TEST_ID.HOME_DASHBOARD_GRID)).toBeInTheDocument();
+      expect(screen.getByTestId(JOB_READY_DATA_TEST_ID.HOME_JOB_READY)).toBeInTheDocument();
+      // AND the footer collaboration section is visible
       expect(screen.getByTestId(FOOTER_DATA_TEST_ID.FOOTER_COLLABORATION)).toBeInTheDocument();
-      // AND a module card is rendered for each enabled module
-      const cards = screen.getAllByTestId(MODULE_CARD_DATA_TEST_ID.MODULE_CARD);
-      expect(cards).toHaveLength(getEnabledModules().length);
     });
 
-    test("should display modules section title and subtitle with translated text", () => {
-      // GIVEN default mocks
+    test("should show hero headline and path illustration", () => {
+      // GIVEN default mocked profile data
       // WHEN the Home page is rendered
       render(<Home />);
 
-      // THEN the modules title shows the translated whatToDo text
-      expect(screen.getByTestId(DATA_TEST_ID.HOME_MODULES_TITLE)).toHaveTextContent(/what would you like to do today/i);
-      // AND the modules subtitle shows the translated whatToDoSubtitle text
-      expect(screen.getByTestId(DATA_TEST_ID.HOME_MODULES_SUBTITLE)).toHaveTextContent(/each module is an ai-guided/i);
+      // THEN the hero headline text is displayed
+      expect(screen.getByTestId(HERO_DATA_TEST_ID.HOME_HERO_HEADLINE)).toHaveTextContent(/Let's discover/i);
+      // AND the path illustration points to the expected public asset
+      expect(screen.getByTestId(HERO_DATA_TEST_ID.HOME_HERO_ILLUSTRATION)).toHaveAttribute("src", "/path.svg");
     });
 
-    test("should show Welcome back with user name when user has a name", () => {
-      // GIVEN a user with a name
-      mockProfileData.name = "Jane";
-
+    test("should render three CTA cards with links to skills, career explorer, and job matching", () => {
+      // GIVEN default mocked profile data
       // WHEN the Home page is rendered
       render(<Home />);
 
-      // THEN the welcome title shows Welcome back and the user name
-      expect(screen.getByTestId(DATA_TEST_ID.HOME_WELCOME_TITLE)).toHaveTextContent(/Welcome back, Jane/i);
-    });
-
-    test("should call getBadgeStatus for each enabled module", () => {
-      // GIVEN default mocks
-      // WHEN the Home page is rendered
-      render(<Home />);
-
-      // THEN getBadgeStatus was called for each enabled module id
-      const modules = getEnabledModules();
-      const calledModuleIds = mockGetBadgeStatus.mock.calls.map(([moduleId]) => moduleId);
-      modules.forEach((m) => expect(calledModuleIds).toContain(m.id));
-    });
-
-    test("should show continue chip on skills_discovery card when getBadgeStatus returns continue", () => {
-      // GIVEN getBadgeStatus returns continue for skills_discovery
-      mockGetBadgeStatus.mockImplementation((moduleId: string) => {
-        if (moduleId === "skills_discovery") return "continue" as BadgeStatus;
-        return null;
-      });
-
-      // WHEN the Home page is rendered
-      render(<Home />);
-
-      // THEN the skills_discovery module card shows the continue chip
-      expect(screen.getByTestId(MODULE_CARD_DATA_TEST_ID.MODULE_CARD_CONTINUE_CHIP)).toBeInTheDocument();
-    });
-
-    test("should show completed chip on skills_discovery card when getBadgeStatus returns completed", () => {
-      // GIVEN getBadgeStatus returns completed for skills_discovery
-      mockGetBadgeStatus.mockImplementation((moduleId: string) => {
-        if (moduleId === "skills_discovery") return "completed" as BadgeStatus;
-        return null;
-      });
-
-      // WHEN the Home page is rendered
-      render(<Home />);
-
-      // THEN the skills_discovery module card shows the completed chip
-      expect(screen.getByTestId(MODULE_CARD_DATA_TEST_ID.MODULE_CARD_COMPLETED_CHIP)).toBeInTheDocument();
+      // THEN all three CTA cards are present
+      expect(screen.getByTestId(`${CTA_DATA_TEST_ID.HOME_CTA_CARD}-profile`)).toBeInTheDocument();
+      expect(screen.getByTestId(`${CTA_DATA_TEST_ID.HOME_CTA_CARD}-paths`)).toBeInTheDocument();
+      expect(screen.getByTestId(`${CTA_DATA_TEST_ID.HOME_CTA_CARD}-jobs`)).toBeInTheDocument();
     });
   });
 });
