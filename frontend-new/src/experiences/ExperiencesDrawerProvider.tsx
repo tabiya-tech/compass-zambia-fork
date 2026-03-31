@@ -28,7 +28,7 @@ const defaultExperiencesDrawerContext: ExperiencesDrawerContextType = {
   fetchExperiences: () => Promise.resolve(),
 };
 
-const ExperiencesDrawerContext = createContext<ExperiencesDrawerContextType>(defaultExperiencesDrawerContext);
+export const ExperiencesDrawerContext = createContext<ExperiencesDrawerContextType>(defaultExperiencesDrawerContext);
 
 export const ExperiencesDrawerProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
