@@ -36,9 +36,7 @@ export async function fetchSkills(): Promise<FetchSkillsResult> {
   const educationExperiences = allExperiences.filter(
     (exp) => exp.work_type === WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
   );
-  const otherExperiences = allExperiences.filter(
-    (exp) => exp.work_type !== WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK
-  );
+  const otherExperiences = allExperiences.filter((exp) => exp.work_type !== WorkType.FORMAL_SECTOR_UNPAID_TRAINEE_WORK);
 
   return {
     workSkills: aggregateSkills(otherExperiences),

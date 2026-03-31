@@ -43,9 +43,27 @@ const mockSkills: Skill[] = [
   },
 ];
 
+const mockEducationSkills: Skill[] = [
+  {
+    UUID: "edu-skill-1",
+    preferredLabel: "Technical Drawing",
+    altLabels: [],
+    description: "Engineering drawing",
+    orderIndex: 0,
+  },
+  {
+    UUID: "edu-skill-2",
+    preferredLabel: "Mathematics",
+    altLabels: [],
+    description: "Applied mathematics",
+    orderIndex: 1,
+  },
+];
+
 export const Default: Story = {
   args: {
     skills: mockSkills,
+    educationSkills: mockEducationSkills,
     isLoading: false,
   },
 };
@@ -53,6 +71,7 @@ export const Default: Story = {
 export const Loading: Story = {
   args: {
     skills: [],
+    educationSkills: [],
     isLoading: true,
   },
 };
@@ -60,6 +79,7 @@ export const Loading: Story = {
 export const NoSkills: Story = {
   args: {
     skills: [],
+    educationSkills: [],
     isLoading: false,
   },
 };
@@ -67,6 +87,7 @@ export const NoSkills: Story = {
 export const SingleSkill: Story = {
   args: {
     skills: [mockSkills[0]],
+    educationSkills: [],
     isLoading: false,
   },
 };
@@ -118,6 +139,7 @@ export const ManySkills: Story = {
         orderIndex: 9,
       },
     ],
+    educationSkills: mockEducationSkills,
     isLoading: false,
   },
 };
@@ -147,6 +169,7 @@ export const LongSkillNames: Story = {
         orderIndex: 2,
       },
     ],
+    educationSkills: [],
     isLoading: false,
   },
 };
