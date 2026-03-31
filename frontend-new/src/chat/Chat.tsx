@@ -779,6 +779,10 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
           const mappedMessages = filteredMessages.flatMap(
             (message: ConversationMessage, idx: number, arr: ConversationMessage[]): IChatMessage<any>[] => {
               if (message.sender === ConversationMessageSender.USER) {
+                try {
+                  const parsed = JSON.parse(message.message);
+                  if (parsed.type === "bws_response") return [];
+                } catch {}
                 return [generateUserMessage(message.message, message.sent_at)];
               }
               const isLast = idx === arr.length - 1;

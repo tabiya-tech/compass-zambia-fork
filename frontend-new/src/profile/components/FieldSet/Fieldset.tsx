@@ -24,47 +24,35 @@ export const DATA_TEST_ID = {
 export const Fieldset: React.FC<FieldsetProps> = (props) => {
   const { isLoading, value } = useMemo(() => {
     if ("isLoading" in props) {
-      return {
-        isLoading: true,
-        value: undefined,
-      };
+      return { isLoading: true, value: undefined };
     }
-
-    return {
-      isLoading: false,
-      value: props.value,
-    };
+    return { isLoading: false, value: props.value };
   }, [props]);
 
   return (
-    <Box data-testid={DATA_TEST_ID.CONTAINER} sx={{ paddingBottom: (theme) => theme.tabiyaSpacing.sm }}>
+    <Box
+      data-testid={DATA_TEST_ID.CONTAINER}
+      sx={{ paddingBottom: (theme) => theme.fixedSpacing(theme.tabiyaSpacing.sm) }}
+    >
       <Typography
-        variant="body2"
-        color={"secondary.dark"}
+        data-testid={DATA_TEST_ID.LABEL}
         sx={{
+          display: "block",
+          fontSize: "0.65rem",
           textTransform: "uppercase",
           fontWeight: 600,
+          letterSpacing: "0.08em",
+          color: "text.disabled",
+          marginBottom: (theme) => theme.fixedSpacing(theme.tabiyaSpacing.xxs),
         }}
-        data-testid={DATA_TEST_ID.LABEL}
       >
         {props.label}
       </Typography>
-      <Typography
-        variant="subtitle1"
-        data-testid={DATA_TEST_ID.VALUE}
-        sx={{
-          color: "text.primary",
-        }}
-      >
+      <Typography variant="body2" data-testid={DATA_TEST_ID.VALUE} sx={{ color: "text.primary", fontWeight: 500 }}>
         {isLoading ? (
-          <Skeleton
-            variant="text"
-            // The 300 is like the average field set of the details shown on the frontend
-            sx={{ backgroundColor: "lightgray", maxWidth: 300 }}
-            data-testid={DATA_TEST_ID.SKELETON}
-          />
+          <Skeleton variant="text" sx={{ maxWidth: 220 }} data-testid={DATA_TEST_ID.SKELETON} />
         ) : (
-          value || "-"
+          value || "—"
         )}
       </Typography>
     </Box>

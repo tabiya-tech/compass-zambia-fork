@@ -5,6 +5,8 @@ import { Skill } from "src/experiences/experienceService/experiences.types";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
 import authenticationStateService from "src/auth/services/AuthenticationState.service";
 import CareerReadinessService from "src/careerReadiness/services/CareerReadinessService";
+import CareerExplorerService from "src/careerExplorer/services/CareerExplorerService";
+import type { UserSectorEngagementItem } from "src/careerExplorer/services/CareerExplorerService";
 import ChatService from "src/chat/ChatService/ChatService";
 import type { ModuleSummary } from "src/careerReadiness/types";
 
@@ -20,6 +22,7 @@ export interface UserProfileData {
   skills: Skill[];
   modules: ModuleSummary[];
   skillsInterestsProgress: number;
+  careerExplorerSectors: UserSectorEngagementItem[];
 }
 
 export interface UseUserProfileResult {
@@ -30,12 +33,14 @@ export interface UseUserProfileResult {
   isLoadingProfile: boolean;
   isLoadingSkills: boolean;
   isLoadingModules: boolean;
+  isLoadingCareerExplorer: boolean;
   errors: {
     security: Error | null;
     preferences: Error | null;
     profile: Error | null;
     skills: Error | null;
     modules: Error | null;
+    careerExplorer: Error | null;
   };
 }
 
@@ -71,9 +76,11 @@ export const useUserProfile = (): UseUserProfileResult => {
     year: null,
   });
   const [isLoadingModules, setIsLoadingModules] = useState(true);
+  const [isLoadingCareerExplorer, setIsLoadingCareerExplorer] = useState(true);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [modules, setModules] = useState<ModuleSummary[]>([]);
   const [skillsInterestsProgress, setSkillsInterestsProgress] = useState<number>(0);
+  const [careerExplorerSectors, setCareerExplorerSectors] = useState<UserSectorEngagementItem[]>([]);
 
   const activeSessionId = useMemo(() => UserPreferencesStateService.getInstance().getActiveSessionId(), []);
 
@@ -84,12 +91,14 @@ export const useUserProfile = (): UseUserProfileResult => {
     profile: Error | null;
     skills: Error | null;
     modules: Error | null;
+    careerExplorer: Error | null;
   }>({
     security: null,
     preferences: null,
     profile: null,
     skills: null,
     modules: null,
+    careerExplorer: null,
   });
 
   // Effect 1: Fetch security data (email from authenticated user)
@@ -230,6 +239,26 @@ export const useUserProfile = (): UseUserProfileResult => {
     fetchModules();
   }, []);
 
+  // Effect 7: Fetch career explorer sector engagement for the user
+  useEffect(() => {
+    const fetchCareerExplorerData = async () => {
+      try {
+        setIsLoadingCareerExplorer(true);
+        setErrors((prev) => ({ ...prev, careerExplorer: null }));
+
+        const response = await CareerExplorerService.getInstance().getSectorEngagementForUser();
+        setCareerExplorerSectors(response.data);
+      } catch (error) {
+        console.error("Error fetching career explorer engagement:", error);
+        setErrors((prev) => ({ ...prev, careerExplorer: error as Error }));
+      } finally {
+        setIsLoadingCareerExplorer(false);
+      }
+    };
+
+    fetchCareerExplorerData();
+  }, []);
+
   // Combine all data into a single profile object
   const profileData: UserProfileData = {
     email: securityData.email,
@@ -243,10 +272,16 @@ export const useUserProfile = (): UseUserProfileResult => {
     skills,
     modules,
     skillsInterestsProgress,
+    careerExplorerSectors,
   };
 
   const isLoading =
-    isLoadingSecurity || isLoadingPreferences || isLoadingProfile || isLoadingSkills || isLoadingModules;
+    isLoadingSecurity ||
+    isLoadingPreferences ||
+    isLoadingProfile ||
+    isLoadingSkills ||
+    isLoadingModules ||
+    isLoadingCareerExplorer;
 
   return {
     profileData,
@@ -256,6 +291,7 @@ export const useUserProfile = (): UseUserProfileResult => {
     isLoadingProfile,
     isLoadingSkills,
     isLoadingModules,
+    isLoadingCareerExplorer,
     errors,
   };
 };

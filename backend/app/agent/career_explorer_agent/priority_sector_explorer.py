@@ -1,5 +1,11 @@
 """
-Explorer for priority sectors using RAG (vector search). Answers based on retrieved content only.
+Explorer for priority sectors using a hybrid RAG + general knowledge approach.
+
+Answers are sourced in priority order:
+  1. Retrieved content (vector search) — used for country-specific facts such as salaries,
+     employer names, TEVET qualifications, and local market conditions.
+  2. General knowledge — used to fill gaps when retrieved content is thin or absent,
+     with hedging language to distinguish locally-verified data from general knowledge.
 """
 
 import logging
@@ -56,36 +62,73 @@ def _build_base_instructions(retrieved_content: str) -> str:
         {STD_AGENT_CHARACTER}
 
         # Instructions
-            - Start by suggesting the priority sectors ({sector_list_str}) and ask which interests the user most
-            - Answer questions based ONLY on the retrieved content provided below
-            - Stay on topic: focus on the priority sectors ({sector_list_str})
-            - If asked about something outside this scope, politely redirect to the priority sectors
+            - Your area of expertise is {country_name}'s priority sectors ({sector_list_str})
+            - Answer any career question to the best of your ability
+            - For topics outside your expertise, share what you know and be honest about your limitations — never refuse or redirect the user away
             - Be encouraging and conversational
-            - Do not invent information not in the provided content
+
+        # How to Use Sources (follow this hierarchy strictly)
+            ## Tier 1 — Retrieved Content (highest priority)
+                - Always prefer the retrieved content below for {country_name}-specific facts:
+                  salaries, employer names, provinces, TEVET qualification requirements, and local market conditions
+                - When retrieved content answers the question, use it directly and cite specifics
+
+            ## Tier 2 — General Knowledge (fill the gaps)
+                - When retrieved content does not cover the user's question — or covers it only partially —
+                  draw on your general knowledge about the sector, career, or role
+                - This is expected and encouraged: our local data may not cover every sub-topic
+                - Use general knowledge for universal career concepts: day-to-day work, career progression,
+                  skills needed, global industry trends, typical entry requirements
+
+            ## Hedging Language Rules
+                - When answering from Tier 1 (local data): speak with confidence and cite specifics
+                  e.g. "In {country_name}, Drillers can earn K6,300–K15,000+ monthly..."
+                - When answering from Tier 2 (general knowledge): signal the scope shift naturally
+                  e.g. "Generally in this field...", "Across the industry...", "While I don't have
+                  {country_name}-specific data on this, typically..."
+                - Never present general knowledge as {country_name}-specific fact
 
         # Retrieved Content
-            Use the following content to answer user questions. Cite specifics when relevant.
+            Use the following content as your primary source. Supplement with general knowledge where the content is thin or silent.
 
-        {{retrieved_content}}
+        {retrieved_content}
 
         {finish_instructions}
 
         {escaped_quick_reply}
         </system_instructions>
-    """).format(sector_list_str=sector_list_str, retrieved_content=retrieved_content)
+    """)
 
 
 def _format_chunks(chunks: list[SectorChunkEntity]) -> str:
     if not chunks:
-        config = get_application_config()
-        sectors = config.career_explorer_config.sectors
-        sector_names = [s["name"] for s in sectors] if sectors else []
-        sector_list_str = ", ".join(sector_names) if sector_names else "the priority sectors"
-        return f"(No relevant content found. Suggest the user pick a sector or ask a question related to {sector_list_str}.)"
+        return (
+            "(No local data was retrieved for this query. "
+            "Answer using your general knowledge about the relevant sector or career. "
+            "Apply the Tier 2 hedging language rules — do not present general knowledge as locally verified fact.)"
+        )
     parts = []
     for c in chunks:
         parts.append(f"[{c.sector}]\n{c.text}")
     return "\n\n---\n\n".join(parts)
+
+
+def _build_pending_sectors_section(pending_sectors: list[dict] | None) -> str:
+    if not pending_sectors:
+        return ""
+    formatted = ", ".join(s["sector_name"] for s in pending_sectors)
+    next_sector = pending_sectors[0]["sector_name"]
+    return dedent(f"""\
+
+        # Pending Sectors
+            The user has also expressed interest in these sectors (not yet explored): {formatted}
+            IMPORTANT: Do not redirect the user away from these sectors — they explicitly asked about them.
+            Acknowledge ALL of them in your first response, then explore the current sector first.
+            When the current topic reaches a natural pause (user's question has been answered, they say "ok"/"thanks",
+            or the conversation on this sector winds down), proactively transition to the next pending sector.
+            Example: "Now, you also mentioned interest in {next_sector}. Let me tell you about opportunities there..."
+            Do NOT rush — finish the current topic first, then transition naturally.
+    """)
 
 
 class PrioritySectorExplorer:
@@ -103,10 +146,15 @@ class PrioritySectorExplorer:
         self,
         user_input: str,
         context,
+        pending_sectors: list[dict] | None = None,
+        user_profile_context: str | None = None,
     ) -> tuple[str, bool, str, list[LLMStats], dict | None]:
         chunks = await self._sector_search.search(query=user_input, k=5)
         retrieved = _format_chunks(chunks)
         full_instructions = _build_base_instructions(retrieved)
+        full_instructions += _build_pending_sectors_section(pending_sectors)
+        if user_profile_context:
+            full_instructions = user_profile_context + "\n\n" + full_instructions
 
         self._logger.info(
             "Priority sector RAG for query '%s': found %d chunks",

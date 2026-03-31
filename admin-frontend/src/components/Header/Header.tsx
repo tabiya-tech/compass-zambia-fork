@@ -1,4 +1,4 @@
-import React, { useMemo, useState, startTransition } from "react";
+import React, { useEffect, useMemo, useState, startTransition } from "react";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import type { Theme } from "@mui/material/styles";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -30,7 +30,13 @@ const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const logoFromEnv = getAppIconUrl() || getLogoUrl();
-  const logoSrc = logoFromEnv || `${process.env.PUBLIC_URL}/njila_logo.svg`;
+  const preferredLogoSrc = logoFromEnv || `${process.env.PUBLIC_URL}/njila_logo.svg`;
+  const localLogoFallback = `${process.env.PUBLIC_URL}/logo.svg`;
+  const [logoSrc, setLogoSrc] = useState(preferredLogoSrc);
+
+  useEffect(() => {
+    setLogoSrc(preferredLogoSrc);
+  }, [preferredLogoSrc]);
 
   const contextMenuItems: MenuItemConfig[] = useMemo(
     () => [
@@ -96,6 +102,9 @@ const Header: React.FC = () => {
               alt={t("app.logoAlt")}
               height={12 * theme.tabiyaSpacing.xl}
               data-testid={DATA_TEST_ID.HEADER_LOGO}
+              onError={() => {
+                setLogoSrc((prev) => (prev === localLogoFallback ? prev : localLogoFallback));
+              }}
             />
           </NavLink>
         </Box>

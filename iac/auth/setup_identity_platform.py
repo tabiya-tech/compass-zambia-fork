@@ -158,6 +158,7 @@ def _setup_identity_platform(
         environment_type: pulumi.Output[str],
         auth_domain: pulumi.Output[str],
         frontend_domain: pulumi.Output[str],
+        app_name: str,
         dependencies: list[pulumi.Resource]) -> IdentityPlatform:
     # for the development environment allow localhost
     def _get_authorized_domains(args) -> list[str]:
@@ -182,13 +183,15 @@ def _setup_identity_platform(
                 ),
                 verify_email_template=EmailTemplateArgs(
                     sender_local_part="noreply",
-                    sender_display_name="Compass",
+                    sender_display_name=app_name,
                     subject="Please verify your email address",
+                    body=f"<p>Hello %DISPLAY_NAME%,</p>\n<p>Follow this link to verify your email address.</p>\n<p><a href='%LINK%'>%LINK%</a></p>\n<p>If you didn't ask to verify this address, you can ignore this email.</p>\n<p>Thanks,</p>\n<p>Your {app_name} team</p>",
                 ),
                 reset_password_template=EmailTemplateArgs(
                     sender_local_part="noreply",
-                    sender_display_name="Compass",
+                    sender_display_name=app_name,
                     subject="Reset your password",
+                    body=f"<p>Hello,</p>\n<p>Follow this link to reset your {app_name} password for your %EMAIL% account.</p>\n<p><a href='%LINK%'>%LINK%</a></p>\n<p>If you didn't ask to reset your password, you can ignore this email.</p>\n<p>Thanks,</p>\n<p>Your {app_name} team</p>",
                 )
             )
         ),
@@ -233,7 +236,8 @@ def deploy_auth(*,
                 auth_domain: pulumi.Output[str],
                 frontend_domain: pulumi.Output[str],
                 gcp_oauth_client_id: str,
-                gcp_oauth_client_secret: str):
+                gcp_oauth_client_secret: str,
+                app_name: str):
     """
     Deploy the Identity Platform for the project.
 
@@ -243,6 +247,10 @@ def deploy_auth(*,
     — Enable Google Authentication
     — Enable Email/Password Authentication
     — Enable Anonymous Authentication
+
+    :param app_name: The public-facing name shown in Firebase auth emails (%APP_NAME%) and
+                     on the Google sign-in consent screen.  Reads from the ``auth:app_name``
+                     Pulumi config key.
     """
     _basic_config = get_project_base_config(
         project=project,
@@ -263,6 +271,7 @@ def deploy_auth(*,
         environment_type=environment_type,
         auth_domain=auth_domain,
         frontend_domain=frontend_domain,
+        app_name=app_name,
         dependencies=record_sets
     )
     _setup_google_signin(
@@ -274,3 +283,4 @@ def deploy_auth(*,
         gcp_oauth_client_secret=gcp_oauth_client_secret,
         dependencies=[idp_cfg]  # Wait for the identity platform to be setup first
     )
+

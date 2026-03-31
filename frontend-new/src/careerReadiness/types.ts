@@ -1,11 +1,11 @@
 export type ModuleStatus = "NOT_STARTED" | "UNLOCKED" | "IN_PROGRESS" | "COMPLETED";
 
-export type ModuleStatusDisplay = "locked" | "unlocked" | "in_progress" | "done";
+export type ModuleStatusDisplay = "unlocked" | "in_progress" | "done";
 
 export const mapModuleStatusToDisplay = (status: ModuleStatus): ModuleStatusDisplay => {
   switch (status) {
     case "NOT_STARTED":
-      return "locked";
+      return "unlocked";
     case "UNLOCKED":
       return "unlocked";
     case "IN_PROGRESS":
@@ -13,7 +13,7 @@ export const mapModuleStatusToDisplay = (status: ModuleStatus): ModuleStatusDisp
     case "COMPLETED":
       return "done";
     default:
-      return "locked";
+      return "unlocked";
   }
 };
 

@@ -6,10 +6,14 @@ import ErrorConstants from "src/error/restAPIError/RestAPIError.constants";
 import type {
   DashboardStats,
   InstitutionApiItem,
+  JobApiItem,
+  JobStatsResponse,
+  StudentApiItem,
   PaginatedResponse,
   AdoptionTrendsResponse,
   SkillGapStatsResponse,
   CareerReadinessStatsResponse,
+  CareerExplorerStatsResponse,
   SkillsDiscoveryStatsResponse,
   SkillsSupplyStatsResponse,
 } from "./AnalyticsService.types";
@@ -17,10 +21,14 @@ import type {
 export type {
   DashboardStats,
   InstitutionApiItem,
+  JobApiItem,
+  JobStatsResponse,
+  StudentApiItem,
   PaginatedResponse,
   AdoptionTrendsResponse,
   SkillGapStatsResponse,
   CareerReadinessStatsResponse,
+  CareerExplorerStatsResponse,
   SkillsDiscoveryStatsResponse,
   SkillsSupplyStatsResponse,
 };
@@ -86,8 +94,51 @@ export default class AnalyticsService {
     }
   }
 
-  async getSkillGapStats(limit = 10): Promise<SkillGapStatsResponse> {
+  async listStudents(filters?: {
+    active?: boolean;
+    institution?: string;
+    province?: string;
+    programme?: string;
+    year?: string;
+    search?: string;
+    cursor?: string;
+    limit?: number;
+    include?: string;
+  }): Promise<PaginatedResponse<StudentApiItem>> {
+    const params = new URLSearchParams();
+    if (filters?.active !== undefined) params.set("active", String(filters.active));
+    if (filters?.institution) params.set("institution", filters.institution);
+    if (filters?.province) params.set("province", filters.province);
+    if (filters?.programme) params.set("programme", filters.programme);
+    if (filters?.year) params.set("year", filters.year);
+    if (filters?.search) params.set("search", filters.search);
+    if (filters?.cursor) params.set("cursor", filters.cursor);
+    params.set("limit", String(filters?.limit ?? 20));
+    if (filters?.include) params.set("include", filters.include);
+
+    const url = `${this.baseUrl}/students?${params}`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "listStudents", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "listStudents",
+      failureMessage: "Failed to fetch students",
+      expectedContentType: "application/json",
+    });
+    try {
+      return (await response.json()) as PaginatedResponse<StudentApiItem>;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        error: e,
+      });
+    }
+  }
+
+  async getSkillGapStats(limit = 10, institution?: string): Promise<SkillGapStatsResponse> {
     const params = new URLSearchParams({ limit: String(limit) });
+    if (institution) params.set("institution", institution);
     const url = `${this.baseUrl}/analytics/skill-gap-stats?${params}`;
     const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "getSkillGapStats", "GET", url);
     const response = await customFetch(url, {
@@ -140,8 +191,9 @@ export default class AnalyticsService {
     }
   }
 
-  async getSkillsSupplyStats(limit = 10): Promise<SkillsSupplyStatsResponse> {
+  async getSkillsSupplyStats(limit = 10, institution?: string): Promise<SkillsSupplyStatsResponse> {
     const params = new URLSearchParams({ limit: String(limit) });
+    if (institution) params.set("institution", institution);
     const url = `${this.baseUrl}/analytics/skills-supply-stats?${params}`;
     const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "getSkillsSupplyStats", "GET", url);
     const response = await customFetch(url, {
@@ -187,6 +239,94 @@ export default class AnalyticsService {
     });
     try {
       return (await response.json()) as SkillsDiscoveryStatsResponse;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        error: e,
+      });
+    }
+  }
+
+  async getCareerExplorerStats(filters?: {
+    institution?: string;
+    location?: string;
+    program?: string;
+    year?: string;
+  }): Promise<CareerExplorerStatsResponse> {
+    const params = new URLSearchParams();
+    if (filters?.institution) params.set("institution", filters.institution);
+    if (filters?.location) params.set("location", filters.location);
+    if (filters?.program) params.set("program", filters.program);
+    if (filters?.year) params.set("year", filters.year);
+    const query = params.toString();
+    const url = `${this.baseUrl}/analytics/career-explorer-stats${query ? `?${query}` : ""}`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "getCareerExplorerStats", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "getCareerExplorerStats",
+      failureMessage: "Failed to fetch career explorer stats",
+      expectedContentType: "application/json",
+    });
+    try {
+      return (await response.json()) as CareerExplorerStatsResponse;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        error: e,
+      });
+    }
+  }
+
+  async getJobStats(): Promise<JobStatsResponse> {
+    const url = `${this.baseUrl}/jobs/stats`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "getJobStats", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "getJobStats",
+      failureMessage: "Failed to fetch job stats",
+      expectedContentType: "application/json",
+    });
+    try {
+      return (await response.json()) as JobStatsResponse;
+    } catch (e) {
+      throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
+        error: e,
+      });
+    }
+  }
+
+  async listJobs(
+    params: {
+      category?: string;
+      employment_type?: string;
+      location?: string;
+      cursor?: string;
+      limit?: number;
+    } = {}
+  ): Promise<PaginatedResponse<JobApiItem>> {
+    const query = new URLSearchParams();
+    if (params.category) query.set("category", params.category);
+    if (params.employment_type) query.set("employment_type", params.employment_type);
+    if (params.location) query.set("location", params.location);
+    if (params.cursor) query.set("cursor", params.cursor);
+    query.set("limit", String(params.limit ?? 20));
+    const url = `${this.baseUrl}/jobs?${query}`;
+    const errorFactory = getRestAPIErrorFactory(SERVICE_NAME, "listJobs", "GET", url);
+    const response = await customFetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      expectedStatusCode: StatusCodes.OK,
+      serviceName: SERVICE_NAME,
+      serviceFunction: "listJobs",
+      failureMessage: "Failed to fetch jobs",
+      expectedContentType: "application/json",
+    });
+    try {
+      return (await response.json()) as PaginatedResponse<JobApiItem>;
     } catch (e) {
       throw errorFactory(response.status, ErrorConstants.ErrorCodes.INVALID_RESPONSE_BODY, "Invalid JSON", {
         error: e,

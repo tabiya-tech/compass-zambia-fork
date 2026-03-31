@@ -23,7 +23,7 @@ exports[`Testing Login component Render tests should hide login code related ele
             style="max-width: 60%; margin: 5% 10%;"
           />
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-nhq5gd-MuiButtonBase-root-MuiIconButton-root"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-r34hws-MuiButtonBase-root-MuiIconButton-root"
             data-testid="language-context-menu-select-button-f4d06e4b-0e0c-49c7-ad93-924c5ac89070"
             tabindex="0"
             title="Language Selector"
@@ -43,7 +43,7 @@ exports[`Testing Login component Render tests should hide login code related ele
           </button>
         </div>
         <h4
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-h0hv7s-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-294e0o-MuiTypography-root"
           data-testid="auth-header-title-40374529-6e2c-49d8-81d7-93f01603a648"
         >
           Welcome to {{appName}}!
@@ -54,12 +54,12 @@ exports[`Testing Login component Render tests should hide login code related ele
         data-testid="login-form-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
       >
         <p
-          class="MuiTypography-root MuiTypography-body2 css-vtq6gs-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body2 css-oh40v8-MuiTypography-root"
         >
           Login to your account to continue
         </p>
         <h6
-          class="MuiTypography-root MuiTypography-subtitle2 css-ggg0vy-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-subtitle2 css-r245rg-MuiTypography-root"
           data-testid="login-subtitle-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
         >
           Login using
@@ -69,7 +69,7 @@ exports[`Testing Login component Render tests should hide login code related ele
           data-testid="reset-password-email-container"
         />
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-18qmiyb-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-5rnsqa-MuiButtonBase-root-MuiButton-root"
           data-testid="login-button-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
           disabled=""
           style="margin-top: 8px;"
@@ -83,13 +83,13 @@ exports[`Testing Login component Render tests should hide login code related ele
         data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
       />
       <span
-        class="MuiTypography-root MuiTypography-caption css-1q1mrxw-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
         data-testid="login-register-link-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
       >
         Don't have an account? 
         <a
           aria-disabled="false"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-179zpik-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kqozpc-MuiTypography-root-MuiLink-root"
         >
           Register
         </a>
@@ -260,7 +260,7 @@ exports[`Testing Login component Render tests should hide login code related ele
                 class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
               >
                 <h6
-                  class="MuiTypography-root MuiTypography-h6 css-j3d3zm-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-h6 css-65dhei-MuiTypography-root"
                   data-testid="message-91b57774-d50c-4350-882d-363f80ac10e8"
                 >
                   Logging you in...
@@ -323,7 +323,7 @@ exports[`Testing Login component Render tests should hide login code related ele
             style="max-width: 60%; margin: 5% 10%;"
           />
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-nhq5gd-MuiButtonBase-root-MuiIconButton-root"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-r34hws-MuiButtonBase-root-MuiIconButton-root"
             data-testid="language-context-menu-select-button-f4d06e4b-0e0c-49c7-ad93-924c5ac89070"
             tabindex="0"
             title="Language Selector"
@@ -343,7 +343,7 @@ exports[`Testing Login component Render tests should hide login code related ele
           </button>
         </div>
         <h4
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-h0hv7s-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-294e0o-MuiTypography-root"
           data-testid="auth-header-title-40374529-6e2c-49d8-81d7-93f01603a648"
         >
           Welcome to {{appName}}!
@@ -354,12 +354,12 @@ exports[`Testing Login component Render tests should hide login code related ele
         data-testid="login-form-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
       >
         <p
-          class="MuiTypography-root MuiTypography-body2 css-vtq6gs-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body2 css-oh40v8-MuiTypography-root"
         >
           Login to your account to continue
         </p>
         <h6
-          class="MuiTypography-root MuiTypography-subtitle2 css-ggg0vy-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-subtitle2 css-r245rg-MuiTypography-root"
           data-testid="login-subtitle-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
         >
           Login using
@@ -369,7 +369,7 @@ exports[`Testing Login component Render tests should hide login code related ele
           data-testid="reset-password-email-container"
         />
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-18qmiyb-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-5rnsqa-MuiButtonBase-root-MuiButton-root"
           data-testid="login-button-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
           disabled=""
           style="margin-top: 8px;"
@@ -383,13 +383,13 @@ exports[`Testing Login component Render tests should hide login code related ele
         data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
       />
       <span
-        class="MuiTypography-root MuiTypography-caption css-1q1mrxw-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
         data-testid="login-register-link-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
       >
         Don't have an account? 
         <a
           aria-disabled="false"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-179zpik-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kqozpc-MuiTypography-root-MuiLink-root"
         >
           Register
         </a>
@@ -560,7 +560,7 @@ exports[`Testing Login component Render tests should hide login code related ele
                 class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
               >
                 <h6
-                  class="MuiTypography-root MuiTypography-h6 css-j3d3zm-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-h6 css-65dhei-MuiTypography-root"
                   data-testid="message-91b57774-d50c-4350-882d-363f80ac10e8"
                 >
                   Logging you in...
@@ -623,7 +623,7 @@ exports[`Testing Login component Render tests should show continue as guest if l
             style="max-width: 60%; margin: 5% 10%;"
           />
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-nhq5gd-MuiButtonBase-root-MuiIconButton-root"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-r34hws-MuiButtonBase-root-MuiIconButton-root"
             data-testid="language-context-menu-select-button-f4d06e4b-0e0c-49c7-ad93-924c5ac89070"
             tabindex="0"
             title="Language Selector"
@@ -643,7 +643,7 @@ exports[`Testing Login component Render tests should show continue as guest if l
           </button>
         </div>
         <h4
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-h0hv7s-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-294e0o-MuiTypography-root"
           data-testid="auth-header-title-40374529-6e2c-49d8-81d7-93f01603a648"
         >
           Welcome to {{appName}}!
@@ -654,7 +654,7 @@ exports[`Testing Login component Render tests should show continue as guest if l
         data-testid="login-form-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-1c68ceu-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-119bxks-MuiButtonBase-root-MuiButton-root"
           data-testid="login-start-new-conversation-button-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
           tabindex="0"
           type="button"
@@ -671,7 +671,7 @@ exports[`Testing Login component Render tests should show continue as guest if l
             class="MuiDivider-wrapper css-ijin0t-MuiDivider-wrapper"
           >
             <h6
-              class="MuiTypography-root MuiTypography-subtitle2 css-1xbqiv2-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-subtitle2 css-ew0dyz-MuiTypography-root"
               data-testid="login-subtitle-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
             >
               Or login to your account to continue
@@ -683,7 +683,7 @@ exports[`Testing Login component Render tests should show continue as guest if l
           data-testid="reset-password-email-container"
         />
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-18qmiyb-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-5rnsqa-MuiButtonBase-root-MuiButton-root"
           data-testid="login-button-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
           disabled=""
           style="margin-top: 8px;"
@@ -697,13 +697,13 @@ exports[`Testing Login component Render tests should show continue as guest if l
         data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
       />
       <span
-        class="MuiTypography-root MuiTypography-caption css-1q1mrxw-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
         data-testid="login-register-link-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
       >
         Don't have an account? 
         <a
           aria-disabled="false"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-179zpik-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kqozpc-MuiTypography-root-MuiLink-root"
         >
           Register
         </a>
@@ -874,7 +874,7 @@ exports[`Testing Login component Render tests should show continue as guest if l
                 class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
               >
                 <h6
-                  class="MuiTypography-root MuiTypography-h6 css-j3d3zm-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-h6 css-65dhei-MuiTypography-root"
                   data-testid="message-91b57774-d50c-4350-882d-363f80ac10e8"
                 >
                   Logging you in...
@@ -936,7 +936,7 @@ exports[`Testing Login component it should show login form successfully 1`] = `
           style="max-width: 60%; margin: 5% 10%;"
         />
         <button
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-nhq5gd-MuiButtonBase-root-MuiIconButton-root"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-r34hws-MuiButtonBase-root-MuiIconButton-root"
           data-testid="language-context-menu-select-button-f4d06e4b-0e0c-49c7-ad93-924c5ac89070"
           tabindex="0"
           title="Language Selector"
@@ -956,7 +956,7 @@ exports[`Testing Login component it should show login form successfully 1`] = `
         </button>
       </div>
       <h4
-        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-h0hv7s-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-294e0o-MuiTypography-root"
         data-testid="auth-header-title-40374529-6e2c-49d8-81d7-93f01603a648"
       >
         Welcome to {{appName}}!
@@ -967,12 +967,12 @@ exports[`Testing Login component it should show login form successfully 1`] = `
       data-testid="login-form-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
     >
       <p
-        class="MuiTypography-root MuiTypography-body2 css-vtq6gs-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body2 css-oh40v8-MuiTypography-root"
       >
         Login to your account to continue
       </p>
       <h6
-        class="MuiTypography-root MuiTypography-subtitle2 css-ggg0vy-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-subtitle2 css-r245rg-MuiTypography-root"
         data-testid="login-subtitle-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
       >
         Login using
@@ -990,7 +990,7 @@ exports[`Testing Login component it should show login form successfully 1`] = `
           class="MuiDivider-wrapper css-ijin0t-MuiDivider-wrapper"
         >
           <h6
-            class="MuiTypography-root MuiTypography-subtitle2 css-1xbqiv2-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-subtitle2 css-ew0dyz-MuiTypography-root"
             data-testid="login-subtitle-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
           >
             or
@@ -1002,7 +1002,7 @@ exports[`Testing Login component it should show login form successfully 1`] = `
         data-testid="reset-password-email-container"
       />
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-18qmiyb-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-5rnsqa-MuiButtonBase-root-MuiButton-root"
         data-testid="login-button-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
         disabled=""
         style="margin-top: 8px;"
@@ -1016,13 +1016,13 @@ exports[`Testing Login component it should show login form successfully 1`] = `
       data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
     />
     <span
-      class="MuiTypography-root MuiTypography-caption css-1q1mrxw-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
       data-testid="login-register-link-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
     >
       Don't have an account? 
       <a
         aria-disabled="false"
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-179zpik-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kqozpc-MuiTypography-root-MuiLink-root"
       >
         Register
       </a>
@@ -1196,7 +1196,7 @@ exports[`Testing Login component it should show login form successfully 1`] = `
               class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
             >
               <h6
-                class="MuiTypography-root MuiTypography-h6 css-j3d3zm-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-h6 css-65dhei-MuiTypography-root"
                 data-testid="message-91b57774-d50c-4350-882d-363f80ac10e8"
               >
                 Logging you in...
@@ -1257,7 +1257,7 @@ exports[`Testing Login component should handle application login code 1`] = `
           style="max-width: 60%; margin: 5% 10%;"
         />
         <button
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-nhq5gd-MuiButtonBase-root-MuiIconButton-root"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-r34hws-MuiButtonBase-root-MuiIconButton-root"
           data-testid="language-context-menu-select-button-f4d06e4b-0e0c-49c7-ad93-924c5ac89070"
           tabindex="0"
           title="Language Selector"
@@ -1277,7 +1277,7 @@ exports[`Testing Login component should handle application login code 1`] = `
         </button>
       </div>
       <h4
-        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-h0hv7s-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-294e0o-MuiTypography-root"
         data-testid="auth-header-title-40374529-6e2c-49d8-81d7-93f01603a648"
       >
         Welcome to {{appName}}!
@@ -1288,7 +1288,7 @@ exports[`Testing Login component should handle application login code 1`] = `
       data-testid="login-form-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-1c68ceu-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-119bxks-MuiButtonBase-root-MuiButton-root"
         data-testid="login-start-new-conversation-button-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
         tabindex="0"
         type="button"
@@ -1305,7 +1305,7 @@ exports[`Testing Login component should handle application login code 1`] = `
           class="MuiDivider-wrapper css-ijin0t-MuiDivider-wrapper"
         >
           <h6
-            class="MuiTypography-root MuiTypography-subtitle2 css-1xbqiv2-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-subtitle2 css-ew0dyz-MuiTypography-root"
             data-testid="login-subtitle-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
           >
             Or login to your account to continue
@@ -1317,7 +1317,7 @@ exports[`Testing Login component should handle application login code 1`] = `
         data-testid="reset-password-email-container"
       />
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-18qmiyb-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-5rnsqa-MuiButtonBase-root-MuiButton-root"
         data-testid="login-button-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
         disabled=""
         style="margin-top: 8px;"
@@ -1331,13 +1331,13 @@ exports[`Testing Login component should handle application login code 1`] = `
       data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
     />
     <span
-      class="MuiTypography-root MuiTypography-caption css-1q1mrxw-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
       data-testid="login-register-link-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
     >
       Don't have an account? 
       <a
         aria-disabled="false"
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-179zpik-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kqozpc-MuiTypography-root-MuiLink-root"
       >
         Register
       </a>
@@ -1508,7 +1508,7 @@ exports[`Testing Login component should handle application login code 1`] = `
               class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
             >
               <h6
-                class="MuiTypography-root MuiTypography-h6 css-j3d3zm-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-h6 css-65dhei-MuiTypography-root"
                 data-testid="message-91b57774-d50c-4350-882d-363f80ac10e8"
               >
                 Logging you in...
@@ -1570,7 +1570,7 @@ exports[`Testing Login component should remove registration link if registration
             style="max-width: 60%; margin: 5% 10%;"
           />
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-nhq5gd-MuiButtonBase-root-MuiIconButton-root"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-r34hws-MuiButtonBase-root-MuiIconButton-root"
             data-testid="language-context-menu-select-button-f4d06e4b-0e0c-49c7-ad93-924c5ac89070"
             tabindex="0"
             title="Language Selector"
@@ -1590,7 +1590,7 @@ exports[`Testing Login component should remove registration link if registration
           </button>
         </div>
         <h4
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-h0hv7s-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-294e0o-MuiTypography-root"
           data-testid="auth-header-title-40374529-6e2c-49d8-81d7-93f01603a648"
         >
           Welcome to {{appName}}!
@@ -1601,12 +1601,12 @@ exports[`Testing Login component should remove registration link if registration
         data-testid="login-form-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
       >
         <p
-          class="MuiTypography-root MuiTypography-body2 css-vtq6gs-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body2 css-oh40v8-MuiTypography-root"
         >
           Login to your account to continue
         </p>
         <h6
-          class="MuiTypography-root MuiTypography-subtitle2 css-ggg0vy-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-subtitle2 css-r245rg-MuiTypography-root"
           data-testid="login-subtitle-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
         >
           Login using
@@ -1624,7 +1624,7 @@ exports[`Testing Login component should remove registration link if registration
             class="MuiDivider-wrapper css-ijin0t-MuiDivider-wrapper"
           >
             <h6
-              class="MuiTypography-root MuiTypography-subtitle2 css-1xbqiv2-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-subtitle2 css-ew0dyz-MuiTypography-root"
               data-testid="login-subtitle-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
             >
               or
@@ -1636,7 +1636,7 @@ exports[`Testing Login component should remove registration link if registration
           data-testid="reset-password-email-container"
         />
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-18qmiyb-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-5rnsqa-MuiButtonBase-root-MuiButton-root"
           data-testid="login-button-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
           disabled=""
           style="margin-top: 8px;"
@@ -1818,7 +1818,7 @@ exports[`Testing Login component should remove registration link if registration
                 class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
               >
                 <h6
-                  class="MuiTypography-root MuiTypography-h6 css-j3d3zm-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-h6 css-65dhei-MuiTypography-root"
                   data-testid="message-91b57774-d50c-4350-882d-363f80ac10e8"
                 >
                   Logging you in...

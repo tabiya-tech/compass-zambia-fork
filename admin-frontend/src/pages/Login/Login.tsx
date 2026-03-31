@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, CircularProgress, Container, TextField, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import { FirebaseError } from "src/error/FirebaseError/firebaseError";
 import { FirebaseErrorCodes } from "src/error/FirebaseError/firebaseError.constants";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import { getLogoUrl } from "src/envService";
+import UserStateService from "src/userState/UserStateService";
 
 const uniqueId = "login-page-5a8f3b2c-1d4e-4f6a-9b8c-7e2d1f0a3b5c";
 
@@ -33,7 +34,13 @@ const Login: React.FC<LoginProps> = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const logoUrl = getLogoUrl() || "/logo.svg";
+  const preferredLocal = `${process.env.PUBLIC_URL}/logo.svg`;
+  const preferredSrc = getLogoUrl() || preferredLocal;
+  const [logoSrc, setLogoSrc] = useState(preferredSrc);
+
+  useEffect(() => {
+    setLogoSrc(preferredSrc);
+  }, [preferredSrc]);
 
   const getErrorMessage = (error: FirebaseError): string => {
     switch (error.code) {
@@ -67,7 +74,10 @@ const Login: React.FC<LoginProps> = () => {
     try {
       const authService = FirebaseEmailAuthenticationService.getInstance();
       await authService.login(email, password);
-      navigate(routerPaths.ROOT);
+      const redirectPath = UserStateService.getInstance().isInstitutionStaff()
+        ? routerPaths.INSTRUCTOR
+        : routerPaths.ROOT;
+      navigate(redirectPath);
     } catch (error) {
       console.error("Login error:", error);
       if (error instanceof FirebaseError) {
@@ -110,9 +120,12 @@ const Login: React.FC<LoginProps> = () => {
           >
             <Box
               component="img"
-              src={logoUrl}
+              src={logoSrc}
               alt={t("login.logoAlt", "Logo")}
               data-testid={DATA_TEST_ID.LOGIN_PAGE_LOGO}
+              onError={() => {
+                setLogoSrc((prev) => (prev === preferredLocal ? prev : preferredLocal));
+              }}
               sx={{
                 height: 64,
                 width: "auto",

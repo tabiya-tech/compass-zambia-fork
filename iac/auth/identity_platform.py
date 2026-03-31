@@ -50,6 +50,8 @@ class EmailTemplateArgs:
     sender_display_name: Optional[pulumi.Input[str]] = None
     subject: Optional[pulumi.Input[str]] = None
     reply_to: Optional[pulumi.Input[str]] = None
+    body: Optional[pulumi.Input[str]] = None
+    body_format: Optional[pulumi.Input[str]] = "HTML"
 
     def to_dict(self):
         return {
@@ -57,6 +59,8 @@ class EmailTemplateArgs:
             "subject": self.subject,
             "sender_display_name": self.sender_display_name,
             "reply_to": self.reply_to,
+            "body": self.body,
+            "body_format": self.body_format if self.body else None,
         }
 
 
@@ -131,8 +135,7 @@ def _getconfig_for_api_body(props: dict[str, Any]) -> dict[str, Any]:
         "client.apiKey",
         "client.firebaseSubdomain",
         "notification.sendEmail.verifyEmailTemplate.customized",
-        "notification.sendEmail.verifyEmailTemplate.body",
-        "notification.sendEmail.verifyEmailTemplate.bodyFormat",
+        "notification.sendEmail.resetPasswordTemplate.customized",
         "notification.sendEmail.dnsInfo.customDomain",
         "notification.sendEmail.dnsInfo.pendingCustomDomain",
         "notification.sendEmail.dnsInfo.customDomainState",

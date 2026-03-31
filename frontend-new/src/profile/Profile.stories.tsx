@@ -66,12 +66,14 @@ const createProfileState = (overrides?: Partial<ProfileProps>): ProfileProps => 
       makeModule("career_explorer", "NOT_STARTED"),
     ],
     skillsInterestsProgress: 75,
+    careerExplorerSectors: [],
 
     // Loading states
     isLoadingSecurity: false,
     isLoadingPreferences: false,
     isLoadingProfile: false,
     isLoadingSkills: false,
+    isLoadingCareerExplorer: false,
   };
 
   return { ...defaultState, ...overrides };

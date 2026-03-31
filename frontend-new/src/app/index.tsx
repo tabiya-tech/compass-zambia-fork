@@ -47,6 +47,7 @@ const LazyLoadedCareerReadinessModule = lazyWithPreload(
 );
 
 const LazyLoadedProfile = lazyWithPreload(() => import("src/profile/ProfileContainer"));
+const LazyLoadedJobMatching = lazyWithPreload(() => import("src/jobMatching/pages/JobMatchingPage/JobMatchingPage"));
 
 // Wrap the createHashRouter function with Sentry to capture errors that occur during router initialization
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV6(createHashRouter);
@@ -73,6 +74,7 @@ const ProtectedRouteKeys = {
   CAREER_EXPLORER: "CAREER_EXPLORER",
   CAREER_READINESS: "CAREER_READINESS",
   CAREER_READINESS_MODULE: "CAREER_READINESS_MODULE",
+  JOB_MATCHING: "JOB_MATCHING",
 };
 
 const NotFound: React.FC = () => {
@@ -395,6 +397,14 @@ const App = () => {
           element: (
             <ProtectedRoute key={ProtectedRouteKeys.PROFILE}>
               <LazyLoadedProfile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: routerPaths.JOB_MATCHING,
+          element: (
+            <ProtectedRoute key={ProtectedRouteKeys.JOB_MATCHING}>
+              <LazyLoadedJobMatching />
             </ProtectedRoute>
           ),
         },

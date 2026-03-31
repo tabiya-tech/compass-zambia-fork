@@ -793,10 +793,9 @@
     "statusDone": "Done",
     "statusInProgress": "In Progress",
     "statusNotStarted": "Not started",
-    "statusLocked": "Locked",
     "statusUnlocked": "Not started",
     "moduleNotFound": "Module not found.",
-    "moduleComplete": "Module complete! The next module is now unlocked.",
+    "moduleComplete": "Module complete! Well done.",
     "progressTitle": "Career Readiness Completion",
     "progressDescription": "Career readiness modules you have completed",
     "progressCompleted": "completed",
@@ -832,6 +831,8 @@
       "profileSection": "Profile",
       "skillsInterestsProgressTitle": "Skills & Interests Progress",
       "skillsInterestsProgressDescription": "How far you have progressed in your skills discovery conversation",
+      "moduleCompleted": "completed",
+      "moduleRemaining": "remaining",
       "moduleProgress": "Module Progress",
       "skillsDiscovered": "Skills Discovered",
       "name": "Name",
@@ -844,7 +845,10 @@
       "year": "Year",
       "notProvided": "Not provided",
       "notAvailable": "Not available",
-      "noSkillsYet": "No skills discovered yet. Start a conversation to discover your skills!"
+      "noSkillsYet": "No skills discovered yet. Start a conversation to discover your skills!",
+      "careerExplorer": "Career Explorer",
+      "noSectorsYet": "No sectors explored yet. Start the Career Explorer to explore sectors!",
+      "sectorsExplored": "You've explored {{count}} sector(s)"
     },
     "modules": {
       "skillsDiscovery": "My Skills & Interests",
@@ -882,5 +886,9 @@
     "documentNotFound": "Document not found",
     "introduction": "These are Zambia's priority sectors for TEVET graduates. Each profile gives you an overview of what the industry looks like, what roles exist, and what you can expect to earn. Explore the sectors that interest you to make more informed decisions about your career path.",
     "noDocumentsAvailable": "No documents available yet."
+  },
+  "jobMatching": {
+    "pageTitle": "Job Matching",
+    "pageDescription": "Explore real job openings and see how your skills match opportunities across Zambia."
   }
 }

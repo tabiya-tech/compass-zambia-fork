@@ -14,6 +14,28 @@ export interface InstitutionRow {
   skillsDiscoveryCompletedPct: number | null;
   careerReadinessStartedPct: number | null;
   careerReadinessCompletedPct: number | null;
+  careerExplorerStartedPct: number | null;
+}
+
+export interface InstructorDashboardStatItem {
+  id: string;
+  titleKey: string;
+  value: string | number;
+  subtitleKey?: string;
+  subtitleValues?: Record<string, string | number>;
+}
+
+export interface InstructorStudentRow {
+  id: string;
+  studentName: string;
+  programme: string;
+  year: string;
+  gender: string;
+  modulesExplored: number;
+  careerReady: string;
+  skillsInterestsExplored: number;
+  lastLogin: string;
+  lastActiveModuleId: string;
 }
 
 export interface ModuleSummaryRow {

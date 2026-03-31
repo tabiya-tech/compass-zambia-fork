@@ -50,6 +50,30 @@ class CareerExplorerConversationInput(BaseModel):
         extra = "forbid"
 
 
+class PendingSector(BaseModel):
+    sector_name: str
+    is_priority: bool
+    mentioned_at: datetime
+
+    @field_serializer("mentioned_at")
+    def _serialize_mentioned_at(self, value: datetime) -> str:
+        return value.astimezone(timezone.utc).isoformat()
+
+    @classmethod
+    @field_validator("mentioned_at", mode="before")
+    def _deserialize_mentioned_at(cls, value: str | datetime) -> datetime:
+        if isinstance(value, str):
+            dt = datetime.fromisoformat(value)
+        elif isinstance(value, datetime):
+            dt = value
+        else:
+            raise ValueError(f"Invalid datetime: {value}")
+        return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+    class Config:
+        extra = "forbid"
+
+
 class CareerExplorerConversationDocument(BaseModel):
     user_id: str
     messages: list[CareerExplorerMessage] = Field(default_factory=list)
@@ -57,6 +81,7 @@ class CareerExplorerConversationDocument(BaseModel):
     updated_at: datetime
     summary: str = ""
     num_turns_summarized: int = 0
+    pending_sectors: list[PendingSector] = Field(default_factory=list)
 
     @field_serializer("created_at", "updated_at")
     def _serialize_datetime(self, value: datetime) -> str:
@@ -82,6 +107,7 @@ class CareerExplorerConversationDocument(BaseModel):
             updated_at=d["updated_at"],
             summary=d.get("summary", ""),
             num_turns_summarized=d.get("num_turns_summarized", 0),
+            pending_sectors=[PendingSector(**ps) for ps in d.get("pending_sectors", [])],
         )
 
     class Config:

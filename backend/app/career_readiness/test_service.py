@@ -13,7 +13,6 @@ from app.career_readiness.errors import (
     ConversationAlreadyExistsError,
     ConversationNotFoundError,
     CareerReadinessModuleNotFoundError,
-    ModuleNotUnlockedError,
     QuizAlreadyPassedError,
     QuizNotAvailableError,
 )
@@ -248,7 +247,7 @@ def _make_service(
 class TestDeriveModuleStatuses:
     """Tests for the _derive_module_statuses function."""
 
-    def test_first_module_unlocked_when_no_conversations(self):
+    def test_all_modules_not_started_when_no_conversations(self):
         # GIVEN three modules and no conversations
         given_modules = [
             _make_module_config(module_id="m1", sort_order=1),
@@ -259,12 +258,12 @@ class TestDeriveModuleStatuses:
         # WHEN statuses are derived
         actual_statuses = _derive_module_statuses(given_modules, [])
 
-        # THEN the first module is UNLOCKED and the rest are NOT_STARTED
-        assert actual_statuses["m1"] == ModuleStatus.UNLOCKED
+        # THEN all modules are NOT_STARTED
+        assert actual_statuses["m1"] == ModuleStatus.NOT_STARTED
         assert actual_statuses["m2"] == ModuleStatus.NOT_STARTED
         assert actual_statuses["m3"] == ModuleStatus.NOT_STARTED
 
-    def test_second_module_unlocked_when_first_completed(self):
+    def test_modules_without_conversations_are_not_started_regardless_of_completions(self):
         # GIVEN three modules and the first one completed
         given_modules = [
             _make_module_config(module_id="m1", sort_order=1),
@@ -278,12 +277,12 @@ class TestDeriveModuleStatuses:
         # WHEN statuses are derived
         actual_statuses = _derive_module_statuses(given_modules, given_conversations)
 
-        # THEN the first is COMPLETED, second is UNLOCKED, third is NOT_STARTED
+        # THEN the first is COMPLETED, second and third are NOT_STARTED
         assert actual_statuses["m1"] == ModuleStatus.COMPLETED
-        assert actual_statuses["m2"] == ModuleStatus.UNLOCKED
+        assert actual_statuses["m2"] == ModuleStatus.NOT_STARTED
         assert actual_statuses["m3"] == ModuleStatus.NOT_STARTED
 
-    def test_chain_completion_unlocks_next(self):
+    def test_completed_modules_coexist_with_not_started_modules(self):
         # GIVEN three modules with first two completed
         given_modules = [
             _make_module_config(module_id="m1", sort_order=1),
@@ -298,12 +297,12 @@ class TestDeriveModuleStatuses:
         # WHEN statuses are derived
         actual_statuses = _derive_module_statuses(given_modules, given_conversations)
 
-        # THEN third module is UNLOCKED
+        # THEN third module is NOT_STARTED
         assert actual_statuses["m1"] == ModuleStatus.COMPLETED
         assert actual_statuses["m2"] == ModuleStatus.COMPLETED
-        assert actual_statuses["m3"] == ModuleStatus.UNLOCKED
+        assert actual_statuses["m3"] == ModuleStatus.NOT_STARTED
 
-    def test_in_progress_module_blocks_next(self):
+    def test_in_progress_module_does_not_affect_other_statuses(self):
         # GIVEN first module in progress (has conversation but quiz not passed)
         given_modules = [
             _make_module_config(module_id="m1", sort_order=1),
@@ -407,10 +406,10 @@ class TestBuildConversationContext:
 
 
 class TestListModules:
-    """Tests for listing modules with sequential unlock status."""
+    """Tests for listing modules with status derivation."""
 
     @pytest.mark.asyncio
-    async def test_first_module_unlocked_rest_not_started(self):
+    async def test_all_modules_not_started_when_no_conversations(self):
         # GIVEN a service with two modules and no conversations
         given_modules = [
             _make_module_config(module_id="m1", sort_order=1),
@@ -421,8 +420,8 @@ class TestListModules:
         # WHEN modules are listed
         actual_result = await service.list_modules("user_abc")
 
-        # THEN first is UNLOCKED, second is NOT_STARTED
-        assert actual_result.modules[0].status == ModuleStatus.UNLOCKED
+        # THEN both modules are NOT_STARTED
+        assert actual_result.modules[0].status == ModuleStatus.NOT_STARTED
         assert actual_result.modules[1].status == ModuleStatus.NOT_STARTED
 
     @pytest.mark.asyncio
@@ -453,9 +452,9 @@ class TestGetModule:
         # WHEN the module is retrieved
         actual_result = await service.get_module("user_abc", "cv-development")
 
-        # THEN the module detail is returned with UNLOCKED status
+        # THEN the module detail is returned with NOT_STARTED status
         assert actual_result.id == "cv-development"
-        assert actual_result.status == ModuleStatus.UNLOCKED
+        assert actual_result.status == ModuleStatus.NOT_STARTED
 
     @pytest.mark.asyncio
     async def test_returns_active_conversation_id(self):
@@ -530,20 +529,6 @@ class TestCreateConversation:
         # THEN CareerReadinessModuleNotFoundError is raised
         with pytest.raises(CareerReadinessModuleNotFoundError):
             await service.create_conversation("user_abc", "nonexistent")
-
-    @pytest.mark.asyncio
-    async def test_raises_not_unlocked_for_locked_module(self):
-        # GIVEN two modules where the second is locked (first not completed)
-        given_modules = [
-            _make_module_config(module_id="m1", sort_order=1),
-            _make_module_config(module_id="m2", title="Module 2", sort_order=2),
-        ]
-        service, _ = _make_service(modules=given_modules)
-
-        # WHEN a conversation is created for the locked second module
-        # THEN ModuleNotUnlockedError is raised
-        with pytest.raises(ModuleNotUnlockedError):
-            await service.create_conversation("user_abc", "m2")
 
 
 class TestSendMessage:

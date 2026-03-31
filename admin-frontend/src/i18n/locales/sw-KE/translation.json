@@ -152,6 +152,7 @@
       "completed": "Completed",
       "completedAll5": "Completed all 5",
       "returned2Plus": "Returned 2+ times",
+      "prioritySectors": "Priority sector users",
       "avgSubModulesCompleted": "Avg. sub-modules completed",
       "engagementFunnel": "Engagement funnel",
       "funnelCaption": "301 students in progress",
@@ -275,6 +276,53 @@
       "page": "Ukurasa {{page}}"
     },
     "comingSoon": "No data so far."
+  },
+  "instructorDashboard": {
+    "sectionTitle": "Instructor dashboard — monitor student engagement and progress",
+    "header": {
+      "welcome": "Welcome, {{name}}",
+      "institutionFallback": "Your Institution",
+      "defaultName": "Instructor",
+      "school": "Evelyn Hone College of Applied Art and Commerce"
+    },
+    "tabs": {
+      "ariaLabel": "Instructor dashboard tabs",
+      "students": "Students",
+      "modules": "Modules",
+      "skillsAnalytics": "Skills Analytics"
+    },
+    "stats": {
+      "totalStudentsRegistered": "Total Students Registered",
+      "activeStudents7Days": "Active Students (7 days)",
+      "activeStudents7DaysSubtitle": "{{pct}}% of registered",
+      "avgProfileStrength": "Avg Profile Strength",
+      "avgProfileStrengthSubtitle": "Up from 52% last week"
+    },
+    "studentsTable": {
+      "ariaLabel": "Instructor students table",
+      "empty": "No students match the current filters.",
+      "headers": {
+        "studentName": "Student Name",
+        "programme": "Programme",
+        "year": "Year",
+        "gender": "Gender",
+        "profileStrength": "Profile Strength",
+        "modulesExplored": "Modules Explored",
+        "careerReady": "Career Readiness",
+        "skillsInterestsExplored": "Skills & Interests Explored",
+        "prioritySectorsExplored": "Priority Sectors Explored",
+        "lastLogin": "Last Login",
+        "lastActiveModule": "Last Active Module"
+      },
+      "filters": {
+        "all": "All",
+        "searchPlaceholder": "Search...",
+        "searchAriaLabel": "Search by student name",
+        "today": "Today",
+        "thisWeek": "This week",
+        "older": "Older"
+      }
+    }
   },
   "login": {
     "title": "Admin Login",

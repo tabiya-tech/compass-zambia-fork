@@ -6,7 +6,7 @@ exports[`QuickReplyButtons render tests should render a chip for each quick repl
   data-testid="quick-reply-container-quick-reply-buttons-3f7a8b2c"
 >
   <div
-    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-15tlszv-MuiButtonBase-root-MuiChip-root"
+    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-ql0d68-MuiButtonBase-root-MuiChip-root"
     data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
     role="button"
     tabindex="0"
@@ -18,7 +18,7 @@ exports[`QuickReplyButtons render tests should render a chip for each quick repl
     </span>
   </div>
   <div
-    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-15tlszv-MuiButtonBase-root-MuiChip-root"
+    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-ql0d68-MuiButtonBase-root-MuiChip-root"
     data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
     role="button"
     tabindex="0"
@@ -30,7 +30,7 @@ exports[`QuickReplyButtons render tests should render a chip for each quick repl
     </span>
   </div>
   <div
-    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-15tlszv-MuiButtonBase-root-MuiChip-root"
+    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-ql0d68-MuiButtonBase-root-MuiChip-root"
     data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
     role="button"
     tabindex="0"

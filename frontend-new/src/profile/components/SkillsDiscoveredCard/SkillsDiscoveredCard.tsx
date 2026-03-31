@@ -17,62 +17,69 @@ export interface SkillsDiscoveredCardProps {
   isLoading: boolean;
 }
 
-/**
- * SkillsDiscoveredCard displays all unique skills discovered across conversation sessions.
- * Shows skeleton loaders while data is loading and empty state when no skills found.
- *
- * @param skills - Array of unique skills aggregated from all experiences
- * @param isLoading - Whether data is currently being loaded
- */
 export const SkillsDiscoveredCard: React.FC<SkillsDiscoveredCardProps> = ({ skills, isLoading }) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
   return (
     <Card
-      sx={{
-        border: `1px solid ${theme.palette.divider}`,
-        boxShadow: "none",
-      }}
+      sx={{ border: `1px solid ${theme.palette.divider}`, boxShadow: "none" }}
       data-testid={DATA_TEST_ID.SKILLS_CARD}
     >
       <CardContent
         sx={{
-          padding: theme.spacing(theme.tabiyaSpacing.lg),
+          padding: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+          "&:last-child": { paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) },
         }}
       >
-        <Typography
-          variant="h6"
+        <Box
           sx={{
-            marginBottom: theme.spacing(theme.tabiyaSpacing.md),
-            fontWeight: "bold",
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.sm),
           }}
-          data-testid={DATA_TEST_ID.SKILLS_TITLE}
         >
-          {t("home.profile.skillsDiscovered")}
-        </Typography>
+          <Typography
+            variant="subtitle1"
+            fontWeight="bold"
+            color="text.primary"
+            data-testid={DATA_TEST_ID.SKILLS_TITLE}
+          >
+            {t("home.profile.skillsDiscovered")}
+          </Typography>
+          {!isLoading && skills.length > 0 && (
+            <Typography variant="body2" color="text.secondary">
+              {skills.length}
+            </Typography>
+          )}
+        </Box>
 
         {isLoading ? (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: theme.spacing(theme.tabiyaSpacing.sm) }}>
-            <Skeleton variant="rectangular" width={100} height={32} sx={{ borderRadius: 16 }} />
-            <Skeleton variant="rectangular" width={120} height={32} sx={{ borderRadius: 16 }} />
-            <Skeleton variant="rectangular" width={90} height={32} sx={{ borderRadius: 16 }} />
-            <Skeleton variant="rectangular" width={110} height={32} sx={{ borderRadius: 16 }} />
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: theme.fixedSpacing(theme.tabiyaSpacing.xs) }}>
+            {[100, 80, 120, 90, 110].map((w, i) => (
+              <Skeleton
+                key={i}
+                variant="rectangular"
+                width={w}
+                height={28}
+                sx={{ borderRadius: theme.rounding(theme.tabiyaRounding.sm) }}
+              />
+            ))}
           </Box>
         ) : skills.length === 0 ? (
-          <Typography variant="body2" color="text.secondary" data-testid={DATA_TEST_ID.SKILLS_EMPTY}>
+          <Typography variant="body2" color="text.disabled" data-testid={DATA_TEST_ID.SKILLS_EMPTY}>
             {t("home.profile.noSkillsYet")}
           </Typography>
         ) : (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: theme.spacing(theme.tabiyaSpacing.sm) }}>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: theme.fixedSpacing(theme.tabiyaSpacing.xs) }}>
             {skills.map((skill, index) => (
               <Chip
                 key={skill.UUID}
                 label={skill.preferredLabel}
+                size="small"
                 data-testid={DATA_TEST_ID.SKILL_ITEM(index)}
-                sx={{
-                  borderRadius: theme.rounding(theme.tabiyaRounding.md),
-                }}
+                sx={{ borderRadius: theme.rounding(theme.tabiyaRounding.sm) }}
               />
             ))}
           </Box>

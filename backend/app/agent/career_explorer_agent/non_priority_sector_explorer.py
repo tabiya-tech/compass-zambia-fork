@@ -80,6 +80,24 @@ def _llm_input_to_contents(llm_input) -> list[types.Content]:
     return contents
 
 
+def _build_pending_sectors_section(pending_sectors: list[dict] | None) -> str:
+    if not pending_sectors:
+        return ""
+    formatted = ", ".join(s["sector_name"] for s in pending_sectors)
+    next_sector = pending_sectors[0]["sector_name"]
+    return dedent(f"""\
+
+        # Pending Sectors
+            The user has also expressed interest in these sectors (not yet explored): {formatted}
+            IMPORTANT: Do not redirect the user away from these sectors — they explicitly asked about them.
+            Acknowledge ALL of them in your first response, then explore the current sector first.
+            When the current topic reaches a natural pause (user's question has been answered, they say "ok"/"thanks",
+            or the conversation on this sector winds down), proactively transition to the next pending sector.
+            Example: "Now, you also mentioned interest in {next_sector}. Let me tell you about opportunities there..."
+            Do NOT rush — finish the current topic first, then transition naturally.
+    """)
+
+
 class NonPrioritySectorExplorer:
     def __init__(self):
         self._logger = logging.getLogger(self.__class__.__name__)
@@ -88,8 +106,13 @@ class NonPrioritySectorExplorer:
         self,
         user_input: str,
         context,
+        pending_sectors: list[dict] | None = None,
+        user_profile_context: str | None = None,
     ) -> tuple[str, bool, str, list[LLMStats], GroundingMetadata | None]:
         full_instructions = _build_non_priority_instructions()
+        full_instructions += _build_pending_sectors_section(pending_sectors)
+        if user_profile_context:
+            full_instructions = user_profile_context + "\n\n" + full_instructions
         example_response = ModelResponse(
             reasoning="The user asked about a non-priority sector, so I used Google Search to find current information and provided a substantive answer.",
             finished=False,

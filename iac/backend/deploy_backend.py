@@ -32,6 +32,9 @@ class BackendServiceConfig:
     userdata_database_name: str
     career_explorer_mongodb_uri: str
     career_explorer_database_name: str
+    jobs_mongodb_uri: str
+    jobs_database_name: str
+    jobs_collection_name: str
     vertex_api_region: str
     embeddings_service_name: str
     embeddings_model_name: str
@@ -373,6 +376,15 @@ def _deploy_cloud_run_service(
                         gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
                             name="CAREER_EXPLORER_DATABASE_NAME",
                             value=backend_service_cfg.career_explorer_database_name),
+                        gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
+                            name="JOBS_MONGODB_URI",
+                            value=backend_service_cfg.jobs_mongodb_uri),
+                        gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
+                            name="JOBS_DATABASE_NAME",
+                            value=backend_service_cfg.jobs_database_name),
+                        gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
+                            name="JOBS_COLLECTION_NAME",
+                            value=backend_service_cfg.jobs_collection_name),
                         gcp.cloudrunv2.ServiceTemplateContainerEnvArgs(
                             name="VERTEX_API_REGION",
                             value=backend_service_cfg.vertex_api_region),

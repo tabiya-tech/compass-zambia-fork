@@ -10,9 +10,11 @@ import Dashboard from "src/pages/Dashboard";
 import NotFound from "src/pages/NotFound";
 import AuthenticationStateService from "src/auth/services/AuthenticationState.service";
 import FirebaseEmailAuthenticationService from "src/auth/services/FirebaseAuthenticationService/FirebaseEmailAuthenticationService";
+import StdFirebaseAuthenticationService from "src/auth/services/FirebaseAuthenticationService/StdFirebaseAuthenticationService";
 import UserStateService from "src/userState/UserStateService";
 import { getFirebaseErrorFactory } from "src/error/FirebaseError/firebaseError";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import InstructorDashboard from "src/pages/InstructorDashboard";
 
 // Wrap the createHashRouter function with Sentry to capture errors that occur during router initialization
 const sentryCreateHashRouter = Sentry.wrapCreateBrowserRouterV6(createHashRouter);
@@ -31,6 +33,14 @@ const router = sentryCreateHashRouter([
     element: (
       <ProtectedRoute>
         <Login />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: routerPaths.INSTRUCTOR,
+    element: (
+      <ProtectedRoute>
+        <InstructorDashboard />
       </ProtectedRoute>
     ),
   },
@@ -108,7 +118,9 @@ const initializeAuth = async (): Promise<void> => {
         // Fetch and populate user state with access role
         try {
           const firebaseErrorFactory = getFirebaseErrorFactory("App", "initializeAuth");
-          const accessRole = await authService.getAccessRole(user.id, firebaseErrorFactory);
+          const firebaseUser = await StdFirebaseAuthenticationService.getInstance().getCurrentUser();
+          if (!firebaseUser) throw new Error("No current firebase user");
+          const accessRole = await authService.getAccessRole(firebaseUser, firebaseErrorFactory);
           userStateService.setUserState({
             id: user.id,
             name: user.name,

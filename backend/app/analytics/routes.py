@@ -11,6 +11,7 @@ from app.analytics.skill_gap.routes import add_skill_gap_analytics_routes
 from app.analytics.skills_discovery.routes import add_skills_discovery_analytics_routes
 from app.analytics.skills_supply.routes import add_skills_supply_analytics_routes
 from app.analytics.sector_engagement.routes import add_sector_engagement_routes
+from app.analytics.career_explorer.routes import add_career_explorer_analytics_routes
 from app.users.auth import Authentication
 
 logger = logging.getLogger(__name__)
@@ -33,4 +34,5 @@ def add_analytics_routes(app: FastAPI, auth: Authentication):
     add_skills_discovery_analytics_routes(analytics_router, auth)
     add_skills_supply_analytics_routes(analytics_router, auth)
     add_sector_engagement_routes(analytics_router, auth)
+    add_career_explorer_analytics_routes(analytics_router, auth)
     app.include_router(analytics_router)

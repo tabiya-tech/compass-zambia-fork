@@ -11,6 +11,7 @@ from app.career_explorer.types import (
     CareerExplorerConversationResponse,
     CareerExplorerMessage,
     CareerExplorerMessageSender,
+    PendingSector,
 )
 from app.server_dependencies.database_collections import Collections
 
@@ -39,6 +40,10 @@ class ICareerExplorerConversationRepository(ABC):
         summary: str,
         num_turns_summarized: int,
     ) -> None:
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def update_pending_sectors(self, user_id: str, pending_sectors: list[PendingSector]) -> None:
         raise NotImplementedError()
 
     @abstractmethod
@@ -100,6 +105,16 @@ class CareerExplorerConversationRepository(ICareerExplorerConversationRepository
             {"$set": {
                 "summary": summary,
                 "num_turns_summarized": num_turns_summarized,
+                "updated_at": now,
+            }},
+        )
+
+    async def update_pending_sectors(self, user_id: str, pending_sectors: list[PendingSector]) -> None:
+        now = datetime.now(timezone.utc)
+        await self._collection.update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "pending_sectors": [ps.model_dump() for ps in pending_sectors],
                 "updated_at": now,
             }},
         )

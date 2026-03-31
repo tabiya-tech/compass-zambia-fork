@@ -798,10 +798,9 @@
     "statusDone": "Imekamilika",
     "statusInProgress": "Inaendelea",
     "statusNotStarted": "Haijaanza",
-    "statusLocked": "Imefungwa",
     "statusUnlocked": "Haijaanza",
     "moduleNotFound": "Moduli haijapatikana.",
-    "moduleComplete": "Moduli imekamilika! Moduli inayofuata sasa inafunguliwa.",
+    "moduleComplete": "Moduli imekamilika! Umefanya vizuri.",
     "progressTitle": "Maendeleo Yako",
     "progressDescription": "Moduli za utayari wa kazi ulizokamilisha",
     "progressCompleted": "imekamilika",
@@ -849,7 +848,12 @@
       "notAvailable": "Haipatikani",
       "skillsInterestsProgressTitle": "Maendeleo ya Ujuzi na Maslahi",
       "skillsInterestsProgressDescription": "Umbali uliofika katika mazungumzo yako ya kugundua ujuzi",
-      "noSkillsYet": "Hakuna ujuzi uliogundulika bado. Anza mazungumzo ili kugundua ujuzi wako!"
+      "moduleCompleted": "imekamilika",
+      "moduleRemaining": "imebaki",
+      "noSkillsYet": "Hakuna ujuzi uliogundulika bado. Anza mazungumzo ili kugundua ujuzi wako!",
+      "careerExplorer": "Career Explorer",
+      "noSectorsYet": "Hakuna sekta zilizochunguzwa bado.",
+      "sectorsExplored": "Umechunguza sekta {{count}}"
     },
     "modules": {
       "skillsDiscovery": "Ujuzi na Mapendeleo Yangu",
@@ -882,5 +886,9 @@
     "documentNotFound": "Waraka haujapatikana",
     "introduction": "Hizi ni sekta za kipaumbele za Zambia kwa wanaomaliza TEVET. Kila wasifu unakupa muhtasari wa jinsi tasnia inavyoonekana, nafasi zilizopo, na unachoweza kutarajia kupata. Chunguza sekta zinazokuvutia ili kufanya maamuzi sahihi zaidi kuhusu njia yako ya kazi.",
     "noDocumentsAvailable": "Bado hakuna waraka zinazopatikana."
+  },
+  "jobMatching": {
+    "pageTitle": "Kuoanisha Kazi",
+    "pageDescription": "Gundua nafasi za kazi halisi na uone jinsi ujuzi wako unavyooanisha fursa nchini Zambia."
   }
 }

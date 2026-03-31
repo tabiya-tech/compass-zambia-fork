@@ -5,8 +5,8 @@ import PrimaryButton from "src/theme/PrimaryButton/PrimaryButton";
 import { ComponentError } from "src/error/commonErrors";
 
 interface SecondaryButtonProps extends ButtonProps {
-  // Add additional props specific to SecondaryButton Button here
   disableWhenOffline?: boolean;
+  showCircle?: boolean;
 }
 
 const SecondaryButton: React.FC<SecondaryButtonProps> = ({
@@ -26,12 +26,9 @@ const SecondaryButton: React.FC<SecondaryButtonProps> = ({
   return (
     // props are passed to the component last, so that they can override the default values
     <PrimaryButton
-      variant={"text"}
+      variant="outlined"
       style={style}
-      sx={{
-        color: (theme) => theme.palette.text.secondary,
-        ...sx,
-      }}
+      sx={sx}
       disabled={Boolean(disabled || (disableWhenOffline && !isOnline))}
       {...props}
     >

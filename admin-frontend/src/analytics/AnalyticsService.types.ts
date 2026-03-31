@@ -14,6 +14,23 @@ export interface InstitutionApiItem {
   skills_discovery_completed_pct: number | null;
   career_readiness_started_pct: number | null;
   career_readiness_completed_pct: number | null;
+  career_explorer_started_pct: number | null;
+}
+
+export interface StudentApiItem {
+  id: string;
+  name: string | null;
+  institution: string | null;
+  province: string | null;
+  programme: string | null;
+  year: string | null;
+  gender: string | null;
+  active: boolean;
+  modules_explored: number | null;
+  career_readiness_modules_explored: number | null;
+  skills_interests_explored: number | null;
+  last_login: string | null;
+  last_active_module: string | null;
 }
 
 export interface PaginatedResponse<T> {
@@ -82,6 +99,22 @@ export interface SkillsSupplyStatsResponse {
   top_skills: SkillSupplyEntry[];
 }
 
+export interface CareerExplorerSectorStat {
+  sector_name: string;
+  is_priority: boolean;
+  unique_users: number;
+  total_inquiries: number;
+}
+
+export interface CareerExplorerStatsResponse {
+  total_registered_students: number;
+  started: { count: number; percentage: number };
+  returned_2_plus: { count: number; percentage: number };
+  priority_sector_users: number;
+  non_priority_sector_users: number;
+  top_sectors: CareerExplorerSectorStat[];
+}
+
 export interface SkillsDiscoveryFunnelStage {
   label: string;
   count: number;
@@ -94,4 +127,23 @@ export interface SkillsDiscoveryStatsResponse {
   completed: { count: number; percentage: number };
   in_progress_count: number;
   funnel: SkillsDiscoveryFunnelStage[];
+}
+
+export interface JobApiItem {
+  title?: string;
+  employer?: string;
+  category?: string;
+  employment_type?: string;
+  location?: string;
+  posted_date?: string;
+  closing_date?: string;
+  application_url?: string;
+  source_platform?: string;
+  skills?: string[];
+}
+
+export interface JobStatsResponse {
+  total: number;
+  sectors: number;
+  platforms: number;
 }

@@ -798,10 +798,9 @@
     "statusDone": "Zatha",
     "statusInProgress": "Ikupitilira",
     "statusNotStarted": "Sinayambe",
-    "statusLocked": "Yotsekedwa",
     "statusUnlocked": "Sinayambe",
     "moduleNotFound": "Module sipinapezeke.",
-    "moduleComplete": "Module yatha! Module yotsatira tsopano yavomerezedwa.",
+    "moduleComplete": "Module yatha! Mwachita bwino.",
     "progressTitle": "Kupita Kwanu",
     "progressDescription": "Maphunziro a kukonzekera ntchito amene mwathera",
     "progressCompleted": "zachitika",
@@ -849,7 +848,12 @@
       "notAvailable": "Sichipezeka",
       "skillsInterestsProgressTitle": "Kupita kwa Luso ndi Zokonda",
       "skillsInterestsProgressDescription": "Motali mwafika m'kukambirana kwanu kwa kupeza luso",
-      "noSkillsYet": "Palibe luso lopezeka mpaka pano. Yambani kukambirana kuti mupeze luso lanu!"
+      "moduleCompleted": "yathera",
+      "moduleRemaining": "yotsala",
+      "noSkillsYet": "Palibe luso lopezeka mpaka pano. Yambani kukambirana kuti mupeze luso lanu!",
+      "careerExplorer": "Career Explorer",
+      "noSectorsYet": "Palibe gawo lopezeka mpaka pano.",
+      "sectorsExplored": "Mwafufuza magawo {{count}}"
     },
     "modules": {
       "skillsDiscovery": "Luso ndi Zomwe Ndimakonda",
@@ -882,5 +886,9 @@
     "documentNotFound": "Chikalata sichinapezeke",
     "introduction": "Awa ndi magawo ofunikira a Zambia kwa omaliza maphunziro a TEVET. Mbiri iliyonse ikukupatsani chiwonetsero cha momwe makampaniwo akuwonekera, ntchito zomwe zilipo, ndi zomwe mungayembekezere kupeza. Fufuzani magawo omwe amakusangalatsani kuti mupange zisankho zanzeru pa njira yanu ya ntchito.",
     "noDocumentsAvailable": "Palibe zikalata zomwe zilipo pakadali pano."
+  },
+  "jobMatching": {
+    "pageTitle": "Kufunana Ntchito",
+    "pageDescription": "Onani mwayi wa ntchito zenizeni ndikuona momwe luso lanu likugwirizana ndi mwayi uzambezi."
   }
 }

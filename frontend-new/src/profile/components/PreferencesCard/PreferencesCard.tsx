@@ -16,38 +16,26 @@ export interface PreferencesCardProps {
   isLoading: boolean;
 }
 
-/**
- * PreferencesCard displays user preferences (language and terms acceptance date).
- * Shows skeleton loaders while data is loading.
- *
- * @param language - User's preferred language
- * @param acceptedTcDate - Date when user accepted terms and conditions
- * @param isLoading - Whether data is currently being loaded
- */
 export const PreferencesCard: React.FC<PreferencesCardProps> = ({ language, acceptedTcDate, isLoading }) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
   return (
     <Card
-      sx={{
-        border: `1px solid ${theme.palette.divider}`,
-        boxShadow: "none",
-        width: "100%",
-      }}
+      sx={{ border: `1px solid ${theme.palette.divider}`, boxShadow: "none", width: "100%" }}
       data-testid={DATA_TEST_ID.PREFERENCES_CARD}
     >
       <CardContent
         sx={{
-          padding: theme.spacing(theme.tabiyaSpacing.lg),
+          padding: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+          "&:last-child": { paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg) },
         }}
       >
         <Typography
-          variant="h6"
-          sx={{
-            marginBottom: theme.spacing(theme.tabiyaSpacing.md),
-            fontWeight: "bold",
-          }}
+          variant="subtitle1"
+          fontWeight="bold"
+          color="text.primary"
+          sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.sm) }}
           data-testid={DATA_TEST_ID.PREFERENCES_TITLE}
         >
           {t("home.profile.preferences")}
@@ -55,15 +43,19 @@ export const PreferencesCard: React.FC<PreferencesCardProps> = ({ language, acce
 
         {isLoading ? (
           <>
-            <Fieldset label={t("home.profile.language")} isLoading={true} />
-            <Fieldset label={t("home.profile.termsAccepted")} isLoading={true} />
+            <Fieldset label={t("home.profile.language")} isLoading />
+            <Fieldset label={t("home.profile.termsAccepted")} isLoading />
           </>
         ) : (
           <>
             <Fieldset label={t("home.profile.language")} value={language || t("home.profile.notAvailable")} />
             <Fieldset
               label={t("home.profile.termsAccepted")}
-              value={acceptedTcDate ? new Date(acceptedTcDate).toLocaleString() : t("home.profile.notAvailable")}
+              value={
+                acceptedTcDate
+                  ? new Date(acceptedTcDate).toLocaleDateString(undefined, { dateStyle: "medium" })
+                  : t("home.profile.notAvailable")
+              }
             />
           </>
         )}

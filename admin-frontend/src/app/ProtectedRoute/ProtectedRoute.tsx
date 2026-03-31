@@ -3,6 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 
 import { routerPaths } from "src/app/routerPaths";
 import AuthenticationStateService from "src/auth/services/AuthenticationState.service";
+import UserStateService from "src/userState/UserStateService";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -15,14 +16,16 @@ interface ProtectedRouteProps {
  */
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const user = AuthenticationStateService.getInstance().getUser();
+  const userStateService = UserStateService.getInstance();
   const targetPath = useLocation().pathname;
+  const homePath = userStateService.isInstitutionStaff() ? routerPaths.INSTRUCTOR : routerPaths.ROOT;
 
   // If on login page
   if (targetPath === routerPaths.LOGIN) {
     // If already authenticated, redirect to root
     if (user) {
-      console.debug("redirecting from /login --> / because user is authenticated");
-      return <Navigate to={routerPaths.ROOT} replace />;
+      console.debug(`redirecting from /login --> ${homePath} because user is authenticated`);
+      return <Navigate to={homePath} replace />;
     }
     // Otherwise, show login page
     console.debug("showing login page because no user");
@@ -33,6 +36,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (!user) {
     console.debug(`redirecting from ${targetPath} --> /login because no user`);
     return <Navigate to={routerPaths.LOGIN} replace />;
+  }
+
+  // Keep institution staff on the instructor dashboard route.
+  if (targetPath === routerPaths.ROOT && userStateService.isInstitutionStaff()) {
+    console.debug(`redirecting from / --> ${routerPaths.INSTRUCTOR} for institution staff`);
+    return <Navigate to={routerPaths.INSTRUCTOR} replace />;
   }
 
   // User is authenticated, show the page

@@ -162,6 +162,8 @@ if not os.getenv('CAREER_EXPLORER_MONGODB_URI'):
     raise ValueError("Mandatory CAREER_EXPLORER_MONGODB_URI env variable is not set!")
 if not os.getenv("CAREER_EXPLORER_DATABASE_NAME"):
     raise ValueError("Mandatory CAREER_EXPLORER_DATABASE_NAME environment variable is not set")
+if not os.getenv('JOBS_MONGODB_URI'):
+    raise ValueError("Mandatory JOBS_MONGODB_URI env variable is not set!")
 if not os.getenv('TAXONOMY_MODEL_ID'):
     raise ValueError("Mandatory TAXONOMY_MODEL_ID env variable is not set!")
 if not os.getenv("EMBEDDINGS_SERVICE_NAME"):
@@ -280,6 +282,7 @@ async def lifespan(_app: FastAPI):
     userdata_db = await CompassDBProvider.get_userdata_db()
     metrics_db = await CompassDBProvider.get_metrics_db()
     career_explorer_db = await CompassDBProvider.get_career_explorer_db()
+    jobs_db = await CompassDBProvider.get_jobs_db()
 
     app_cfg = get_application_config()
     # Initialize the MongoDB databases
@@ -320,6 +323,7 @@ async def lifespan(_app: FastAPI):
     taxonomy_db.client.close()
     metrics_db.client.close()
     career_explorer_db.client.close()
+    jobs_db.client.close()
 
     logger.info("Shutting down completed.")
     # noinspection PyUnresolvedReferences
@@ -409,7 +413,6 @@ add_user_invitations_routes(app)
 
 ############################################
 # Add the jobs routes
-# TODO: added under the aassumption that jobs will be a top level route, if not, move to appropriate place
 ############################################
 add_jobs_routes(app)
 

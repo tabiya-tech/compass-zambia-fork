@@ -47,8 +47,7 @@ const DEFAULT_MODULES: Module[] = [
     id: "job_matching",
     labelKey: "home.modules.jobMatching",
     descriptionKey: "home.modules.jobMatchingDesc",
-    route: routerPaths.SKILLS_INTERESTS,
-    disabled: true,
+    route: routerPaths.JOB_MATCHING,
   },
 ];
 

@@ -1,3 +1,4 @@
+import firebase from "firebase/compat/app";
 import { firebaseAuth } from "src/auth/firebaseConfig";
 import {
   castToFirebaseError,
@@ -66,8 +67,8 @@ class FirebaseEmailAuthenticationService extends AuthenticationService {
       throw firebaseErrorFactory(FirebaseErrorCodes.USER_NOT_FOUND, "User not found", {});
     }
 
-    // Verify the user has access enabled and get the access role
-    const profile = await this.stdFirebaseAuthServiceInstance.getProfile(userCredential.user.uid, firebaseErrorFactory);
+    // Verify the user has access enabled and get the access role from token custom claims
+    const profile = await this.stdFirebaseAuthServiceInstance.getProfile(userCredential.user, firebaseErrorFactory);
 
     // Get the ID token
     const token = await userCredential.user.getIdToken();
@@ -100,13 +101,13 @@ class FirebaseEmailAuthenticationService extends AuthenticationService {
   }
 
   /**
-   * Fetches the user's access role from Firestore.
-   * @param userId - The user's ID.
+   * Fetches the user's access role from their token custom claims.
+   * @param firebaseUser - The Firebase user object.
    * @param errorFactory - Factory function to create FirebaseError instances.
    * @returns The user's access role.
    */
-  async getAccessRole(userId: string, errorFactory: FirebaseErrorFactory): Promise<AccessRole> {
-    return this.stdFirebaseAuthServiceInstance.getProfile(userId, errorFactory);
+  async getAccessRole(firebaseUser: firebase.User, errorFactory: FirebaseErrorFactory): Promise<AccessRole> {
+    return this.stdFirebaseAuthServiceInstance.getProfile(firebaseUser, errorFactory);
   }
 
   /**
