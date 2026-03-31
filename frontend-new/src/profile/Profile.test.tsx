@@ -74,6 +74,7 @@ const getDefaultProps = (overrides?: Partial<ProfileProps>): ProfileProps => ({
   program: null,
   year: null,
   skills: [],
+  educationSkills: [],
   modules: [],
   skillsInterestsProgress: 0,
   careerExplorerSectors: [],
@@ -139,6 +140,7 @@ describe("Profile Component", () => {
       expect(SkillsDiscoveredCard).toHaveBeenCalledWith(
         {
           skills: [],
+          educationSkills: [],
           isLoading: false,
         },
         expect.anything()

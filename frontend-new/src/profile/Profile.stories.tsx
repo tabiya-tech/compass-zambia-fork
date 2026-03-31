@@ -59,6 +59,22 @@ const createProfileState = (overrides?: Partial<ProfileProps>): ProfileProps => 
         orderIndex: 2,
       },
     ],
+    educationSkills: [
+      {
+        UUID: "e1",
+        preferredLabel: "Technical Drawing",
+        description: "Engineering drawing skills",
+        altLabels: [],
+        orderIndex: 0,
+      },
+      {
+        UUID: "e2",
+        preferredLabel: "Mathematics",
+        description: "Applied mathematics",
+        altLabels: ["Maths"],
+        orderIndex: 1,
+      },
+    ],
     modules: [
       makeModule("skills_discovery", "COMPLETED"),
       makeModule("career_discovery", "IN_PROGRESS"),

@@ -906,6 +906,9 @@
       "notProvided": "Not provided",
       "notAvailable": "Not available",
       "noSkillsYet": "No skills discovered yet. Start a conversation to discover your skills!",
+      "workSkills": "Work & Other Skills",
+      "educationSkills": "Education Skills",
+      "noEducationSkillsYet": "No education skills discovered yet.",
       "careerExplorer": "Career Paths",
       "noSectorsYet": "No sectors explored yet. Start the Career Explorer to explore sectors!",
       "sectorsExplored": "You've explored {{count}} sector(s)"

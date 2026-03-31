@@ -20,6 +20,7 @@ export interface UserProfileData {
   program: string | null;
   year: string | null;
   skills: Skill[];
+  educationSkills: Skill[];
   modules: ModuleSummary[];
   skillsInterestsProgress: number;
   careerExplorerSectors: UserSectorEngagementItem[];
@@ -78,6 +79,7 @@ export const useUserProfile = (): UseUserProfileResult => {
   const [isLoadingModules, setIsLoadingModules] = useState(true);
   const [isLoadingCareerExplorer, setIsLoadingCareerExplorer] = useState(true);
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [educationSkills, setEducationSkills] = useState<Skill[]>([]);
   const [modules, setModules] = useState<ModuleSummary[]>([]);
   const [skillsInterestsProgress, setSkillsInterestsProgress] = useState<number>(0);
   const [careerExplorerSectors, setCareerExplorerSectors] = useState<UserSectorEngagementItem[]>([]);
@@ -193,7 +195,8 @@ export const useUserProfile = (): UseUserProfileResult => {
         setErrors((prev) => ({ ...prev, skills: null }));
 
         const skillsData = await fetchSkills();
-        setSkills(skillsData);
+        setSkills(skillsData.workSkills);
+        setEducationSkills(skillsData.educationSkills);
       } catch (error) {
         console.error("Error fetching skills:", error);
         setErrors((prev) => ({ ...prev, skills: error as Error }));
@@ -270,6 +273,7 @@ export const useUserProfile = (): UseUserProfileResult => {
     program: personalData.program,
     year: personalData.year,
     skills,
+    educationSkills,
     modules,
     skillsInterestsProgress,
     careerExplorerSectors,
