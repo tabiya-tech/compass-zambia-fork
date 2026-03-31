@@ -912,6 +912,9 @@
       "moduleCompleted": "yathera",
       "moduleRemaining": "yotsala",
       "noSkillsYet": "Palibe luso lopezeka mpaka pano. Yambani kukambirana kuti mupeze luso lanu!",
+      "workSkills": "Luso la Ntchito ndi Lina",
+      "educationSkills": "Luso la Maphunziro",
+      "noEducationSkillsYet": "Palibe luso la maphunziro lopezeka mpaka pano.",
       "careerExplorer": "Njira za ntchito",
       "noSectorsYet": "Palibe gawo lopezeka mpaka pano.",
       "sectorsExplored": "Mwafufuza magawo {{count}}"

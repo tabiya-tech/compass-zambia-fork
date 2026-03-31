@@ -912,6 +912,9 @@
       "moduleCompleted": "completado",
       "moduleRemaining": "restante",
       "noSkillsYet": "¡Aún no se han descubierto habilidades. Comienza una conversación para descubrir tus habilidades!",
+      "workSkills": "Habilidades laborales y otras",
+      "educationSkills": "Habilidades educativas",
+      "noEducationSkillsYet": "Aún no se han descubierto habilidades educativas.",
       "careerExplorer": "Rutas profesionales",
       "noSectorsYet": "Aún no se han explorado sectores.",
       "sectorsExplored": "Has explorado {{count}} sector(es)"
