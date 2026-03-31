@@ -912,6 +912,9 @@
       "moduleCompleted": "imekamilika",
       "moduleRemaining": "imebaki",
       "noSkillsYet": "Hakuna ujuzi uliogundulika bado. Anza mazungumzo ili kugundua ujuzi wako!",
+      "workSkills": "Ujuzi wa Kazi na Mengineyo",
+      "educationSkills": "Ujuzi wa Elimu",
+      "noEducationSkillsYet": "Hakuna ujuzi wa elimu uliogundulika bado.",
       "careerExplorer": "Njia za kazi",
       "noSectorsYet": "Hakuna sekta zilizochunguzwa bado.",
       "sectorsExplored": "Umechunguza sekta {{count}}"
