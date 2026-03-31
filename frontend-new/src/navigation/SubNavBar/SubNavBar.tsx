@@ -77,7 +77,7 @@ const SubNavBar: React.FC<SubNavBarProps> = ({
         backgroundColor: bgColor,
         color: textColor,
         borderTop: `1px solid ${theme.palette.common.white}33`,
-        paddingX: theme.spacing(isMobile ? theme.tabiyaSpacing.sm : theme.tabiyaSpacing.md),
+        paddingX: "var(--layout-gutter-x)",
         paddingTop: theme.spacing(theme.tabiyaSpacing.sm),
         paddingBottom: theme.spacing(theme.tabiyaSpacing.sm),
       }}

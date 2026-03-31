@@ -96,8 +96,7 @@ const CareerReadinessModule: React.FC = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
-        overflow: "hidden",
+        minHeight: "100vh",
         backgroundColor: theme.palette.containerBackground.light,
       }}
       data-testid={DATA_TEST_ID.CAREER_READINESS_MODULE_CONTAINER}

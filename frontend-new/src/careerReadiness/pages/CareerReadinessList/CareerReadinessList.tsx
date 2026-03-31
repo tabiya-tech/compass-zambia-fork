@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
-import type { Theme } from "@mui/material/styles";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import type { ModuleSummary } from "src/careerReadiness/types";
 import Footer from "src/home/components/Footer/Footer";
@@ -24,7 +23,6 @@ const CareerReadinessList: React.FC = () => {
   const theme = useTheme();
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   const [modules, setModules] = useState<ModuleSummary[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -68,6 +66,7 @@ const CareerReadinessList: React.FC = () => {
           sx={{
             width: { xs: "100%", md: "60%" },
             display: "flex",
+            flexDirection: { xs: "column", md: "row" },
             alignItems: "stretch",
           }}
         >
@@ -106,7 +105,14 @@ const CareerReadinessList: React.FC = () => {
             </Box>
           </Box>
 
-          {!isMobile && <HomeSidebar />}
+          <Box
+            sx={{
+              width: { xs: "100%", md: 320 },
+              flexShrink: 0,
+            }}
+          >
+            <HomeSidebar />
+          </Box>
         </Box>
       </Box>
 
