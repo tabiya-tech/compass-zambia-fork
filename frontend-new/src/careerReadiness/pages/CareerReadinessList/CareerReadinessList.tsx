@@ -64,10 +64,11 @@ const CareerReadinessList: React.FC = () => {
       >
         <Box
           sx={{
-            width: { xs: "100%", md: "60%" },
+            width: { xs: "100%", md: "90%" },
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
             alignItems: "stretch",
+            gap: theme.fixedSpacing(theme.tabiyaSpacing.lg * 2),
           }}
         >
           <Box
@@ -81,11 +82,12 @@ const CareerReadinessList: React.FC = () => {
           >
             <Typography
               sx={{
-                ...theme.typography.caption,
-                fontWeight: 600,
+                ...theme.typography.h2,
+                fontWeight: 700,
+                fontSize: "1.5rem",
+                lineHeight: 0.9,
+                letterSpacing: "-0.02em",
                 color: theme.palette.text.secondary,
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
                 marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.sm),
               }}
             >
@@ -111,11 +113,10 @@ const CareerReadinessList: React.FC = () => {
               flexShrink: 0,
             }}
           >
-            <HomeSidebar />
+            <HomeSidebar showViewCvButton={false} />
           </Box>
         </Box>
       </Box>
-
       <Footer sx={{ backgroundColor: theme.palette.containerBackground.main }} />
     </Box>
   );

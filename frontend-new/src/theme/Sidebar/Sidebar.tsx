@@ -10,7 +10,7 @@ export const DATA_TEST_ID = {
 };
 
 export interface SidebarProps {
-  title: React.ReactNode;
+  title?: React.ReactNode;
   children: React.ReactNode;
   width?: number | string;
 }
@@ -34,20 +34,22 @@ const Sidebar: React.FC<SidebarProps> = ({ title, children, width = 280 }) => {
         borderLeft: "none",
         overflowY: "auto",
         padding: `${theme.fixedSpacing(theme.tabiyaSpacing.md * 1.125)} ${theme.fixedSpacing(theme.tabiyaSpacing.md)}`,
-        gap: theme.fixedSpacing(theme.tabiyaSpacing.md * 1.25),
+        gap: theme.fixedSpacing(theme.tabiyaSpacing.lg * 1.25),
       }}
     >
-      <Box
-        data-testid={DATA_TEST_ID.SIDEBAR_TITLE}
-        sx={{
-          ...theme.typography.body2,
-          fontWeight: 700,
-          color: theme.palette.common.black,
-          letterSpacing: "0.01em",
-        }}
-      >
-        {title}
-      </Box>
+      {title && (
+        <Box
+          data-testid={DATA_TEST_ID.SIDEBAR_TITLE}
+          sx={{
+            ...theme.typography.body2,
+            fontWeight: 700,
+            color: theme.palette.common.black,
+            letterSpacing: "0.01em",
+          }}
+        >
+          {title}
+        </Box>
+      )}
       <Box
         data-testid={DATA_TEST_ID.SIDEBAR_CONTENT}
         sx={{ display: "flex", flexDirection: "column", gap: theme.fixedSpacing(theme.tabiyaSpacing.md * 1.25) }}

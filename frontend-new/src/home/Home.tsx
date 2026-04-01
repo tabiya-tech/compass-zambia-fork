@@ -89,6 +89,8 @@ const Home: React.FC = () => {
         >
           <Box
             sx={{
+              width: { xs: "100%", md: "90%" },
+              mx: { md: "auto" },
               display: "flex",
               flexDirection: { xs: "column", md: "row" },
               alignItems: "flex-start",
