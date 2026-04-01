@@ -1,0 +1,111 @@
+import React, { startTransition } from "react";
+import { Box, Typography, useTheme } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { mapModuleStatusToDisplay } from "src/careerReadiness/types";
+import type { ModuleSummary } from "src/careerReadiness/types";
+import { routerPaths } from "src/app/routerPaths";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PrimaryButton from "src/theme/PrimaryButton/PrimaryButton";
+
+const uniqueId = "c3d4e5f6-a7b8-9012-cdef-123456789012";
+
+export const DATA_TEST_ID = {
+  MODULE_ROW: `module-row-${uniqueId}`,
+};
+
+export interface ModuleRowProps {
+  module: ModuleSummary;
+  index: number;
+}
+
+const ModuleRow: React.FC<ModuleRowProps> = ({ module, index }) => {
+  const theme = useTheme();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const status = mapModuleStatusToDisplay(module.status);
+  const isActive = status === "in_progress";
+  const isDone = status === "done";
+
+  const handleClick = () => {
+    startTransition(() => {
+      navigate(`${routerPaths.CAREER_READINESS}/${module.id}`);
+    });
+  };
+
+  const pillSx = {
+    fontSize: theme.typography.caption.fontSize,
+    padding: `${theme.fixedSpacing(theme.tabiyaSpacing.xs)} ${theme.fixedSpacing(theme.tabiyaSpacing.sm)}`,
+    flexShrink: 0,
+    lineHeight: 1.2,
+  };
+
+  return (
+    <Box
+      data-testid={DATA_TEST_ID.MODULE_ROW}
+      onClick={handleClick}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: theme.fixedSpacing(theme.tabiyaSpacing.md),
+        paddingY: theme.fixedSpacing(theme.tabiyaSpacing.sm),
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        cursor: "pointer",
+        "&:last-child": { borderBottom: "none" },
+        "&:hover": { opacity: 0.8 },
+      }}
+    >
+      <Box
+        sx={{
+          width: theme.fixedSpacing(theme.tabiyaSpacing.md * 1.75),
+          height: theme.fixedSpacing(theme.tabiyaSpacing.md * 1.75),
+          borderRadius: "50%",
+          border: `2px solid ${theme.palette.careerReadiness.main}`,
+          backgroundColor: isDone ? theme.palette.careerReadiness.main : "transparent",
+          color: isDone ? theme.palette.common.white : theme.palette.careerReadiness.main,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          ...theme.typography.caption,
+          fontWeight: 700,
+        }}
+      >
+        {index + 1}
+      </Box>
+
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography variant="body2" fontWeight={isActive ? 700 : 400} color="text.primary">
+          {module.title}
+        </Typography>
+        {isActive && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: theme.fixedSpacing(theme.tabiyaSpacing.xxs),
+              marginTop: theme.fixedSpacing(theme.tabiyaSpacing.xxs),
+            }}
+          >
+            <AccessTimeIcon sx={{ fontSize: 12, color: theme.palette.text.secondary }} />
+            <Typography sx={{ ...theme.typography.caption, color: theme.palette.text.secondary }}>
+              {t("careerReadiness.takes30Min")}
+            </Typography>
+          </Box>
+        )}
+      </Box>
+
+      {isActive ? (
+        <PrimaryButton color="brandAction" sx={pillSx}>
+          {t("careerReadiness.continue")} →
+        </PrimaryButton>
+      ) : !isDone ? (
+        <PrimaryButton variant="outlined" color="primary" sx={pillSx}>
+          {t("careerReadiness.chat")}
+        </PrimaryButton>
+      ) : null}
+    </Box>
+  );
+};
+
+export default ModuleRow;
