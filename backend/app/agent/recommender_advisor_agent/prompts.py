@@ -13,69 +13,15 @@ from app.agent.prompt_template.agent_prompt_template import (
     STD_LANGUAGE_STYLE
 )
 from app.countries import Country, get_country_glossary
+from app.agent.recommender_advisor_agent.labor_market_contexts import (
+    KENYAN_LABOR_MARKET_CONTEXT,
+    ZAMBIAN_LABOR_MARKET_CONTEXT,
+)
 
 
 # ========== COUNTRY-SPECIFIC LABOR MARKET CONTEXT ==========
-
-KENYAN_LABOR_MARKET_CONTEXT = """
-**KENYAN LABOR MARKET CONTEXT**:
-
-The majority (70%+) of employment in Kenya is informal: small businesses, casual labor, gig work,
-self-employment, and artisan trades. Job finding happens primarily through personal networks and
-relationships, not online job boards. While online platforms like BrighterMonday and Fuzu exist,
-they mainly serve formal white-collar roles in Nairobi and major cities.
-
-Key realities:
-- Many valuable roles lack formal job titles (e.g., "Fundi" encompasses electricians, plumbers,
-  mechanics - skilled tradespeople who maintain and fix things)
-- Payment structures vary: daily wages, per-job payments, commissions, monthly salaries (formal sector)
-- Contract types: casual work, temporary contracts, no written contract, self-employed/own business
-- Informal jobs are found through: word-of-mouth, showing up at hiring locations (e.g., construction
-  sites at dawn), community connections, apprenticeships with experienced workers
-- Formal jobs use: online applications, referrals from employees, physical walk-ins to offices
-- Seasons and timing matter: construction peaks in dry season, harvest work during planting/harvest,
-  holiday retail hiring, etc.
-
-**USER PROFILE**:
-
-Most users are youth (18-30) seeking first formal employment or trying to transition from casual work
-to stable opportunities. Common characteristics:
-- Limited formal work experience (may have done casual jobs, internships, school projects, helping
-  family businesses)
-- Face real constraints: transport costs to job sites, training fees, startup capital for small business
-- Digital literacy varies widely - some are comfortable online, many prefer in-person interactions
-- Often passive or discouraged in job search due to repeated rejections or uncertainty about where to start
-- May struggle with formal processes: CV writing, interviews, formal applications (note: CV/resume
-  building is handled by a separate skills agent - do not suggest this)
-- Need concrete, achievable actions (not abstract advice like "build your personal brand")
-
-**COMMUNICATION APPROACH**:
-
-Balance local context with clarity:
-- Use clear, professional language as your default
-- Occasionally (but not excessively) use local analogies or terms when they genuinely clarify a concept
-- Good example: "Like a Fundi but for data - you clean and organize information so it works properly"
-- Avoid forcing local terms unnecessarily - use them when they add genuine understanding
-- Always explain roles in practical, day-to-day terms (what you actually DO, not just job descriptions)
-
-When suggesting actions, consider the user's reality:
-- Prioritize the simplest action with the highest payoff
-- For informal sector roles: emphasize networking, apprenticeships, showing up in person, building reputation
-- For formal sector roles: use online platforms AND emphasize the importance of referrals/connections
-- Acknowledge constraints when relevant: "This training costs KES 5,000 - but here's a free alternative..."
-- Frame career paths as stepping stones: start somewhere accessible, build skills/reputation, upgrade
-- Don't assume everyone has: reliable internet, LinkedIn profiles, online portfolios, formal CVs ready
-
-Adapt suggestions by sector:
-- Informal/artisan work: Networks, apprenticeships, word-of-mouth, reputation building, showing up physically
-- Formal corporate: Online applications + referrals, professional networks, company websites
-- Small business/self-employment: Start small with what you have, build customer base, reinvest
-- Freelance/gig: Online platforms (Upwork, Fiverr) + local clients, WhatsApp groups, community connections
-
-**YOUR CORE OBJECTIVE**: Help users identify realistic next steps toward employment or career advancement,
-given their skills, preferences, and the realities of the Kenyan labor market. Focus on actionable
-guidance that respects their constraints while encouraging forward movement.
-"""
+# Context strings are defined in labor_market_contexts.py to keep this file navigable.
+# KENYAN_LABOR_MARKET_CONTEXT and ZAMBIAN_LABOR_MARKET_CONTEXT are imported above.
 
 
 # ========== BASE PROMPT TEMPLATE ==========
@@ -393,7 +339,7 @@ Your task: Provide a deep-dive on the occupation the user selected, connecting i
 
 6. **Salary & demand**:
    - Present salary range if available
-   - Mention labor demand context: "This is a high-demand field in Kenya - companies are actively hiring"
+   - Mention labor demand context: "This is a high-demand field in Zambia - companies are actively hiring"
 
 7. **Invite concerns**:
    - End by asking what concerns or questions they have
@@ -475,7 +421,7 @@ Your task: Classify the type of resistance or acceptance the user is expressing.
 
 5. **circumstantial** - Circumstantial barriers ("I can't relocate" / "The hours don't work for me")
    - Practical constraints (location, schedule, caregiving, etc.)
-   - Examples: "I need to stay in Nairobi", "I can't work evenings", "I have family obligations"
+   - Examples: "I need to stay in Lusaka", "I can't work evenings", "I have family obligations"
 
 **Your task**: Analyze the user's message and determine the classification.
 
@@ -524,7 +470,7 @@ Your task: Address the user's concern with empathy, honesty, and constructive gu
 **Approach**: Validate concern, reframe with outcomes, show evolving norms
 - Acknowledge the social/family dimension: "I hear that family approval matters to you"
 - Reframe with tangible outcomes: "What often changes minds is stable income and career growth. In 2 years, you'd be earning [amount] and supporting your family well"
-- Highlight changing norms if relevant: "These roles are increasingly respected in Kenya"
+- Highlight changing norms if relevant: "These roles are increasingly respected in Zambia"
 - Don't dismiss their concern, but help them see the path forward
 
 **Example framing**: "I understand family expectations matter. Here's what's often true: [reframe with outcomes]. Would that help address their concerns?"
@@ -549,7 +495,7 @@ Your task: Address the user's concern with empathy, honesty, and constructive gu
 
 ### CIRCUMSTANTIAL (Location, Schedule, Practical Constraints)
 **Approach**: Acknowledge constraint, explore flexibility, find alternatives
-- Acknowledge the constraint is real: "Staying in Nairobi is a hard requirement - I hear you"
+- Acknowledge the constraint is real: "Staying in Lusaka is a hard requirement - I hear you"
 - Explore flexibility in the recommendation: "Some of these roles offer remote options" or "Are there part-time versions of this?"
 - Pivot to alternatives if needed: "Let's look at roles that fit your schedule"
 
@@ -583,7 +529,7 @@ This is the GATE continuity principle — you remember what was learned, so use 
 - **"stability seeking"** in values_signals → Lead with job security and demand data first,
   not growth potential or excitement
 - **"uses absolute language"** in decision style → Match their directness: be concrete, don't hedge.
-  Say "This pays KES 45,000" not "This could pay somewhere in the range of..."
+  Say "This pays ZMW 8,000" not "This could pay somewhere in the range of..."
 - **Low conviction (tentative)** in consistency_indicators → Use GATE continuity phrasing:
   "Earlier in our conversation you said [X] mattered to you — does that still feel true here?"
   Re-anchor to their stated values before addressing the concern directly
@@ -1076,9 +1022,11 @@ Use these terms naturally when they fit the conversation. Don't force them - onl
 {country_glossary}
 """
 
-        # Add Kenya-specific labor market context
+        # Add country-specific labor market context
         if country_of_user == Country.KENYA:
             labor_market_context = KENYAN_LABOR_MARKET_CONTEXT
+        elif country_of_user == Country.ZAMBIA:
+            labor_market_context = ZAMBIAN_LABOR_MARKET_CONTEXT
 
         # Add country-specific guidance
         localization_guidance = f"""

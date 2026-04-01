@@ -228,7 +228,7 @@ class OccupationRecommendation(BaseModel):
     rank: int = Field(ge=1, description="Ranking (1 = best match)")
 
     # Occupation identification
-    occupation_id: str = Field(description="ESCO/KeSCO occupation ID")
+    occupation_id: str = Field(description="ESCO occupation ID")
     occupation_code: str = Field(description="Occupation code (e.g., '2512')")
     occupation: str = Field(description="Occupation title (e.g., 'Data Analyst')")
 
@@ -277,7 +277,7 @@ class OccupationRecommendation(BaseModel):
     )
     salary_range: Optional[str] = Field(
         default=None,
-        description="Typical salary range (e.g., 'KES 60,000-120,000/month')"
+        description="Typical salary range (e.g., 'ZMW 8,000-18,000/month')"
     )
 
     class Config:
@@ -367,7 +367,7 @@ class OpportunityRecommendation(BaseModel):
         description="Job title (e.g., 'Senior Python Developer')"
     )
     location: str = Field(
-        description="Location (e.g., 'Nairobi' or 'Remote')"
+        description="Location (e.g., 'Lusaka' or 'Remote')"
     )
 
     # Eligibility and scoring (Jasmin's format)
@@ -489,11 +489,11 @@ class SkillsTrainingRecommendation(BaseModel):
     )
     cost: Optional[str] = Field(
         default=None,
-        description="Cost (e.g., 'Free', 'KES 5,000')"
+        description="Cost (e.g., 'Free', 'ZMW 500')"
     )
     location: Optional[str] = Field(
         default=None,
-        description="Location (e.g., 'Online', 'Nairobi')"
+        description="Location (e.g., 'Online', 'Lusaka')"
     )
     delivery_mode: Optional[Literal["online", "in_person", "hybrid"]] = Field(
         default=None,

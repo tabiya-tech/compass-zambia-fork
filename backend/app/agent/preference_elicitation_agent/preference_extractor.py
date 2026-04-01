@@ -159,12 +159,12 @@ _EXTRACTION_SYSTEM_INSTRUCTIONS = """
     - suggested_follow_up (string): A follow-up question if clarification would help, or empty string
 
 #Example Input and Output
-    User chose Option A (remote job at KES 50,000/month) over Option B (office job at KES 70,000/month with 1.5 hour commute).
+    User chose Option A (remote job at ZMW 8,000/month) over Option B (office job at ZMW 11,000/month with 1.5 hour commute).
     User said: "I'd choose the remote job. Commuting 1.5 hours each way would be exhausting and expensive."
 
     Correct output:
     {
-      "reasoning": "User explicitly values avoiding long commute over higher salary. Willing to sacrifice KES 20,000/month (29% pay cut) to work remotely. Strong signal about commute intolerance and high value of remote work. The financial trade-off suggests financial compensation is important but not the top priority (moderate importance ~0.6). Commute tolerance appears very low (~30 minutes max).",
+      "reasoning": "User explicitly values avoiding long commute over higher salary. Willing to sacrifice ZMW 3,000/month (27% pay cut) to work remotely. Strong signal about commute intolerance and high value of remote work. The financial trade-off suggests financial compensation is important but not the top priority (moderate importance ~0.6). Commute tolerance appears very low (~30 minutes max).",
       "chosen_option_id": "A",
       "stated_reasons": [
         "avoid exhausting commute",
@@ -613,7 +613,7 @@ _EXPERIENCE_EXTRACTION_SYSTEM_INSTRUCTIONS = """
     - confidence (number): Your confidence score from 0.1 to 0.7 (max)
 
 #Example Input and Output
-    Experience Context: "You worked as a Software Developer at TechCorp Kenya from 2020-2022"
+    Experience Context: "You worked as a Software Developer at Airtel Zambia from 2020-2022"
     Question: "What aspects of that work did you find most satisfying?"
     User Response: "I enjoyed the flexibility that I could work from home and the pay was good enough for my bills"
 

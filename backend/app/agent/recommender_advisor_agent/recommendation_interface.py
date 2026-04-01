@@ -31,84 +31,84 @@ SKILL_TO_TRAINING_MAP = {
     # Electrical/Technical skills
     "supervise correctional procedures": {
         "training_title": "Law Enforcement and Corrections Training",
-        "provider": "Kenya Prisons Training College",
-        "cost": "KES 50,000-80,000",
+        "provider": "Zambia Police College / Zambia Correctional Service Training School",
+        "cost": "ZMW 5,000-10,000",
         "estimated_hours": 240,
         "delivery_mode": "in_person",
-        "location": "Nairobi",
+        "location": "Lusaka",
     },
     "teach housekeeping skills": {
         "training_title": "Hospitality and Housekeeping Management",
-        "provider": "Utalii College / Kenya Coast Hotel Training Institute",
-        "cost": "KES 30,000-50,000",
+        "provider": "Zambia Centre for Accountancy Studies (ZCAS) / Lusaka Apex Medical University",
+        "cost": "ZMW 3,000-6,000",
         "estimated_hours": 160,
         "delivery_mode": "in_person",
-        "location": "Nairobi / Mombasa",
+        "location": "Lusaka / Livingstone",
     },
     "enterprise risk management": {
         "training_title": "Enterprise Risk Management Certification",
-        "provider": "Institute of Certified Public Accountants of Kenya (ICPAK)",
-        "cost": "KES 80,000-120,000",
+        "provider": "Zambia Institute of Chartered Accountants (ZICA)",
+        "cost": "ZMW 8,000-15,000",
         "estimated_hours": 120,
         "delivery_mode": "hybrid",
-        "location": "Nairobi / Online",
+        "location": "Lusaka / Online",
     },
     "control compliance of railway vehicles regulations": {
         "training_title": "Transport Safety and Compliance Training",
-        "provider": "Kenya School of Government / NTSA",
-        "cost": "KES 25,000-40,000",
+        "provider": "Road Transport and Safety Agency (RTSA) / Zambia Railways",
+        "cost": "ZMW 2,000-4,000",
         "estimated_hours": 80,
         "delivery_mode": "in_person",
-        "location": "Nairobi",
+        "location": "Lusaka / Kabwe",
     },
     "handle equipment while suspended": {
         "training_title": "Industrial Rigging and Safety Certification",
-        "provider": "Directorate of Occupational Safety and Health Services (DOSHS)",
-        "cost": "KES 15,000-25,000",
+        "provider": "TEVETA-registered Safety Training Centre",
+        "cost": "ZMW 1,500-3,000",
         "estimated_hours": 40,
         "delivery_mode": "in_person",
-        "location": "Nairobi / Mombasa / Kisumu",
+        "location": "Lusaka / Kitwe / Ndola",
     },
     "lead police investigations": {
         "training_title": "Criminal Investigation and Forensics",
-        "provider": "Kenya Police College",
-        "cost": "KES 60,000-100,000",
+        "provider": "Zambia Police College",
+        "cost": "ZMW 5,000-9,000",
         "estimated_hours": 200,
         "delivery_mode": "in_person",
-        "location": "Nairobi",
+        "location": "Lusaka",
     },
     # Programming/Tech skills
     "python": {
         "training_title": "Python for Data Science and Development",
-        "provider": "Moringa School / ALX Africa / Coursera",
-        "cost": "Free - KES 120,000 (depending on provider)",
+        "provider": "ALX Africa / Coursera / UNZA ICT Centre",
+        "cost": "Free - ZMW 8,000 (depending on provider)",
         "estimated_hours": 200,
         "delivery_mode": "online",
-        "location": "Online / Nairobi / Mombasa",
+        "location": "Online / Lusaka",
     },
     "haskell": {
         "training_title": "Functional Programming with Haskell",
         "provider": "Online platforms (Coursera, edX)",
-        "cost": "Free - KES 15,000",
+        "cost": "Free - ZMW 1,500",
         "estimated_hours": 80,
         "delivery_mode": "online",
         "location": "Online",
     },
     "git / version control": {
         "training_title": "Git and Version Control for Developers",
-        "provider": "freeCodeCamp / Udemy / Moringa School",
-        "cost": "Free - KES 5,000",
+        "provider": "freeCodeCamp / Udemy / ALX Africa",
+        "cost": "Free - ZMW 500",
         "estimated_hours": 20,
         "delivery_mode": "online",
         "location": "Online",
     },
     "sql / database management": {
         "training_title": "SQL and Database Management",
-        "provider": "Coursera / Udemy / Moringa School",
-        "cost": "Free - KES 30,000",
+        "provider": "Coursera / Udemy / CBU ICT Department",
+        "cost": "Free - ZMW 3,000",
         "estimated_hours": 60,
         "delivery_mode": "online",
-        "location": "Online / Nairobi",
+        "location": "Online / Lusaka / Kitwe",
     },
     # Add more as needed...
 }
@@ -281,11 +281,11 @@ class RecommendationInterface:
         Get stub recommendations for development without Node2Vec.
 
         These are realistic sample recommendations for testing the agent,
-        based on a Mombasa youth persona with informal sector background.
+        based on a Lusaka youth persona with informal sector background.
 
-        PERSONA: Hassan, 24, Mombasa
-        - Completed Form 4, some technical college
-        - Has worked casual jobs at the port, helped uncle with electrical repairs
+        PERSONA: Chanda, 24, Lusaka
+        - Completed Grade 12, some TEVETA vocational training
+        - Has worked casual piece jobs at construction sites, helped uncle with electrical repairs
         - Good with hands, basic phone/mobile money skills
         - Wants stable income but values flexibility
         - Family expects him to contribute financially
@@ -301,13 +301,13 @@ class RecommendationInterface:
             occupation_recommendations=[
                 OccupationRecommendation(
                     uuid="occ_001_uuid",
-                    originUuid="kesco_7411_origin",
+                    originUuid="esco_7411_origin",
                     rank=1,
-                    occupation_id="KESCO_7411",
+                    occupation_id="ESCO_7411",
                     occupation_code="7411",
-                    occupation="Fundi wa Stima (Electrician)",
+                    occupation="Electrician / Electrical Fitter",
                     confidence_score=0.88,
-                    justification="Your hands-on experience helping your uncle with electrical work gives you a strong foundation. High demand in Mombasa's growing construction and hotel sector.",
+                    justification="Your hands-on experience helping your uncle with electrical repairs gives you a strong foundation. High demand in Lusaka's growing construction and real estate sector.",
                     skills_match_score=0.82,
                     preference_match_score=0.85,
                     labor_demand_score=0.92,
@@ -320,8 +320,8 @@ class RecommendationInterface:
                         "Customer communication"
                     ],
                     user_skill_coverage=0.55,
-                    skill_gaps=["Formal certification (Grade Test)", "Industrial wiring"],
-                    description="Electricians install, maintain, and repair electrical wiring and systems in homes, hotels, and businesses.",
+                    skill_gaps=["TEVETA trade certificate", "Industrial wiring"],
+                    description="Electricians install, maintain, and repair electrical wiring and systems in homes, offices, and industrial sites.",
                     typical_tasks=[
                         "Install and repair electrical wiring in buildings",
                         "Fix faulty sockets, switches, and lighting",
@@ -330,37 +330,37 @@ class RecommendationInterface:
                         "Quote jobs and collect payment from clients"
                     ],
                     career_path_next_steps=[
-                        "Apprentice/Helper → Fundi (1-2 years)",
-                        "Fundi → Certified Electrician (Grade Test)",
+                        "Apprentice/Helper → Qualified Electrician (1-2 years)",
+                        "Qualified → TEVETA Certified Electrician",
                         "Certified → Contractor/Own business",
-                        "Specialize in solar installation (growing demand)"
+                        "Specialize in solar installation (growing demand in Zambia)"
                     ],
                     labor_demand_category="high",
-                    salary_range="KES 800-2,000/day (job-based) or KES 25,000-45,000/month (employed)"
+                    salary_range="ZMW 150-400/day (piece work) or ZMW 4,000-9,000/month (employed)"
                 ),
                 OccupationRecommendation(
                     uuid="occ_002_uuid",
-                    originUuid="kesco_8322_origin",
+                    originUuid="esco_8322_origin",
                     rank=2,
-                    occupation_id="KESCO_8322",
+                    occupation_id="ESCO_8322",
                     occupation_code="8322",
-                    occupation="Boda-Boda Rider / Delivery Driver",
+                    occupation="Motorbike / Delivery Rider",
                     confidence_score=0.79,
-                    justification="Offers immediate income and flexibility you value. Your knowledge of Mombasa streets is an asset. Can start quickly while building other skills.",
+                    justification="Offers immediate income and flexibility you value. Your knowledge of Lusaka roads is an asset. Can start quickly while building other skills.",
                     skills_match_score=0.70,
                     preference_match_score=0.88,
                     labor_demand_score=0.85,
                     graph_proximity_score=0.72,
                     essential_skills=[
-                        "Motorcycle riding (valid license)",
+                        "Motorcycle riding (valid RTSA license)",
                         "Knowledge of local routes",
-                        "Basic phone/M-Pesa skills",
+                        "Basic phone/mobile money skills",
                         "Customer service",
                         "Time management"
                     ],
                     user_skill_coverage=0.75,
                     skill_gaps=["Motorcycle license (if not yet obtained)"],
-                    description="Boda-boda riders provide passenger transport and delivery services using motorcycles.",
+                    description="Motorbike riders provide passenger transport and delivery services using motorcycles (similar to boda boda in East Africa).",
                     typical_tasks=[
                         "Transport passengers around the city",
                         "Deliver food, packages, and goods",
@@ -370,22 +370,22 @@ class RecommendationInterface:
                     ],
                     career_path_next_steps=[
                         "Rider (employed) → Own motorcycle",
-                        "Join delivery apps (Glovo, Uber Eats)",
+                        "Join local delivery networks",
                         "Build regular customer base",
                         "Grow to 2-3 bikes with riders (fleet owner)"
                     ],
                     labor_demand_category="high",
-                    salary_range="KES 500-1,500/day depending on hustle"
+                    salary_range="ZMW 100-300/day depending on hustle"
                 ),
                 OccupationRecommendation(
                     uuid="occ_003_uuid",
-                    originUuid="kesco_9329_origin",
+                    originUuid="esco_9329_origin",
                     rank=3,
-                    occupation_id="KESCO_9329",
+                    occupation_id="ESCO_9329",
                     occupation_code="9329",
-                    occupation="Port Cargo Handler / Stevedore",
+                    occupation="Warehouse / Logistics Handler",
                     confidence_score=0.74,
-                    justification="Your experience with casual port work is valuable. More organized positions offer better pay and some job security.",
+                    justification="Your experience with casual piece work in construction is transferable. Warehouse roles at Shoprite, Zambeef, or distribution centres offer better pay and some job security.",
                     skills_match_score=0.78,
                     preference_match_score=0.65,
                     labor_demand_score=0.80,
@@ -398,72 +398,72 @@ class RecommendationInterface:
                         "Punctuality and reliability"
                     ],
                     user_skill_coverage=0.70,
-                    skill_gaps=["Forklift certification", "Container handling training"],
-                    description="Cargo handlers load, unload, and move goods at the port, warehouses, and shipping yards.",
+                    skill_gaps=["Forklift certification", "Inventory management basics"],
+                    description="Warehouse handlers load, unload, and move goods at warehouses, distribution centres, and retail depots.",
                     typical_tasks=[
-                        "Load and unload cargo from ships/trucks",
-                        "Operate basic cargo equipment",
-                        "Sort and stack containers/goods",
-                        "Follow safety procedures strictly",
+                        "Load and unload goods from trucks",
+                        "Operate basic warehouse equipment",
+                        "Sort and stack stock",
+                        "Follow health and safety procedures",
                         "Work in shifts (day/night)"
                     ],
                     career_path_next_steps=[
-                        "Casual laborer → Registered handler",
-                        "Get forklift/equipment certification",
-                        "Handler → Supervisor/Tally clerk",
-                        "Move to logistics/clearing agent roles"
+                        "Casual piece worker → Permanent handler",
+                        "Get forklift/equipment certification (TEVETA)",
+                        "Handler → Supervisor/Stock controller",
+                        "Move to logistics and supply chain roles"
                     ],
                     labor_demand_category="medium",
-                    salary_range="KES 600-1,200/day (casual) or KES 20,000-35,000/month (registered)"
+                    salary_range="ZMW 100-250/day (casual) or ZMW 3,500-7,000/month (permanent)"
                 ),
                 OccupationRecommendation(
                     uuid="occ_004_uuid",
-                    originUuid="kesco_7233_origin",
+                    originUuid="esco_7233_origin",
                     rank=4,
-                    occupation_id="KESCO_7233",
+                    occupation_id="ESCO_7233",
                     occupation_code="7233",
-                    occupation="Boat/Marine Equipment Fundi",
+                    occupation="Diesel Mechanic / Plant Fitter",
                     confidence_score=0.71,
-                    justification="Mombasa's fishing and tourism boat industry needs repair skills. Combines your electrical knowledge with marine work.",
+                    justification="Zambia's mining and construction sectors have strong demand for plant fitters and diesel mechanics. Combines your electrical knowledge with mechanical work.",
                     skills_match_score=0.68,
                     preference_match_score=0.75,
                     labor_demand_score=0.70,
                     graph_proximity_score=0.72,
                     essential_skills=[
-                        "Outboard motor repair",
+                        "Engine diagnostics and repair",
                         "Basic electrical troubleshooting",
-                        "Fiberglass patching",
-                        "Engine maintenance",
+                        "Hydraulic systems knowledge",
+                        "Preventive maintenance",
                         "Customer negotiation"
                     ],
                     user_skill_coverage=0.45,
-                    skill_gaps=["Marine engine training", "Fiberglass work"],
-                    description="Marine fundis repair and maintain boats, outboard motors, and marine electrical systems.",
+                    skill_gaps=["Diesel engine training", "Hydraulics basics"],
+                    description="Diesel mechanics and plant fitters repair and maintain heavy equipment, generators, and vehicles used in mining, construction, and transport.",
                     typical_tasks=[
-                        "Repair outboard motors for fishermen",
-                        "Fix electrical systems on boats",
-                        "Patch and maintain boat hulls",
-                        "Install marine equipment",
-                        "Travel to different landing sites for jobs"
+                        "Diagnose and repair engine faults",
+                        "Service and maintain heavy machinery",
+                        "Replace worn parts and components",
+                        "Perform routine preventive maintenance",
+                        "Work at mine sites or construction sites"
                     ],
                     career_path_next_steps=[
-                        "Learn from experienced marine fundi",
-                        "Specialize in outboard motors (Yamaha, etc.)",
-                        "Build reputation at fish landing sites",
-                        "Open marine repair shop"
+                        "Apprentice with experienced mechanic",
+                        "Get TEVETA trade certificate in diesel mechanics",
+                        "Build reputation with mining companies (Konkola, Mopani)",
+                        "Open own repair workshop"
                     ],
                     labor_demand_category="medium",
-                    salary_range="KES 1,000-3,000/job or KES 20,000-40,000/month (busy season)"
+                    salary_range="ZMW 200-600/job (freelance) or ZMW 5,000-12,000/month (mining sector)"
                 ),
                 OccupationRecommendation(
                     uuid="occ_005_uuid",
-                    originUuid="kesco_5221_origin",
+                    originUuid="esco_5221_origin",
                     rank=5,
-                    occupation_id="KESCO_5221",
+                    occupation_id="ESCO_5221",
                     occupation_code="5221",
                     occupation="Market Vendor / Trader",
                     confidence_score=0.68,
-                    justification="Low startup cost, flexible hours, and potential to grow. Your M-Pesa skills help with transactions.",
+                    justification="Low startup cost, flexible hours, and potential to grow. Your mobile money skills help with transactions.",
                     skills_match_score=0.60,
                     preference_match_score=0.80,
                     labor_demand_score=0.75,
@@ -471,7 +471,7 @@ class RecommendationInterface:
                     essential_skills=[
                         "Basic math and pricing",
                         "Customer service",
-                        "M-Pesa transactions",
+                        "Airtel Money / MTN Money transactions",
                         "Negotiation",
                         "Stock management"
                     ],
@@ -482,17 +482,17 @@ class RecommendationInterface:
                         "Source and buy goods for resale",
                         "Set up stall and display products",
                         "Negotiate prices with customers",
-                        "Manage daily cash and M-Pesa payments",
+                        "Manage daily cash and mobile money payments",
                         "Track what sells well"
                     ],
                     career_path_next_steps=[
-                        "Start small (phone accessories, fruits)",
+                        "Start small (phone accessories, fruits, vegetables)",
                         "Build regular customers",
-                        "Get permanent stall/kiosk",
+                        "Get permanent stall at Lusaka City Market or Soweto Market",
                         "Grow to wholesale or multiple stalls"
                     ],
                     labor_demand_category="medium",
-                    salary_range="KES 300-1,000/day profit (depends on product and location)"
+                    salary_range="ZMW 50-200/day profit (depends on product and location)"
                 )
             ],
             opportunity_recommendations=[
@@ -500,12 +500,12 @@ class RecommendationInterface:
                     uuid="opp_001_uuid",
                     originUuid="job_001_origin",
                     rank=1,
-                    opportunity_title="Electrical Apprenticeship - Nyali Construction Site",
-                    location="Nyali, Mombasa",
-                    justification="Learn from certified electricians while earning. The foreman is known to train serious workers.",
+                    opportunity_title="Electrical Apprenticeship - Lusaka Construction Site",
+                    location="Lusaka (various sites)",
+                    justification="Learn from qualified electricians while earning. Foremen at major sites are often willing to train hardworking apprentices.",
                     essential_skills=["Basic wiring", "Willingness to learn", "Physical work"],
-                    employer="Nyali Heights Development",
-                    salary_range="KES 500-800/day + skills training",
+                    employer="Local construction contractors",
+                    salary_range="ZMW 80-150/day + skills training",
                     contract_type="contract",
                     related_occupation_id="occ_001_uuid"
                 ),
@@ -513,26 +513,25 @@ class RecommendationInterface:
                     uuid="opp_002_uuid",
                     originUuid="job_002_origin",
                     rank=2,
-                    opportunity_title="Glovo Delivery Partner",
-                    location="Mombasa (various zones)",
-                    justification="Flexible hours, paid per delivery. Good way to earn while exploring other opportunities.",
-                    essential_skills=["Motorcycle + license", "Smartphone", "M-Pesa"],
-                    employer="Glovo Kenya",
-                    salary_range="KES 100-200 per delivery",
+                    opportunity_title="Motorbike Delivery Rider",
+                    location="Lusaka (various zones)",
+                    justification="Flexible hours, paid per delivery or daily rate. Good way to earn while exploring other opportunities.",
+                    essential_skills=["Motorcycle + RTSA license", "Smartphone", "Airtel Money / MTN Money"],
+                    employer="Local courier companies / restaurants",
+                    salary_range="ZMW 80-200/day",
                     contract_type="freelance",
-                    posting_url="https://glovoapp.com/ke/riders",
                     related_occupation_id="occ_002_uuid"
                 ),
                 OpportunityRecommendation(
                     uuid="opp_003_uuid",
                     originUuid="job_003_origin",
                     rank=3,
-                    opportunity_title="Cargo Handler - Kilindini Port",
-                    location="Mombasa Port",
-                    justification="Regular work available. Being registered with a gang gives more consistent income than casual pickup.",
+                    opportunity_title="Warehouse Handler - Shoprite / Zambeef Distribution",
+                    location="Lusaka",
+                    justification="Regular work available at large retail and food distribution companies. Permanent positions offer NAPSA and NHIMA benefits.",
                     essential_skills=["Physical fitness", "Reliability", "Safety awareness"],
-                    employer="Various shipping agents",
-                    salary_range="KES 800-1,200/day",
+                    employer="Shoprite Zambia / Zambeef Products",
+                    salary_range="ZMW 3,500-6,000/month",
                     contract_type="contract",
                     related_occupation_id="occ_003_uuid"
                 )
@@ -542,13 +541,13 @@ class RecommendationInterface:
                     uuid="skill_001_uuid",
                     originUuid="training_001_origin",
                     rank=1,
-                    skill="Electrical Installation (Grade Test Preparation)",
-                    training_title="Electrician Grade III Certification",
-                    provider="Mombasa Technical Training Institute",
+                    skill="Electrical Installation (TEVETA Certification)",
+                    training_title="Electrician Trade Certificate - TEVETA",
+                    provider="Lusaka Technical and Vocational College (LTVC) / TEVETA-registered centre",
                     estimated_hours=160,
-                    justification="The Grade Test certification opens doors to formal employment and higher-paying contracts. Many hotels and companies require certified electricians.",
-                    cost="KES 15,000-20,000",
-                    location="Mombasa Technical",
+                    justification="A TEVETA trade certificate opens doors to formal employment and higher-paying contracts. Many companies and construction firms require certified electricians.",
+                    cost="ZMW 2,000-4,000",
+                    location="Lusaka",
                     delivery_mode="in_person",
                     target_occupations=["Electrician", "Maintenance Technician"],
                     fills_gap_for=["occ_001_uuid"]
@@ -559,11 +558,11 @@ class RecommendationInterface:
                     rank=2,
                     skill="Solar Panel Installation",
                     training_title="Solar PV Installation Training",
-                    provider="Kenya Power / Various NGOs",
+                    provider="ZESCO / Various NGOs / TEVETA-registered providers",
                     estimated_hours=40,
-                    justification="Solar is booming in Coast region. Adds to your electrical skills and pays very well.",
-                    cost="Free - KES 10,000 (NGO programs often subsidized)",
-                    location="Mombasa / Kilifi",
+                    justification="Solar energy is growing rapidly in Zambia due to load-shedding and rural electrification. Adds to your electrical skills and pays well.",
+                    cost="Free - ZMW 2,000 (NGO programs often subsidized)",
+                    location="Lusaka / Copperbelt",
                     delivery_mode="hybrid",
                     target_occupations=["Solar Technician", "Electrician"],
                     fills_gap_for=["occ_001_uuid"]
@@ -573,14 +572,14 @@ class RecommendationInterface:
                     originUuid="training_003_origin",
                     rank=3,
                     skill="Motorcycle Riding License",
-                    training_title="NTSA Motorcycle License (Class A)",
-                    provider="Approved Driving Schools",
+                    training_title="RTSA Motorcycle License (Class A)",
+                    provider="RTSA-approved Driving Schools",
                     estimated_hours=20,
-                    justification="Required for legal boda-boda work and delivery apps. Protects you from police harassment and opens formal delivery opportunities.",
-                    cost="KES 3,000-5,000",
-                    location="Mombasa driving schools",
+                    justification="Required for legal motorbike work and delivery. Protects you legally and opens formal delivery opportunities.",
+                    cost="ZMW 500-1,000",
+                    location="Lusaka driving schools",
                     delivery_mode="in_person",
-                    target_occupations=["Boda-Boda Rider", "Delivery Driver"],
+                    target_occupations=["Motorbike Rider", "Delivery Driver"],
                     fills_gap_for=["occ_002_uuid"]
                 ),
                 SkillsTrainingRecommendation(
@@ -588,12 +587,12 @@ class RecommendationInterface:
                     originUuid="training_004_origin",
                     rank=4,
                     skill="Forklift Operation",
-                    training_title="Forklift Operator Certificate",
-                    provider="Industrial Training Centres",
+                    training_title="Forklift Operator Certificate - TEVETA",
+                    provider="TEVETA Industrial Training Centres / Lusaka",
                     estimated_hours=40,
-                    justification="Certified forklift operators earn much more at the port. Opens path to supervisor roles.",
-                    cost="KES 8,000-12,000",
-                    location="Mombasa",
+                    justification="Certified forklift operators earn significantly more in warehouses and distribution centres. Opens path to supervisor roles.",
+                    cost="ZMW 1,000-2,500",
+                    location="Lusaka",
                     delivery_mode="in_person",
                     target_occupations=["Forklift Operator", "Warehouse Supervisor"],
                     fills_gap_for=["occ_003_uuid"]
