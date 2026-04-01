@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Container, Divider, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Container, Divider, Typography, useTheme } from "@mui/material";
+import type { SxProps } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CustomLink from "src/theme/CustomLink/CustomLink";
 import { getProductName } from "src/envService";
@@ -27,9 +28,12 @@ export const EXTERNAL_URLS = {
   CONTACT: "mailto:hi@tabiya.org",
 };
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  sx?: SxProps<Theme>;
+}
+
+const Footer: React.FC<FooterProps> = ({ sx }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const { t } = useTranslation();
   const appName = getProductName() || "";
 
@@ -38,16 +42,7 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <Box
-      component="footer"
-      data-testid={DATA_TEST_ID.FOOTER_CONTAINER}
-      sx={{
-        backgroundColor: theme.palette.containerBackground.light,
-        marginTop: isMobile
-          ? theme.fixedSpacing(theme.tabiyaSpacing.xl * 1.5)
-          : theme.fixedSpacing(theme.tabiyaSpacing.xl * 2),
-      }}
-    >
+    <Box component="footer" data-testid={DATA_TEST_ID.FOOTER_CONTAINER} sx={sx}>
       <Divider sx={{ borderColor: theme.palette.grey[300] }} />
       <Container
         maxWidth="md"
