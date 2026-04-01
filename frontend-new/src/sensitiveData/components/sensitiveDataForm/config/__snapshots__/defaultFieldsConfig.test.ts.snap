@@ -3,16 +3,30 @@
 exports[`DEFAULT_FIELDS_CONFIG parseFieldsConfig should not throw given the locale is en-GB 1`] = `
 Array [
   StringFieldDefinition {
-    "dataKey": "name",
+    "dataKey": "first_name",
     "defaultValue": undefined,
     "encrypt": true,
-    "label": "Name",
-    "name": "name",
+    "label": "First name",
+    "name": "firstName",
     "questionText": undefined,
     "required": true,
     "type": "STRING",
     "validation": Object {
-      "errorMessage": "Name should contain only letters and be 2-50 characters long.",
+      "errorMessage": "First name should contain only letters and be 2-50 characters long.",
+      "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
+    },
+  },
+  StringFieldDefinition {
+    "dataKey": "last_name",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Last name",
+    "name": "lastName",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Last name should contain only letters and be 2-50 characters long.",
       "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
     },
   },
@@ -100,16 +114,30 @@ Array [
 exports[`DEFAULT_FIELDS_CONFIG parseFieldsConfig should not throw given the locale is en-US 1`] = `
 Array [
   StringFieldDefinition {
-    "dataKey": "name",
+    "dataKey": "first_name",
     "defaultValue": undefined,
     "encrypt": true,
-    "label": "Name",
-    "name": "name",
+    "label": "First name",
+    "name": "firstName",
     "questionText": undefined,
     "required": true,
     "type": "STRING",
     "validation": Object {
-      "errorMessage": "Name should contain only letters and be 2-50 characters long.",
+      "errorMessage": "First name should contain only letters and be 2-50 characters long.",
+      "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
+    },
+  },
+  StringFieldDefinition {
+    "dataKey": "last_name",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Last name",
+    "name": "lastName",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Last name should contain only letters and be 2-50 characters long.",
       "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
     },
   },
@@ -197,16 +225,30 @@ Array [
 exports[`DEFAULT_FIELDS_CONFIG parseFieldsConfig should not throw given the locale is es-AR 1`] = `
 Array [
   StringFieldDefinition {
-    "dataKey": "name",
+    "dataKey": "first_name",
     "defaultValue": undefined,
     "encrypt": true,
     "label": "Nombre",
-    "name": "name",
+    "name": "firstName",
     "questionText": undefined,
     "required": true,
     "type": "STRING",
     "validation": Object {
       "errorMessage": "El nombre debe contener solo letras y tener entre 2 y 50 caracteres.",
+      "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
+    },
+  },
+  StringFieldDefinition {
+    "dataKey": "last_name",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Apellido",
+    "name": "lastName",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "El apellido debe contener solo letras y tener entre 2 y 50 caracteres.",
       "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
     },
   },
@@ -294,16 +336,30 @@ Array [
 exports[`DEFAULT_FIELDS_CONFIG parseFieldsConfig should not throw given the locale is es-ES 1`] = `
 Array [
   StringFieldDefinition {
-    "dataKey": "name",
+    "dataKey": "first_name",
     "defaultValue": undefined,
     "encrypt": true,
     "label": "Nombre",
-    "name": "name",
+    "name": "firstName",
     "questionText": undefined,
     "required": true,
     "type": "STRING",
     "validation": Object {
       "errorMessage": "El nombre debe contener solo letras y tener entre 2 y 50 caracteres.",
+      "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
+    },
+  },
+  StringFieldDefinition {
+    "dataKey": "last_name",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Apellido",
+    "name": "lastName",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "El apellido debe contener solo letras y tener entre 2 y 50 caracteres.",
       "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
     },
   },
@@ -391,16 +447,30 @@ Array [
 exports[`DEFAULT_FIELDS_CONFIG parseFieldsConfig should not throw given the locale is ny-ZM 1`] = `
 Array [
   StringFieldDefinition {
-    "dataKey": "name",
+    "dataKey": "first_name",
     "defaultValue": undefined,
     "encrypt": true,
-    "label": "Name",
-    "name": "name",
+    "label": "Dzina loyamba",
+    "name": "firstName",
     "questionText": undefined,
     "required": true,
     "type": "STRING",
     "validation": Object {
-      "errorMessage": "Name should contain only letters and be 2-50 characters long.",
+      "errorMessage": "Dzina loyamba liyenera kukhala ndi zilembo zokha komanso kukhala pakati pa 2 ndi 50 zilembo.",
+      "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
+    },
+  },
+  StringFieldDefinition {
+    "dataKey": "last_name",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Dzina la familia",
+    "name": "lastName",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Dzina la familia liyenera kukhala ndi zilembo zokha komanso kukhala pakati pa 2 ndi 50 zilembo.",
       "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
     },
   },
@@ -488,16 +558,30 @@ Array [
 exports[`DEFAULT_FIELDS_CONFIG parseFieldsConfig should not throw given the locale is sw-KE 1`] = `
 Array [
   StringFieldDefinition {
-    "dataKey": "name",
+    "dataKey": "first_name",
     "defaultValue": undefined,
     "encrypt": true,
-    "label": "Name",
-    "name": "name",
+    "label": "Jina la kwanza",
+    "name": "firstName",
     "questionText": undefined,
     "required": true,
     "type": "STRING",
     "validation": Object {
-      "errorMessage": "Name should contain only letters and be 2-50 characters long.",
+      "errorMessage": "Jina la kwanza linapaswa kuwa na herufi tu na kuwa kati ya herufi 2-50.",
+      "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
+    },
+  },
+  StringFieldDefinition {
+    "dataKey": "last_name",
+    "defaultValue": undefined,
+    "encrypt": true,
+    "label": "Jina la familia",
+    "name": "lastName",
+    "questionText": undefined,
+    "required": true,
+    "type": "STRING",
+    "validation": Object {
+      "errorMessage": "Jina la familia linapaswa kuwa na herufi tu na kuwa kati ya herufi 2-50.",
       "pattern": "^(?!\\\\.)(?!.*\\\\.\\\\.)(?!.*(\\\\..*){5,})[\\\\p{L}\\\\s\\\\.]{2,50}$",
     },
   },

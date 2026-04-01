@@ -166,9 +166,9 @@ describe("Fields Configuration Validation", () => {
     // WHEN the component is rendered
     render(<TestComponent />);
 
-    // THEN the component should load the default fields (6 fields)
+    // THEN the component should load the default fields (7 fields)
     await waitFor(() => {
-      expect(screen.getByText(/Fields loaded: 6/)).toBeInTheDocument();
+      expect(screen.getByText(/Fields loaded: 7/)).toBeInTheDocument();
     });
   });
 });

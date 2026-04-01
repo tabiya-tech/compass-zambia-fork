@@ -60,7 +60,8 @@ describe("useFieldsConfig", () => {
 
       // AND the fields should include the standard default fields
       const fieldNames = result.current.fields.map((f) => f.name);
-      expect(fieldNames).toContain("name");
+      expect(fieldNames).toContain("firstName");
+      expect(fieldNames).toContain("lastName");
       expect(fieldNames).toContain("contactEmail");
       expect(fieldNames).toContain("gender");
       expect(fieldNames).toContain("age");
