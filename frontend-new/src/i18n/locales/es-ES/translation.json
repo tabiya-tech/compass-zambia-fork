@@ -817,7 +817,15 @@
     "quizFailedInline": "No has aprobado. Puedes volver a hacer el quiz.",
     "quizCorrectAnswersSummary": "Respuestas correctas: {{answers}}",
     "quizPassedAgentMessage": "Has obtenido {{score}}/{{total}}. ¡Enhorabuena, has aprobado! Ahora puedes seguir haciéndome preguntas de seguimiento sobre este tema.",
-    "chatLockedUntilQuizPassed": "Puedes seguir chateando después de aprobar el quiz."
+    "chatLockedUntilQuizPassed": "Puedes seguir chateando después de aprobar el quiz.",
+    "modulesTitle": "Módulos",
+    "upNext": "Lo siguiente",
+    "takes30Min": "Tarda ~30 min",
+    "continue": "Continuar",
+    "chat": "Chat",
+    "heroTitle": "Prepárate para trabajar",
+    "heroDescription": "Seis módulos para prepararte para el mercado laboral — redacción de CV, entrevistas, habilidades laborales y más. Trabájalos a tu propio ritmo.",
+    "illustration": "Ilustración"
   },
   "home": {
     "dashboard": "Tu Centro de Carrera",

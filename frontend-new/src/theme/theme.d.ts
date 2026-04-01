@@ -81,6 +81,7 @@ declare module "@mui/material/styles" {
     brandAction: PaletteColor;
     brandAccent: PaletteColor;
     containerBackground: PaletteColor;
+    careerReadiness: PaletteColor;
     tabiyaBlue: PaletteColor;
     tabiyaYellow: PaletteColor;
     tabiyaGreen: PaletteColor;
@@ -102,6 +103,7 @@ declare module "@mui/material/styles" {
     brandAction?: PaletteColorOptions;
     brandAccent?: PaletteColorOptions;
     containerBackground?: PaletteColorOptions;
+    careerReadiness?: PaletteColorOptions;
     tabiyaBlue?: PaletteColorOptions;
     tabiyaYellow?: PaletteColorOptions;
     tabiyaGreen?: PaletteColorOptions;

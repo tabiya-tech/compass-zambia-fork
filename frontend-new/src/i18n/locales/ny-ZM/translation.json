@@ -817,7 +817,15 @@
     "quizFailedInline": "Munadana. Mungachitanso quiz.",
     "quizCorrectAnswersSummary": "Mayankho olondola: {{answers}}",
     "quizPassedAgentMessage": "Mwapeza {{score}}/{{total}}. Mwayamikirika, mwapasa! Tsopano mungapitirize kundifunsa mafunso ena okhudza mutu uwu.",
-    "chatLockedUntilQuizPassed": "Mungapitirize kucheza mukadutsa quiz."
+    "chatLockedUntilQuizPassed": "Mungapitirize kucheza mukadutsa quiz.",
+    "modulesTitle": "Mamodule",
+    "upNext": "Otsatira",
+    "takes30Min": "Imatenga ~30 mphindi",
+    "continue": "Pitilizani",
+    "chat": "Yankhulani",
+    "heroTitle": "Konzekerani Kugwira Ntchito",
+    "heroDescription": "Mamodule asanu ndi limodzi akukuthandizira kukonzekera msika wa ntchito — kulemba CV, zakuyankhula, luso la ntchito, ndi zambiri. Yendani mwachangu wanu.",
+    "illustration": "Chithunzi"
   },
   "home": {
     "dashboard": "Malo Anu a Ntchito",

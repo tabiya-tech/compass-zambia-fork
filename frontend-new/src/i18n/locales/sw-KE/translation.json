@@ -817,7 +817,15 @@
     "quizFailedInline": "Hukufaulu. Unaweza kuchukua jaribio tena.",
     "quizCorrectAnswersSummary": "Majibu sahihi: {{answers}}",
     "quizPassedAgentMessage": "Ulipata {{score}}/{{total}}. Hongera, umefaulu! Sasa unaweza kuendelea kuniuliza maswali ya kufuatilia kuhusu mada hii.",
-    "chatLockedUntilQuizPassed": "Unaweza kuendelea kuchati baada ya kupita quiz."
+    "chatLockedUntilQuizPassed": "Unaweza kuendelea kuchati baada ya kupita quiz.",
+    "modulesTitle": "Moduli",
+    "upNext": "Inayofuata",
+    "takes30Min": "Inachukua ~dakika 30",
+    "continue": "Endelea",
+    "chat": "Zungumza",
+    "heroTitle": "Jiandae Kupata Kazi",
+    "heroDescription": "Moduli sita za kukusaidia kujiandaa kwa soko la kazi — kuandika CV, mahojiano, ujuzi wa mahali pa kazi, na zaidi. Fanya kwa kasi yako mwenyewe.",
+    "illustration": "Mchoro"
   },
   "home": {
     "dashboard": "Kituo Chako cha Kazi",

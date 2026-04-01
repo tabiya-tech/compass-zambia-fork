@@ -28,12 +28,10 @@ const Sidebar: React.FC<SidebarProps> = ({ title, children, width = 280 }) => {
       data-testid={DATA_TEST_ID.SIDEBAR_CONTAINER}
       sx={{
         width,
-        height: "100%",
         flexShrink: 0,
         display: "flex",
         flexDirection: "column",
-        backgroundColor: theme.palette.background.paper,
-        borderLeft: `1px solid ${theme.palette.divider}`,
+        borderLeft: "none",
         overflowY: "auto",
         padding: `${theme.fixedSpacing(theme.tabiyaSpacing.md * 1.125)} ${theme.fixedSpacing(theme.tabiyaSpacing.md)}`,
         gap: theme.fixedSpacing(theme.tabiyaSpacing.md * 1.25),

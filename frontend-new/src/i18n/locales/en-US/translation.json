@@ -811,7 +811,15 @@
     "quizFailedInline": "You failed. You can retake the quiz.",
     "quizCorrectAnswersSummary": "Correct answers: {{answers}}",
     "quizPassedAgentMessage": "You scored {{score}}/{{total}}. Congratulations, you passed! You can now continue to ask me any follow-up questions about this topic.",
-    "chatLockedUntilQuizPassed": "You can continue chatting after you pass the quiz."
+    "chatLockedUntilQuizPassed": "You can continue chatting after you pass the quiz.",
+    "modulesTitle": "Modules",
+    "upNext": "Up next",
+    "takes30Min": "Takes ~30 min",
+    "continue": "Continue",
+    "chat": "Chat",
+    "heroTitle": "Get Job Ready",
+    "heroDescription": "Six modules to get you ready for the job market — CV writing, interviews, workplace skills, and more. Work through them at your own pace.",
+    "illustration": "Illustration"
   },
   "home": {
     "dashboard": "Your Career Hub",
