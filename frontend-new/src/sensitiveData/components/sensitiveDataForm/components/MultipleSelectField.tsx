@@ -10,7 +10,12 @@ import {
   Box,
   OutlinedInput,
   Typography,
+  ListSubheader,
+  TextField,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+
+const SEARCHABLE_THRESHOLD = 5;
 import { MultipleSelectFieldDefinition } from "src/sensitiveData/components/sensitiveDataForm/config/types";
 
 export const DATA_TEST_ID = {
@@ -37,6 +42,12 @@ interface MultipleFieldProps {
 const MultipleSelectField: React.FC<MultipleFieldProps> = ({ field, dataTestId, initialValue = [], onChange }) => {
   const [selectedValues, setSelectedValues] = useState<string[]>(initialValue);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const isSearchable = field.values.length > SEARCHABLE_THRESHOLD;
+  const visibleValues = isSearchable
+    ? field.values.filter((v) => v.toLowerCase().includes(searchQuery.toLowerCase()))
+    : field.values;
 
   // Simple validation function
   const validate = (values: string[]): { isValid: boolean; errorMessage: string | null } => {
@@ -101,6 +112,7 @@ const MultipleSelectField: React.FC<MultipleFieldProps> = ({ field, dataTestId, 
           data-testid={dataTestId || DATA_TEST_ID.MULTIPLE_SELECT_FIELD_SELECT}
           input={<OutlinedInput label={field.label} />}
           onChange={handleChange}
+          onClose={() => setSearchQuery("")}
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
@@ -114,7 +126,24 @@ const MultipleSelectField: React.FC<MultipleFieldProps> = ({ field, dataTestId, 
             </Box>
           )}
         >
-          {field.values.map((value, index) => (
+          {isSearchable && (
+            <ListSubheader sx={{ pt: 1, pb: 0.5, lineHeight: "normal", bgcolor: "background.paper" }}>
+              <TextField
+                size="small"
+                autoFocus
+                placeholder="Search…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.stopPropagation()}
+                slotProps={{
+                  input: { startAdornment: <SearchIcon fontSize="small" sx={{ mr: 0.5, color: "text.disabled" }} /> },
+                  htmlInput: { "aria-label": "search options" },
+                }}
+                sx={{ width: "100%" }}
+              />
+            </ListSubheader>
+          )}
+          {visibleValues.map((value, index) => (
             <MenuItem
               key={`${field.dataKey}-${index}`}
               data-testid={`${DATA_TEST_ID.MULTIPLE_SELECT_FIELD_MENU_ITEM}-${index}`}

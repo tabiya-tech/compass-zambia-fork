@@ -26,6 +26,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import SearchIcon from "@mui/icons-material/Search";
 import { useSortableData } from "src/jobMatching/hooks/useSortableData";
 
 // ─── Column & Group definitions ──────────────────────────────────────────────
@@ -98,8 +99,11 @@ interface FilterIconButtonProps<T> {
   onSort: (key: keyof T) => void;
 }
 
+const SEARCHABLE_FILTER_THRESHOLD = 5;
+
 function FilterIconButton<T>({ col, isActiveSortKey, activeSortDir, onSort }: FilterIconButtonProps<T>) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [filterSearch, setFilterSearch] = useState("");
   const open = Boolean(anchorEl);
   const theme = useTheme();
 
@@ -131,7 +135,10 @@ function FilterIconButton<T>({ col, isActiveSortKey, activeSortDir, onSort }: Fi
       <Popover
         open={open}
         anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
+        onClose={() => {
+          setAnchorEl(null);
+          setFilterSearch("");
+        }}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "left" }}
         slotProps={{
@@ -152,6 +159,28 @@ function FilterIconButton<T>({ col, isActiveSortKey, activeSortDir, onSort }: Fi
             py: theme.fixedSpacing(theme.tabiyaSpacing.xxs),
           }}
         >
+          {/* Search — shown at the top when filter has >5 options */}
+          {hasFilter && col.filter!.options.length > SEARCHABLE_FILTER_THRESHOLD && (
+            <>
+              <Box px={1} pt={theme.fixedSpacing(theme.tabiyaSpacing.xxs)} pb={theme.fixedSpacing(theme.tabiyaSpacing.xxs)}>
+                <TextField
+                  size="small"
+                  placeholder="Search…"
+                  value={filterSearch}
+                  autoFocus
+                  onChange={(e) => setFilterSearch(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
+                  slotProps={{
+                    input: { startAdornment: <SearchIcon fontSize="small" sx={{ mr: 0.5, color: "text.disabled" }} /> },
+                    htmlInput: { "aria-label": "search filter options" },
+                  }}
+                  sx={{ width: "100%" }}
+                />
+              </Box>
+              <Divider sx={{ mb: theme.fixedSpacing(theme.tabiyaSpacing.xxs) }} />
+            </>
+          )}
+
           {/* Sort rows */}
           {col.sortable !== false && (
             <>
@@ -183,25 +212,34 @@ function FilterIconButton<T>({ col, isActiveSortKey, activeSortDir, onSort }: Fi
             </>
           )}
 
-          {/* Filter */}
-          {hasFilter && (
-            <MenuList dense disablePadding sx={{ maxHeight: 240, overflowY: "auto" }}>
-              {col.filter!.options.map((opt) => (
-                <MenuItem
-                  key={opt.value}
-                  dense
-                  selected={col.filter!.value === opt.value}
-                  onClick={() => {
-                    col.filter!.onChange(opt.value);
-                    setAnchorEl(null);
-                  }}
-                  sx={{ fontSize: "0.78rem", color: "text.primary" }}
-                >
-                  {opt.label}
-                </MenuItem>
-              ))}
-            </MenuList>
-          )}
+          {/* Filter list */}
+          {hasFilter && (() => {
+            const isSearchable = col.filter!.options.length > SEARCHABLE_FILTER_THRESHOLD;
+            const visibleOptions = isSearchable
+              ? col.filter!.options.filter((opt) =>
+                  opt.label.toLowerCase().includes(filterSearch.toLowerCase())
+                )
+              : col.filter!.options;
+            return (
+              <MenuList key={open ? "open" : "closed"} dense disablePadding sx={{ maxHeight: 200, overflowY: "auto" }}>
+                {visibleOptions.map((opt) => (
+                  <MenuItem
+                    key={opt.value}
+                    dense
+                    selected={col.filter!.value === opt.value}
+                    onClick={() => {
+                      col.filter!.onChange(opt.value);
+                      setAnchorEl(null);
+                      setFilterSearch("");
+                    }}
+                    sx={{ fontSize: "0.78rem", color: "text.primary" }}
+                  >
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </MenuList>
+            );
+          })()}
         </Box>
       </Popover>
     </>
