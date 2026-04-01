@@ -10,6 +10,8 @@ export interface RouteHandle {
   title?: string;
   subtitle?: string;
   headerColor?: string;
+  backLabelKey?: string;
+  backTo?: string;
 }
 
 const Layout: React.FC = () => {
@@ -49,6 +51,8 @@ const Layout: React.FC = () => {
           title={t(currentHandle.title as TranslationKey)}
           subtitle={t(currentHandle.subtitle as TranslationKey)}
           headerColor={headerColor}
+          backLabelKey={currentHandle.backLabelKey as TranslationKey | undefined}
+          backTo={currentHandle.backTo}
         />
       )}
       <Box display="flex" flexDirection="column" flex={1}>

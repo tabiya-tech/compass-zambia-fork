@@ -1,12 +1,10 @@
-import React, { startTransition, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Box, Container, useTheme } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import MarkdownReader from "src/knowledgeHub/components/MarkdownReader";
 import { getDocumentById } from "src/knowledgeHub/documentLoader";
-import { routerPaths } from "src/app/routerPaths";
 import ErrorPage from "src/error/errorPage/ErrorPage";
-import BackButton from "src/knowledgeHub/components/BackButton";
 
 const uniqueId = "d5e6f7a8-90bc-def1-2345-678901234567";
 
@@ -19,7 +17,6 @@ export const DATA_TEST_ID = {
 
 const KnowledgeHubDocument: React.FC = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const { documentId } = useParams<{ documentId: string }>();
   const { t } = useTranslation();
 
@@ -27,12 +24,6 @@ const KnowledgeHubDocument: React.FC = () => {
     if (!documentId) return null;
     return getDocumentById(documentId);
   }, [documentId]);
-
-  const handleBackClick = () => {
-    startTransition(() => {
-      navigate(routerPaths.KNOWLEDGE_HUB);
-    });
-  };
 
   if (!document) {
     return <ErrorPage errorMessage={t("knowledgeHub.documentNotFound")} />;
@@ -55,15 +46,6 @@ const KnowledgeHubDocument: React.FC = () => {
         }}
       >
         <Box display="flex" flexDirection="column" gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}>
-          {/* Back link */}
-          <Box>
-            <BackButton
-              onClick={handleBackClick}
-              labelKey="knowledgeHub.backToKnowledgeHub"
-              dataTestId={DATA_TEST_ID.KNOWLEDGE_HUB_DOCUMENT_BACK_BUTTON}
-            />
-          </Box>
-
           {/* Document Content */}
           <Box
             data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_DOCUMENT_CONTENT}

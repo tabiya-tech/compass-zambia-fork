@@ -892,10 +892,31 @@
   },
   "knowledgeHub": {
     "backToDashboard": "Bwererani ku Dashibodi",
-    "backToKnowledgeHub": "Bwererani ku Malo Ophunzirira",
+    "backToKnowledgeHub": "Bwererani ku Njira",
     "documentNotFound": "Chikalata sichinapezeke",
+    "heroTitlePrefix": "Njira za Ntchito",
+    "heroTitleQuestion": "Kodi ku Zambia akulemba ntchito kuti?",
     "introduction": "Awa ndi magawo ofunikira a Zambia kwa omaliza maphunziro a TEVET. Mbiri iliyonse ikukupatsani chiwonetsero cha momwe makampaniwo akuwonekera, ntchito zomwe zilipo, ndi zomwe mungayembekezere kupeza. Fufuzani magawo omwe amakusangalatsani kuti mupange zisankho zanzeru pa njira yanu ya ntchito.",
-    "noDocumentsAvailable": "Palibe zikalata zomwe zilipo pakadali pano."
+    "discoverSectorCta": "Dziwani zambiri za gawo la {{sector}} →",
+    "sectors": {
+      "energy": {
+        "title": "Mphamvu"
+      },
+      "mining": {
+        "title": "Migodi"
+      },
+      "hospitality": {
+        "title": "Alendo ndi Ulendo"
+      },
+      "agriculture": {
+        "title": "Ulimi"
+      },
+      "water": {
+        "title": "Madzi ndi Ukhondo"
+      }
+    },
+    "noDocumentsAvailable": "Palibe zikalata zomwe zilipo pakadali pano.",
+    "careerPathwaysTitle": "Njira za Ntchito"
   },
   "jobMatching": {
     "pageTitle": "Kufunana Ntchito",

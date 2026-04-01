@@ -311,10 +311,7 @@ const App = () => {
             },
             {
               path: routerPaths.KNOWLEDGE_HUB,
-              handle: {
-                title: "home.modules.knowledgeHub",
-                subtitle: "home.modules.knowledgeHubDesc",
-              },
+              handle: {},
               element: (
                 <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB}>
                   <LazyLoadedKnowledgeHubList />
@@ -324,8 +321,10 @@ const App = () => {
             {
               path: routerPaths.KNOWLEDGE_HUB_DOCUMENT,
               handle: {
-                title: "home.modules.knowledgeHub",
+                title: "knowledgeHub.careerPathwaysTitle",
                 subtitle: "home.modules.knowledgeHubDesc",
+                backLabelKey: "knowledgeHub.backToKnowledgeHub",
+                backTo: routerPaths.KNOWLEDGE_HUB,
               },
               element: (
                 <ProtectedRoute key={ProtectedRouteKeys.KNOWLEDGE_HUB_DOCUMENT}>

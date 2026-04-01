@@ -1,6 +1,6 @@
 ---
-title: "Hospitality"
-description: "Hotels, lodges, restaurants and tourism services across Zambia's national parks and urban centres."
+title: "Hospitality & Tourism"
+description: "Zambia's rich natural heritage and growing business hubs make hospitality a vibrant sector."
 sector: "Hospitality"
 ---
 

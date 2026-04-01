@@ -892,10 +892,31 @@
   },
   "knowledgeHub": {
     "backToDashboard": "Rudi kwenye Dashibodi",
-    "backToKnowledgeHub": "Rudi kwenye Kituo cha Maarifa",
+    "backToKnowledgeHub": "Rudi kwenye Njia",
     "documentNotFound": "Waraka haujapatikana",
+    "heroTitlePrefix": "Njia za Kazi",
+    "heroTitleQuestion": "Ni wapi Zambia inaajiri?",
     "introduction": "Hizi ni sekta za kipaumbele za Zambia kwa wanaomaliza TEVET. Kila wasifu unakupa muhtasari wa jinsi tasnia inavyoonekana, nafasi zilizopo, na unachoweza kutarajia kupata. Chunguza sekta zinazokuvutia ili kufanya maamuzi sahihi zaidi kuhusu njia yako ya kazi.",
-    "noDocumentsAvailable": "Bado hakuna waraka zinazopatikana."
+    "discoverSectorCta": "Chunguza sekta ya {{sector}} →",
+    "sectors": {
+      "energy": {
+        "title": "Nishati"
+      },
+      "mining": {
+        "title": "Uchimbaji Madini"
+      },
+      "hospitality": {
+        "title": "Ukarimu na Utalii"
+      },
+      "agriculture": {
+        "title": "Kilimo"
+      },
+      "water": {
+        "title": "Maji na Usafi wa Mazingira"
+      }
+    },
+    "noDocumentsAvailable": "Bado hakuna waraka zinazopatikana.",
+    "careerPathwaysTitle": "Njia za Kazi"
   },
   "jobMatching": {
     "pageTitle": "Kuoanisha Kazi",

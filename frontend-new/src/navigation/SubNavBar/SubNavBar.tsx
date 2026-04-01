@@ -23,9 +23,18 @@ export interface SubNavBarProps {
   subtitle: string;
   headerColor: string;
   labelAbove?: boolean;
+  backLabelKey?: TranslationKey;
+  backTo?: string;
 }
 
-const SubNavBar: React.FC<SubNavBarProps> = ({ title, subtitle, headerColor, labelAbove = false }) => {
+const SubNavBar: React.FC<SubNavBarProps> = ({
+  title,
+  subtitle,
+  headerColor,
+  labelAbove = false,
+  backLabelKey = "home.backToDashboard",
+  backTo = routerPaths.ROOT,
+}) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -111,13 +120,13 @@ const SubNavBar: React.FC<SubNavBarProps> = ({ title, subtitle, headerColor, lab
           }}
           onClick={() => {
             startTransition(() => {
-              navigate(routerPaths.ROOT);
+              navigate(backTo);
             });
           }}
           data-testid={DATA_TEST_ID.SUB_NAVBAR_BACK_LINK}
         >
           <ArrowBackIcon sx={{ fontSize: "1rem" }} />
-          {t("home.backToDashboard" as TranslationKey)}
+          {t(backLabelKey)}
         </Box>
       </Box>
     </Box>

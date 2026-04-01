@@ -1,6 +1,6 @@
 ---
 title: "Energy"
-description: "Power generation, transmission, distribution and the growing renewable energy sector."
+description: "Zambia's energy sector is undergoing a massive transformation, shifting towards renewable energy sources like solar and wind to complement its strong hydroelectric base."
 sector: "Energy"
 ---
 

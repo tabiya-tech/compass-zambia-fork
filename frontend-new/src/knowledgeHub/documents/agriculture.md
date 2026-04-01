@@ -1,6 +1,6 @@
 ---
 title: "Agriculture"
-description: "Commercial farming, agri-processing, food production and agricultural supply chains."
+description: "Agriculture is the largest employer in Zambia, but it is shifting from subsistence farming to commercial agribusiness and technology-driven production."
 sector: "Agriculture"
 ---
 
