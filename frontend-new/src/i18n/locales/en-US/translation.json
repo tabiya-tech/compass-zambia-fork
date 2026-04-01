@@ -892,10 +892,31 @@
   },
   "knowledgeHub": {
     "backToDashboard": "Back to Dashboard",
-    "backToKnowledgeHub": "Back to Knowledge Hub",
+    "backToKnowledgeHub": "Back to Pathways",
     "documentNotFound": "Document not found",
-    "introduction": "These are Zambia's priority sectors for TEVET graduates. Each profile gives you an overview of what the industry looks like, what roles exist, and what you can expect to earn. Explore the sectors that interest you to make more informed decisions about your career path.",
-    "noDocumentsAvailable": "No documents available yet."
+    "heroTitlePrefix": "Career Pathways",
+    "heroTitleQuestion": "Where is Zambia hiring?",
+    "introduction": "Knowing what you're good at is only half the picture. These are the career pathways in highest demand across Zambia right now — explore them to see where your skills meet real opportunity.",
+    "discoverSectorCta": "Discover the {{sector}} sector →",
+    "sectors": {
+      "energy": {
+        "title": "Energy"
+      },
+      "mining": {
+        "title": "Mining"
+      },
+      "hospitality": {
+        "title": "Hospitality & Tourism"
+      },
+      "agriculture": {
+        "title": "Agriculture"
+      },
+      "water": {
+        "title": "Water & Sanitation"
+      }
+    },
+    "noDocumentsAvailable": "No documents available yet.",
+    "careerPathwaysTitle": "Career Pathways"
   },
   "jobMatching": {
     "pageTitle": "Job Matching",

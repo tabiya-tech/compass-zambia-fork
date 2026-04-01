@@ -791,10 +791,31 @@
   },
   "knowledgeHub": {
     "backToDashboard": "Volver al Panel",
-    "backToKnowledgeHub": "Volver al Centro de conocimiento",
+    "backToKnowledgeHub": "Volver a rutas",
     "documentNotFound": "Documento no encontrado",
+    "heroTitlePrefix": "Rutas laborales",
+    "heroTitleQuestion": "¿Dónde están contratando en Zambia?",
     "introduction": "Estos son los sectores prioritarios de Zambia para graduados de TEVET. Cada perfil te brinda una descripción general de cómo se ve la industria, qué roles existen y qué podés esperar ganar. Explorá los sectores que te interesen para tomar decisiones más informadas sobre tu trayectoria profesional.",
-    "noDocumentsAvailable": "Aún no hay documentos disponibles."
+    "discoverSectorCta": "Descubrí el sector de {{sector}} →",
+    "sectors": {
+      "energy": {
+        "title": "Energía"
+      },
+      "mining": {
+        "title": "Minería"
+      },
+      "hospitality": {
+        "title": "Hospitalidad y Turismo"
+      },
+      "agriculture": {
+        "title": "Agricultura"
+      },
+      "water": {
+        "title": "Agua y Saneamiento"
+      }
+    },
+    "noDocumentsAvailable": "Aún no hay documentos disponibles.",
+    "careerPathwaysTitle": "Rutas laborales"
   },
   "careerReadiness": {
     "backToModules": "Volver a todos los módulos",

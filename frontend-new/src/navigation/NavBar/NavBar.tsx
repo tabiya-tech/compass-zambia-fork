@@ -100,7 +100,7 @@ const NavBar: React.FC<NavBarProps> = ({ headerColor = "brandAction" }) => {
 
   const currentPath = location.pathname;
   const isOnDashboard = currentPath === "/" || currentPath === "";
-  const isOnPathways = currentPath.startsWith(routerPaths.CAREER_READINESS);
+  const isOnPathways = currentPath.startsWith(routerPaths.KNOWLEDGE_HUB);
 
   const handleReportBug = useCallback(() => {
     void openFeedbackForm();
@@ -140,6 +140,15 @@ const NavBar: React.FC<NavBarProps> = ({ headerColor = "brandAction" }) => {
       navigate(routerPaths.PROFILE);
     });
   }, [navigate]);
+
+  const navigateWithTransition = useCallback(
+    (path: string) => {
+      startTransition(() => {
+        navigate(path);
+      });
+    },
+    [navigate]
+  );
 
   const handleViewExperiences = useCallback(() => {
     setAnchorEl(null);
@@ -320,11 +329,19 @@ const NavBar: React.FC<NavBarProps> = ({ headerColor = "brandAction" }) => {
         alignItems="center"
         justifyContent="space-between"
         gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
-        paddingX={theme.spacing(isMobile ? theme.tabiyaSpacing.sm : theme.tabiyaSpacing.md)}
+        paddingX="var(--layout-gutter-x)"
         paddingY={theme.spacing(theme.tabiyaSpacing.sm)}
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <NavLink style={{ lineHeight: 0 }} to={routerPaths.ROOT} data-testid={DATA_TEST_ID.NAVBAR_LOGO_LINK}>
+          <NavLink
+            style={{ lineHeight: 0 }}
+            to={routerPaths.ROOT}
+            onClick={(event) => {
+              event.preventDefault();
+              navigateWithTransition(routerPaths.ROOT);
+            }}
+            data-testid={DATA_TEST_ID.NAVBAR_LOGO_LINK}
+          >
             <img src={logoSrc} alt={t("app.compassLogoAlt")} height={28} data-testid={DATA_TEST_ID.NAVBAR_LOGO} />
           </NavLink>
         </Box>
@@ -362,6 +379,10 @@ const NavBar: React.FC<NavBarProps> = ({ headerColor = "brandAction" }) => {
                 component={NavLink}
                 to={routerPaths.ROOT}
                 end
+                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                  event.preventDefault();
+                  navigateWithTransition(routerPaths.ROOT);
+                }}
                 sx={getNavLinkSx(isOnDashboard)}
                 data-testid={DATA_TEST_ID.NAVBAR_LINK_DASHBOARD}
               >
@@ -370,7 +391,11 @@ const NavBar: React.FC<NavBarProps> = ({ headerColor = "brandAction" }) => {
               </Box>
               <Box
                 component={NavLink}
-                to={routerPaths.CAREER_READINESS}
+                to={routerPaths.KNOWLEDGE_HUB}
+                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                  event.preventDefault();
+                  navigateWithTransition(routerPaths.KNOWLEDGE_HUB);
+                }}
                 sx={getNavLinkSx(isOnPathways)}
                 data-testid={DATA_TEST_ID.NAVBAR_LINK_PATHWAYS}
               >

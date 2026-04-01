@@ -103,7 +103,14 @@ const CareerReadinessModule: React.FC = () => {
       data-testid={DATA_TEST_ID.CAREER_READINESS_MODULE_CONTAINER}
     >
       {moduleDetail && (
-        <SubNavBar title={subNavTitle} subtitle={moduleDetail.title} headerColor="secondary" labelAbove />
+        <SubNavBar
+          title={subNavTitle}
+          subtitle={moduleDetail.title}
+          headerColor="secondary"
+          labelAbove
+          backLabelKey="careerReadiness.backToModules"
+          backTo={routerPaths.CAREER_READINESS}
+        />
       )}
       <Box
         sx={{

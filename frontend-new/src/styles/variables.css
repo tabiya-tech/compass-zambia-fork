@@ -23,4 +23,6 @@
   --text-primary: 26 18 8; /* black */
   --text-secondary: 125 116 105; /* stone */
   --text-accent: 92 191 191; /* teal */
+
+  --layout-gutter-x: 16px;
 }

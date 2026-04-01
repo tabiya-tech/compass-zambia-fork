@@ -1,6 +1,6 @@
 ---
 title: "Mining"
-description: "Copper, gold and gemstone extraction, mineral processing, and mine site operations."
+description: "The mining sector remains the economic backbone of Zambia, driving export earnings and technological advancement."
 sector: "Mining"
 ---
 

@@ -1,18 +1,59 @@
 import React, { startTransition, useMemo } from "react";
-import { Box, Container, Grid, Typography, useTheme } from "@mui/material";
+import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import DocumentCard from "src/knowledgeHub/components/DocumentCard";
 import { getAllDocuments } from "src/knowledgeHub/documentLoader";
 import { routerPaths } from "src/app/routerPaths";
+import Footer from "src/home/components/Footer/Footer";
+import type { DocumentMetadata } from "src/knowledgeHub/types";
 
 const uniqueId = "b3d4e5f6-7890-abcd-ef12-345678901234";
 
 export const DATA_TEST_ID = {
   KNOWLEDGE_HUB_LIST_CONTAINER: `knowledge-hub-list-container-${uniqueId}`,
   KNOWLEDGE_HUB_LIST_CONTENT: `knowledge-hub-list-content-${uniqueId}`,
-  KNOWLEDGE_HUB_LIST_GRID: `knowledge-hub-list-grid-${uniqueId}`,
-  KNOWLEDGE_HUB_INTRODUCTION: `knowledge-hub-introduction-${uniqueId}`,
+  KNOWLEDGE_HUB_HERO: `knowledge-hub-hero-${uniqueId}`,
+  KNOWLEDGE_HUB_SECTOR_LIST: `knowledge-hub-sector-list-${uniqueId}`,
+  KNOWLEDGE_HUB_SECTOR_ITEM: `knowledge-hub-sector-item-${uniqueId}`,
+};
+
+const ICON_BY_SECTOR: Record<string, string> = {
+  energy: "⚡️",
+  mining: "⛏️",
+  hospitality: "🗻",
+  agriculture: "🌾",
+  water: "💧",
+};
+
+const SECTOR_TRANSLATION_KEYS = {
+  energy: {
+    title: "knowledgeHub.sectors.energy.title",
+  },
+  mining: {
+    title: "knowledgeHub.sectors.mining.title",
+  },
+  hospitality: {
+    title: "knowledgeHub.sectors.hospitality.title",
+  },
+  agriculture: {
+    title: "knowledgeHub.sectors.agriculture.title",
+  },
+  water: {
+    title: "knowledgeHub.sectors.water.title",
+  },
+} as const;
+
+type SectorTranslationKey = keyof typeof SECTOR_TRANSLATION_KEYS;
+
+const isSectorTranslationKey = (value: string): value is SectorTranslationKey => {
+  return value in SECTOR_TRANSLATION_KEYS;
+};
+
+const getSectorKey = (document: DocumentMetadata) => (document.sector ?? document.title).toLowerCase();
+
+const getSectorIcon = (document: DocumentMetadata): string => {
+  const key = getSectorKey(document);
+  return ICON_BY_SECTOR[key] ?? "•";
 };
 
 const KnowledgeHubList: React.FC = () => {
@@ -28,54 +69,234 @@ const KnowledgeHubList: React.FC = () => {
     });
   };
 
+  const contentColumnSx = {
+    width: "100%",
+    maxWidth: 640,
+    mx: "auto",
+    textAlign: "left" as const,
+  };
+
+  const textAlignGrid = {
+    display: "grid",
+    gridTemplateColumns: {
+      xs: "minmax(40px, 52px) minmax(0, 1fr)",
+      sm: "minmax(48px, 56px) minmax(0, 1fr)",
+    },
+    columnGap: { xs: 2, sm: 2.5 },
+    alignItems: "flex-start",
+    width: "100%",
+  } as const;
+
   return (
-    <Box display="flex" flexDirection="column" height="100%" data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_LIST_CONTAINER}>
-      <Container
-        maxWidth="md"
-        sx={{
-          flex: 1,
-          padding: theme.spacing(theme.tabiyaSpacing.lg),
-          paddingTop: theme.spacing(theme.tabiyaSpacing.md),
-          overflowY: "auto",
-        }}
+    <Box
+      display="flex"
+      flexDirection="column"
+      minHeight="100vh"
+      sx={{ backgroundColor: theme.palette.containerBackground.main }}
+      data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_LIST_CONTAINER}
+    >
+      <Box
+        component="main"
+        sx={{ flex: 1, width: "100%", display: "flex", flexDirection: "column", pb: 10 }}
         data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_LIST_CONTENT}
       >
-        {/* Introduction paragraph */}
-        <Box mb={theme.spacing(theme.tabiyaSpacing.lg)} data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_INTRODUCTION}>
-          <Typography variant="body1" color="text.secondary">
-            {t("knowledgeHub.introduction")}
-          </Typography>
+        <Box
+          sx={{
+            width: "100%",
+            backgroundColor: theme.palette.common.white,
+            overflow: "visible",
+            pb: theme.fixedSpacing(theme.tabiyaSpacing.xl),
+            pt: { xs: 4, md: 8 },
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          <Container
+            maxWidth="md"
+            sx={{
+              marginX: "auto",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              overflow: "visible",
+              pl: { xs: 0, md: 20 },
+            }}
+          >
+            <Box
+              data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_HERO}
+              sx={{
+                ...contentColumnSx,
+                ...textAlignGrid,
+                gridTemplateColumns: { xs: "1fr", md: "minmax(48px, 56px) minmax(0, 1fr)" },
+                rowGap: { xs: 2, md: 0 },
+                position: "relative",
+                overflow: "visible",
+              }}
+            >
+              <Box
+                component="img"
+                src={`${process.env.PUBLIC_URL}/runner-v2.svg`}
+                alt=""
+                sx={{
+                  display: { xs: "block", md: "none" },
+                  width: "auto",
+                  height: "auto",
+                  mx: "auto",
+                }}
+              />
+              <Box
+                aria-hidden
+                sx={{
+                  position: "relative",
+                  minWidth: 0,
+                  alignSelf: "stretch",
+                  overflow: "visible",
+                  display: { xs: "none", md: "block" },
+                }}
+              >
+                <Box
+                  component="img"
+                  src={`${process.env.PUBLIC_URL}/runner-v2.svg`}
+                  alt=""
+                  sx={{
+                    position: "absolute",
+                    left: { md: -185 },
+                    top: { md: -20 },
+                    width: { md: 250 },
+                    height: { md: 290 },
+                    opacity: 1,
+                    display: "block",
+                    zIndex: 1,
+                    pointerEvents: "none",
+                  }}
+                />
+              </Box>
+              <Box sx={{ minWidth: 0, position: "relative", zIndex: 2 }}>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontWeight: 800,
+                    mb: 1,
+                    color: theme.palette.text.primary,
+                  }}
+                >
+                  {t("knowledgeHub.heroTitlePrefix")}
+                  <span style={{ color: theme.palette.brandAction.main }}>:</span>
+                  <br />
+                  {t("knowledgeHub.heroTitleQuestion")}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: theme.palette.text.primary,
+                    fontSize: { xs: "0.95rem", md: "1rem" },
+                  }}
+                >
+                  {t("knowledgeHub.introduction")}
+                </Typography>
+              </Box>
+            </Box>
+          </Container>
         </Box>
 
-        {/* Document Grid */}
-        <Grid
-          container
-          spacing={theme.tabiyaSpacing.lg}
-          justifyContent="center"
-          data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_LIST_GRID}
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            backgroundColor: theme.palette.containerBackground.main,
+            position: "relative",
+            zIndex: 0,
+            pt: { xs: 12, sm: 10, md: 8 },
+          }}
         >
-          {documents.map((doc) => (
-            <Grid key={doc.id} size={{ xs: 12, sm: 6, md: 4 }}>
-              <DocumentCard document={doc} onClick={handleDocumentClick} />
-            </Grid>
-          ))}
-        </Grid>
-
-        {/* Empty state */}
-        {documents.length === 0 && (
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            py={theme.fixedSpacing(theme.tabiyaSpacing.xl * 2)}
+          <Container
+            maxWidth="md"
+            sx={{
+              marginX: "auto",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              pl: { xs: 0, md: 20 },
+            }}
           >
-            <Typography variant="body1" color="text.secondary">
-              {t("knowledgeHub.noDocumentsAvailable")}
-            </Typography>
-          </Box>
-        )}
-      </Container>
+            <Stack
+              spacing={{ xs: 10, sm: 8, md: 5 }}
+              sx={contentColumnSx}
+              data-testid={DATA_TEST_ID.KNOWLEDGE_HUB_SECTOR_LIST}
+            >
+              {documents.map((doc) => {
+                const sectorKey = getSectorKey(doc);
+                const sectorTranslation = isSectorTranslationKey(sectorKey)
+                  ? SECTOR_TRANSLATION_KEYS[sectorKey]
+                  : undefined;
+                const displayName = sectorTranslation ? t(sectorTranslation.title) : doc.title;
+                const discoverLabel = displayName.toLowerCase();
+
+                return (
+                  <Box
+                    key={doc.id}
+                    sx={textAlignGrid}
+                    data-testid={`${DATA_TEST_ID.KNOWLEDGE_HUB_SECTOR_ITEM}-${doc.id}`}
+                  >
+                    <Typography variant="h1" aria-hidden>
+                      {getSectorIcon(doc)}
+                    </Typography>
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography variant="h3" sx={{ color: theme.palette.text.primary }}>
+                        {displayName}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          mt: theme.fixedSpacing(theme.tabiyaSpacing.sm),
+                          color: theme.palette.text.primary,
+                        }}
+                      >
+                        {doc.description}
+                      </Typography>
+                      <Typography
+                        component="button"
+                        type="button"
+                        onClick={() => handleDocumentClick(doc.id)}
+                        sx={{
+                          mt: theme.fixedSpacing(theme.tabiyaSpacing.sm),
+                          border: 0,
+                          p: 0,
+                          cursor: "pointer",
+                          background: "transparent",
+                          color: theme.palette.brandAction.main,
+                          fontWeight: 600,
+                          fontSize: "0.95rem",
+                          textAlign: "left",
+                          display: "inline-block",
+                          "&:hover": { textDecoration: "underline" },
+                        }}
+                      >
+                        {t("knowledgeHub.discoverSectorCta", { sector: discoverLabel })}
+                      </Typography>
+                    </Box>
+                  </Box>
+                );
+              })}
+            </Stack>
+
+            {documents.length === 0 && (
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                py={theme.fixedSpacing(theme.tabiyaSpacing.xl * 2)}
+              >
+                <Typography variant="body1" color="text.secondary">
+                  {t("knowledgeHub.noDocumentsAvailable")}
+                </Typography>
+              </Box>
+            )}
+          </Container>
+        </Box>
+      </Box>
+      <Footer />
     </Box>
   );
 };
