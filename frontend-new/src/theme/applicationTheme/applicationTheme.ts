@@ -109,6 +109,11 @@ const lightPalette: PaletteOptions = {
     dark: "#4EA2A2",
     light: "#D8EFF0",
   },
+  careerReadiness: {
+    ...augmentedThemeColor("#E68E16", "#FFFFFF"),
+    dark: "#B86A0E",
+    light: "#FEF3E2",
+  },
   tabiyaYellow: augmentedThemeColor(TabiyaBasicColors.Yellow),
   tabiyaBlue: augmentedThemeColor(TabiyaBasicColors.DarkBlue),
   tabiyaGreen: augmentedThemeColor(TabiyaBasicColors.DarkGreen),

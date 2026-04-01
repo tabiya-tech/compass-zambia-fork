@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { Box } from "@mui/material";
 import { Outlet, useMatches } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type { TranslationKey } from "src/react-i18next";
@@ -41,7 +42,7 @@ const Layout: React.FC = () => {
   }, [matches]);
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" minHeight="100vh">
       <NavBar headerColor={headerColor} />
       {currentHandle?.title && currentHandle?.subtitle && (
         <SubNavBar
@@ -50,8 +51,10 @@ const Layout: React.FC = () => {
           headerColor={headerColor}
         />
       )}
-      <Outlet />
-    </>
+      <Box display="flex" flexDirection="column" flex={1}>
+        <Outlet />
+      </Box>
+    </Box>
   );
 };
 
