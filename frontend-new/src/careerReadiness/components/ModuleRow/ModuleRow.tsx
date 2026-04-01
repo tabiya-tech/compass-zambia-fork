@@ -96,11 +96,11 @@ const ModuleRow: React.FC<ModuleRowProps> = ({ module, index }) => {
       </Box>
 
       {isActive ? (
-        <PrimaryButton color="brandAction" sx={pillSx}>
+        <PrimaryButton color="careerReadiness" sx={pillSx}>
           {t("careerReadiness.continue")} →
         </PrimaryButton>
       ) : !isDone ? (
-        <PrimaryButton variant="outlined" color="primary" sx={pillSx}>
+        <PrimaryButton variant="outlined" color="careerReadiness" sx={pillSx}>
           {t("careerReadiness.chat")}
         </PrimaryButton>
       ) : null}

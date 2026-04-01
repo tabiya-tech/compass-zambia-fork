@@ -132,6 +132,7 @@ declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {
     brandAction: true;
     brandAccent: true;
+    careerReadiness: true;
   }
 }
 

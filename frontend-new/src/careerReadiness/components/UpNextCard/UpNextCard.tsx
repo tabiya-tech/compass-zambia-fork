@@ -76,7 +76,7 @@ const UpNextCard: React.FC<UpNextCardProps> = ({ module }) => {
       <PrimaryButton
         data-testid={DATA_TEST_ID.UP_NEXT_CARD_CONTINUE}
         onClick={handleContinue}
-        color="brandAction"
+        color="careerReadiness"
         showCircle
         sx={{ flexShrink: 0, fontSize: { xs: "0.75rem", sm: "1rem" } }}
       >
