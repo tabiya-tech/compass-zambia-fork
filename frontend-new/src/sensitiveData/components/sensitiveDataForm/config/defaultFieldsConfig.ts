@@ -37,25 +37,28 @@ export type FieldsConfig = Record<string, RawFieldConfig>;
  *
  * This configuration is used when FRONTEND_SENSITIVE_DATA_FIELDS is not provided in env.js.
  * It contains the standard fields for collecting sensitive personal data:
- * - name: User's full name
+ * - firstName: User's first name
+ * - lastName: User's last name
  * - contactEmail: User's contact email address
  * - gender: User's gender
  * - age: User's age
  * - educationStatus: Highest level of education completed
  * - mainActivity: Main activity in terms of time spent in the last 30 days
  *
- * Each field supports multiple locales (en-GB, en-US, es-ES, es-AR).
+ * Each field supports multiple locales (en-GB, en-US, es-ES, es-AR, ny-ZM, sw-KE).
  */
 export const DEFAULT_FIELDS_CONFIG: FieldsConfig = {
-  name: {
-    dataKey: "name",
+  firstName: {
+    dataKey: "first_name",
     type: FieldType.String,
     required: true,
     label: {
-      "en-GB": "Name",
-      "en-US": "Name",
+      "en-GB": "First name",
+      "en-US": "First name",
       "es-ES": "Nombre",
       "es-AR": "Nombre",
+      "ny-ZM": "Dzina loyamba",
+      "sw-KE": "Jina la kwanza",
     },
     validation: {
       // Pattern allows letters, spaces, and dots (max 4 dots, 2-50 chars)
@@ -66,10 +69,37 @@ export const DEFAULT_FIELDS_CONFIG: FieldsConfig = {
       // Unicode letter characters REQUIRES the 'u' flag in the regex e.g. /pattern/u
       pattern: "^(?!\\.)(?!.*\\.\\.)(?!.*(\\..*){5,})[\\p{L}\\s\\.]{2,50}$",
       errorMessage: {
-        "en-GB": "Name should contain only letters and be 2-50 characters long.",
-        "en-US": "Name should contain only letters and be 2-50 characters long.",
+        "en-GB": "First name should contain only letters and be 2-50 characters long.",
+        "en-US": "First name should contain only letters and be 2-50 characters long.",
         "es-ES": "El nombre debe contener solo letras y tener entre 2 y 50 caracteres.",
         "es-AR": "El nombre debe contener solo letras y tener entre 2 y 50 caracteres.",
+        "ny-ZM": "Dzina loyamba liyenera kukhala ndi zilembo zokha komanso kukhala pakati pa 2 ndi 50 zilembo.",
+        "sw-KE": "Jina la kwanza linapaswa kuwa na herufi tu na kuwa kati ya herufi 2-50.",
+      },
+    },
+  },
+  lastName: {
+    dataKey: "last_name",
+    type: FieldType.String,
+    required: true,
+    label: {
+      "en-GB": "Last name",
+      "en-US": "Last name",
+      "es-ES": "Apellido",
+      "es-AR": "Apellido",
+      "ny-ZM": "Dzina la familia",
+      "sw-KE": "Jina la familia",
+    },
+    validation: {
+      // Pattern allows letters, spaces, and dots (max 4 dots, 2-50 chars)
+      pattern: "^(?!\\.)(?!.*\\.\\.)(?!.*(\\..*){5,})[\\p{L}\\s\\.]{2,50}$",
+      errorMessage: {
+        "en-GB": "Last name should contain only letters and be 2-50 characters long.",
+        "en-US": "Last name should contain only letters and be 2-50 characters long.",
+        "es-ES": "El apellido debe contener solo letras y tener entre 2 y 50 caracteres.",
+        "es-AR": "El apellido debe contener solo letras y tener entre 2 y 50 caracteres.",
+        "ny-ZM": "Dzina la familia liyenera kukhala ndi zilembo zokha komanso kukhala pakati pa 2 ndi 50 zilembo.",
+        "sw-KE": "Jina la familia linapaswa kuwa na herufi tu na kuwa kati ya herufi 2-50.",
       },
     },
   },
