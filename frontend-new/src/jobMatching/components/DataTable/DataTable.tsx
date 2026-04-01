@@ -162,7 +162,11 @@ function FilterIconButton<T>({ col, isActiveSortKey, activeSortDir, onSort }: Fi
           {/* Search — shown at the top when filter has >5 options */}
           {hasFilter && col.filter!.options.length > SEARCHABLE_FILTER_THRESHOLD && (
             <>
-              <Box px={1} pt={theme.fixedSpacing(theme.tabiyaSpacing.xxs)} pb={theme.fixedSpacing(theme.tabiyaSpacing.xxs)}>
+              <Box
+                px={1}
+                pt={theme.fixedSpacing(theme.tabiyaSpacing.xxs)}
+                pb={theme.fixedSpacing(theme.tabiyaSpacing.xxs)}
+              >
                 <TextField
                   size="small"
                   placeholder="Search…"
@@ -213,33 +217,37 @@ function FilterIconButton<T>({ col, isActiveSortKey, activeSortDir, onSort }: Fi
           )}
 
           {/* Filter list */}
-          {hasFilter && (() => {
-            const isSearchable = col.filter!.options.length > SEARCHABLE_FILTER_THRESHOLD;
-            const visibleOptions = isSearchable
-              ? col.filter!.options.filter((opt) =>
-                  opt.label.toLowerCase().includes(filterSearch.toLowerCase())
-                )
-              : col.filter!.options;
-            return (
-              <MenuList key={open ? "open" : "closed"} dense disablePadding sx={{ maxHeight: 200, overflowY: "auto" }}>
-                {visibleOptions.map((opt) => (
-                  <MenuItem
-                    key={opt.value}
-                    dense
-                    selected={col.filter!.value === opt.value}
-                    onClick={() => {
-                      col.filter!.onChange(opt.value);
-                      setAnchorEl(null);
-                      setFilterSearch("");
-                    }}
-                    sx={{ fontSize: "0.78rem", color: "text.primary" }}
-                  >
-                    {opt.label}
-                  </MenuItem>
-                ))}
-              </MenuList>
-            );
-          })()}
+          {hasFilter &&
+            (() => {
+              const isSearchable = col.filter!.options.length > SEARCHABLE_FILTER_THRESHOLD;
+              const visibleOptions = isSearchable
+                ? col.filter!.options.filter((opt) => opt.label.toLowerCase().includes(filterSearch.toLowerCase()))
+                : col.filter!.options;
+              return (
+                <MenuList
+                  key={open ? "open" : "closed"}
+                  dense
+                  disablePadding
+                  sx={{ maxHeight: 200, overflowY: "auto" }}
+                >
+                  {visibleOptions.map((opt) => (
+                    <MenuItem
+                      key={opt.value}
+                      dense
+                      selected={col.filter!.value === opt.value}
+                      onClick={() => {
+                        col.filter!.onChange(opt.value);
+                        setAnchorEl(null);
+                        setFilterSearch("");
+                      }}
+                      sx={{ fontSize: "0.78rem", color: "text.primary" }}
+                    >
+                      {opt.label}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              );
+            })()}
         </Box>
       </Popover>
     </>
