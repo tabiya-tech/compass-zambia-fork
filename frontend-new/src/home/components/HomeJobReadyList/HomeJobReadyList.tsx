@@ -16,15 +16,6 @@ export const DATA_TEST_ID = {
   HOME_JOB_READY_ROW: `home-job-ready-row-${uniqueId}`,
 };
 
-const COURSE_TITLES_BY_POSITION = [
-  "Who You Are as a Professional",
-  "Building Your CV",
-  "Cover Letters & Motivation Statements",
-  "Interview Preparation",
-  "Workplace Readiness",
-  "Entrepreneurship & Enterprise",
-] as const;
-
 function sortModules(modules: ModuleSummary[]): ModuleSummary[] {
   return [...modules].sort((a, b) => a.sort_order - b.sort_order);
 }
@@ -155,7 +146,7 @@ const HomeJobReadyList: React.FC<HomeJobReadyListProps> = ({ modules, isLoading,
           const isExpanded = module.id === expandedModuleId;
           const learningLabel =
             n === 1 ? t("home.jobReadySection.startLearning") : t("home.jobReadySection.continueLearning");
-          const displayTitle = COURSE_TITLES_BY_POSITION[index] ?? module.title;
+          const displayTitle = module.title;
 
           return (
             <Box key={module.id} component="li">

@@ -30,9 +30,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ upNextModule, loading = false
     >
       <Box
         sx={{
-          width: { xs: "100%", md: "60%" },
+          width: { xs: "100%", md: "90%" },
           margin: "0 auto",
           padding: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+          paddingRight: { xs: 0, md: "10%" },
           display: "flex",
           gap: theme.fixedSpacing(theme.tabiyaSpacing.lg),
           alignItems: "center",
@@ -43,7 +44,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ upNextModule, loading = false
           src="/thinkers.svg"
           alt=""
           sx={{
-            width: theme.fixedSpacing(theme.tabiyaSpacing.xl * 6),
+            width: theme.fixedSpacing(theme.tabiyaSpacing.xl * 8),
             flexShrink: 0,
             display: { xs: "none", sm: "block" },
             objectFit: "contain",
@@ -51,12 +52,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ upNextModule, loading = false
         />
 
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography
-            variant="h4"
-            fontWeight={700}
-            color="text.primary"
-            sx={{ marginBottom: theme.fixedSpacing(theme.tabiyaSpacing.xs) }}
-          >
+          <Typography variant="h3" component="h2" fontWeight="bold" color="text.primary" sx={{ letterSpacing: -0.2 }}>
             {t("careerReadiness.heroTitle")}
           </Typography>
           <Typography
