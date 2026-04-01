@@ -10,8 +10,13 @@ import {
   IconButton,
   Typography,
   Box,
+  ListSubheader,
+  TextField,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import SearchIcon from "@mui/icons-material/Search";
+
+const SEARCHABLE_THRESHOLD = 5;
 import { EnumFieldDefinition } from "src/sensitiveData/components/sensitiveDataForm/config/types";
 
 const uniqueId = "5dae7bed-8fbc-455e-8d3b-0bebd7c72749";
@@ -40,7 +45,13 @@ interface EnumFieldProps {
 const EnumField: React.FC<EnumFieldProps> = ({ field, dataTestId, initialValue = "", onChange }) => {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation();
+
+  const isSearchable = field.values.length > SEARCHABLE_THRESHOLD;
+  const visibleValues = isSearchable
+    ? field.values.filter((v) => v.toLowerCase().includes(searchQuery.toLowerCase()))
+    : field.values;
 
   // Simple validation function
   const validate = useCallback(
@@ -116,6 +127,7 @@ const EnumField: React.FC<EnumFieldProps> = ({ field, dataTestId, initialValue =
           label={field.label}
           data-testid={DATA_TEST_ID.ENUM_FIELD_SELECT}
           onChange={handleChange}
+          onClose={() => setSearchQuery("")}
           // when the field is not required and has a value, remove the dropdown icon
           // else return undefined since the IconButton defaults to ArrowDropDownIcon
           IconComponent={!field.required && value !== "" ? () => null : undefined}
@@ -134,13 +146,30 @@ const EnumField: React.FC<EnumFieldProps> = ({ field, dataTestId, initialValue =
             )
           }
         >
-          {field.values.map((value, index) => (
+          {isSearchable && (
+            <ListSubheader sx={{ pt: 1, pb: 0.5, lineHeight: "normal", bgcolor: "background.paper" }}>
+              <TextField
+                size="small"
+                autoFocus
+                placeholder="Search…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.stopPropagation()}
+                slotProps={{
+                  input: { startAdornment: <SearchIcon fontSize="small" sx={{ mr: 0.5, color: "text.disabled" }} /> },
+                  htmlInput: { "aria-label": "search options" },
+                }}
+                sx={{ width: "100%" }}
+              />
+            </ListSubheader>
+          )}
+          {visibleValues.map((v, index) => (
             <MenuItem
               key={`${field.dataKey}-${index}`}
               data-testid={`${DATA_TEST_ID.ENUM_FIELD_MENU_ITEM}-${index}`}
-              value={value}
+              value={v}
             >
-              {value}
+              {v}
             </MenuItem>
           ))}
         </Select>
