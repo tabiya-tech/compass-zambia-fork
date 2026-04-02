@@ -12,6 +12,7 @@ from app.conversations.routes import add_conversation_routes
 from app.countries import Country, get_country_from_string
 from app.invitations import add_user_invitations_routes
 from app.jobs import add_jobs_routes
+from app.institutions import add_institutions_routes
 from app.job_preferences import add_job_preferences_routes
 from app.career_path import add_career_path_routes
 from app.career_readiness import add_career_readiness_routes
@@ -292,6 +293,7 @@ async def lifespan(_app: FastAPI):
         CompassDBProvider.initialize_userdata_mongo_db(userdata_db, logger),
         CompassDBProvider.initialize_metrics_mongo_db(metrics_db, logger),
         CompassDBProvider.initialize_career_explorer_mongo_db(career_explorer_db, logger),
+        CompassDBProvider.initialize_jobs_mongo_db(jobs_db, logger),
         validate_taxonomy_model(taxonomy_db=taxonomy_db,
                                 taxonomy_model_id=app_cfg.taxonomy_model_id,
                                 embeddings_service_name=app_cfg.embeddings_service_name,
@@ -415,6 +417,11 @@ add_user_invitations_routes(app)
 # Add the jobs routes
 ############################################
 add_jobs_routes(app)
+
+############################################
+# Add the institutions routes
+############################################
+add_institutions_routes(app)
 
 ############################################
 # Add the job preferences routes
