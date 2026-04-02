@@ -1,7 +1,7 @@
 import LanguageContextMenu from "src/i18n/languageContextMenu/LanguageContextMenu";
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import { getLogoUrl } from "src/envService";
+import { getDarkLogoUrl, getLogoUrl } from "src/envService";
 
 const uniqueId = "40374529-6e2c-49d8-81d7-93f01603a648";
 
@@ -18,8 +18,8 @@ export interface AuthHeaderProps {
 }
 
 const AuthHeader: React.FC<Readonly<AuthHeaderProps>> = ({ title, subtitle }) => {
-  const logoUrlFromEnv = getLogoUrl();
-  const logoSrc = logoUrlFromEnv || `${process.env.PUBLIC_URL}/logo.svg`;
+  const logoUrlFromEnv = getDarkLogoUrl() || getLogoUrl();
+  const logoSrc = logoUrlFromEnv || `${process.env.PUBLIC_URL}/njila-logo-dark.svg`;
 
   return (
     <Box

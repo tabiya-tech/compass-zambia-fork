@@ -20,6 +20,7 @@ jest.mock("src/envService", () => ({
   getSkillsReportOutputConfigEnvVar: jest.fn(() => "{}"),
   ensureRequiredEnvVars: jest.fn(() => {}),
   getLogoUrl: jest.fn(() => "mock-logo-url"),
+  getDarkLogoUrl: jest.fn(() => ""),
   getFaviconUrl: jest.fn(() => "mock-favicon-url"),
   getAppIconUrl: jest.fn(() => "mock-app-icon-url"),
   getThemeCssVariables: jest.fn(() => "{}"),
