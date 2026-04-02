@@ -47,9 +47,13 @@ const Layout: React.FC = () => {
     <Box
       display="flex"
       flexDirection="column"
-      minHeight="100vh"
+      height="100vh"
       sx={(theme) => ({
-        "--layout-gutter-x": { xs: theme.spacing(theme.tabiyaSpacing.sm), md: theme.spacing(theme.tabiyaSpacing.xl) },
+        "--layout-content-max-width": "80rem",
+        "--layout-gutter-x": {
+          xs: theme.fixedSpacing(theme.tabiyaSpacing.md),
+          md: theme.spacing(theme.tabiyaSpacing.xl),
+        },
       })}
     >
       <NavBar headerColor={headerColor} />

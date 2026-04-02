@@ -475,7 +475,7 @@ describe("ProtectedRoute test", () => {
       expect(screen.queryByText("Root Page")).not.toBeInTheDocument();
     });
 
-    test("should redirect to landing page when trying to access settings without being logged in", () => {
+    test("should redirect to login page when trying to access settings without being logged in", () => {
       // GIVEN the user is not logged in
       getUser(false);
       // AND no user preferences exist
@@ -493,10 +493,10 @@ describe("ProtectedRoute test", () => {
             ),
           },
           {
-            path: routerPaths.LANDING,
+            path: routerPaths.LOGIN,
             element: (
               <ProtectedRoute>
-                <div>Landing Page</div>
+                <div>Login Page</div>
               </ProtectedRoute>
             ),
           },
@@ -507,8 +507,8 @@ describe("ProtectedRoute test", () => {
       );
       render(<RouterProvider router={router} />);
 
-      // THEN expect the user to be redirected to the landing page
-      expect(screen.getByText("Landing Page")).toBeInTheDocument();
+      // THEN expect the user to be redirected to the login page
+      expect(screen.getByText("Login Page")).toBeInTheDocument();
       expect(screen.queryByText("Settings Page")).not.toBeInTheDocument();
     });
 
@@ -693,8 +693,8 @@ describe("ProtectedRoute test", () => {
     });
   });
 
-  describe("Landing page", () => {
-    test("should redirect to the landing page if the user is not logged in", () => {
+  describe("Unauthenticated redirect", () => {
+    test("should redirect to the login page if the user is not logged in", () => {
       // GIVEN the user is not logged in
       getUser(false);
 
@@ -710,10 +710,10 @@ describe("ProtectedRoute test", () => {
             ),
           },
           {
-            path: routerPaths.LANDING,
+            path: routerPaths.LOGIN,
             element: (
               <ProtectedRoute>
-                <div>Landing Page</div>
+                <div>Login Page</div>
               </ProtectedRoute>
             ),
           },
@@ -724,8 +724,8 @@ describe("ProtectedRoute test", () => {
       );
       render(<RouterProvider router={router} />);
 
-      // THEN expect the user to be redirected to the landing page
-      expect(screen.getByText("Landing Page")).toBeInTheDocument();
+      // THEN expect the user to be redirected to the login page
+      expect(screen.getByText("Login Page")).toBeInTheDocument();
       expect(screen.queryByText("Protected page")).not.toBeInTheDocument();
       // AND expect no errors or warning to have occurred
       expect(console.error).not.toHaveBeenCalled();

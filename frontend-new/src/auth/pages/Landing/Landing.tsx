@@ -101,7 +101,12 @@ const Landing: React.FC = () => {
   const showGuestOption = Boolean(applicationLoginCode && !loginCodeDisabled);
 
   const form = (
-    <Box display="flex" flexDirection="column" gap={theme.fixedSpacing(theme.tabiyaSpacing.md)} width={320}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap={theme.fixedSpacing(theme.tabiyaSpacing.md)}
+      sx={{ width: "100%", maxWidth: 360, mx: "auto" }}
+    >
       <Box>
         <Typography variant="h3" gutterBottom sx={{ color: theme.palette.common.white }}>
           {t("auth.pages.landing.welcomeTitle", { appName })}

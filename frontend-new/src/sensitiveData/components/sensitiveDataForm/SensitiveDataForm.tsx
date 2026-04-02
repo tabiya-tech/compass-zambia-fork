@@ -311,7 +311,7 @@ const SensitiveDataForm: React.FC = () => {
       await authenticationService!.logout();
       console.info("User rejected providing sensitive data. Logging out user.");
 
-      navigate(routerPaths.LANDING, { replace: true });
+      navigate(routerPaths.LOGIN, { replace: true });
       enqueueSnackbar(t("consent.components.consentPage.snackbarLoggedOutSuccess"), { variant: "success" });
     } catch (e) {
       console.error("Failed to log out", e);

@@ -311,8 +311,8 @@ describe("index", () => {
 
       // THEN the authentication state should be reset
       expect(AuthenticationFactoryModule.default.resetAuthenticationState).toHaveBeenCalled();
-      // AND the page should redirect to the landing page
-      expect(window.location.href).toContain(routerPaths.LANDING);
+      // AND the page should redirect to the login page
+      expect(window.location.href).toContain(routerPaths.LOGIN);
       // AND the broadcast channel should remain ope
       expect(mockChannel.closeChannel).not.toHaveBeenCalled();
       // AND expect no errors or warning to have occurred (closed only on full teardown)

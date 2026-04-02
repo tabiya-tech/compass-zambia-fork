@@ -124,7 +124,7 @@ const refreshToken = async (
     // Or the navigate function should be chained from a React component all the way here.
     // It is not extendable and not maintainable.
     // So we are using window.location.href to redirect to the landing page.
-    window.location.href = `/#${routerPaths.LANDING}`;
+    window.location.href = `/#${routerPaths.LOGIN}`;
 
     throw new AuthenticationError("Authentication provider session is not valid/available. Logging out user.");
   }

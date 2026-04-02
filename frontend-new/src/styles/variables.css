@@ -25,4 +25,5 @@
   --text-accent: 92 191 191; /* teal */
 
   --layout-gutter-x: 16px;
+  --layout-content-max-width: 80rem;
 }

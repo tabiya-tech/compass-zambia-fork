@@ -354,9 +354,9 @@ describe("Testing Consent Page", () => {
         // AND the user clicks the accept button
         await userEvent.click(screen.getByTestId(DATA_TEST_ID.ACCEPT_BUTTON));
 
-        // AND the user should be navigated to the landing page
+        // AND the user should be navigated to the login page
         await waitFor(() => {
-          expect(useNavigate()).toHaveBeenCalledWith(routerPaths.LANDING);
+          expect(useNavigate()).toHaveBeenCalledWith(routerPaths.LOGIN);
         });
       });
     });
@@ -405,9 +405,9 @@ describe("Testing Consent Page", () => {
         // THEN the accept button should be disabled while the user is being logged out
         expect(screen.getByTestId(DATA_TEST_ID.ACCEPT_BUTTON)).toBeDisabled();
 
-        // AND the user should be navigated to the landing page
+        // AND the user should be navigated to the login page
         await waitFor(() => {
-          expect(useNavigate()).toHaveBeenCalledWith(routerPaths.LANDING, { replace: true });
+          expect(useNavigate()).toHaveBeenCalledWith(routerPaths.LOGIN, { replace: true });
         });
 
         // AND snack bar should display a success message

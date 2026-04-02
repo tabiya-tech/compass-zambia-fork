@@ -42,10 +42,10 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
         fontWeight: 600,
         fontSize: "1rem",
         lineHeight: 1,
-        gap: 1.5,
+        gap: showCircle ? 1.5 : 1,
+        justifyContent: showCircle ? "space-between" : "center",
         ...(isOutlined && { border: `2px solid ${paletteColor.main}` }),
-        padding: showCircle ? "6px 6px 6px 22px" : "12px 24px",
-        "&:active:not(:disabled)": { transform: "scale(0.97)" },
+        padding: showCircle ? "6px 16px 6px 16px" : "12px 24px",
         "&:focus-visible": {
           outline: `3px solid ${theme.palette.brandAccent.main}`,
           outlineOffset: "2px",
@@ -81,8 +81,6 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
             alignItems: "center",
             justifyContent: "center",
             flexShrink: 0,
-            transition: "transform 0.2s ease",
-            "button:hover:not(:disabled) &": { transform: "translateX(3px)" },
           }}
         >
           <ArrowForwardIcon sx={{ fontSize: 18 }} />

@@ -7,7 +7,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
     data-testid="landing-dialog-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
   >
     <div
-      class="MuiBox-root css-1y2qhbx"
+      class="MuiBox-root css-hko51v"
     >
       <div
         class="MuiBox-root css-1tt306o"
@@ -17,7 +17,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
           class="MuiBox-root css-cxzmv"
         />
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-160i1ww-MuiContainer-root"
+          class="MuiBox-root css-bq3b4n"
           data-testid="landing-dialog-content-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
         >
           <div
@@ -52,7 +52,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
               </button>
             </div>
             <div
-              class="MuiBox-root css-1f0xaam"
+              class="MuiBox-root css-1bdret1"
             >
               <div
                 class="MuiBox-root css-b32oh9"
@@ -88,13 +88,13 @@ exports[`Landing Page Continue as Guest button should not show guest button when
                 />
               </div>
               <div
-                class="MuiBox-root css-6femut"
+                class="MuiBox-root css-1r6jins"
               >
                 <div
-                  class="MuiBox-root css-1w1j8ov"
+                  class="MuiBox-root css-5yk6ln"
                 >
                   <div
-                    class="MuiBox-root css-1uwkank"
+                    class="MuiBox-root css-1a36uf9"
                   >
                     <div
                       class="MuiBox-root css-0"
@@ -111,7 +111,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
                       </h5>
                     </div>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-hnd49g-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1keu62p-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-login-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -119,7 +119,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
                       Login
                     </button>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-ely5yt-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1e721ze-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-signup-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -137,7 +137,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
         class="MuiBox-root css-texfgp"
       >
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-506cbk-MuiContainer-root"
+          class="MuiBox-root css-vjorxl"
         >
           <h2
             class="MuiTypography-root MuiTypography-h2 css-ghnlas-MuiTypography-root"
@@ -145,7 +145,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
             What is 
              
             <span
-              class="MuiBox-root css-afr59k"
+              class="MuiBox-root css-1niw1bj"
             >
               mockProduct
             </span>
@@ -294,7 +294,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
       data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-11m9nmq-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-bo4hau-MuiButtonBase-root-MuiButton-root"
         data-testid="bug-report-button-31d2b110-8308-4035-90a6-519e89e7f6fa"
         tabindex="0"
         title="Report a bug."
@@ -527,7 +527,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
     data-testid="landing-dialog-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
   >
     <div
-      class="MuiBox-root css-1y2qhbx"
+      class="MuiBox-root css-hko51v"
     >
       <div
         class="MuiBox-root css-1tt306o"
@@ -537,7 +537,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
           class="MuiBox-root css-cxzmv"
         />
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-160i1ww-MuiContainer-root"
+          class="MuiBox-root css-bq3b4n"
           data-testid="landing-dialog-content-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
         >
           <div
@@ -572,7 +572,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
               </button>
             </div>
             <div
-              class="MuiBox-root css-1f0xaam"
+              class="MuiBox-root css-1bdret1"
             >
               <div
                 class="MuiBox-root css-b32oh9"
@@ -608,13 +608,13 @@ exports[`Landing Page Continue as Guest button should not show guest button when
                 />
               </div>
               <div
-                class="MuiBox-root css-6femut"
+                class="MuiBox-root css-1r6jins"
               >
                 <div
-                  class="MuiBox-root css-1w1j8ov"
+                  class="MuiBox-root css-5yk6ln"
                 >
                   <div
-                    class="MuiBox-root css-1uwkank"
+                    class="MuiBox-root css-1a36uf9"
                   >
                     <div
                       class="MuiBox-root css-0"
@@ -631,7 +631,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
                       </h5>
                     </div>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-hnd49g-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1keu62p-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-login-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -639,7 +639,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
                       Login
                     </button>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-ely5yt-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1e721ze-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-signup-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -657,7 +657,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
         class="MuiBox-root css-texfgp"
       >
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-506cbk-MuiContainer-root"
+          class="MuiBox-root css-vjorxl"
         >
           <h2
             class="MuiTypography-root MuiTypography-h2 css-ghnlas-MuiTypography-root"
@@ -665,7 +665,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
             What is 
              
             <span
-              class="MuiBox-root css-afr59k"
+              class="MuiBox-root css-1niw1bj"
             >
               mockProduct
             </span>
@@ -814,7 +814,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
       data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-11m9nmq-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-bo4hau-MuiButtonBase-root-MuiButton-root"
         data-testid="bug-report-button-31d2b110-8308-4035-90a6-519e89e7f6fa"
         tabindex="0"
         title="Report a bug."
@@ -1047,7 +1047,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
     data-testid="landing-dialog-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
   >
     <div
-      class="MuiBox-root css-1y2qhbx"
+      class="MuiBox-root css-hko51v"
     >
       <div
         class="MuiBox-root css-1tt306o"
@@ -1057,7 +1057,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
           class="MuiBox-root css-cxzmv"
         />
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-160i1ww-MuiContainer-root"
+          class="MuiBox-root css-bq3b4n"
           data-testid="landing-dialog-content-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
         >
           <div
@@ -1092,7 +1092,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
               </button>
             </div>
             <div
-              class="MuiBox-root css-1f0xaam"
+              class="MuiBox-root css-1bdret1"
             >
               <div
                 class="MuiBox-root css-b32oh9"
@@ -1128,13 +1128,13 @@ exports[`Landing Page Continue as Guest button should not show guest button when
                 />
               </div>
               <div
-                class="MuiBox-root css-6femut"
+                class="MuiBox-root css-1r6jins"
               >
                 <div
-                  class="MuiBox-root css-1w1j8ov"
+                  class="MuiBox-root css-5yk6ln"
                 >
                   <div
-                    class="MuiBox-root css-1uwkank"
+                    class="MuiBox-root css-1a36uf9"
                   >
                     <div
                       class="MuiBox-root css-0"
@@ -1151,7 +1151,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
                       </h5>
                     </div>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-hnd49g-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1keu62p-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-login-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -1159,7 +1159,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
                       Login
                     </button>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-ely5yt-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1e721ze-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-signup-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -1177,7 +1177,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
         class="MuiBox-root css-texfgp"
       >
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-506cbk-MuiContainer-root"
+          class="MuiBox-root css-vjorxl"
         >
           <h2
             class="MuiTypography-root MuiTypography-h2 css-ghnlas-MuiTypography-root"
@@ -1185,7 +1185,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
             What is 
              
             <span
-              class="MuiBox-root css-afr59k"
+              class="MuiBox-root css-1niw1bj"
             >
               mockProduct
             </span>
@@ -1334,7 +1334,7 @@ exports[`Landing Page Continue as Guest button should not show guest button when
       data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-11m9nmq-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-bo4hau-MuiButtonBase-root-MuiButton-root"
         data-testid="bug-report-button-31d2b110-8308-4035-90a6-519e89e7f6fa"
         tabindex="0"
         title="Report a bug."
@@ -1567,7 +1567,7 @@ exports[`Landing Page Continue as Guest button should show guest button when app
     data-testid="landing-dialog-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
   >
     <div
-      class="MuiBox-root css-1y2qhbx"
+      class="MuiBox-root css-hko51v"
     >
       <div
         class="MuiBox-root css-1tt306o"
@@ -1577,7 +1577,7 @@ exports[`Landing Page Continue as Guest button should show guest button when app
           class="MuiBox-root css-cxzmv"
         />
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-160i1ww-MuiContainer-root"
+          class="MuiBox-root css-bq3b4n"
           data-testid="landing-dialog-content-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
         >
           <div
@@ -1612,7 +1612,7 @@ exports[`Landing Page Continue as Guest button should show guest button when app
               </button>
             </div>
             <div
-              class="MuiBox-root css-1f0xaam"
+              class="MuiBox-root css-1bdret1"
             >
               <div
                 class="MuiBox-root css-b32oh9"
@@ -1648,13 +1648,13 @@ exports[`Landing Page Continue as Guest button should show guest button when app
                 />
               </div>
               <div
-                class="MuiBox-root css-6femut"
+                class="MuiBox-root css-1r6jins"
               >
                 <div
-                  class="MuiBox-root css-1w1j8ov"
+                  class="MuiBox-root css-5yk6ln"
                 >
                   <div
-                    class="MuiBox-root css-1uwkank"
+                    class="MuiBox-root css-1a36uf9"
                   >
                     <div
                       class="MuiBox-root css-0"
@@ -1671,7 +1671,7 @@ exports[`Landing Page Continue as Guest button should show guest button when app
                       </h5>
                     </div>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-hnd49g-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1keu62p-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-login-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -1679,7 +1679,7 @@ exports[`Landing Page Continue as Guest button should show guest button when app
                       Login
                     </button>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-ely5yt-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1e721ze-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-signup-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -1724,7 +1724,7 @@ exports[`Landing Page Continue as Guest button should show guest button when app
         class="MuiBox-root css-texfgp"
       >
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-506cbk-MuiContainer-root"
+          class="MuiBox-root css-vjorxl"
         >
           <h2
             class="MuiTypography-root MuiTypography-h2 css-ghnlas-MuiTypography-root"
@@ -1732,7 +1732,7 @@ exports[`Landing Page Continue as Guest button should show guest button when app
             What is 
              
             <span
-              class="MuiBox-root css-afr59k"
+              class="MuiBox-root css-1niw1bj"
             >
               mockProduct
             </span>
@@ -1881,7 +1881,7 @@ exports[`Landing Page Continue as Guest button should show guest button when app
       data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-11m9nmq-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-bo4hau-MuiButtonBase-root-MuiButton-root"
         data-testid="bug-report-button-31d2b110-8308-4035-90a6-519e89e7f6fa"
         tabindex="0"
         title="Report a bug."
@@ -2114,7 +2114,7 @@ exports[`Landing Page Register button should not show register link when registr
     data-testid="landing-dialog-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
   >
     <div
-      class="MuiBox-root css-1y2qhbx"
+      class="MuiBox-root css-hko51v"
     >
       <div
         class="MuiBox-root css-1tt306o"
@@ -2124,7 +2124,7 @@ exports[`Landing Page Register button should not show register link when registr
           class="MuiBox-root css-cxzmv"
         />
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-160i1ww-MuiContainer-root"
+          class="MuiBox-root css-bq3b4n"
           data-testid="landing-dialog-content-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
         >
           <div
@@ -2159,7 +2159,7 @@ exports[`Landing Page Register button should not show register link when registr
               </button>
             </div>
             <div
-              class="MuiBox-root css-1f0xaam"
+              class="MuiBox-root css-1bdret1"
             >
               <div
                 class="MuiBox-root css-b32oh9"
@@ -2195,13 +2195,13 @@ exports[`Landing Page Register button should not show register link when registr
                 />
               </div>
               <div
-                class="MuiBox-root css-6femut"
+                class="MuiBox-root css-1r6jins"
               >
                 <div
-                  class="MuiBox-root css-1w1j8ov"
+                  class="MuiBox-root css-5yk6ln"
                 >
                   <div
-                    class="MuiBox-root css-1uwkank"
+                    class="MuiBox-root css-1a36uf9"
                   >
                     <div
                       class="MuiBox-root css-0"
@@ -2218,7 +2218,7 @@ exports[`Landing Page Register button should not show register link when registr
                       </h5>
                     </div>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-hnd49g-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1keu62p-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-login-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -2263,7 +2263,7 @@ exports[`Landing Page Register button should not show register link when registr
         class="MuiBox-root css-texfgp"
       >
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-506cbk-MuiContainer-root"
+          class="MuiBox-root css-vjorxl"
         >
           <h2
             class="MuiTypography-root MuiTypography-h2 css-ghnlas-MuiTypography-root"
@@ -2271,7 +2271,7 @@ exports[`Landing Page Register button should not show register link when registr
             What is 
              
             <span
-              class="MuiBox-root css-afr59k"
+              class="MuiBox-root css-1niw1bj"
             >
               mockProduct
             </span>
@@ -2420,7 +2420,7 @@ exports[`Landing Page Register button should not show register link when registr
       data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-11m9nmq-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-bo4hau-MuiButtonBase-root-MuiButton-root"
         data-testid="bug-report-button-31d2b110-8308-4035-90a6-519e89e7f6fa"
         tabindex="0"
         title="Report a bug."
@@ -2653,7 +2653,7 @@ exports[`Landing Page Register button should not show register link when registr
     data-testid="landing-dialog-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
   >
     <div
-      class="MuiBox-root css-1y2qhbx"
+      class="MuiBox-root css-hko51v"
     >
       <div
         class="MuiBox-root css-1tt306o"
@@ -2663,7 +2663,7 @@ exports[`Landing Page Register button should not show register link when registr
           class="MuiBox-root css-cxzmv"
         />
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-160i1ww-MuiContainer-root"
+          class="MuiBox-root css-bq3b4n"
           data-testid="landing-dialog-content-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
         >
           <div
@@ -2698,7 +2698,7 @@ exports[`Landing Page Register button should not show register link when registr
               </button>
             </div>
             <div
-              class="MuiBox-root css-1f0xaam"
+              class="MuiBox-root css-1bdret1"
             >
               <div
                 class="MuiBox-root css-b32oh9"
@@ -2734,13 +2734,13 @@ exports[`Landing Page Register button should not show register link when registr
                 />
               </div>
               <div
-                class="MuiBox-root css-6femut"
+                class="MuiBox-root css-1r6jins"
               >
                 <div
-                  class="MuiBox-root css-1w1j8ov"
+                  class="MuiBox-root css-5yk6ln"
                 >
                   <div
-                    class="MuiBox-root css-1uwkank"
+                    class="MuiBox-root css-1a36uf9"
                   >
                     <div
                       class="MuiBox-root css-0"
@@ -2757,7 +2757,7 @@ exports[`Landing Page Register button should not show register link when registr
                       </h5>
                     </div>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-hnd49g-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1keu62p-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-login-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -2802,7 +2802,7 @@ exports[`Landing Page Register button should not show register link when registr
         class="MuiBox-root css-texfgp"
       >
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-506cbk-MuiContainer-root"
+          class="MuiBox-root css-vjorxl"
         >
           <h2
             class="MuiTypography-root MuiTypography-h2 css-ghnlas-MuiTypography-root"
@@ -2810,7 +2810,7 @@ exports[`Landing Page Register button should not show register link when registr
             What is 
              
             <span
-              class="MuiBox-root css-afr59k"
+              class="MuiBox-root css-1niw1bj"
             >
               mockProduct
             </span>
@@ -2959,7 +2959,7 @@ exports[`Landing Page Register button should not show register link when registr
       data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-11m9nmq-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-bo4hau-MuiButtonBase-root-MuiButton-root"
         data-testid="bug-report-button-31d2b110-8308-4035-90a6-519e89e7f6fa"
         tabindex="0"
         title="Report a bug."
@@ -3192,7 +3192,7 @@ exports[`Landing Page Register button should show register link when registratio
     data-testid="landing-dialog-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
   >
     <div
-      class="MuiBox-root css-1y2qhbx"
+      class="MuiBox-root css-hko51v"
     >
       <div
         class="MuiBox-root css-1tt306o"
@@ -3202,7 +3202,7 @@ exports[`Landing Page Register button should show register link when registratio
           class="MuiBox-root css-cxzmv"
         />
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-160i1ww-MuiContainer-root"
+          class="MuiBox-root css-bq3b4n"
           data-testid="landing-dialog-content-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
         >
           <div
@@ -3237,7 +3237,7 @@ exports[`Landing Page Register button should show register link when registratio
               </button>
             </div>
             <div
-              class="MuiBox-root css-1f0xaam"
+              class="MuiBox-root css-1bdret1"
             >
               <div
                 class="MuiBox-root css-b32oh9"
@@ -3273,13 +3273,13 @@ exports[`Landing Page Register button should show register link when registratio
                 />
               </div>
               <div
-                class="MuiBox-root css-6femut"
+                class="MuiBox-root css-1r6jins"
               >
                 <div
-                  class="MuiBox-root css-1w1j8ov"
+                  class="MuiBox-root css-5yk6ln"
                 >
                   <div
-                    class="MuiBox-root css-1uwkank"
+                    class="MuiBox-root css-1a36uf9"
                   >
                     <div
                       class="MuiBox-root css-0"
@@ -3296,7 +3296,7 @@ exports[`Landing Page Register button should show register link when registratio
                       </h5>
                     </div>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-hnd49g-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1keu62p-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-login-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -3304,7 +3304,7 @@ exports[`Landing Page Register button should show register link when registratio
                       Login
                     </button>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-ely5yt-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1e721ze-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-signup-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -3349,7 +3349,7 @@ exports[`Landing Page Register button should show register link when registratio
         class="MuiBox-root css-texfgp"
       >
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-506cbk-MuiContainer-root"
+          class="MuiBox-root css-vjorxl"
         >
           <h2
             class="MuiTypography-root MuiTypography-h2 css-ghnlas-MuiTypography-root"
@@ -3357,7 +3357,7 @@ exports[`Landing Page Register button should show register link when registratio
             What is 
              
             <span
-              class="MuiBox-root css-afr59k"
+              class="MuiBox-root css-1niw1bj"
             >
               mockProduct
             </span>
@@ -3506,7 +3506,7 @@ exports[`Landing Page Register button should show register link when registratio
       data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-11m9nmq-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-bo4hau-MuiButtonBase-root-MuiButton-root"
         data-testid="bug-report-button-31d2b110-8308-4035-90a6-519e89e7f6fa"
         tabindex="0"
         title="Report a bug."
@@ -3739,7 +3739,7 @@ exports[`Landing Page Register button should show register link when registratio
     data-testid="landing-dialog-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
   >
     <div
-      class="MuiBox-root css-1y2qhbx"
+      class="MuiBox-root css-hko51v"
     >
       <div
         class="MuiBox-root css-1tt306o"
@@ -3749,7 +3749,7 @@ exports[`Landing Page Register button should show register link when registratio
           class="MuiBox-root css-cxzmv"
         />
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-160i1ww-MuiContainer-root"
+          class="MuiBox-root css-bq3b4n"
           data-testid="landing-dialog-content-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
         >
           <div
@@ -3784,7 +3784,7 @@ exports[`Landing Page Register button should show register link when registratio
               </button>
             </div>
             <div
-              class="MuiBox-root css-1f0xaam"
+              class="MuiBox-root css-1bdret1"
             >
               <div
                 class="MuiBox-root css-b32oh9"
@@ -3820,13 +3820,13 @@ exports[`Landing Page Register button should show register link when registratio
                 />
               </div>
               <div
-                class="MuiBox-root css-6femut"
+                class="MuiBox-root css-1r6jins"
               >
                 <div
-                  class="MuiBox-root css-1w1j8ov"
+                  class="MuiBox-root css-5yk6ln"
                 >
                   <div
-                    class="MuiBox-root css-1uwkank"
+                    class="MuiBox-root css-1a36uf9"
                   >
                     <div
                       class="MuiBox-root css-0"
@@ -3843,7 +3843,7 @@ exports[`Landing Page Register button should show register link when registratio
                       </h5>
                     </div>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-hnd49g-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1keu62p-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-login-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -3851,7 +3851,7 @@ exports[`Landing Page Register button should show register link when registratio
                       Login
                     </button>
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-ely5yt-MuiButtonBase-root-MuiButton-root"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1e721ze-MuiButtonBase-root-MuiButton-root"
                       data-testid="landing-signup-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                       tabindex="0"
                       type="button"
@@ -3896,7 +3896,7 @@ exports[`Landing Page Register button should show register link when registratio
         class="MuiBox-root css-texfgp"
       >
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg css-506cbk-MuiContainer-root"
+          class="MuiBox-root css-vjorxl"
         >
           <h2
             class="MuiTypography-root MuiTypography-h2 css-ghnlas-MuiTypography-root"
@@ -3904,7 +3904,7 @@ exports[`Landing Page Register button should show register link when registratio
             What is 
              
             <span
-              class="MuiBox-root css-afr59k"
+              class="MuiBox-root css-1niw1bj"
             >
               mockProduct
             </span>
@@ -4053,7 +4053,7 @@ exports[`Landing Page Register button should show register link when registratio
       data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-11m9nmq-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-bo4hau-MuiButtonBase-root-MuiButton-root"
         data-testid="bug-report-button-31d2b110-8308-4035-90a6-519e89e7f6fa"
         tabindex="0"
         title="Report a bug."
@@ -4285,7 +4285,7 @@ exports[`Landing Page should render landing page successfully 1`] = `
   data-testid="landing-dialog-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
 >
   <div
-    class="MuiBox-root css-1y2qhbx"
+    class="MuiBox-root css-hko51v"
   >
     <div
       class="MuiBox-root css-1tt306o"
@@ -4295,7 +4295,7 @@ exports[`Landing Page should render landing page successfully 1`] = `
         class="MuiBox-root css-cxzmv"
       />
       <div
-        class="MuiContainer-root MuiContainer-maxWidthLg css-160i1ww-MuiContainer-root"
+        class="MuiBox-root css-bq3b4n"
         data-testid="landing-dialog-content-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
       >
         <div
@@ -4330,7 +4330,7 @@ exports[`Landing Page should render landing page successfully 1`] = `
             </button>
           </div>
           <div
-            class="MuiBox-root css-1f0xaam"
+            class="MuiBox-root css-1bdret1"
           >
             <div
               class="MuiBox-root css-b32oh9"
@@ -4366,13 +4366,13 @@ exports[`Landing Page should render landing page successfully 1`] = `
               />
             </div>
             <div
-              class="MuiBox-root css-6femut"
+              class="MuiBox-root css-1r6jins"
             >
               <div
-                class="MuiBox-root css-1w1j8ov"
+                class="MuiBox-root css-5yk6ln"
               >
                 <div
-                  class="MuiBox-root css-1uwkank"
+                  class="MuiBox-root css-1a36uf9"
                 >
                   <div
                     class="MuiBox-root css-0"
@@ -4389,7 +4389,7 @@ exports[`Landing Page should render landing page successfully 1`] = `
                     </h5>
                   </div>
                   <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-hnd49g-MuiButtonBase-root-MuiButton-root"
+                    class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedBrandAction MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1keu62p-MuiButtonBase-root-MuiButton-root"
                     data-testid="landing-login-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                     tabindex="0"
                     type="button"
@@ -4397,7 +4397,7 @@ exports[`Landing Page should render landing page successfully 1`] = `
                     Login
                   </button>
                   <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-ely5yt-MuiButtonBase-root-MuiButton-root"
+                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-1e721ze-MuiButtonBase-root-MuiButton-root"
                     data-testid="landing-signup-button-e9c346bb-bcc6-4aaa-aaa9-d24d09274925"
                     tabindex="0"
                     type="button"
@@ -4442,7 +4442,7 @@ exports[`Landing Page should render landing page successfully 1`] = `
       class="MuiBox-root css-texfgp"
     >
       <div
-        class="MuiContainer-root MuiContainer-maxWidthLg css-506cbk-MuiContainer-root"
+        class="MuiBox-root css-vjorxl"
       >
         <h2
           class="MuiTypography-root MuiTypography-h2 css-ghnlas-MuiTypography-root"
@@ -4450,7 +4450,7 @@ exports[`Landing Page should render landing page successfully 1`] = `
           What is 
            
           <span
-            class="MuiBox-root css-afr59k"
+            class="MuiBox-root css-1niw1bj"
           >
             mockProduct
           </span>
@@ -4599,7 +4599,7 @@ exports[`Landing Page should render landing page successfully 1`] = `
     data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
   >
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-11m9nmq-MuiButtonBase-root-MuiButton-root"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation css-bo4hau-MuiButtonBase-root-MuiButton-root"
       data-testid="bug-report-button-31d2b110-8308-4035-90a6-519e89e7f6fa"
       tabindex="0"
       title="Report a bug."

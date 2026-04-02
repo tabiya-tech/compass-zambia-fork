@@ -6,7 +6,6 @@ import { render, screen, waitFor, act, fireEvent } from "src/_test_utilities/tes
 import Register, { DATA_TEST_ID } from "./Register";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import RegisterWithEmailForm from "src/auth/pages/Register/components/RegisterWithEmailForm/RegisterWithEmailForm";
-import { DATA_TEST_ID as AUTH_HEADER_DATA_TEST_ID } from "src/auth/components/AuthHeader/AuthHeader";
 import FirebaseEmailAuthenticationService from "src/auth/services/FirebaseAuthenticationService/emailAuth/FirebaseEmailAuthentication.service";
 import { invitationsService } from "src/auth/services/invitationsService/invitations.service";
 import { InvitationStatus, InvitationType } from "src/auth/services/invitationsService/invitations.types";
@@ -124,14 +123,12 @@ jest.mock("src/auth/pages/Register/components/RegisterWithEmailForm/RegisterWith
   };
 });
 
-// mock the AuthHeader component
-jest.mock("src/auth/components/AuthHeader/AuthHeader", () => {
-  const actual = jest.requireActual("src/auth/components/AuthHeader/AuthHeader");
+// mock AuthLayout shell on register tests
+jest.mock("src/auth/components/AuthLayout/AuthLayout", () => {
   return {
-    ...actual,
     __esModule: true,
-    default: jest.fn().mockImplementation(() => {
-      return <span data-testid={actual.DATA_TEST_ID.AUTH_HEADER_CONTAINER}></span>;
+    default: jest.fn().mockImplementation(({ children }) => {
+      return <div data-testid="auth-layout-mock">{children}</div>;
     }),
   };
 });
@@ -200,8 +197,8 @@ describe("Testing Register component", () => {
     // THEN the component should be rendered
     expect(screen.getByTestId(DATA_TEST_ID.REGISTER_CONTAINER)).toBeInTheDocument();
 
-    // AND the header component should be rendered
-    expect(screen.getByTestId(AUTH_HEADER_DATA_TEST_ID.AUTH_HEADER_CONTAINER)).toBeInTheDocument();
+    // AND the sign-up heading should be rendered
+    expect(screen.getByText("Sign Up")).toBeInTheDocument();
 
     // AND expect the bug report button to be rendered
     expect(screen.getByTestId(BUG_REPORT_DATA_TEST_ID.BUG_REPORT_BUTTON_CONTAINER)).toBeInTheDocument();

@@ -2,104 +2,110 @@
 
 exports[`Testing Register component it should show register form successfully 1`] = `
 <div
-  class="MuiContainer-root MuiContainer-maxWidthXs css-1tzl094-MuiContainer-root"
+  class="MuiBox-root css-6gpkta"
   data-testid="register-container-ab02918f-d559-47ba-9662-ea6b3a3606d0"
 >
   <div
-    class="MuiBox-root css-ipu2l5"
+    data-testid="auth-layout-mock"
   >
-    <span
-      data-testid="auth-header-container-40374529-6e2c-49d8-81d7-93f01603a648"
-    />
-    <h6
-      class="MuiTypography-root MuiTypography-subtitle2 css-r245rg-MuiTypography-root"
-    >
-      Enter your registration code
-    </h6>
     <div
-      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-yk5tdh-MuiFormControl-root-MuiTextField-root"
+      class="MuiBox-root css-1hvnxas"
     >
-      <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined css-st6o5v-MuiFormLabel-root-MuiInputLabel-root"
-        data-shrink="true"
-        for=":r1:"
-        id=":r1:-label"
+      <h3
+        class="MuiTypography-root MuiTypography-h3 css-38wwff-MuiTypography-root"
       >
-        Registration code
-        <span
-          aria-hidden="true"
-          class="MuiFormLabel-asterisk MuiInputLabel-asterisk css-gvy03r-MuiFormLabel-asterisk"
-        >
-           
-          *
-        </span>
-      </label>
+        Sign Up
+      </h3>
+      <h6
+        class="MuiTypography-root MuiTypography-subtitle2 css-r245rg-MuiTypography-root"
+      >
+        Enter your registration code
+      </h6>
       <div
-        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1nrrg6d-MuiInputBase-root-MuiOutlinedInput-root"
+        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-84m7qf-MuiFormControl-root-MuiTextField-root"
       >
-        <input
-          aria-invalid="false"
-          class="MuiInputBase-input MuiOutlinedInput-input css-1y15kj-MuiInputBase-input-MuiOutlinedInput-input"
-          data-testid="register-registration-code-input-ab02918f-d559-47ba-9662-ea6b3a3606d0"
-          id=":r1:"
-          required=""
-          type="text"
-          value="foo-bar"
-        />
-        <fieldset
-          aria-hidden="true"
-          class="MuiOutlinedInput-notchedOutline css-1ohs4y1-MuiNotchedOutlined-root-MuiOutlinedInput-notchedOutline"
+        <label
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined css-st6o5v-MuiFormLabel-root-MuiInputLabel-root"
+          data-shrink="true"
+          for=":r1:"
+          id=":r1:-label"
         >
-          <legend
-            class="css-ex8a5f-MuiNotchedOutlined-root"
+          Registration code
+          <span
+            aria-hidden="true"
+            class="MuiFormLabel-asterisk MuiInputLabel-asterisk css-gvy03r-MuiFormLabel-asterisk"
           >
-            <span>
-              Registration code
-               
-              *
-            </span>
-          </legend>
-        </fieldset>
-      </div>
-    </div>
-    <div
-      aria-orientation="horizontal"
-      class="MuiDivider-root MuiDivider-fullWidth MuiDivider-withChildren css-1ib53nm-MuiDivider-root"
-      role="separator"
-      style="width: 100%;"
-    >
-      <span
-        class="MuiDivider-wrapper css-ijin0t-MuiDivider-wrapper"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-subtitle2 css-ew0dyz-MuiTypography-root"
+             
+            *
+          </span>
+        </label>
+        <div
+          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1nrrg6d-MuiInputBase-root-MuiOutlinedInput-root"
         >
-          and either continue with
-        </h6>
-      </span>
-    </div>
-    <span
-      data-testid="register-form-6cf1a0fa-8d75-4342-bf6b-1203d5b114d7"
-    />
-    <span
-      data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
-    />
-    <span
-      class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
-      data-testid="register-login-link-ab02918f-d559-47ba-9662-ea6b3a3606d0"
-    >
-      Already have an account?
-       
-      <a
-        aria-disabled="false"
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kqozpc-MuiTypography-root-MuiLink-root"
+          <input
+            aria-invalid="false"
+            class="MuiInputBase-input MuiOutlinedInput-input css-1y15kj-MuiInputBase-input-MuiOutlinedInput-input"
+            data-testid="register-registration-code-input-ab02918f-d559-47ba-9662-ea6b3a3606d0"
+            id=":r1:"
+            required=""
+            type="text"
+            value="foo-bar"
+          />
+          <fieldset
+            aria-hidden="true"
+            class="MuiOutlinedInput-notchedOutline css-1ohs4y1-MuiNotchedOutlined-root-MuiOutlinedInput-notchedOutline"
+          >
+            <legend
+              class="css-ex8a5f-MuiNotchedOutlined-root"
+            >
+              <span>
+                Registration code
+                 
+                *
+              </span>
+            </legend>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        aria-orientation="horizontal"
+        class="MuiDivider-root MuiDivider-fullWidth MuiDivider-withChildren css-1ib53nm-MuiDivider-root"
+        role="separator"
+        style="width: 100%;"
       >
-        Login
-      </a>
-    </span>
-    <span
-      data-testid="request-invitation-code-link-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
-    />
+        <span
+          class="MuiDivider-wrapper css-ijin0t-MuiDivider-wrapper"
+        >
+          <h6
+            class="MuiTypography-root MuiTypography-subtitle2 css-ymle3q-MuiTypography-root"
+          >
+            and either continue with
+          </h6>
+        </span>
+      </div>
+      <span
+        data-testid="register-form-6cf1a0fa-8d75-4342-bf6b-1203d5b114d7"
+      />
+      <span
+        data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
+      />
+      <span
+        class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
+        data-testid="register-login-link-ab02918f-d559-47ba-9662-ea6b3a3606d0"
+      >
+        Already have an account?
+         
+        <a
+          aria-disabled="false"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-q5pagn-MuiTypography-root-MuiLink-root"
+        >
+          Login
+        </a>
+      </span>
+      <span
+        data-testid="request-invitation-code-link-7ce9ba1f-bde0-48e2-88df-e4f697945cc4"
+      />
+    </div>
   </div>
   <span
     data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"
@@ -307,34 +313,40 @@ exports[`Testing Register component it should show register form successfully 1`
 
 exports[`Testing Register component should handle application registration code 1`] = `
 <div
-  class="MuiContainer-root MuiContainer-maxWidthXs css-1tzl094-MuiContainer-root"
+  class="MuiBox-root css-6gpkta"
   data-testid="register-container-ab02918f-d559-47ba-9662-ea6b3a3606d0"
 >
   <div
-    class="MuiBox-root css-ipu2l5"
+    data-testid="auth-layout-mock"
   >
-    <span
-      data-testid="auth-header-container-40374529-6e2c-49d8-81d7-93f01603a648"
-    />
-    <span
-      data-testid="register-form-6cf1a0fa-8d75-4342-bf6b-1203d5b114d7"
-    />
-    <span
-      data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
-    />
-    <span
-      class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
-      data-testid="register-login-link-ab02918f-d559-47ba-9662-ea6b3a3606d0"
+    <div
+      class="MuiBox-root css-1hvnxas"
     >
-      Already have an account?
-       
-      <a
-        aria-disabled="false"
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kqozpc-MuiTypography-root-MuiLink-root"
+      <h3
+        class="MuiTypography-root MuiTypography-h3 css-38wwff-MuiTypography-root"
       >
-        Login
-      </a>
-    </span>
+        Sign Up
+      </h3>
+      <span
+        data-testid="register-form-6cf1a0fa-8d75-4342-bf6b-1203d5b114d7"
+      />
+      <span
+        data-testid="firebase-auth-container-f0324e97-83fd-49e6-95c3-1043751fa1db"
+      />
+      <span
+        class="MuiTypography-root MuiTypography-caption css-c36qc7-MuiTypography-root"
+        data-testid="register-login-link-ab02918f-d559-47ba-9662-ea6b3a3606d0"
+      >
+        Already have an account?
+         
+        <a
+          aria-disabled="false"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-q5pagn-MuiTypography-root-MuiLink-root"
+        >
+          Login
+        </a>
+      </span>
+    </div>
   </div>
   <span
     data-testid="bug-report-button-container-31d2b110-8308-4035-90a6-519e89e7f6fa"

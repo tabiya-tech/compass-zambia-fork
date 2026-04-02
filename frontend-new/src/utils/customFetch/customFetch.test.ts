@@ -894,8 +894,8 @@ describe("Api Service tests", () => {
       // AND the request should be retried with the new token
       expect(mockFetch).not.toHaveBeenCalled();
 
-      // AND the user should be redirected to the landing page.
-      expect(window.location.hash).toBe(`#${routerPaths.LANDING}`);
+      // AND the user should be redirected to the login page.
+      expect(window.location.hash).toBe(`#${routerPaths.LOGIN}`);
     });
   });
 

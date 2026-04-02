@@ -6,7 +6,7 @@ exports[`Testing Register Email Form component it should show register form 1`] 
   data-testid="register-form-6cf1a0fa-8d75-4342-bf6b-1203d5b114d7"
 >
   <div
-    class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-yk5tdh-MuiFormControl-root-MuiTextField-root"
+    class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-84m7qf-MuiFormControl-root-MuiTextField-root"
   >
     <label
       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-181ccgh-MuiFormLabel-root-MuiInputLabel-root"
@@ -55,14 +55,29 @@ exports[`Testing Register Email Form component it should show register form 1`] 
     data-testid="b7499b01-8082-4209-8667-c7d559a70cag-text-field"
   />
   <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-disableElevation MuiButton-fullWidth css-5rnsqa-MuiButtonBase-root-MuiButton-root"
+    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth Mui-disabled MuiButton-root MuiButton-outlined MuiButton-outlinedBrandAction MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorBrandAction MuiButton-disableElevation MuiButton-fullWidth css-brv9ui-MuiButtonBase-root-MuiButton-root"
     data-testid="register-button-6cf1a0fa-8d75-4342-bf6b-1203d5b114d7"
     disabled=""
-    style="margin-top: 16px;"
+    style="margin-top: 8px;"
     tabindex="-1"
     type="submit"
   >
     Register
+    <div
+      class="MuiBox-root css-piy7g0"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1rwg863-MuiSvgIcon-root"
+        data-testid="ArrowForwardIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+        />
+      </svg>
+    </div>
   </button>
 </form>
 `;

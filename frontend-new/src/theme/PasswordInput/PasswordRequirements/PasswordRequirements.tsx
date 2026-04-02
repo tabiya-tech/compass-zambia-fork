@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 const uniqueId = "480b210a-d548-4fc6-a2c0-35f46e98e537";
 
@@ -42,12 +42,16 @@ const PasswordRequirements: React.FC<PasswordRequirementsProps> = ({ validationR
     <span data-testid={DATA_TEST_ID.PASSWORD_REQUIREMENTS}>
       {validationCriteria.map((criteria, index) => (
         <span key={index}>
-          <Typography
-            variant="caption"
-            color={criteria.isValid ? theme.palette.success.dark : theme.palette.error.main}
+          <Box
+            component="span"
+            sx={{
+              typography: "caption",
+              color: criteria.isValid ? theme.palette.success.dark : theme.palette.warning.main,
+              fontWeight: criteria.isValid ? 500 : 700,
+            }}
           >
             * {criteria.label}
-          </Typography>
+          </Box>
           <br />
           {/* we need a <br /> to arrange the password requirements in a column */}
         </span>
