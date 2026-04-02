@@ -219,6 +219,9 @@ const SocialAuth: React.FC<Readonly<SocialAuthProps>> = ({
               alignContent: "center",
               gap: 2,
               color: (theme) => theme.palette.tabiyaBlue.light,
+              borderRadius: theme.fixedSpacing(theme.tabiyaSpacing.xl),
+              border: "2px solid",
+              borderColor: (theme) => theme.palette.common.cream,
             }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>

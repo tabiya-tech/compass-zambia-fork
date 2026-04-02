@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Container, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
-import AuthPageShell from "src/auth/components/AuthPageShell/AuthPageShell";
+import AuthPageShell, { layoutContentColumnSx } from "src/auth/components/AuthPageShell/AuthPageShell";
 import Footer from "src/home/components/Footer/Footer";
 import { getLogoUrl, getProductName } from "src/envService";
 
@@ -32,7 +32,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, contentTestId }) => {
     <Box
       sx={{
         display: "grid",
-        mt: { xs: 8, md: 6 },
+        position: "relative",
+        mt: { xs: 0, md: -4 },
         gridTemplateColumns: {
           xs: "1fr",
           md: "minmax(0, 1fr) minmax(200px, 300px) minmax(280px, 420px)",
@@ -88,11 +89,11 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, contentTestId }) => {
 
       <Box
         sx={{
+          width: "100%",
           maxWidth: "480px",
-          maxHeight: "560px",
-          width: "fit-content",
-          height: "fit-content",
+          maxHeight: "520px",
           mx: { xs: "auto", md: 0 },
+          transform: { md: "translateY(80px)" },
           zIndex: 2,
         }}
       >
@@ -101,7 +102,10 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, contentTestId }) => {
             backgroundColor: theme.palette.brandAction.main,
             borderRadius: 2,
             p: theme.fixedSpacing(4),
-            height: { xs: "auto", md: "100%" },
+            height: "100%",
+            maxHeight: "100%",
+            overflowY: "auto",
+            overflowX: "hidden",
             boxShadow: `0 8px 24px ${alpha(theme.palette.common.black, 0.12)}`,
             color: theme.palette.common.white,
           }}
@@ -114,10 +118,16 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, contentTestId }) => {
 
   return (
     <AuthPageShell logoUrl={logoSrc} whiteContainerTestId={contentTestId} whiteBandContent={whiteBandContent}>
-      <Container sx={{ maxWidth: "lg", px: { xs: 2, md: 3 }, pt: { xs: 3, md: 6 }, pb: { xs: 3, md: 4 } }}>
+      <Box
+        sx={{
+          ...layoutContentColumnSx,
+          pt: { xs: 3, md: 6 },
+          pb: { xs: 3, md: 4 },
+        }}
+      >
         <Typography variant="h2" sx={{ fontWeight: 700, textAlign: "start", mb: 3 }}>
           {t("auth.pages.login.appHero.whatIsTitleBefore")}{" "}
-          <Box component="span" color="primary">
+          <Box component="span" sx={{ color: theme.palette.brandAction.main }}>
             {t("auth.pages.login.appHero.whatIsTitleBrand", { appName })}
           </Box>
           ?
@@ -147,7 +157,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, contentTestId }) => {
             body={t("auth.pages.login.appHero.feature3Body")}
           />
         </Box>
-      </Container>
+      </Box>
 
       <Footer sx={{ mt: "auto", backgroundColor: theme.palette.common.cream }} />
     </AuthPageShell>

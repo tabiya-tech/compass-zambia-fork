@@ -116,7 +116,7 @@ const Consent: React.FC = () => {
       if (!user) {
         console.warn("User preferences could not be persisted: user not found. Redirecting to landing page.");
         enqueueSnackbar(t("consent.components.consentPage.snackbarUserNotFound"), { variant: "error" });
-        navigate(routerPaths.LANDING);
+        navigate(routerPaths.LOGIN);
         return;
       }
 
@@ -179,7 +179,7 @@ const Consent: React.FC = () => {
       await authenticationService!.logout();
       console.info("User rejected consent. Logging out user.");
 
-      navigate(routerPaths.LANDING, { replace: true });
+      navigate(routerPaths.LOGIN, { replace: true });
       enqueueSnackbar(t("consent.components.consentPage.snackbarLoggedOutSuccess"), { variant: "success" });
     } catch (e) {
       console.error(new AuthenticationError("Failed to log out", e));

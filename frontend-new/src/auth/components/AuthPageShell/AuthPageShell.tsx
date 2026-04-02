@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Container, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
+import type { Theme } from "@mui/material/styles";
 import LanguageContextMenu from "src/i18n/languageContextMenu/LanguageContextMenu";
 
 export const shapesBackgroundUrl = `${process.env.PUBLIC_URL}/Shapes.svg`;
@@ -11,7 +12,23 @@ export type AuthPageShellProps = {
   whiteContainerTestId?: string;
 };
 
-const whiteContainerSx = { maxWidth: "lg", px: { xs: 2, md: 3 } } as const;
+const layoutCssVarsSx = (theme: Theme) => ({
+  "--layout-content-max-width": "80rem",
+  "--layout-gutter-x": {
+    xs: theme.fixedSpacing(theme.tabiyaSpacing.md),
+    md: theme.spacing(theme.tabiyaSpacing.xl),
+  },
+});
+
+export const layoutContentColumnSx = {
+  width: "100%",
+  maxWidth: "var(--layout-content-max-width)",
+  marginLeft: "auto",
+  marginRight: "auto",
+  paddingLeft: "var(--layout-gutter-x)",
+  paddingRight: "var(--layout-gutter-x)",
+  boxSizing: "border-box",
+} as const;
 
 const AuthPageShell: React.FC<AuthPageShellProps> = ({ logoUrl, whiteBandContent, children, whiteContainerTestId }) => {
   const theme = useTheme();
@@ -22,13 +39,14 @@ const AuthPageShell: React.FC<AuthPageShellProps> = ({ logoUrl, whiteBandContent
 
   return (
     <Box
-      sx={{
+      sx={(t) => ({
         minHeight: "100%",
         display: "flex",
         flexDirection: "column",
         width: "100%",
         position: "relative",
-      }}
+        ...layoutCssVarsSx(t),
+      })}
     >
       <Box
         sx={{
@@ -55,10 +73,13 @@ const AuthPageShell: React.FC<AuthPageShellProps> = ({ logoUrl, whiteBandContent
             zIndex: 0,
           }}
         />
-        <Container
+        <Box
           data-testid={whiteContainerTestId}
-          maxWidth="lg"
-          sx={{ ...whiteContainerSx, position: "relative", zIndex: 1 }}
+          sx={{
+            ...layoutContentColumnSx,
+            position: "relative",
+            zIndex: 1,
+          }}
         >
           <Box sx={{ position: "relative", pt, pb }}>
             <Box
@@ -79,7 +100,7 @@ const AuthPageShell: React.FC<AuthPageShellProps> = ({ logoUrl, whiteBandContent
             </Box>
             {whiteBandContent}
           </Box>
-        </Container>
+        </Box>
       </Box>
 
       <Box

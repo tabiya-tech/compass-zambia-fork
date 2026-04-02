@@ -53,8 +53,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       console.debug("redirecting from landing/login/register --> landing/login/register because no user");
       return <>{children}</>;
     }
-    console.debug("redirecting from ? --> /landing because no user");
-    return <Navigate to={routerPaths.LANDING} />;
+    console.debug("redirecting from ? --> /login because no user");
+    return <Navigate to={routerPaths.LOGIN} />;
   }
 
   //--- by now we know we have a user and some preferences

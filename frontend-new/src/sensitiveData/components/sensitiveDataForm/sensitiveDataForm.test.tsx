@@ -959,9 +959,9 @@ describe("Sensitive Data Form", () => {
       // THEN the logout function should be called
       expect(mockLogout).toHaveBeenCalled();
 
-      // AND the user should be navigated to the landing page
+      // AND the user should be navigated to the login page
       await waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith(routerPaths.LANDING, { replace: true });
+        expect(mockNavigate).toHaveBeenCalledWith(routerPaths.LOGIN, { replace: true });
       });
 
       // AND a success message should be shown

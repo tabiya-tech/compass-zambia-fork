@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, CircularProgress, Container, Divider, Typography, useTheme } from "@mui/material";
+import { Box, CircularProgress, Divider, Typography, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { routerPaths } from "src/app/routerPaths";
 import SocialAuth from "src/auth/components/SocialAuth/SocialAuth";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import { getUserFriendlyErrorMessage, RestAPIError } from "src/error/restAPIError/RestAPIError";
-import AuthHeader from "src/auth/components/AuthHeader/AuthHeader";
 import LoginWithEmailForm from "src/auth/pages/Login/components/LoginWithEmailForm/LoginWithEmailForm";
 import PrimaryButton from "src/theme/PrimaryButton/PrimaryButton";
 import LoginWithInviteCodeForm from "./components/LoginWithInviteCodeForm/LoginWithInviteCodeForm";
@@ -35,19 +34,18 @@ import {
   getSocialAuthDisabled,
 } from "src/envService";
 import PasswordReset from "src/auth/components/passwordReset/PasswordReset";
+import AuthLayout from "src/auth/components/AuthLayout/AuthLayout";
 
 const uniqueId = "7ce9ba1f-bde0-48e2-88df-e4f697945cc4";
 
 export const DATA_TEST_ID = {
   LOGIN_CONTAINER: `login-container-${uniqueId}`,
-  SUBTITLE: `login-subtitle-${uniqueId}`,
   FORM: `login-form-${uniqueId}`,
   EMAIL_INPUT: `login-email-input-${uniqueId}`,
   PASSWORD_INPUT: `login-password-input-${uniqueId}`,
   LOGIN_BUTTON: `login-button-${uniqueId}`,
   LOGIN_BUTTON_CIRCULAR_PROGRESS: `login-button-circular-progress-${uniqueId}`,
   FORGOT_PASSWORD_LINK: `login-forgot-password-link-${uniqueId}`,
-  LOGIN_USING: `login-using-${uniqueId}`,
   FIREBASE_AUTH_CONTAINER: `firebase-auth-container-${uniqueId}`,
   REGISTER_LINK: `login-register-link-${uniqueId}`,
   LANGUAGE_SELECTOR: `login-language-selector-${uniqueId}`,
@@ -340,14 +338,7 @@ const Login: React.FC = () => {
 
   const getLoginCodeComponent = useMemo(() => {
     if (loginCodeDisabled) {
-      return (
-        <>
-          <Typography variant="body2">{t("auth.pages.login.loginToYourAccountToContinue")}</Typography>
-          <Typography variant="subtitle2" data-testid={DATA_TEST_ID.SUBTITLE}>
-            {t("auth.pages.login.loginUsing")}
-          </Typography>
-        </>
-      );
+      return null;
     } else {
       return (
         <>
@@ -357,15 +348,19 @@ const Login: React.FC = () => {
               disableWhenOffline={true}
               onClick={handleStartNewConversation}
               data-testid={DATA_TEST_ID.START_NEW_CONVERSATION_BUTTON}
+              sx={{
+                color: theme.palette.brandAction.main,
+                backgroundColor: theme.palette.common.cream,
+                "&:hover:not(:disabled)": {
+                  backgroundColor: theme.palette.common.cream,
+                  opacity: 0.9,
+                },
+              }}
             >
               {t("auth.pages.landing.continueAsGuest")}
             </PrimaryButton>
           ) : (
             <React.Fragment>
-              <Typography variant="body2">{t("auth.pages.login.loginToYourAccountToContinue")}</Typography>
-              <Typography variant="subtitle2" data-testid={DATA_TEST_ID.SUBTITLE}>
-                {t("auth.pages.login.loginUsing")}
-              </Typography>
               <LoginWithInviteCodeForm
                 inviteCode={inviteCode}
                 notifyOnInviteCodeChanged={handleInviteCodeChanged}
@@ -376,8 +371,8 @@ const Login: React.FC = () => {
           <Divider textAlign="center" style={{ width: "100%" }}>
             <Typography
               variant="subtitle2"
+              sx={{ color: theme.palette.common.white }}
               padding={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
-              data-testid={DATA_TEST_ID.SUBTITLE}
             >
               {invitationCodeAndEmailFormDividerText}
             </Typography>
@@ -448,88 +443,120 @@ const Login: React.FC = () => {
   );
 
   return (
-    <Container
-      maxWidth="xs"
-      sx={{ height: "100%", padding: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}
-      data-testid={DATA_TEST_ID.LOGIN_CONTAINER}
-    >
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent={"space-evenly"}
-        gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
-        width={"100%"}
-      >
-        <AuthHeader title={t("auth.pages.login.welcomeTitle")} />
+    <Box data-testid={DATA_TEST_ID.LOGIN_CONTAINER} sx={{ minHeight: "100%" }}>
+      <AuthLayout>
         <Box
-          component="form"
-          onSubmit={handleLoginSubmit}
-          data-testid={DATA_TEST_ID.FORM}
-          display={"flex"}
-          flexDirection={"column"}
-          textAlign={"center"}
-          width={"100%"}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent={"space-evenly"}
           gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
+          width={"100%"}
+          sx={{
+            color: theme.palette.common.white,
+            "& .MuiTypography-root": { color: theme.palette.common.white },
+            "& .MuiLink-root": { color: theme.palette.common.white },
+          }}
         >
-          {getLoginCodeComponent}
-          <LoginWithEmailForm
-            email={email}
-            password={password}
-            notifyOnEmailChanged={handleEmailChanged}
-            notifyOnPasswordChanged={handlePasswordChanged}
-            isDisabled={isLoading}
-          />
-          {showResendVerification && (
-            <ResendVerificationEmail email={lastAttemptedEmail} password={lastAttemptedPassword} />
-          )}
-          {
-            /*dont show both the resend verification email and forgot password at the same time*/
-            !showResendVerification && <PasswordReset />
-          }
-          <PrimaryButton
-            fullWidth
-            variant="contained"
-            color="primary"
-            style={{ marginTop: 8 }}
-            type="submit"
-            disabled={isLoginButtonDisabled}
-            disableWhenOffline={true}
-            data-testid={DATA_TEST_ID.LOGIN_BUTTON}
-          >
-            {isLoading ? (
-              <CircularProgress
-                color={"secondary"}
-                data-testid={DATA_TEST_ID.LOGIN_BUTTON_CIRCULAR_PROGRESS}
-                aria-label={t("auth.pages.login.loggingInAria")}
-                size={16}
-                sx={{ marginTop: theme.tabiyaSpacing.sm, marginBottom: theme.tabiyaSpacing.sm }}
-              />
-            ) : (
-              t("common.buttons.login")
-            )}
-          </PrimaryButton>
-        </Box>
-        {!socialAuthDisabled && (
-          <SocialAuth
-            disabled={false}
-            postLoginHandler={handlePostLogin}
-            isLoading={isLoading}
-            notifyOnLoading={notifyOnSocialLoading}
-            registrationCode={applicationRegistrationCode}
-          />
-        )}
-        {!registrationDisabled && (
-          <Typography variant="caption" data-testid={DATA_TEST_ID.REGISTER_LINK}>
-            {t("auth.pages.login.dontHaveAnAccount")}
-            <CustomLink onClick={() => navigate(routerPaths.REGISTER)}>{t("common.buttons.register")}</CustomLink>
+          <Typography variant="h3" sx={{ fontWeight: 700, textTransform: "uppercase" }}>
+            Sign In
           </Typography>
-        )}
-        {showRequestLoginCode && <RequestInvitationCode invitationCodeType={InvitationType.LOGIN} />}
-      </Box>
+          <Box
+            component="form"
+            onSubmit={handleLoginSubmit}
+            data-testid={DATA_TEST_ID.FORM}
+            display={"flex"}
+            flexDirection={"column"}
+            textAlign={"center"}
+            width={"100%"}
+            gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
+          >
+            {getLoginCodeComponent}
+            <LoginWithEmailForm
+              email={email}
+              password={password}
+              notifyOnEmailChanged={handleEmailChanged}
+              notifyOnPasswordChanged={handlePasswordChanged}
+              isDisabled={isLoading}
+            />
+            {showResendVerification && (
+              <ResendVerificationEmail email={lastAttemptedEmail} password={lastAttemptedPassword} />
+            )}
+            {
+              /*dont show both the resend verification email and forgot password at the same time*/
+              !showResendVerification && <PasswordReset />
+            }
+            <PrimaryButton
+              fullWidth
+              variant="outlined"
+              color="brandAction"
+              showCircle
+              style={{ marginTop: 8 }}
+              type="submit"
+              disabled={isLoginButtonDisabled}
+              disableWhenOffline={true}
+              data-testid={DATA_TEST_ID.LOGIN_BUTTON}
+              sx={{
+                textTransform: "uppercase",
+                backgroundColor: theme.palette.common.cream,
+                border: "none",
+                color: theme.palette.brandAction.main,
+                "&:hover:not(:disabled)": {
+                  backgroundColor: theme.palette.common.cream,
+                  border: "none",
+                  opacity: 0.95,
+                },
+                "&.Mui-disabled": {
+                  opacity: 0.8,
+                },
+              }}
+            >
+              {isLoading ? (
+                <CircularProgress
+                  color={"secondary"}
+                  data-testid={DATA_TEST_ID.LOGIN_BUTTON_CIRCULAR_PROGRESS}
+                  aria-label={t("auth.pages.login.loggingInAria")}
+                  size={16}
+                  sx={{ marginTop: theme.tabiyaSpacing.sm, marginBottom: theme.tabiyaSpacing.sm }}
+                />
+              ) : (
+                t("common.buttons.login")
+              )}
+            </PrimaryButton>
+          </Box>
+          {!socialAuthDisabled && (
+            <SocialAuth
+              disabled={false}
+              postLoginHandler={handlePostLogin}
+              isLoading={isLoading}
+              notifyOnLoading={notifyOnSocialLoading}
+              registrationCode={applicationRegistrationCode}
+            />
+          )}
+          {!registrationDisabled && (
+            <Typography variant="caption" data-testid={DATA_TEST_ID.REGISTER_LINK}>
+              {t("auth.pages.login.dontHaveAnAccount")}
+              <CustomLink
+                onClick={() => navigate(routerPaths.REGISTER)}
+                sx={{
+                  color: theme.palette.common.white,
+                  fontWeight: 700,
+                  "&:hover": {
+                    color: theme.palette.common.white,
+                    opacity: 0.75,
+                  },
+                }}
+              >
+                {t("common.buttons.register")}
+              </CustomLink>
+            </Typography>
+          )}
+          {showRequestLoginCode && <RequestInvitationCode invitationCodeType={InvitationType.LOGIN} />}
+        </Box>
+      </AuthLayout>
       <BugReportButton bottomAlign={true} />
       <Backdrop isShown={isLoading} message={t("auth.pages.login.loggingYouIn")} />
-    </Container>
+    </Box>
   );
 };
 

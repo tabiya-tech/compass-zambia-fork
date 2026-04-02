@@ -115,7 +115,7 @@ const NavBar: React.FC<NavBarProps> = ({ headerColor = "brandAction" }) => {
       setIsLoggingOut(true);
       const authenticationService = AuthenticationServiceFactory.getCurrentAuthenticationService();
       await authenticationService!.logout();
-      navigate(routerPaths.LANDING, { replace: true });
+      navigate(routerPaths.LOGIN, { replace: true });
       enqueueSnackbar(t("chat.chat.notifications.logoutSuccess"), { variant: "success" });
       setIsLoggingOut(false);
     }
@@ -126,7 +126,7 @@ const NavBar: React.FC<NavBarProps> = ({ headerColor = "brandAction" }) => {
     setIsLoggingOut(true);
     const authenticationService = AuthenticationServiceFactory.getCurrentAuthenticationService();
     await authenticationService!.logout();
-    navigate(routerPaths.LANDING, { replace: true });
+    navigate(routerPaths.LOGIN, { replace: true });
     enqueueSnackbar(t("chat.chat.notifications.logoutSuccess"), { variant: "success" });
     setIsLoggingOut(false);
   }, [enqueueSnackbar, navigate, t]);

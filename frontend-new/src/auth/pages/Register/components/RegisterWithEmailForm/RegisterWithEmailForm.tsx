@@ -67,6 +67,10 @@ const RegisterWithEmailForm: React.FC<Readonly<RegisterFormProps>> = ({
         disabled={isRegistering || disabled}
         variant="outlined"
         required
+        sx={{
+          "& .MuiInputBase-root": { backgroundColor: theme.palette.common.white },
+          "& .MuiInputLabel-root": { color: theme.palette.common.black },
+        }}
         onChange={(e) => handleEmailChange(e)}
         inputProps={{ "data-testid": DATA_TEST_ID.EMAIL_INPUT }}
       />
@@ -80,16 +84,35 @@ const RegisterWithEmailForm: React.FC<Readonly<RegisterFormProps>> = ({
         value={password}
         onValidityChange={setIsPasswordValid}
         inputProps={{ "data-testid": DATA_TEST_ID.PASSWORD_INPUT }}
+        sx={{
+          "& .MuiInputBase-root": { backgroundColor: theme.palette.common.white },
+          "& .MuiInputLabel-root": { color: theme.palette.common.black },
+        }}
       />
       <PrimaryButton
         fullWidth
-        variant="contained"
-        color="primary"
-        style={{ marginTop: 16 }}
+        variant="outlined"
+        color="brandAction"
+        showCircle
+        style={{ marginTop: 8 }}
         type="submit"
         disabled={isRegistering || disabled || !isPasswordValid || !email}
         disableWhenOffline={true}
         data-testid={DATA_TEST_ID.REGISTER_BUTTON}
+        sx={{
+          textTransform: "uppercase",
+          backgroundColor: theme.palette.common.cream,
+          border: "none",
+          color: theme.palette.brandAction.main,
+          "&:hover:not(:disabled)": {
+            backgroundColor: theme.palette.common.cream,
+            border: "none",
+            opacity: 0.95,
+          },
+          "&.Mui-disabled": {
+            opacity: 0.8,
+          },
+        }}
       >
         {isRegistering ? (
           <CircularProgress

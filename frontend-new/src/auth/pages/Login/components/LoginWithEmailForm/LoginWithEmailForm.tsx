@@ -50,6 +50,10 @@ const LoginWithEmailForm: React.FC<Readonly<LoginFormProps>> = ({
         label={t("common.fields.email")}
         type="email"
         variant="outlined"
+        sx={{
+          "& .MuiInputBase-root": { backgroundColor: theme.palette.common.white },
+          "& .MuiInputLabel-root": { color: theme.palette.common.black },
+        }}
         disabled={isDisabled}
         value={email}
         onChange={(e) => handleEmailChange(e)}
@@ -63,6 +67,10 @@ const LoginWithEmailForm: React.FC<Readonly<LoginFormProps>> = ({
         value={password}
         onChange={(e) => handlePasswordChange(e)}
         inputProps={{ "data-testid": DATA_TEST_ID.EMAIL_LOGIN_FORM_PASSWORD_INPUT }}
+        sx={{
+          "& .MuiInputBase-root": { backgroundColor: theme.palette.common.white },
+          "& .MuiInputLabel-root": { color: theme.palette.common.black },
+        }}
         shouldValidatePassword={false} // no password validation necessary on login
       />
     </Box>

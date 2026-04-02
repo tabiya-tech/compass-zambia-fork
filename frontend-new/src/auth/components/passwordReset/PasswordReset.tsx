@@ -108,6 +108,12 @@ const ResetPasswordEmailSender: React.FC<ResetPasswordEmailSenderProps> = ({ ini
           onClick={() => setDialogOpen(true)}
           disabled={isLoading || cooldownSeconds > 0 || !isOnline}
           data-testid={DATA_TEST_ID.RESET_LINK}
+          sx={{
+            "&:hover": {
+              color: theme.palette.common.white,
+              opacity: 0.75,
+            },
+          }}
         >
           {t("auth.components.passwordReset.forgotPassword")}
         </CustomLink>

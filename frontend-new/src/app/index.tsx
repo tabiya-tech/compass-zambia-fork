@@ -196,7 +196,7 @@ const App = () => {
       await AuthenticationServiceFactory.resetAuthenticationState();
 
       // Redirect without a page reload
-      window.location.href = `/#${routerPaths.LANDING}`;
+      window.location.href = `/#${routerPaths.LOGIN}`;
     };
 
     // When another tab logs in, reload the application state
