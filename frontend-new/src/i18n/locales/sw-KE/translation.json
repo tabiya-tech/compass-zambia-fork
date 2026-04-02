@@ -282,6 +282,21 @@
         "or": "au",
         "invitationCodeValid": "Nambari ya mwaliko ni sahihi",
         "continueAsGuest": "Endelea kama Mgeni",
+        "appHero": {
+          "discoverLine": "Gundua ako",
+          "skillsLine": "ujuzi na nguvu zako.",
+          "subheadline": "Njia yako iliyoongozwa kutoka kwa ujuzi hadi kazi yako ya kwanza — imejengwa kulingana na unachojua, ulichofanya, na unapotaka kwenda.",
+          "signInTitle": "Ingia",
+          "cta": "Twende",
+          "whatIsTitleBefore": "Ni nini ",
+          "whatIsTitleBrand": "{{appName}}",
+          "feature1Title": "Gundua nguvu zako",
+          "feature1Body": "Jua ni ujuzi gani tayari una nao — kutoka mafunzo yako, kazi yako, na maisha yako.",
+          "feature2Title": "Unda CV inayoonekana",
+          "feature2Body": "Unda CV ya kitaalamu inayolingana na kinachotafutwa na waajiri Zambia.",
+          "feature3Title": "Pata njia yako",
+          "feature3Body": "Chunguza kazi zinazohitajika, elewa sifa zipi unazohitaji, na linganisha na nafasi halisi za kazi."
+        },
         "components": {
           "loginWithInviteCodeForm": {
             "loginCode": "Nambari ya Kuingia"

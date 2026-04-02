@@ -2,13 +2,13 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { routerPaths } from "src/app/routerPaths";
-import { Box, Typography, useTheme, Dialog, Divider, DialogContent, useMediaQuery } from "@mui/material";
+import { Box, Divider, Typography, useTheme } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import PrimaryButton from "src/theme/PrimaryButton/PrimaryButton";
 import SecondaryButton from "src/theme/SecondaryButton/SecondaryButton";
 import CustomLink from "src/theme/CustomLink/CustomLink";
-import AuthHeader from "src/auth/components/AuthHeader/AuthHeader";
 import BugReportButton from "src/feedback/bugReport/bugReportButton/BugReportButton";
-import { getLoginCodeDisabled, getApplicationLoginCode, getRegistrationDisabled } from "src/envService";
+import { getLoginCodeDisabled, getApplicationLoginCode, getRegistrationDisabled, getProductName } from "src/envService";
 import FirebaseInvitationCodeAuthenticationService from "src/auth/services/FirebaseAuthenticationService/invitationCodeAuth/FirebaseInvitationCodeAuthenticationService";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
@@ -16,8 +16,7 @@ import { AuthenticationError } from "src/error/commonErrors";
 import { RestAPIError, getUserFriendlyErrorMessage } from "src/error/restAPIError/RestAPIError";
 import { FirebaseError, getUserFriendlyFirebaseErrorMessage } from "src/error/FirebaseError/firebaseError";
 import { Backdrop } from "src/theme/Backdrop/Backdrop";
-import { TabiyaBasicColors } from "src/theme/applicationTheme/applicationTheme";
-import { Theme, alpha } from "@mui/material/styles";
+import AuthLayout from "src/auth/components/AuthLayout/AuthLayout";
 
 const uniqueId = "e9c346bb-bcc6-4aaa-aaa9-d24d09274925";
 
@@ -35,20 +34,13 @@ const Landing: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const isSmallMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const [isLoading, setIsLoading] = useState(false);
 
-  const applicationLoginCode = useMemo(() => {
-    return getApplicationLoginCode();
-  }, []);
+  const appName = getProductName() || "Njila";
 
-  const loginCodeDisabled = useMemo(() => {
-    return getLoginCodeDisabled().toLowerCase() === "true";
-  }, []);
-
-  const registrationDisabled = useMemo(() => {
-    return getRegistrationDisabled().toLowerCase() === "true";
-  }, []);
+  const applicationLoginCode = useMemo(() => getApplicationLoginCode(), []);
+  const loginCodeDisabled = useMemo(() => getLoginCodeDisabled().toLowerCase() === "true", []);
+  const registrationDisabled = useMemo(() => getRegistrationDisabled().toLowerCase() === "true", []);
 
   const handleError = useCallback(
     async (error: Error) => {
@@ -106,139 +98,96 @@ const Landing: React.FC = () => {
     }
   }, [applicationLoginCode, handleError, handlePostLogin, enqueueSnackbar, t]);
 
-  return (
-    <>
-      <Dialog
-        open={true}
-        maxWidth="xs"
+  const showGuestOption = Boolean(applicationLoginCode && !loginCodeDisabled);
+
+  const form = (
+    <Box display="flex" flexDirection="column" gap={theme.fixedSpacing(theme.tabiyaSpacing.md)} width={320}>
+      <Box>
+        <Typography variant="h3" gutterBottom sx={{ color: theme.palette.common.white }}>
+          {t("auth.pages.landing.welcomeTitle", { appName })}
+        </Typography>
+        <Typography variant="h5" sx={{ color: theme.palette.common.white }}>
+          {t("auth.pages.landing.subtitleBold")}
+        </Typography>
+      </Box>
+      <PrimaryButton
         fullWidth
-        disableEscapeKeyDown
-        disableEnforceFocus
-        onClose={() => {}}
-        hideBackdrop={false}
+        disabled={isLoading}
+        color="brandAction"
+        onClick={() => navigate(routerPaths.LOGIN)}
+        data-testid={DATA_TEST_ID.LANDING_LOGIN_BUTTON}
         sx={{
-          "& .MuiDialog-container": {
-            display: "flex",
-            alignItems: "flex-start",
-            paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.lg),
-          },
+          backgroundColor: theme.palette.common.cream,
+          color: theme.palette.brandAction.main,
+          fontWeight: 700,
+          textTransform: "uppercase",
         }}
-        slotProps={{
-          backdrop: {
-            sx: {
-              backgroundColor: TabiyaBasicColors.LightGreen,
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                inset: 0,
-                backgroundColor: isLoading ? "transparent" : alpha(theme.palette.common.black, 0.5),
-                // Use transition to prevent flashing
-                transition: "background-color 0.2s ease-in-out",
-              },
-            },
-          },
-        }}
-        PaperProps={{
-          sx: {
-            height: "fit-content",
-            borderRadius: 2,
-            width: "calc(100% - 16px)",
-            margin: "0",
-          },
-        }}
-        data-testid={DATA_TEST_ID.LANDING_DIALOG}
       >
-        <DialogContent
+        {t("common.buttons.login")}
+      </PrimaryButton>
+      {!registrationDisabled && (
+        <SecondaryButton
+          fullWidth
+          disabled={isLoading}
+          color="brandAction"
+          onClick={() => navigate(routerPaths.REGISTER)}
+          data-testid={DATA_TEST_ID.LANDING_SIGNUP_BUTTON}
           sx={{
-            height: "100%",
-            padding: 0,
-            paddingX: isSmallMobile
-              ? theme.fixedSpacing(theme.tabiyaSpacing.md)
-              : theme.fixedSpacing(theme.tabiyaSpacing.lg),
+            borderColor: theme.palette.common.cream,
+            color: theme.palette.common.cream,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            "&:hover:not(:disabled)": {
+              backgroundColor: "transparent",
+            },
           }}
-          data-testid={DATA_TEST_ID.LANDING_DIALOG_CONTENT}
         >
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            gap={theme.fixedSpacing(theme.tabiyaSpacing.md)}
-            width="100%"
+          {t("common.buttons.register")}
+        </SecondaryButton>
+      )}
+      {showGuestOption && (
+        <Box sx={{ width: "100%", textAlign: "center", mt: 1 }}>
+          <Divider
+            textAlign="center"
             sx={{
-              height: "100%",
-              paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.xl),
+              width: "100%",
+              my: 1,
+              borderColor: alpha(theme.palette.common.white, 0.85),
+            }}
+            data-testid={DATA_TEST_ID.LANDING_DIVIDER}
+          >
+            <Typography
+              variant="subtitle2"
+              sx={{ px: 1, color: theme.palette.common.white }}
+              padding={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
+            >
+              {t("auth.pages.landing.or")}
+            </Typography>
+          </Divider>
+          <CustomLink
+            onClick={handleContinueAsGuest}
+            disabled={isLoading}
+            disableWhenOffline={true}
+            data-testid={DATA_TEST_ID.LANDING_GUEST_BUTTON}
+            sx={{
+              color: theme.palette.common.white,
+              fontWeight: 700,
+              "&:hover": { color: theme.palette.common.white, opacity: 0.7 },
             }}
           >
-            <AuthHeader
-              title={t("auth.pages.landing.welcomeTitle")}
-              subtitle={
-                <>
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold"
-                    textAlign="center"
-                    paddingBottom={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
-                  >
-                    {t("auth.pages.landing.subtitleBold")}
-                  </Typography>
-                  <Typography variant="body2" textAlign="center">
-                    {t("auth.pages.landing.subtitleBody")}
-                  </Typography>
-                </>
-              }
-            />
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
-              width="100%"
-            >
-              <Box display="flex" flexDirection="column" gap={theme.fixedSpacing(theme.tabiyaSpacing.md)} width="100%">
-                <PrimaryButton
-                  fullWidth
-                  disabled={isLoading}
-                  onClick={() => navigate(routerPaths.LOGIN)}
-                  data-testid={DATA_TEST_ID.LANDING_LOGIN_BUTTON}
-                >
-                  {t("common.buttons.login")}
-                </PrimaryButton>
-                {!registrationDisabled && (
-                  <SecondaryButton
-                    fullWidth
-                    disabled={isLoading}
-                    style={{ border: `1px solid ${theme.palette.text.secondary}` }}
-                    onClick={() => navigate(routerPaths.REGISTER)}
-                    data-testid={DATA_TEST_ID.LANDING_SIGNUP_BUTTON}
-                  >
-                    {t("common.buttons.register")}
-                  </SecondaryButton>
-                )}
-              </Box>
-              {applicationLoginCode && !loginCodeDisabled && (
-                <>
-                  <Divider textAlign="center" style={{ width: "100%" }} data-testid={DATA_TEST_ID.LANDING_DIVIDER}>
-                    <Typography variant="subtitle2" padding={theme.fixedSpacing(theme.tabiyaSpacing.sm)}>
-                      {t("auth.pages.landing.or")}
-                    </Typography>
-                  </Divider>
-                  <CustomLink
-                    onClick={handleContinueAsGuest}
-                    disabled={isLoading}
-                    disableWhenOffline={true}
-                    data-testid={DATA_TEST_ID.LANDING_GUEST_BUTTON}
-                  >
-                    {t("auth.pages.landing.continueAsGuest")}
-                  </CustomLink>
-                </>
-              )}
-            </Box>
-          </Box>
-        </DialogContent>
-      </Dialog>
+            {t("auth.pages.landing.continueAsGuest")}
+          </CustomLink>
+        </Box>
+      )}
+    </Box>
+  );
+
+  return (
+    <Box data-testid={DATA_TEST_ID.LANDING_DIALOG} sx={{ minHeight: "100%" }}>
+      <AuthLayout contentTestId={DATA_TEST_ID.LANDING_DIALOG_CONTENT}>{form}</AuthLayout>
       <BugReportButton bottomAlign={true} />
       <Backdrop isShown={isLoading} message={t("auth.pages.landing.loggingYouIn")} />
-    </>
+    </Box>
   );
 };
 
