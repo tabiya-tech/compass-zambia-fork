@@ -1,0 +1,27 @@
+import asyncio
+
+from fastapi import Depends
+
+from app.institutions.repository import InstitutionRepository
+from app.institutions.service import IInstitutionService, InstitutionService
+from app.server_dependencies.database_collections import Collections
+from app.server_dependencies.db_dependencies import CompassDBProvider
+
+_institution_service_singleton: IInstitutionService | None = None
+_institution_service_lock = asyncio.Lock()
+
+
+async def get_institution_service(
+        jobs_db=Depends(CompassDBProvider.get_jobs_db)
+) -> IInstitutionService:
+    global _institution_service_singleton
+
+    if _institution_service_singleton is None:
+        async with _institution_service_lock:
+            if _institution_service_singleton is None:
+                collection = jobs_db.get_collection(Collections.INSTITUTIONS)
+                _institution_service_singleton = InstitutionService(
+                    repository=InstitutionRepository(collection)
+                )
+
+    return _institution_service_singleton

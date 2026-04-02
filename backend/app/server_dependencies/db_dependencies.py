@@ -276,6 +276,31 @@ class CompassDBProvider:
             raise e
 
     @staticmethod
+    async def initialize_jobs_mongo_db(jobs_db: AsyncIOMotorDatabase, logger: logging.Logger):
+        """Initialize indexes for the jobs database (includes institutions collection)."""
+        try:
+            logger.info("Initializing indexes for the jobs database")
+            await jobs_db.get_collection(Collections.INSTITUTIONS).create_index(
+                [
+                    ("name", "text"),
+                    ("sectors_covered", "text"),
+                    ("programmes.name", "text"),
+                ],
+                name="institutions_text_search",
+                default_language="english",
+            )
+            await jobs_db.get_collection(Collections.INSTITUTIONS).create_index(
+                [("reg_no", 1)], sparse=True
+            )
+            await jobs_db.get_collection(Collections.INSTITUTIONS).create_index(
+                [("location.province", 1)]
+            )
+            logger.info("Finished creating indexes for the jobs database")
+        except Exception as e:
+            logger.exception(e)
+            raise e
+
+    @staticmethod
     async def initialize_career_explorer_mongo_db(career_explorer_db: AsyncIOMotorDatabase, logger: logging.Logger):
         try:
             logger.info("Initializing indexes for the Career Explorer database")

@@ -22,3 +22,4 @@ class Collections:
     CAREER_READINESS_CONVERSATIONS: str = "career_readiness_conversations"
     CAREER_EXPLORER_CONVERSATIONS: str = "career_explorer_conversations"
     CAREER_EXPLORER_SECTOR_CHUNKS: str = "career_explorer_sector_chunks"
+    INSTITUTIONS: str = "institutions"
