@@ -24,5 +24,6 @@
   --text-secondary: 125 116 105; /* stone */
   --text-accent: 92 191 191; /* teal */
 
+  --layout-content-max-width: 80rem;
   --layout-gutter-x: 16px;
 }

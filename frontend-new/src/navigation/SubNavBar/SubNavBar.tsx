@@ -77,7 +77,6 @@ const SubNavBar: React.FC<SubNavBarProps> = ({
         backgroundColor: bgColor,
         color: textColor,
         borderTop: `1px solid ${theme.palette.common.white}33`,
-        paddingX: "var(--layout-gutter-x)",
         paddingTop: theme.spacing(theme.tabiyaSpacing.sm),
         paddingBottom: theme.spacing(theme.tabiyaSpacing.sm),
       }}
@@ -85,6 +84,10 @@ const SubNavBar: React.FC<SubNavBarProps> = ({
     >
       <Box
         sx={{
+          width: "100%",
+          maxWidth: "var(--layout-content-max-width)",
+          margin: "0 auto",
+          paddingX: "var(--layout-gutter-x)",
           position: "relative",
           minHeight: isMobile ? undefined : 56,
           display: "flex",
@@ -112,7 +115,7 @@ const SubNavBar: React.FC<SubNavBarProps> = ({
             }),
             ...(!isMobile && {
               position: "absolute",
-              left: 0,
+              left: "var(--layout-gutter-x)",
               top: "50%",
               transform: "translateY(-50%)",
               justifyContent: "flex-start",

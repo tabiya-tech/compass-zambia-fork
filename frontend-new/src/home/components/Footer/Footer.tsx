@@ -45,9 +45,14 @@ const Footer: React.FC<FooterProps> = ({ sx }) => {
     <Box component="footer" data-testid={DATA_TEST_ID.FOOTER_CONTAINER} sx={sx}>
       <Divider sx={{ borderColor: theme.palette.grey[300] }} />
       <Container
-        maxWidth="md"
+        maxWidth={false}
         sx={{
-          padding: theme.spacing(theme.tabiyaSpacing.lg),
+          width: "100%",
+          maxWidth: "var(--layout-content-max-width)",
+          marginX: "auto",
+          paddingTop: theme.spacing(theme.tabiyaSpacing.lg),
+          paddingBottom: theme.spacing(theme.tabiyaSpacing.lg),
+          paddingX: "var(--layout-gutter-x)",
         }}
       >
         <Box

@@ -57,14 +57,15 @@ const CareerReadinessList: React.FC = () => {
         sx={{
           flex: 1,
           backgroundColor: theme.palette.containerBackground.main,
-          display: "flex",
-          justifyContent: "center",
         }}
         data-testid={DATA_TEST_ID.CAREER_READINESS_LIST_CONTENT}
       >
         <Box
           sx={{
-            width: { xs: "100%", md: "90%" },
+            width: "100%",
+            maxWidth: "var(--layout-content-max-width)",
+            mx: "auto",
+            px: "var(--layout-gutter-x)",
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
             alignItems: "stretch",
@@ -75,7 +76,6 @@ const CareerReadinessList: React.FC = () => {
             sx={{
               flex: 1,
               minWidth: 0,
-              paddingX: theme.fixedSpacing(theme.tabiyaSpacing.md),
               paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.lg),
               paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg),
             }}

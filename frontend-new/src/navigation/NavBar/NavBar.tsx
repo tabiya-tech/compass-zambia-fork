@@ -331,6 +331,7 @@ const NavBar: React.FC<NavBarProps> = ({ headerColor = "brandAction" }) => {
         alignItems="center"
         justifyContent="space-between"
         gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
+        width="100%"
         paddingX="var(--layout-gutter-x)"
         paddingY={theme.spacing(theme.tabiyaSpacing.sm)}
       >

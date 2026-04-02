@@ -30,10 +30,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ upNextModule, loading = false
     >
       <Box
         sx={{
-          width: { xs: "100%", md: "90%" },
+          width: "100%",
+          maxWidth: "var(--layout-content-max-width)",
           margin: "0 auto",
-          padding: theme.fixedSpacing(theme.tabiyaSpacing.lg),
-          paddingRight: { xs: 0, md: "10%" },
+          paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+          paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg),
+          paddingLeft: "var(--layout-gutter-x)",
+          paddingRight: "var(--layout-gutter-x)",
           display: "flex",
           gap: theme.fixedSpacing(theme.tabiyaSpacing.lg),
           alignItems: "center",
