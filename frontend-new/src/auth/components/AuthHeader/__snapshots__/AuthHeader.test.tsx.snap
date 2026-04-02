@@ -11,7 +11,7 @@ exports[`AuthHeader tests should not render subtitle if not passed 1`] = `
     <img
       alt="Logo"
       data-testid="auth-header-logo-40374529-6e2c-49d8-81d7-93f01603a648"
-      src="/logo.svg"
+      src="/njila-logo-dark.svg"
       style="max-width: 60%; margin: 5% 10%;"
     />
     <button
@@ -54,7 +54,7 @@ exports[`AuthHeader tests should render the AuthHeader 1`] = `
     <img
       alt="Logo"
       data-testid="auth-header-logo-40374529-6e2c-49d8-81d7-93f01603a648"
-      src="/logo.svg"
+      src="/njila-logo-dark.svg"
       style="max-width: 60%; margin: 5% 10%;"
     />
     <button

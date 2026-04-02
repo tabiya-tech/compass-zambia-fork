@@ -29,6 +29,7 @@ export enum EnvVariables {
   FRONTEND_META_DESCRIPTION = "FRONTEND_META_DESCRIPTION",
   FRONTEND_SEO = "FRONTEND_SEO",
   FRONTEND_LOGO_URL = "FRONTEND_LOGO_URL",
+  FRONTEND_DARK_LOGO_URL = "FRONTEND_DARK_LOGO_URL",
   FRONTEND_FAVICON_URL = "FRONTEND_FAVICON_URL",
   FRONTEND_APP_ICON_URL = "FRONTEND_APP_ICON_URL",
   FRONTEND_THEME_CSS_VARIABLES = "FRONTEND_THEME_CSS_VARIABLES",
@@ -232,6 +233,8 @@ export const getGtmContainerId = () => getEnv(EnvVariables.FRONTEND_GTM_CONTAINE
 export const getGtmEnabled = () => getEnv(EnvVariables.FRONTEND_GTM_ENABLED);
 
 export const getLogoUrl = () => getEnv(EnvVariables.FRONTEND_LOGO_URL);
+
+export const getDarkLogoUrl = () => getEnv(EnvVariables.FRONTEND_DARK_LOGO_URL);
 
 export const getFaviconUrl = () => getEnv(EnvVariables.FRONTEND_FAVICON_URL);
 
