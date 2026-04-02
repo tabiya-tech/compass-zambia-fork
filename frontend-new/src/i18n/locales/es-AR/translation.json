@@ -282,6 +282,21 @@
         "or": "o",
         "invitationCodeValid": "El código de invitación es válido",
         "continueAsGuest": "Continuar como invitado",
+        "appHero": {
+          "discoverLine": "Descubrí tus",
+          "skillsLine": "habilidades y fortalezas.",
+          "subheadline": "Tu camino guiado desde las habilidades hasta tu primer trabajo — basado en lo que sabés, lo que hiciste y a dónde querés ir.",
+          "signInTitle": "Iniciar sesión",
+          "cta": "Vamos",
+          "whatIsTitleBefore": "¿Qué es ",
+          "whatIsTitleBrand": "{{appName}}",
+          "feature1Title": "Descubrí tus fortalezas",
+          "feature1Body": "Descubrí qué habilidades ya tenés — de tu formación, tu trabajo y tu vida.",
+          "feature2Title": "Creá un CV que destaque",
+          "feature2Body": "Creá un CV profesional adaptado a lo que buscan los empleadores en Zambia.",
+          "feature3Title": "Encontrá tu camino",
+          "feature3Body": "Explorá carreras demandadas, entendé qué calificaciones necesitás y conectate con ofertas reales."
+        },
         "components": {
           "loginWithInviteCodeForm": {
             "loginCode": "Código de inicio de sesión"

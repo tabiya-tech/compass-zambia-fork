@@ -282,6 +282,21 @@
         "or": "or",
         "invitationCodeValid": "Invitation code is valid",
         "continueAsGuest": "Continue as Guest",
+        "appHero": {
+          "discoverLine": "Discover your",
+          "skillsLine": "skills & strengths.",
+          "subheadline": "Your guided path from skills to your first job — built around what you know, what you've done, and where you want to go.",
+          "signInTitle": "Sign In",
+          "cta": "Let's go",
+          "whatIsTitleBefore": "What is ",
+          "whatIsTitleBrand": "{{appName}}",
+          "feature1Title": "Discover your strengths",
+          "feature1Body": "Find out what skills you already have — from your training, your work, and your life.",
+          "feature2Title": "Build a CV that gets noticed",
+          "feature2Body": "Create a professional CV tailored to what employers in Zambia are looking for.",
+          "feature3Title": "Find your path",
+          "feature3Body": "Explore in-demand careers, understand what qualifications you need, and match to real job openings."
+        },
         "components": {
           "loginWithInviteCodeForm": {
             "loginCode": "Login Code"

@@ -282,6 +282,21 @@
         "or": "kapena",
         "invitationCodeValid": "Code yokondera ndi yovomerezeka",
         "continueAsGuest": "Pitilizani ngati Mnyamata",
+        "appHero": {
+          "discoverLine": "Senzani zanu",
+          "skillsLine": "nzeru ndi mphamvu zanu.",
+          "subheadline": "Njira yanu yomwe ikutsogoleredwa kuchokera ku nzeru mpaka ku ntchito yoyamba — yomangidwa pa zimene mumazidziwa, zimene mwachita, ndi komwe mukufuna kupita.",
+          "signInTitle": "Lowani",
+          "cta": "Tiyeni",
+          "whatIsTitleBefore": "Ndi chani ",
+          "whatIsTitleBrand": "{{appName}}",
+          "feature1Title": "Senzani mphamvu zanu",
+          "feature1Body": "Dziwani nzeru zimene muli nazo kale — kuchokera ku maphunziro anu, ntchito yanu, ndi moyo wanu.",
+          "feature2Title": "Mangani CV yovumbulika",
+          "feature2Body": "Pangani CV yaukadaulo yomwe imagwirizana ndi zomwe ogwira ntchito ku Zambia akufuna.",
+          "feature3Title": "Pezani njira yanu",
+          "feature3Body": "Yang'anani ntchito zofunika, mutsekese zofunikira, ndipo linganizani ndi mwayi woona wa ntchito."
+        },
         "components": {
           "loginWithInviteCodeForm": {
             "loginCode": "Code ya Kulowa"
