@@ -13,6 +13,7 @@ export const CAREER_READINESS_USER_MESSAGE_TYPE = `career-readiness-user-message
 
 export interface CareerReadinessUserMessageProps {
   message: string;
+  fillColor: string;
 }
 
 const MessageContainer = styled(Box)<{ origin: ConversationMessageSender }>(({ theme, origin }) => ({
@@ -23,7 +24,7 @@ const MessageContainer = styled(Box)<{ origin: ConversationMessageSender }>(({ t
   width: "100%",
 }));
 
-const CareerReadinessUserMessage: React.FC<CareerReadinessUserMessageProps> = ({ message }) => {
+const CareerReadinessUserMessage: React.FC<CareerReadinessUserMessageProps> = ({ message, fillColor }) => {
   return (
     <MessageContainer
       origin={ConversationMessageSender.USER}
@@ -37,7 +38,7 @@ const CareerReadinessUserMessage: React.FC<CareerReadinessUserMessageProps> = ({
           flexDirection: "column",
         }}
       >
-        <ChatBubble message={message} sender={ConversationMessageSender.USER} />
+        <ChatBubble message={message} sender={ConversationMessageSender.USER} fillColor={fillColor} />
       </Box>
     </MessageContainer>
   );

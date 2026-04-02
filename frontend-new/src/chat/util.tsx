@@ -59,11 +59,13 @@ export const FIXED_MESSAGES_TEXT = {
 export const generateUserMessage = (
   message: string,
   sent_at: string,
+  fill_color: string,
   message_id?: string
 ): IChatMessage<UserChatMessageProps> => {
   const payload: UserChatMessageProps = {
     message: message,
     sent_at: sent_at,
+    fill_color: fill_color,
   };
   return {
     type: USER_CHAT_MESSAGE_TYPE,

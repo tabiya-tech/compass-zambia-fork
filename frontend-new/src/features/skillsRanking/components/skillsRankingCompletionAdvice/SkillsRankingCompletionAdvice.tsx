@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, useTheme } from "@mui/material";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { SkillsRankingState, SkillsRankingPhase } from "src/features/skillsRanking/types";
@@ -25,6 +26,7 @@ const ADVICE_SHOWN_DURATION_MS = 5000; // Duration to show the advice before typ
 
 export const DATA_TEST_ID = {
   SKILLS_RANKING_COMPLETION_ADVICE_CONTAINER: `skills-ranking-completion-advice-container-${uniqueId}`,
+  SKILLS_RANKING_COMPLETION_ADVICE_BRAND_LOGO: `skills-ranking-completion-advice-brand-logo-${uniqueId}`,
 };
 
 export const SKILLS_RANKING_COMPLETION_ADVICE_MESSAGE_ID = `skills-ranking-completion-advice-message-${uniqueId}`;
@@ -88,6 +90,9 @@ const SkillsRankingCompletionAdvice: React.FC<Readonly<SkillsRankingCompletionAd
       data-testid={DATA_TEST_ID.SKILLS_RANKING_COMPLETION_ADVICE_CONTAINER}
       gap={theme.fixedSpacing(theme.tabiyaSpacing.md)}
     >
+      <Box data-testid={DATA_TEST_ID.SKILLS_RANKING_COMPLETION_ADVICE_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       <Box sx={{ width: "100%" }}>
         <ChatBubble
           message={<>{t("features.skillsRanking.components.skillsRankingCompletionAdvice.adviceMessage")}</>}

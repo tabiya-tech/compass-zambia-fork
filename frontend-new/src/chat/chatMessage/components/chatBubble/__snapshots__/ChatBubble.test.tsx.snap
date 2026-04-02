@@ -2,9 +2,8 @@
 
 exports[`render tests should render the Chat Bubble with a child if one is passed 1`] = `
 <div
-  class="MuiBox-root css-1mnw19y"
+  class="MuiBox-root css-tein1s"
   data-testid="chat-message-bubble-container-6e685eeb-2b54-432a-8b66-8a81633b3981"
-  origin="COMPASS"
 >
   <p
     class="MuiTypography-root MuiTypography-body1 css-n76poq-MuiTypography-root"
@@ -27,9 +26,8 @@ exports[`render tests should render the Chat Bubble with a child if one is passe
 
 exports[`render tests should render the Chat Bubble without a child if none is passed 1`] = `
 <div
-  class="MuiBox-root css-1mnw19y"
+  class="MuiBox-root css-tein1s"
   data-testid="chat-message-bubble-container-6e685eeb-2b54-432a-8b66-8a81633b3981"
-  origin="COMPASS"
 >
   <p
     class="MuiTypography-root MuiTypography-body1 css-n76poq-MuiTypography-root"

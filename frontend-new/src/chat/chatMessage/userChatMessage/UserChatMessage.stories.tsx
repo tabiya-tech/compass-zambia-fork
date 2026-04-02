@@ -39,29 +39,3 @@ export const SingleLetter: Story = {
     message: "a",
   },
 };
-
-export const ShownWithDifferentTimestamps: Story = {
-  render: () => (
-    <>
-      <UserChatMessage sent_at={new Date().toISOString()} message="sent just now" />
-      <UserChatMessage sent_at={new Date(Date.now() - 1000 * 60 * 60).toISOString()} message="sent an hour ago" />
-      <UserChatMessage sent_at={new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()} message="sent yesterday" />
-      <UserChatMessage
-        sent_at={new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()}
-        message="sent two days ago"
-      />
-      <UserChatMessage
-        sent_at={new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString()}
-        message="sent a week ago"
-      />
-      <UserChatMessage
-        sent_at={new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString()}
-        message="sent a month ago"
-      />
-      <UserChatMessage
-        sent_at={new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 12).toISOString()}
-        message="sent a year ago"
-      />
-    </>
-  ),
-};

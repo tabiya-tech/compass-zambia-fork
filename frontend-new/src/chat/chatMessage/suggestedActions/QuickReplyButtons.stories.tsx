@@ -5,6 +5,9 @@ const meta: Meta<typeof QuickReplyButtons> = {
   title: "Chat/ChatMessage/QuickReplyButtons",
   component: QuickReplyButtons,
   tags: ["autodocs"],
+  parameters: {
+    layout: "padded",
+  },
 };
 
 export default meta;
@@ -33,6 +36,17 @@ export const ManyOptions: Story = {
       { label: "Leadership" },
       { label: "Communication" },
       { label: "Problem solving" },
+    ],
+    onSelect: (label: string) => console.log("Selected:", label),
+  },
+};
+
+export const LongText: Story = {
+  args: {
+    options: [
+      { label: "I sold vegetables for the farm and collected money." },
+      { label: "I never sold produce, but I counted the money." },
+      { label: "No, I was never in a leadership role." },
     ],
     onSelect: (label: string) => console.log("Selected:", label),
   },

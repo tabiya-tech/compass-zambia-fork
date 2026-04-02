@@ -2,14 +2,13 @@ import React from "react";
 import { Box, styled } from "@mui/material";
 import { ConversationMessageSender, QuickReplyOption } from "src/chat/ChatService/ChatService.types";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
-import Timestamp from "src/chat/chatMessage/components/chatMessageFooter/components/timestamp/Timestamp";
-import ChatMessageFooterLayout from "src/chat/chatMessage/components/chatMessageFooter/ChatMessageFooterLayout";
-import QuickReplyButtons from "src/chat/chatMessage/suggestedActions/QuickReplyButtons";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 
 const uniqueId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
 
 export const DATA_TEST_ID = {
   CAREER_EXPLORER_AGENT_MESSAGE_CONTAINER: `career-explorer-agent-message-container-${uniqueId}`,
+  CAREER_EXPLORER_AGENT_MESSAGE_BRAND_LOGO: `career-explorer-agent-message-brand-logo-${uniqueId}`,
 };
 
 export const CAREER_EXPLORER_AGENT_MESSAGE_TYPE = `career-explorer-agent-message-${uniqueId}`;
@@ -24,7 +23,7 @@ export interface CareerExplorerAgentMessageProps {
 
 const MessageContainer = styled(Box)<{ origin: ConversationMessageSender }>(({ theme }) => ({
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "row",
   alignItems: "flex-start",
   marginBottom: theme.spacing(theme.tabiyaSpacing.sm),
   width: "100%",
@@ -42,6 +41,9 @@ const CareerExplorerAgentMessage: React.FC<CareerExplorerAgentMessageProps> = ({
       origin={ConversationMessageSender.COMPASS}
       data-testid={`${DATA_TEST_ID.CAREER_EXPLORER_AGENT_MESSAGE_CONTAINER}-${message_id}`}
     >
+      <Box data-testid={DATA_TEST_ID.CAREER_EXPLORER_AGENT_MESSAGE_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       <Box
         sx={{
           width: "fit-content",
@@ -54,12 +56,6 @@ const CareerExplorerAgentMessage: React.FC<CareerExplorerAgentMessageProps> = ({
       >
         <Box sx={{ width: "100%" }}>
           <ChatBubble message={message} sender={ConversationMessageSender.COMPASS} />
-          <ChatMessageFooterLayout sender={ConversationMessageSender.COMPASS}>
-            <Timestamp sentAt={sent_at} />
-          </ChatMessageFooterLayout>
-          {quick_reply_options && quick_reply_options.length > 0 && onQuickReplyClick && (
-            <QuickReplyButtons options={quick_reply_options} onSelect={onQuickReplyClick} />
-          )}
         </Box>
       </Box>
     </MessageContainer>

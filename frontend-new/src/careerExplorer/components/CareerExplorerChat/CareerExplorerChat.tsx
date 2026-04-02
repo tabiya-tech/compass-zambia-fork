@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Box, useTheme } from "@mui/material";
-import ChatList from "src/chat/chatList/ChatList";
-import ChatMessageField from "src/chat/ChatMessageField/ChatMessageField";
+import { useTheme } from "@mui/material";
+import ChatPage from "src/chat/ChatPage/ChatPage";
+import CareerExplorerSidebar from "src/home/components/Sidebar/CareerExplorerSidebar";
 import { generateSomethingWentWrongMessage, generateUserMessage } from "src/chat/util";
 import type { IChatMessage } from "src/chat/Chat.types";
 import type { TranslationKey } from "src/react-i18next";
@@ -23,7 +23,7 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
 }) => {
   const theme = useTheme();
   const [messages, setMessages] = useState<IChatMessage<any>[]>(() =>
-    mapCareerExplorerMessagesToChatMessages(initialMessages)
+    mapCareerExplorerMessagesToChatMessages(initialMessages, theme.palette.brandAction.main)
   );
   const [aiIsTyping, setAiIsTyping] = useState(false);
   const [chatFinished, setChatFinished] = useState(false);
@@ -44,8 +44,10 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
   }, [messages, aiIsTyping, typingMessage, isLoading]);
 
   useEffect(() => {
-    setMessages(mapCareerExplorerMessagesToChatMessages(initialMessages, handleQuickReply));
-  }, [initialMessages, handleQuickReply]);
+    setMessages(
+      mapCareerExplorerMessagesToChatMessages(initialMessages, theme.palette.brandAction.main, handleQuickReply)
+    );
+  }, [initialMessages, handleQuickReply, theme]);
 
   const handleSend = useCallback(
     async (userMessage: string) => {
@@ -61,13 +63,16 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
       const optimisticUserMessage = generateUserMessage(
         userMessage,
         new Date().toISOString(),
+        theme.palette.brandAction.main,
         `optimistic-${Date.now()}`
       );
       setMessages((prev) => [...prev, optimisticUserMessage]);
       setAiIsTyping(true);
       try {
         const res = await CareerExplorerService.getInstance().sendMessage(userMessage);
-        setMessages(mapCareerExplorerMessagesToChatMessages(res.messages, handleQuickReply));
+        setMessages(
+          mapCareerExplorerMessagesToChatMessages(res.messages, theme.palette.brandAction.main, handleQuickReply)
+        );
         setChatFinished(res.finished);
       } catch (e) {
         console.error("Failed to send message", e);
@@ -76,49 +81,34 @@ const CareerExplorerChat: React.FC<CareerExplorerChatProps> = ({
         setAiIsTyping(false);
       }
     },
-    [handleQuickReply]
+    [handleQuickReply, theme]
   );
 
   handleSendRef.current = handleSend;
 
+  // Extract quick_reply_options from the last agent message (if any)
+  const quickReplyOptions = useMemo(() => {
+    const lastMessage = messages[messages.length - 1];
+    return lastMessage?.payload?.quick_reply_options || null;
+  }, [messages]);
+
   return (
-    <Box
-      role="region"
-      aria-label="Career Explorer"
-      sx={{
-        flex: 1,
-        minHeight: 0,
-        display: "flex",
-        flexDirection: "column",
+    <ChatPage
+      chatViewProps={{
+        messages: displayMessages,
+        quickReplyOptions,
+        onQuickReplyClick: handleQuickReply,
+        messageFieldProps: {
+          handleSend,
+          aiIsTyping,
+          isChatFinished: chatFinished,
+          placeholderKey,
+          showCvUpload: false,
+          fillColor: theme.palette.brandAction.main,
+        },
       }}
-      data-testid="career-explorer-chat"
-    >
-      <Box
-        sx={{
-          flex: 1,
-          overflowY: "auto",
-          paddingX: theme.spacing(theme.tabiyaSpacing.lg),
-          paddingTop: theme.spacing(theme.tabiyaSpacing.sm),
-        }}
-      >
-        <ChatList messages={displayMessages} />
-      </Box>
-      <Box
-        sx={{
-          flexShrink: 0,
-          padding: theme.tabiyaSpacing.lg,
-          paddingTop: theme.tabiyaSpacing.xs,
-        }}
-      >
-        <ChatMessageField
-          handleSend={handleSend}
-          aiIsTyping={aiIsTyping}
-          isChatFinished={chatFinished}
-          placeholderKey={placeholderKey}
-          showCvUpload={false}
-        />
-      </Box>
-    </Box>
+      sidebar={<CareerExplorerSidebar />}
+    />
   );
 };
 

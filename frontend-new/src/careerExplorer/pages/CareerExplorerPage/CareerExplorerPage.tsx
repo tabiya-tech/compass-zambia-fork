@@ -34,29 +34,16 @@ const CareerExplorerPage: React.FC = () => {
   }, [loadOrCreateConversation]);
 
   return (
-    <Box
-      width="100%"
-      height="100%"
-      display="flex"
-      flexDirection="column"
-      position="relative"
-      sx={{ backgroundColor: theme.palette.containerBackground.light }}
-      data-testid={DATA_TEST_ID.CONTAINER}
-    >
+    <Box width="100%" height="100%" display="flex" flexDirection="column" data-testid={DATA_TEST_ID.CONTAINER}>
       {error && (
-        <Box sx={{ paddingX: theme.spacing(theme.tabiyaSpacing.md), pt: 1 }}>
+        <Box sx={{ paddingX: theme.spacing(theme.tabiyaSpacing.md), pt: 1, flexShrink: 0 }}>
           <Typography variant="body2" color="error">
             {error}
           </Typography>
         </Box>
       )}
       <Box
-        sx={{
-          flex: 1,
-          minHeight: 0,
-          display: "flex",
-          flexDirection: "column",
-        }}
+        sx={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}
         data-testid={DATA_TEST_ID.MESSAGE_LIST}
       >
         <CareerExplorerChat

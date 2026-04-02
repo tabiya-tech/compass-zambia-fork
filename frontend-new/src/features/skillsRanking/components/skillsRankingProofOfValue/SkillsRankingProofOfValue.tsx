@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import { Trans, useTranslation } from "react-i18next";
 import { Box, useTheme } from "@mui/material";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import {
@@ -38,6 +39,7 @@ const uniqueId = "d08ec52d-cd41-4934-b62f-dcd10eadfb3c";
 
 export const DATA_TEST_ID = {
   SKILLS_RANKING_EFFORT_CONTAINER: `skills-ranking-effort-container-${uniqueId}`,
+  SKILLS_RANKING_EFFORT_BRAND_LOGO: `skills-ranking-effort-brand-logo-${uniqueId}`,
   SKILLS_RANKING_EFFORT_CANCEL_BUTTON: `skills-ranking-effort-cancel-button-${uniqueId}`,
   SKILLS_RANKING_EFFORT_CONTINUE_BUTTON: `skills-ranking-effort-continue-button-${uniqueId}`,
   SKILLS_RANKING_EFFORT_PROGRESS_ICON: `skills-ranking-effort-progress-icon-${uniqueId}`,
@@ -345,6 +347,9 @@ const SkillsRankingProofOfValue: React.FC<SkillsRankingEffortProps> = ({ onFinis
       ref={scrollRef}
       gap={theme.fixedSpacing(theme.tabiyaSpacing.md)}
     >
+      <Box data-testid={DATA_TEST_ID.SKILLS_RANKING_EFFORT_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       <Box sx={{ width: "100%" }}>
         <ChatBubble message={effortMessage} sender={ConversationMessageSender.COMPASS}>
           {effortType === EffortType.WORK_BASED && (

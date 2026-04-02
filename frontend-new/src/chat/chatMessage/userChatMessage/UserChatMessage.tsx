@@ -1,9 +1,7 @@
 import React from "react";
-import { Box, styled } from "@mui/material";
+import { Box, styled, useTheme } from "@mui/material";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
-import Timestamp from "src/chat/chatMessage/components/chatMessageFooter/components/timestamp/Timestamp";
-import ChatMessageFooterLayout from "src/chat/chatMessage/components/chatMessageFooter/ChatMessageFooterLayout";
 
 const uniqueId = "41e9f8a5-be6f-406a-9958-13e9bcc853a9";
 
@@ -24,9 +22,12 @@ export const USER_CHAT_MESSAGE_TYPE = `user-message-${uniqueId}`;
 export interface UserChatMessageProps {
   message: string;
   sent_at: string;
+  fill_color: string;
 }
 
-const UserChatMessage: React.FC<UserChatMessageProps> = ({ message, sent_at }) => {
+const UserChatMessage: React.FC<UserChatMessageProps> = ({ message, sent_at, fill_color }) => {
+  const theme = useTheme();
+
   return (
     <MessageContainer origin={ConversationMessageSender.USER} data-testid={DATA_TEST_ID.CHAT_MESSAGE_CONTAINER}>
       <Box
@@ -37,10 +38,11 @@ const UserChatMessage: React.FC<UserChatMessageProps> = ({ message, sent_at }) =
           flexDirection: "column",
         }}
       >
-        <ChatBubble message={message} sender={ConversationMessageSender.USER} />
-        <ChatMessageFooterLayout sender={ConversationMessageSender.USER}>
-          <Timestamp sentAt={sent_at} />
-        </ChatMessageFooterLayout>
+        <ChatBubble
+          message={message}
+          sender={ConversationMessageSender.USER}
+          fillColor={fill_color || theme.palette.primary.main}
+        />
       </Box>
     </MessageContainer>
   );

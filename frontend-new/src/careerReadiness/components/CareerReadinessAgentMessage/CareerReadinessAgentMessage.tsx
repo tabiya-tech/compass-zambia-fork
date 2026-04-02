@@ -2,12 +2,13 @@ import React from "react";
 import { Box, styled } from "@mui/material";
 import { ConversationMessageSender, QuickReplyOption } from "src/chat/ChatService/ChatService.types";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
-import QuickReplyButtons from "src/chat/chatMessage/suggestedActions/QuickReplyButtons";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 
 const uniqueId = "e46487bc-8ba0-4e0d-960a-b76897fb5aa9";
 
 export const DATA_TEST_ID = {
   CAREER_READINESS_AGENT_MESSAGE_CONTAINER: `career-readiness-agent-message-container-${uniqueId}`,
+  CAREER_READINESS_AGENT_MESSAGE_BRAND_LOGO: `career-readiness-agent-message-brand-logo-${uniqueId}`,
 };
 
 export const CAREER_READINESS_AGENT_MESSAGE_TYPE = `career-readiness-agent-message-${uniqueId}`;
@@ -22,7 +23,7 @@ export interface CareerReadinessAgentMessageProps {
 
 const MessageContainer = styled(Box)<{ origin: ConversationMessageSender }>(({ theme, origin }) => ({
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "row",
   alignItems: origin === ConversationMessageSender.USER ? "flex-end" : "flex-start",
   marginBottom: theme.spacing(theme.tabiyaSpacing.sm),
   width: "100%",
@@ -39,6 +40,9 @@ const CareerReadinessAgentMessage: React.FC<CareerReadinessAgentMessageProps> = 
       origin={ConversationMessageSender.COMPASS}
       data-testid={`${DATA_TEST_ID.CAREER_READINESS_AGENT_MESSAGE_CONTAINER}-${message_id}`}
     >
+      <Box data-testid={DATA_TEST_ID.CAREER_READINESS_AGENT_MESSAGE_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       <Box
         sx={{
           width: "fit-content",
@@ -51,9 +55,6 @@ const CareerReadinessAgentMessage: React.FC<CareerReadinessAgentMessageProps> = 
       >
         <Box sx={{ width: "100%" }}>
           <ChatBubble message={message} sender={ConversationMessageSender.COMPASS} />
-          {quick_reply_options && quick_reply_options.length > 0 && onQuickReplyClick && (
-            <QuickReplyButtons options={quick_reply_options} onSelect={onQuickReplyClick} />
-          )}
         </Box>
       </Box>
     </MessageContainer>

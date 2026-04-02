@@ -2,44 +2,44 @@
 
 exports[`QuickReplyButtons render tests should render a chip for each quick reply option 1`] = `
 <div
-  class="MuiBox-root css-fu7g4k"
+  class="MuiBox-root css-f4no7g"
   data-testid="quick-reply-container-quick-reply-buttons-3f7a8b2c"
 >
   <div
-    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-ql0d68-MuiButtonBase-root-MuiChip-root"
-    data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
-    role="button"
-    tabindex="0"
+    class="MuiBox-root css-0"
   >
-    <span
-      class="MuiChip-label MuiChip-labelSmall css-txwpof-MuiChip-label"
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-9yn2gj-MuiButtonBase-root-MuiButton-root"
+      data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
+      tabindex="0"
+      type="button"
     >
       Yes
-    </span>
+    </button>
   </div>
   <div
-    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-ql0d68-MuiButtonBase-root-MuiChip-root"
-    data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
-    role="button"
-    tabindex="0"
+    class="MuiBox-root css-0"
   >
-    <span
-      class="MuiChip-label MuiChip-labelSmall css-txwpof-MuiChip-label"
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-9yn2gj-MuiButtonBase-root-MuiButton-root"
+      data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
+      tabindex="0"
+      type="button"
     >
       No
-    </span>
+    </button>
   </div>
   <div
-    class="MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeSmall MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-outlinedDefault css-ql0d68-MuiButtonBase-root-MuiChip-root"
-    data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
-    role="button"
-    tabindex="0"
+    class="MuiBox-root css-0"
   >
-    <span
-      class="MuiChip-label MuiChip-labelSmall css-txwpof-MuiChip-label"
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-9yn2gj-MuiButtonBase-root-MuiButton-root"
+      data-testid="quick-reply-button-quick-reply-buttons-3f7a8b2c"
+      tabindex="0"
+      type="button"
     >
       Maybe
-    </span>
+    </button>
   </div>
 </div>
 `;

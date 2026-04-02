@@ -14,7 +14,7 @@ describe("AnimatedDotBadge", () => {
 
     // WHEN the component is rendered
     render(
-      <AnimatedDotBadge show={givenShow}>
+      <AnimatedDotBadge show={givenShow} color="">
         <BadgeOutlinedIcon data-testid={givenTestId} />
       </AnimatedDotBadge>
     );
@@ -38,7 +38,7 @@ describe("AnimatedDotBadge", () => {
 
     // WHEN the component is rendered
     render(
-      <AnimatedDotBadge show={givenShow}>
+      <AnimatedDotBadge show={givenShow} color="">
         <BadgeOutlinedIcon data-testid={givenTestId} />
       </AnimatedDotBadge>
     );

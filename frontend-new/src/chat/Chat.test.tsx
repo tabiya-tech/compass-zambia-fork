@@ -44,9 +44,6 @@ import { nanoid } from "nanoid";
 import { ReactionKind } from "src/chat/reaction/reaction.types";
 import { lazyWithPreload } from "src/utils/preloadableComponent/PreloadableComponent";
 import { ConversationPhase, defaultCurrentPhase } from "./chatProgressbar/types";
-import ChatProgressBar, {
-  DATA_TEST_ID as CHAT_PROGRESS_BAR_DATA_TEST_ID,
-} from "src/chat/chatProgressbar/ChatProgressBar";
 import { ChatProvider } from "src/chat/ChatContext";
 import { USER_CHAT_MESSAGE_TYPE } from "src/chat/chatMessage/userChatMessage/UserChatMessage";
 import { COMPASS_CHAT_MESSAGE_TYPE } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
@@ -146,20 +143,6 @@ jest.mock("src/utils/preloadableComponent/PreloadableComponent", () => {
   };
 });
 
-// mock the ChatProgressBar component
-jest.mock("src/chat/chatProgressbar/ChatProgressBar", () => {
-  const actual = jest.requireActual("src/chat/chatProgressbar/ChatProgressBar");
-  return {
-    __esModule: true,
-    ...actual,
-    default: jest.fn().mockImplementation((props) => (
-      <div data-testid={actual.DATA_TEST_ID.CONTAINER}>
-        {props.phase} - {props.percentage}%
-      </div>
-    )),
-  };
-});
-
 // mock utils
 jest.mock("src/chat/util", () => {
   const actual = jest.requireActual("src/chat/util");
@@ -185,6 +168,12 @@ jest.mock("src/metrics/metricsService", () => ({
       sendMetricsEvent: jest.fn(),
     })),
   },
+}));
+
+// mock SkillsDiscoverySidebar so it does not call ExperienceService and interfere with test mocks
+jest.mock("src/home/components/Sidebar/SkillsDiscoverySidebar", () => ({
+  __esModule: true,
+  default: () => <div data-testid="skills-discovery-sidebar-mock" />,
 }));
 
 describe("Chat", () => {
@@ -352,8 +341,6 @@ describe("Chat", () => {
       expect(screen.getByTestId(CHAT_LIST_TEST_ID.CHAT_LIST_CONTAINER)).toBeInTheDocument();
       // AND expect the chat message field to be visible
       expect(screen.getByTestId(CHAT_MESSAGE_FIELD_TEST_ID.CHAT_MESSAGE_FIELD_CONTAINER)).toBeInTheDocument();
-      // AND expect the chat progress bar to be visible
-      expect(screen.getByTestId(CHAT_PROGRESS_BAR_DATA_TEST_ID.CONTAINER)).toBeInTheDocument();
 
       // AND parseConversationFn should be called with the right conversation phase.
       expect(parseConversationPhaseMock).toHaveBeenCalledWith(
@@ -361,14 +348,6 @@ describe("Chat", () => {
         defaultCurrentPhase
       );
 
-      // AND expect the chat progress bar to be rendered with the correct phase and percentage.
-      expect(ChatProgressBar as jest.Mock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          phase: givenChatHistoryResponse.current_phase.phase,
-          percentage: givenChatHistoryResponse.current_phase.percentage,
-        }),
-        {}
-      );
       // AND expect no console errors
       expect(console.error).not.toHaveBeenCalled();
       expect(console.warn).not.toHaveBeenCalled();
@@ -1209,12 +1188,19 @@ describe("Chat", () => {
                   ? COMPASS_CHAT_MESSAGE_TYPE
                   : USER_CHAT_MESSAGE_TYPE,
               sender: message.sender,
-              payload: {
-                message_id: message.sender === ConversationMessageSender.COMPASS ? expect.any(String) : undefined,
-                message: message.message,
-                sent_at: message.sent_at,
-                reaction: message.sender === ConversationMessageSender.COMPASS ? message.reaction : undefined,
-              },
+              payload:
+                message.sender === ConversationMessageSender.COMPASS
+                  ? {
+                      message_id: expect.any(String),
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      reaction: message.reaction,
+                    }
+                  : {
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      fill_color: expect.any(String),
+                    },
               component: expect.any(Function),
             })),
             {
@@ -1224,6 +1210,7 @@ describe("Chat", () => {
               payload: {
                 message: givenMessage,
                 sent_at: expect.any(String),
+                fill_color: expect.any(String),
               },
               component: expect.any(Function),
             },
@@ -1233,6 +1220,7 @@ describe("Chat", () => {
               sender: ConversationMessageSender.COMPASS,
               payload: {
                 waitBeforeThinking: undefined,
+                thinkingMessage: undefined,
               },
               component: expect.any(Function),
             },
@@ -1262,12 +1250,19 @@ describe("Chat", () => {
                   ? COMPASS_CHAT_MESSAGE_TYPE
                   : USER_CHAT_MESSAGE_TYPE,
               sender: message.sender,
-              payload: {
-                message_id: message.sender === ConversationMessageSender.COMPASS ? expect.any(String) : undefined,
-                message: message.message,
-                sent_at: message.sent_at,
-                reaction: message.sender === ConversationMessageSender.COMPASS ? message.reaction : undefined,
-              },
+              payload:
+                message.sender === ConversationMessageSender.COMPASS
+                  ? {
+                      message_id: expect.any(String),
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      reaction: message.reaction,
+                    }
+                  : {
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      fill_color: expect.any(String),
+                    },
               component: expect.any(Function),
             })),
             {
@@ -1277,6 +1272,7 @@ describe("Chat", () => {
               payload: {
                 message: givenMessage,
                 sent_at: expect.any(String),
+                fill_color: expect.any(String),
               },
               component: expect.any(Function),
             },
@@ -1290,12 +1286,19 @@ describe("Chat", () => {
                 message.sender === ConversationMessageSender.COMPASS
                   ? ConversationMessageSender.COMPASS
                   : ConversationMessageSender.USER,
-              payload: {
-                message_id: message.sender === ConversationMessageSender.COMPASS ? expect.any(String) : undefined,
-                message: message.message,
-                sent_at: message.sent_at,
-                reaction: message.sender === ConversationMessageSender.COMPASS ? message.reaction : undefined,
-              },
+              payload:
+                message.sender === ConversationMessageSender.COMPASS
+                  ? {
+                      message_id: expect.any(String),
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      reaction: message.reaction,
+                    }
+                  : {
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      fill_color: expect.any(String),
+                    },
               component: expect.any(Function),
             })),
           ],
@@ -1436,12 +1439,19 @@ describe("Chat", () => {
                   ? COMPASS_CHAT_MESSAGE_TYPE
                   : USER_CHAT_MESSAGE_TYPE,
               sender: message.sender,
-              payload: {
-                message_id: message.sender === ConversationMessageSender.COMPASS ? expect.any(String) : undefined,
-                message: message.message,
-                sent_at: message.sent_at,
-                reaction: message.sender === ConversationMessageSender.COMPASS ? message.reaction : undefined,
-              },
+              payload:
+                message.sender === ConversationMessageSender.COMPASS
+                  ? {
+                      message_id: expect.any(String),
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      reaction: message.reaction,
+                    }
+                  : {
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      fill_color: expect.any(String),
+                    },
               component: expect.any(Function),
             })),
             {
@@ -1451,6 +1461,7 @@ describe("Chat", () => {
               payload: {
                 message: givenMessage,
                 sent_at: expect.any(String),
+                fill_color: expect.any(String),
               },
               component: expect.any(Function),
             },
@@ -1460,6 +1471,7 @@ describe("Chat", () => {
               sender: ConversationMessageSender.COMPASS,
               payload: {
                 waitBeforeThinking: undefined,
+                thinkingMessage: undefined,
               },
               component: expect.any(Function),
             },
@@ -1486,12 +1498,19 @@ describe("Chat", () => {
               message_id: expect.any(String),
               type: expect.any(String),
               sender: message.sender,
-              payload: {
-                message_id: message.sender === ConversationMessageSender.COMPASS ? expect.any(String) : undefined,
-                message: message.message,
-                sent_at: message.sent_at,
-                reaction: message.sender === ConversationMessageSender.COMPASS ? message.reaction : undefined,
-              },
+              payload:
+                message.sender === ConversationMessageSender.COMPASS
+                  ? {
+                      message_id: expect.any(String),
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      reaction: message.reaction,
+                    }
+                  : {
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      fill_color: expect.any(String),
+                    },
               component: expect.any(Function),
             })),
             {
@@ -1501,6 +1520,7 @@ describe("Chat", () => {
               payload: {
                 message: givenMessage,
                 sent_at: expect.any(String),
+                fill_color: expect.any(String),
               },
               component: expect.any(Function),
             },
@@ -1511,12 +1531,19 @@ describe("Chat", () => {
                 message_id: expect.any(String),
                 type: expect.any(String),
                 sender: message.sender,
-                payload: {
-                  message_id: message.sender === ConversationMessageSender.COMPASS ? expect.any(String) : undefined,
-                  message: message.message,
-                  sent_at: message.sent_at,
-                  reaction: message.sender === ConversationMessageSender.COMPASS ? message.reaction : undefined,
-                },
+                payload:
+                  message.sender === ConversationMessageSender.COMPASS
+                    ? {
+                        message_id: expect.any(String),
+                        message: message.message,
+                        sent_at: message.sent_at,
+                        reaction: message.reaction,
+                      }
+                    : {
+                        message: message.message,
+                        sent_at: message.sent_at,
+                        fill_color: expect.any(String),
+                      },
                 component: expect.any(Function),
               })),
             {
@@ -1630,12 +1657,19 @@ describe("Chat", () => {
               message_id: expect.any(String),
               type: expect.any(String),
               sender: message.sender,
-              payload: {
-                message_id: message.sender === ConversationMessageSender.COMPASS ? expect.any(String) : undefined,
-                message: message.message,
-                sent_at: message.sent_at,
-                reaction: message.sender === ConversationMessageSender.COMPASS ? message.reaction : undefined,
-              },
+              payload:
+                message.sender === ConversationMessageSender.COMPASS
+                  ? {
+                      message_id: expect.any(String),
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      reaction: message.reaction,
+                    }
+                  : {
+                      message: message.message,
+                      sent_at: message.sent_at,
+                      fill_color: expect.any(String),
+                    },
               component: expect.any(Function),
             })),
             {

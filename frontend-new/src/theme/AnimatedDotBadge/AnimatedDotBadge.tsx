@@ -10,6 +10,7 @@ export const DATA_TEST_ID = {
 interface AnimatedDotBadgeProps {
   children: React.ReactNode;
   show: boolean;
+  color: string;
 }
 
 const pulse = keyframes`
@@ -27,21 +28,21 @@ const pulse = keyframes`
   }
 `;
 
-const Dot = styled("span")(({ theme }) => ({
+const Dot = styled("span")(({ theme, color }) => ({
   display: "inline-block",
   width: theme.fixedSpacing(theme.tabiyaSpacing.sm),
   height: theme.fixedSpacing(theme.tabiyaSpacing.sm),
   borderRadius: "50%",
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: color || theme.palette.primary.main,
   animation: `${pulse} 1.4s infinite`,
 }));
 
-const AnimatedDotBadge: React.FC<AnimatedDotBadgeProps> = ({ children, show }) => {
+const AnimatedDotBadge: React.FC<AnimatedDotBadgeProps> = ({ children, show, color }) => {
   return (
     <Badge
       overlap="circular"
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      badgeContent={<Dot />}
+      badgeContent={<Dot color={color} />}
       invisible={!show}
       data-testid={DATA_TEST_ID.ANIMATED_DOT_BADGE}
     >

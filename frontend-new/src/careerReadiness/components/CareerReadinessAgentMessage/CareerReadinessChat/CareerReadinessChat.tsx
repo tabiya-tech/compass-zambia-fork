@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Box, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
-import ChatList from "src/chat/chatList/ChatList";
-import ChatMessageField from "src/chat/ChatMessageField/ChatMessageField";
+import ChatPage from "src/chat/ChatPage/ChatPage";
+import CareerReadinessSidebar from "src/home/components/Sidebar/CareerReadinessSidebar";
 import { generateSomethingWentWrongMessage } from "src/chat/util";
 import type { IChatMessage } from "src/chat/Chat.types";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
@@ -122,11 +122,12 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
         sender: ConversationMessageSender.USER,
         payload: {
           message,
+          fillColor: theme.palette.primary.main,
         },
         component: (p: CareerReadinessUserMessageProps) => <CareerReadinessUserMessage {...p} />,
       };
     },
-    []
+    [theme]
   );
 
   const serializeAnswers = useCallback((answers: Record<number, string>): Record<string, string> => {
@@ -275,7 +276,11 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
       try {
         const res = await CareerReadinessService.getInstance().getConversationHistory(moduleId, id);
         if (getIsCancelled?.()) return;
-        let chatMessages = mapCareerReadinessMessagesToChatMessages(res.messages, handleQuickReply);
+        let chatMessages = mapCareerReadinessMessagesToChatMessages(
+          res.messages,
+          theme.palette.primary.main,
+          handleQuickReply
+        );
         const latestQuizSummary = getLatestQuizHistorySummary(res.messages);
 
         const storedQuizData = PersistentStorageService.getCareerReadinessQuizData(moduleId, id);
@@ -346,6 +351,7 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
       }
     },
     [
+      theme,
       moduleId,
       conversationId,
       onModuleCompleted,
@@ -398,7 +404,11 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
       setAiIsTyping(true);
       try {
         const res = await CareerReadinessService.getInstance().sendMessage(moduleId, conversationId, userMessage);
-        let chatMessages = mapCareerReadinessMessagesToChatMessages(res.messages, handleQuickReply);
+        let chatMessages = mapCareerReadinessMessagesToChatMessages(
+          res.messages,
+          theme.palette.primary.main,
+          handleQuickReply
+        );
 
         if (res.quiz_available) {
           try {
@@ -437,50 +447,36 @@ const CareerReadinessChat: React.FC<CareerReadinessChatProps> = ({
       persistQuizQuestions,
       createQuizSubmitHandler,
       handleQuickReply,
+      theme,
     ]
   );
 
   handleSendRef.current = handleSend;
 
+  // Extract quick_reply_options from the last agent message (if any)
+  const quickReplyOptions = useMemo(() => {
+    const lastMessage = messages[messages.length - 1];
+    return lastMessage?.payload?.quick_reply_options || null;
+  }, [messages]);
+
   return (
-    <Box
-      role="region"
-      aria-label={moduleTitle}
-      sx={{
-        flex: 1,
-        minHeight: 0,
-        display: "flex",
-        flexDirection: "column",
+    <ChatPage
+      chatViewProps={{
+        messages: showTyping,
+        quickReplyOptions,
+        onQuickReplyClick: handleQuickReply,
+        messageFieldProps: {
+          handleSend,
+          aiIsTyping: aiIsTyping || isLoadingHistory || !conversationId,
+          isInputDisabled: isChatLockedForQuiz,
+          isChatFinished: false,
+          isUploadingCv: false,
+          customPlaceholder: isChatLockedForQuiz ? t("careerReadiness.chatLockedUntilQuizPassed") : inputPlaceholder,
+          fillColor: theme.palette.primary.main,
+        },
       }}
-      data-testid="career-readiness-chat"
-    >
-      <Box
-        sx={{
-          flex: 1,
-          overflowY: "auto",
-          paddingX: theme.spacing(theme.tabiyaSpacing.lg),
-          paddingTop: theme.spacing(theme.tabiyaSpacing.sm),
-        }}
-      >
-        <ChatList messages={showTyping} />
-      </Box>
-      <Box
-        sx={{
-          flexShrink: 0,
-          padding: theme.tabiyaSpacing.lg,
-          paddingTop: theme.tabiyaSpacing.xs,
-        }}
-      >
-        <ChatMessageField
-          handleSend={handleSend}
-          aiIsTyping={aiIsTyping || isLoadingHistory || !conversationId}
-          isInputDisabled={isChatLockedForQuiz}
-          isChatFinished={false}
-          isUploadingCv={false}
-          customPlaceholder={isChatLockedForQuiz ? t("careerReadiness.chatLockedUntilQuizPassed") : inputPlaceholder}
-        />
-      </Box>
-    </Box>
+      sidebar={<CareerReadinessSidebar />}
+    />
   );
 };
 

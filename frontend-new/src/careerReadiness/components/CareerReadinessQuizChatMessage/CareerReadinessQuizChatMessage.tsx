@@ -3,12 +3,14 @@ import { Box, Divider, styled, Typography, useTheme } from "@mui/material";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { PersistentStorageService } from "src/app/PersistentStorageService/PersistentStorageService";
 import CareerReadinessQuiz from "src/careerReadiness/components/CareerReadinessQuiz/CareerReadinessQuiz";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 import type { QuizQuestionResponse } from "src/careerReadiness/types";
 
 const uniqueId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
 
 export const DATA_TEST_ID = {
   CAREER_READINESS_QUIZ_CHAT_MESSAGE_CONTAINER: `career-readiness-quiz-chat-message-container-${uniqueId}`,
+  CAREER_READINESS_QUIZ_CHAT_MESSAGE_BRAND_LOGO: `career-readiness-quiz-chat-message-brand-logo-${uniqueId}`,
 };
 
 export const CAREER_READINESS_QUIZ_CHAT_MESSAGE_TYPE = `career-readiness-quiz-chat-message-${uniqueId}`;
@@ -79,6 +81,9 @@ const CareerReadinessQuizChatMessage: React.FC<CareerReadinessQuizChatMessagePro
       origin={ConversationMessageSender.COMPASS}
       data-testid={`${DATA_TEST_ID.CAREER_READINESS_QUIZ_CHAT_MESSAGE_CONTAINER}-${message_id}`}
     >
+      <Box data-testid={DATA_TEST_ID.CAREER_READINESS_QUIZ_CHAT_MESSAGE_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       <AgentBubble>
         {introMessage && (
           <>

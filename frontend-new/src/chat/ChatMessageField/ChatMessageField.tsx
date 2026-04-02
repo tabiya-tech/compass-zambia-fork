@@ -1,7 +1,7 @@
 import React, { KeyboardEvent, MouseEvent, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Box, IconButton, InputAdornment, styled, TextField, Typography, useTheme } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
 import AddIcon from "@mui/icons-material/Add";
+import ArrowUpwardSharpIcon from "@mui/icons-material/ArrowUpwardSharp";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { AnimatePresence, motion } from "framer-motion";
 import { CV_UPLOAD_ERROR_I18N_KEYS, getCvUploadErrorMessageFromHttpStatus } from "../CVUploadErrorHandling";
@@ -35,6 +35,7 @@ export interface ChatMessageFieldProps {
   placeholderKey?: TranslationKey; // optional override for default placeholder
   showCvUpload?: boolean; // when false, hides the plus button and CV upload menu (default true)
   customPlaceholder?: string | null; // optional custom placeholder to override default placeholder
+  fillColor?: string; // color for the input field border and icons
 }
 
 const uniqueId = "2a76494f-351d-409d-ba58-e1b2cfaf2a53";
@@ -92,28 +93,34 @@ export const CHARACTER_LIMIT_ERROR_MESSAGES = {
 export const MAX_FILE_SIZE_BYTES = 3 * 1024 * 1024;
 export const MAX_FILE_SIZE_MB = MAX_FILE_SIZE_BYTES / (1024 * 1024);
 
-const StyledTextField = styled(TextField)(({ theme, disabled }) => ({
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: theme.palette.primary.main,
-      borderWidth: theme.fixedSpacing(theme.tabiyaSpacing.xxs),
+const StyledTextField = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== "fillColor",
+})<{ fillColor?: string }>(({ theme, disabled, fillColor }) => {
+  const color = fillColor || theme.palette.primary.main;
+  return {
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: color,
+        borderRadius: theme.fixedSpacing(theme.tabiyaRounding.lg),
+        borderWidth: theme.fixedSpacing(theme.tabiyaSpacing.xxs),
+      },
+      "&:hover fieldset": {
+        borderColor: disabled ? theme.palette.grey[400] : color,
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: color,
+      },
+      "&.Mui-error fieldset": {
+        borderColor: theme.palette.error.main,
+      },
     },
-    "&:hover fieldset": {
-      borderColor: disabled ? theme.palette.grey[400] : theme.palette.primary.dark,
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: theme.palette.primary.dark,
-    },
-    "&.Mui-error fieldset": {
-      borderColor: theme.palette.error.main,
-    },
-  },
 
-  // Change the color of the input text when disabled to make it more readable
-  "& .MuiInputBase-input.MuiOutlinedInput-input.Mui-disabled": {
-    WebkitTextFillColor: theme.palette.text.textBlack,
-  },
-}));
+    // Change the color of the input text when disabled to make it more readable
+    "& .MuiInputBase-input.MuiOutlinedInput-input.Mui-disabled": {
+      WebkitTextFillColor: theme.palette.text.textBlack,
+    },
+  };
+});
 
 const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
   const { t } = useTranslation();
@@ -540,12 +547,7 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
     >
       <Box
         sx={{
-          // responsive padding
-
-          width: {
-            xs: "100%",
-            md: "60%",
-          },
+          width: "100%",
           position: "relative",
         }}
       >
@@ -562,6 +564,7 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
           inputRef={inputRef}
           error={!!errorMessage}
           helperText={errorMessage}
+          fillColor={props.fillColor}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -581,9 +584,9 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
                         title={t("chat.chatMessageField.moreActionsTooltip")}
                         data-testid={DATA_TEST_ID.CHAT_MESSAGE_FIELD_PLUS_BUTTON}
                       >
-                        <AnimatedDotBadge show={showPlusBadge}>
+                        <AnimatedDotBadge show={showPlusBadge} color={props.fillColor || theme.palette.primary.dark}>
                           <AddIcon
-                            sx={{ color: theme.palette.primary.dark }}
+                            sx={{ color: props.fillColor || theme.palette.primary.dark }}
                             data-testid={DATA_TEST_ID.CHAT_MESSAGE_FIELD_PLUS_ICON}
                           />
                         </AnimatedDotBadge>
@@ -601,11 +604,24 @@ const ChatMessageField: React.FC<ChatMessageFieldProps> = (props) => {
                   onKeyDown={(event) => event.stopPropagation()}
                   disabled={sendIsDisabled()}
                   title={t("chat.chatMessageField.sendMessageTooltip")}
+                  sx={{
+                    backgroundColor: sendIsDisabled()
+                      ? theme.palette.grey[900]
+                      : props.fillColor || theme.palette.primary.main,
+                    "&:hover": {
+                      backgroundColor: sendIsDisabled()
+                        ? theme.palette.grey[300]
+                        : props.fillColor || theme.palette.primary.dark,
+                    },
+                    "&.Mui-disabled": {
+                      backgroundColor: theme.palette.grey[300],
+                    },
+                  }}
                 >
-                  <SendIcon
+                  <ArrowUpwardSharpIcon
                     data-testid={DATA_TEST_ID.CHAT_MESSAGE_FIELD_SEND_ICON}
                     sx={{
-                      color: sendIsDisabled() ? theme.palette.grey[400] : theme.palette.primary.dark,
+                      color: sendIsDisabled() ? theme.palette.grey[500] : theme.palette.common.white,
                     }}
                   />
                 </IconButton>

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, Typography, useTheme } from "@mui/material";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { getLatestPhaseName, SkillsRankingPhase, SkillsRankingState } from "src/features/skillsRanking/types";
@@ -21,6 +22,7 @@ import { shouldSkipMarketDisclosure } from "src/features/skillsRanking/utils/cre
 const uniqueId = "9b0dbc80-c786-4c24-ba9d-04b6946fa0b9";
 export const DATA_TEST_ID = {
   SKILLS_RANKING_JOB_SEEKER_DISCLOSURE_CONTAINER: `skills-ranking-job-seeker-disclosure-container-${uniqueId}`,
+  SKILLS_RANKING_JOB_SEEKER_DISCLOSURE_BRAND_LOGO: `skills-ranking-job-seeker-disclosure-brand-logo-${uniqueId}`,
 };
 
 export const SKILLS_RANKING_JOB_SEEKER_DISCLOSURE_MESSAGE_ID = `skills-ranking-job-seeker-disclosure-message-${uniqueId}`;
@@ -245,6 +247,9 @@ const SkillsRankingJobSeekerDisclosure: React.FC<Readonly<SkillsRankingJobSeeker
       ref={scrollRef}
       gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
     >
+      <Box data-testid={DATA_TEST_ID.SKILLS_RANKING_JOB_SEEKER_DISCLOSURE_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       <Box sx={{ width: "100%" }}>
         {renderGroupMessage()}
 

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { routerPaths } from "src/app/routerPaths";
-import CareerReadinessChat from "src/careerReadiness/components/CareerReadinessChat/CareerReadinessChat";
+import CareerReadinessChat from "src/careerReadiness/components/CareerReadinessAgentMessage/CareerReadinessChat/CareerReadinessChat";
 import CareerReadinessService from "src/careerReadiness/services/CareerReadinessService";
 import type { ModuleDetail, ModuleSummary } from "src/careerReadiness/types";
 import { RestAPIError } from "src/error/restAPIError/RestAPIError";
@@ -20,7 +20,6 @@ export const DATA_TEST_ID = {
 };
 
 const CareerReadinessModule: React.FC = () => {
-  const theme = useTheme();
   const navigate = useNavigate();
   const { moduleId } = useParams<{ moduleId: string }>();
   const { t } = useTranslation();
@@ -96,20 +95,21 @@ const CareerReadinessModule: React.FC = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
-        backgroundColor: theme.palette.containerBackground.light,
+        height: "100%",
       }}
       data-testid={DATA_TEST_ID.CAREER_READINESS_MODULE_CONTAINER}
     >
       {moduleDetail && (
-        <SubNavBar
-          title={subNavTitle}
-          subtitle={moduleDetail.title}
-          headerColor="secondary"
-          labelAbove
-          backLabelKey="careerReadiness.backToModules"
-          backTo={routerPaths.CAREER_READINESS}
-        />
+        <Box sx={{ flexShrink: 0 }}>
+          <SubNavBar
+            title={subNavTitle}
+            subtitle={moduleDetail.title}
+            headerColor="brandColor"
+            labelAbove
+            backLabelKey="careerReadiness.backToModules"
+            backTo={routerPaths.CAREER_READINESS}
+          />
+        </Box>
       )}
       <Box
         sx={{

@@ -47,22 +47,24 @@ const Layout: React.FC = () => {
     <Box
       display="flex"
       flexDirection="column"
-      minHeight="100vh"
+      height="100vh"
       sx={(theme) => ({
         "--layout-gutter-x": { xs: theme.spacing(theme.tabiyaSpacing.sm), md: theme.spacing(theme.tabiyaSpacing.xl) },
       })}
     >
-      <NavBar headerColor={headerColor} />
-      {currentHandle?.title && currentHandle?.subtitle && (
-        <SubNavBar
-          title={t(currentHandle.title as TranslationKey)}
-          subtitle={t(currentHandle.subtitle as TranslationKey)}
-          headerColor={headerColor}
-          backLabelKey={currentHandle.backLabelKey as TranslationKey | undefined}
-          backTo={currentHandle.backTo}
-        />
-      )}
-      <Box display="flex" flexDirection="column" flex={1}>
+      <Box sx={{ flexShrink: 0 }}>
+        <NavBar headerColor={headerColor} />
+        {currentHandle?.title && currentHandle?.subtitle && (
+          <SubNavBar
+            title={t(currentHandle.title as TranslationKey)}
+            subtitle={t(currentHandle.subtitle as TranslationKey)}
+            headerColor={headerColor}
+            backLabelKey={currentHandle.backLabelKey as TranslationKey | undefined}
+            backTo={currentHandle.backTo}
+          />
+        )}
+      </Box>
+      <Box display="flex" flexDirection="column" flex={1} minHeight={0}>
         <Outlet />
       </Box>
     </Box>
