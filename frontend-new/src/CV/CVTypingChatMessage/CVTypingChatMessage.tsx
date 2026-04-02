@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, keyframes } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
-import { MessageContainer } from "src/chat/chatMessage/userChatMessage/UserChatMessage";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
+import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -10,6 +11,7 @@ const uniqueId = "7fa5c1d3-8b76-4d9f-a422-f35c91e7a2c8";
 
 export const DATA_TEST_ID = {
   CV_TYPING_CHAT_MESSAGE_CONTAINER: `cv-typing-chat-message-container-${uniqueId}`,
+  CV_TYPING_CHAT_MESSAGE_BRAND_LOGO: `cv-typing-chat-message-brand-logo-${uniqueId}`,
 };
 
 // Deprecated: UI_TEXT constants replaced by i18n keys. Keep for backwards compatibility in any legacy imports.
@@ -68,6 +70,9 @@ const CVTypingChatMessage: React.FC<CVTypingChatMessageProps> = ({ isUploaded = 
           origin={ConversationMessageSender.COMPASS}
           data-testid={DATA_TEST_ID.CV_TYPING_CHAT_MESSAGE_CONTAINER}
         >
+          <Box data-testid={DATA_TEST_ID.CV_TYPING_CHAT_MESSAGE_BRAND_LOGO}>
+            <BrandLogo />
+          </Box>
           <ChatBubble message="" sender={ConversationMessageSender.COMPASS}>
             <Box display="flex" alignItems="baseline">
               <Typography>{displayText}</Typography>

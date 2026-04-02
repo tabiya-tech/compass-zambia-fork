@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { IChatMessage } from "src/chat/Chat.types";
 import { Box, List, ListItem, useTheme } from "@mui/material";
-import { styled } from "@mui/system";
 import { AnimatePresence, motion } from "framer-motion";
 
 const uniqueId = "0397ee51-f637-4453-9e2f-5cc8900c9554";
@@ -12,19 +11,6 @@ export const DATA_TEST_ID = {
 export type ChatListProps = {
   messages: IChatMessage<any>[];
 };
-
-const ChatListContainer = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  height: "100%",
-  overflowX: "hidden",
-  flexGrow: 1,
-  overflowY: "auto",
-  [theme.breakpoints.up("md")]: {
-    width: "60%",
-    margin: "auto",
-  },
-}));
 
 const ChatList: React.FC<ChatListProps> = ({ messages }) => {
   const theme = useTheme();
@@ -60,7 +46,7 @@ const ChatList: React.FC<ChatListProps> = ({ messages }) => {
   }, []);
 
   return (
-    <ChatListContainer data-testid={DATA_TEST_ID.CHAT_LIST_CONTAINER} tabIndex={0}>
+    <Box data-testid={DATA_TEST_ID.CHAT_LIST_CONTAINER} tabIndex={0}>
       <List
         sx={{
           width: "100%",
@@ -90,7 +76,7 @@ const ChatList: React.FC<ChatListProps> = ({ messages }) => {
         </AnimatePresence>
       </List>
       <div ref={messagesEndRef} />
-    </ChatListContainer>
+    </Box>
   );
 };
 

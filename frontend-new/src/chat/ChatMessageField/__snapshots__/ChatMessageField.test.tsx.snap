@@ -6,10 +6,10 @@ exports[`ChatMessageField should render correctly 1`] = `
   data-testid="chat-message-field-container-2a76494f-351d-409d-ba58-e1b2cfaf2a53"
 >
   <div
-    class="MuiBox-root css-zeiu9o"
+    class="MuiBox-root css-1kxonj9"
   >
     <div
-      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1khqetv-MuiFormControl-root-MuiTextField-root"
+      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1uzp91q-MuiFormControl-root-MuiTextField-root"
     >
       <div
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused MuiInputBase-formControl MuiInputBase-multiline MuiInputBase-adornedStart MuiInputBase-adornedEnd css-csgncd-MuiInputBase-root-MuiOutlinedInput-root"
@@ -76,7 +76,7 @@ exports[`ChatMessageField should render correctly 1`] = `
           class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1t5wmfw-MuiInputAdornment-root"
         >
           <button
-            class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeMedium css-ik2bs8-MuiButtonBase-root-MuiIconButton-root"
+            class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeMedium css-1ihmtav-MuiButtonBase-root-MuiIconButton-root"
             data-testid="chat-message-field-send-button-2a76494f-351d-409d-ba58-e1b2cfaf2a53"
             disabled=""
             tabindex="-1"
@@ -85,13 +85,13 @@ exports[`ChatMessageField should render correctly 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1p4a2ac-MuiSvgIcon-root"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-15yus5f-MuiSvgIcon-root"
               data-testid="chat-message-field-send-icon-2a76494f-351d-409d-ba58-e1b2cfaf2a53"
               focusable="false"
               viewBox="0 0 24 24"
             >
               <path
-                d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
+                d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8z"
               />
             </svg>
           </button>

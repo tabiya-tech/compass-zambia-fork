@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { SkillsRankingPhase, SkillsRankingState, getLatestPhaseName } from "src/features/skillsRanking/types";
@@ -22,6 +23,7 @@ const uniqueId = "1e13ec58-2931-47ef-b1a9-30550519707b";
 
 export const DATA_TEST_ID = {
   SKILLS_RANKING_PROMPT_CONTAINER: `skills-ranking-prompt-container-${uniqueId}`,
+  SKILLS_RANKING_PROMPT_BRAND_LOGO: `skills-ranking-prompt-brand-logo-${uniqueId}`,
   REPLAY_CONTAINER: `skills-ranking-prompt-replay-container-${uniqueId}`,
   MAIN_MESSAGE_CONTAINER: `skills-ranking-prompt-main-message-${uniqueId}`,
 };
@@ -110,6 +112,9 @@ const SkillsRankingPrompt: React.FC<Readonly<SkillsRankingPromptProps>> = ({ onF
       gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
       ref={scrollRef}
     >
+      <Box data-testid={DATA_TEST_ID.SKILLS_RANKING_PROMPT_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       {isReplay ? (
         <Box sx={{ width: "100%" }} data-testid={DATA_TEST_ID.REPLAY_CONTAINER}>
           <PromptMessage />

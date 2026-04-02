@@ -30,9 +30,10 @@ const Home: React.FC = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        height: "100%",
         backgroundColor: theme.palette.containerBackground.main,
         overflowX: "hidden",
+        overflowY: "auto",
       }}
       data-testid={DATA_TEST_ID.HOME_CONTAINER}
     >

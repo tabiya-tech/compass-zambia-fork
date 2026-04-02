@@ -101,12 +101,14 @@ export const getLatestQuizHistorySummary = (messages: CareerReadinessMessage[]):
 export const mapCareerReadinessMessageToChatMessage = (
   msg: CareerReadinessMessage,
   isLastMessage: boolean = false,
+  fillColor: string,
   onQuickReplyClick?: (label: string) => void
 ): IChatMessage<CareerReadinessAgentMessageProps> | IChatMessage<CareerReadinessUserMessageProps> => {
   const sentAt = msg.sent_at;
   if (msg.sender === "USER") {
     const payload: CareerReadinessUserMessageProps = {
       message: msg.message,
+      fillColor,
     };
     return {
       type: CAREER_READINESS_USER_MESSAGE_TYPE,
@@ -135,10 +137,11 @@ export const mapCareerReadinessMessageToChatMessage = (
 
 export const mapCareerReadinessMessagesToChatMessages = (
   messages: CareerReadinessMessage[],
+  fillColor: string,
   onQuickReplyClick?: (label: string) => void
 ): IChatMessage<any>[] => {
   const visible = messages.filter((msg, index) => !isHiddenCareerReadinessSystemMessage(msg, index, messages));
   return visible.map((msg, idx) =>
-    mapCareerReadinessMessageToChatMessage(msg, idx === visible.length - 1, onQuickReplyClick)
+    mapCareerReadinessMessageToChatMessage(msg, idx === visible.length - 1, fillColor, onQuickReplyClick)
   );
 };

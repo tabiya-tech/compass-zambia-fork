@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, keyframes, Typography } from "@mui/material";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
-import { MessageContainer } from "src/chat/chatMessage/userChatMessage/UserChatMessage";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
+import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -10,6 +11,7 @@ const uniqueId = "eb14a7aa-b515-4ab9-9829-8110346d9090";
 
 export const DATA_TEST_ID = {
   TYPING_CHAT_MESSAGE_CONTAINER: `typing-chat-message-container-${uniqueId}`,
+  TYPING_CHAT_MESSAGE_BRAND_LOGO: `typing-chat-message-brand-logo-${uniqueId}`,
 };
 
 export const UI_TEXT_KEYS = {
@@ -79,6 +81,9 @@ const TypingChatMessage: React.FC<TypingChatMessageProps> = ({
           origin={ConversationMessageSender.COMPASS}
           data-testid={DATA_TEST_ID.TYPING_CHAT_MESSAGE_CONTAINER}
         >
+          <Box data-testid={DATA_TEST_ID.TYPING_CHAT_MESSAGE_BRAND_LOGO}>
+            <BrandLogo />
+          </Box>
           <ChatBubble message="" sender={ConversationMessageSender.COMPASS}>
             <Box display="flex" alignItems="baseline">
               <Typography>{displayText}</Typography>

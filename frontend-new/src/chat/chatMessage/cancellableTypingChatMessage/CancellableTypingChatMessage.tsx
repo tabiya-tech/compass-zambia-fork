@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, keyframes, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 import { MessageContainer } from "src/chat/chatMessage/userChatMessage/UserChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { AnimatePresence, motion } from "framer-motion";
@@ -12,6 +13,7 @@ const uniqueId = "6cbdaa24-09da-4c18-907c-7d98d210d2e9";
 
 export const DATA_TEST_ID = {
   CANCELLABLE_TYPING_CHAT_MESSAGE_CONTAINER: `cancellable-typing-chat-message-container-${uniqueId}`,
+  CANCELLABLE_TYPING_CHAT_MESSAGE_BRAND_LOGO: `cancellable-typing-chat-message-brand-logo-${uniqueId}`,
   CANCEL_BUTTON: `cancellable-typing-chat-message-cancel-button-${uniqueId}`,
 };
 
@@ -104,6 +106,9 @@ const CancellableTypingChatMessage: React.FC<CancellableTypingChatMessageProps> 
           origin={ConversationMessageSender.COMPASS}
           data-testid={DATA_TEST_ID.CANCELLABLE_TYPING_CHAT_MESSAGE_CONTAINER}
         >
+          <Box data-testid={DATA_TEST_ID.CANCELLABLE_TYPING_CHAT_MESSAGE_BRAND_LOGO}>
+            <BrandLogo />
+          </Box>
           <ChatBubble message="" sender={ConversationMessageSender.COMPASS}>
             <Box
               display="flex"

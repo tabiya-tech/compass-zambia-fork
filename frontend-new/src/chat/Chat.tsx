@@ -1,7 +1,6 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ChatService from "src/chat/ChatService/ChatService";
-import ChatList from "src/chat/chatList/ChatList";
 import { IChatMessage } from "src/chat/Chat.types";
 import {
   CANCELLABLE_CV_TYPING_CHAT_MESSAGE_TYPE,
@@ -17,7 +16,6 @@ import {
 } from "./util";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
 import { Box, useTheme } from "@mui/material";
-import ChatMessageField from "./ChatMessageField/ChatMessageField";
 import ChatHeader from "src/chat/ChatHeader/ChatHeader";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
 import { ConversationMessage, ConversationMessageSender, ConversationResponse } from "./ChatService/ChatService.types";
@@ -30,7 +28,6 @@ import authenticationStateService from "src/auth/services/AuthenticationState.se
 import { ensureSessionForUser } from "./ensureSession";
 import { ChatProvider } from "src/chat/ChatContext";
 import { lazyWithPreload } from "src/utils/preloadableComponent/PreloadableComponent";
-import ChatProgressBar from "./chatProgressbar/ChatProgressBar";
 import { ConversationPhase, CurrentPhase, defaultCurrentPhase } from "./chatProgressbar/types";
 import { CompassChatMessageProps } from "./chatMessage/compassChatMessage/CompassChatMessage";
 import { SkillsRankingService } from "src/features/skillsRanking/skillsRankingService/skillsRankingService";
@@ -51,6 +48,8 @@ import { nanoid } from "nanoid";
 import { useExperiencesDrawer } from "src/experiences/ExperiencesDrawerProvider";
 import ModuleHandoffBanner from "src/home/components/ModuleHandoffBanner/ModuleHandoffBanner";
 import { useNextModule } from "src/home/useNextModule";
+import ChatPage from "src/chat/ChatPage/ChatPage";
+import SkillsDiscoverySidebar from "src/home/components/Sidebar/SkillsDiscoverySidebar";
 
 export const INACTIVITY_TIMEOUT = 3 * 60 * 1000; // in milliseconds
 // Set the interval to check every TIMEOUT/3,
@@ -621,7 +620,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
       const chatText = displayMessage !== undefined ? displayMessage : userMessage;
       if (chatText) {
         // optimistically add the user's message for a more responsive feel
-        const message = generateUserMessage(chatText, new Date().toISOString());
+        const message = generateUserMessage(chatText, new Date().toISOString(), theme.palette.secondary.main);
         addMessageToChat(message);
       }
 
@@ -725,6 +724,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
       }
     },
     [
+      theme,
       addMessageToChat,
       exploredExperiences,
       fetchExperiences,
@@ -779,7 +779,7 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
                   const parsed = JSON.parse(message.message);
                   if (parsed.type === "bws_response") return [];
                 } catch {}
-                return [generateUserMessage(message.message, message.sent_at)];
+                return [generateUserMessage(message.message, message.sent_at, theme.palette.secondary.main)];
               }
               const isLast = idx === arr.length - 1;
               if (message.message_type === "BWS_TASK" && message.metadata) {
@@ -872,7 +872,15 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
         setAiIsTyping(false);
       }
     },
-    [addMessageToChat, setAiIsTyping, showSkillsRanking, sendMessage, handleQuickReply, setConversationConductedAt]
+    [
+      addMessageToChat,
+      setAiIsTyping,
+      showSkillsRanking,
+      sendMessage,
+      handleQuickReply,
+      setConversationConductedAt,
+      theme,
+    ]
   );
 
   // Resets the text field for the next message
@@ -1053,6 +1061,12 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
     setShowRefreshConfirmDialog(false);
   };
 
+  // Extract quick_reply_options from the last agent message (if any)
+  const quickReplyOptions = useMemo(() => {
+    const lastMessage = messages[messages.length - 1];
+    return lastMessage?.payload?.quick_reply_options || null;
+  }, [messages]);
+
   return (
     <Suspense fallback={<Backdrop isShown={true} transparent={true} />}>
       <ChatProvider
@@ -1060,76 +1074,57 @@ export const Chat: React.FC<Readonly<ChatProps>> = ({
         removeMessageFromChat={removeMessageFromChat}
         addMessageToChat={addMessageToChat}
       >
+        {/* The "is-initialized" attribute helps make the component testable.
+            When the component mounts, an initialization function runs, changing the state and causing a rerender.
+            Tests need to wait for the component to "settle" after mounting, but they don't know when that happens.
+            To check if the component is settled, tests can wait for the "is-initialized" attribute to be true:
+              await waitFor(() => {
+                expect(screen.getByTestId(DATA_TEST_ID.CHAT_CONTAINER)).toHaveAttribute("is-initialized", "true");
+              });
+            This technique can solve the "Warning: An update to Chat inside a test was not wrapped in act(...)" warning. */}
         <Box
-          width="100%"
-          height="100%"
-          display="flex"
-          flexDirection="column"
-          position="relative"
           data-testid={DATA_TEST_ID.CHAT_CONTAINER}
-          // The "is-initialized" attribute helps make the component testable.
-          // When the component mounts, an initialization function runs, changing the state and causing a rerender.
-          // Tests need to wait for the component to "settle" after mounting, but they don't know when that happens.
-          // To check if the component is settled, tests can wait for the "is-initialized" attribute to be true:
-          //   await waitFor(() => {
-          //     expect(screen.getByTestId(DATA_TEST_ID.CHAT_CONTAINER)).toHaveAttribute("is-initialized", "true");
-          //   });
-          // This technique can solve the "Warning: An update to Chat inside a test was not wrapped in act(...)" warning.
           is-initialized={`${initialized}`}
+          sx={{ width: "100%", height: "100%", flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}
         >
-          <ChatHeader
-            experiencesExplored={exploredExperiencesCount.length}
-            exploredExperiencesNotification={exploredExperiencesNotification}
-            setExploredExperiencesNotification={setExploredExperiencesNotification}
-            conversationCompleted={conversationCompleted}
-            timeUntilNotification={timeUntilFeedbackNotification}
-            progressPercentage={currentPhase.percentage}
-          />
-          <Box
-            sx={{
-              paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.sm),
-              paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.md),
-              paddingX: theme.spacing(theme.tabiyaSpacing.md),
-              width: { xs: "100%", md: "60%" },
-              margin: { xs: "0", md: "0 auto" },
+          <ChatPage
+            aboveChatView={
+              <ChatHeader
+                experiencesExplored={exploredExperiencesCount.length}
+                exploredExperiencesNotification={exploredExperiencesNotification}
+                setExploredExperiencesNotification={setExploredExperiencesNotification}
+                conversationCompleted={conversationCompleted}
+                timeUntilNotification={timeUntilFeedbackNotification}
+                progressPercentage={currentPhase.percentage}
+              />
+            }
+            chatViewProps={{
+              messages,
+              quickReplyOptions,
+              onQuickReplyClick: handleQuickReply,
+              messageFieldProps: {
+                handleSend,
+                aiIsTyping,
+                isChatFinished: conversationCompleted,
+                isUploadingCv: isUploadingCv || activeUploads.size > 0,
+                onUploadCv: handleUploadCv,
+                currentPhase: currentPhase.phase,
+                prefillMessage,
+                cvUploadError,
+                fillColor: theme.palette.secondary.main,
+              },
+              children: showBackdrop ? <InactiveBackdrop isShown={showBackdrop} /> : undefined,
             }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: theme.spacing(theme.tabiyaSpacing.sm),
-              }}
-            >
-              <Box sx={{ flex: 1 }}>
-                <ChatProgressBar
-                  percentage={currentPhase.percentage}
-                  phase={currentPhase.phase}
-                  current={currentPhase.current}
-                  total={currentPhase.total}
+            belowChatView={
+              conversationCompleted && nextModule ? (
+                <ModuleHandoffBanner
+                  nextModuleLabel={t(nextModule.labelKey as any)}
+                  nextModuleRoute={nextModule.route}
                 />
-              </Box>
-            </Box>
-          </Box>
-          <Box sx={{ flex: 1, overflowY: "auto", paddingX: theme.spacing(theme.tabiyaSpacing.lg) }}>
-            <ChatList messages={messages} />
-          </Box>
-          {showBackdrop && <InactiveBackdrop isShown={showBackdrop} />}
-          <Box sx={{ flexShrink: 0, padding: theme.tabiyaSpacing.lg, paddingTop: theme.tabiyaSpacing.xs }}>
-            <ChatMessageField
-              handleSend={handleSend}
-              aiIsTyping={aiIsTyping}
-              isChatFinished={conversationCompleted}
-              isUploadingCv={isUploadingCv || activeUploads.size > 0}
-              onUploadCv={handleUploadCv}
-              currentPhase={currentPhase.phase}
-              prefillMessage={prefillMessage}
-              cvUploadError={cvUploadError}
-            />
-          </Box>
-          {conversationCompleted && nextModule && (
-            <ModuleHandoffBanner nextModuleLabel={t(nextModule.labelKey as any)} nextModuleRoute={nextModule.route} />
-          )}
+              ) : undefined
+            }
+            sidebar={<SkillsDiscoverySidebar />}
+          />
         </Box>
         {showRefreshConfirmDialog && (
           <ConfirmModalDialog

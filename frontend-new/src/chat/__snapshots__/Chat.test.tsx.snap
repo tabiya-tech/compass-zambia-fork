@@ -2,47 +2,52 @@
 
 exports[`Chat render tests should render the Chat component with all its children 1`] = `
 <div
-  class="MuiBox-root css-1kuqfkb"
+  class="MuiBox-root css-1pybhnf"
   data-testid="chat-container-b7ea1e82-0002-432d-a768-11bdcd186e1d"
   is-initialized="true"
 >
   <div
-    class="MuiBox-root css-pori7h"
-    data-testid="chat-header-container-7413b63a-887b-4f41-b930-89e9770db12b"
-  />
-  <div
-    class="MuiBox-root css-1u5054q"
+    class="MuiBox-root css-1javu7q"
+    data-testid="chat-page-container-3f7a1b2c-8d4e-5f6a-9b0c-1d2e3f4a5b6c"
   >
     <div
-      class="MuiBox-root css-1elaak3"
+      class="MuiBox-root css-tn79xu"
+      data-testid="chat-page-chat-area-3f7a1b2c-8d4e-5f6a-9b0c-1d2e3f4a5b6c"
     >
       <div
-        class="MuiBox-root css-1rr4qq7"
+        class="MuiBox-root css-pori7h"
+        data-testid="chat-header-container-7413b63a-887b-4f41-b930-89e9770db12b"
+      />
+      <div
+        class="MuiBox-root css-nrtu2f"
+        data-testid="chat-view-container-8f4e2b1a-9c3d-4a5e-b6f7-8a9b0c1d2e3f"
       >
         <div
-          data-testid="chat-progress-bar-container-2a76494f-351d-409d-ba58-e1b2cfaf2a53"
+          class="MuiBox-root css-ghq5n5"
+          data-testid="chat-view-messages-area-8f4e2b1a-9c3d-4a5e-b6f7-8a9b0c1d2e3f"
         >
-          COLLECT_EXPERIENCES
-           - 
-          50
-          %
+          <div
+            data-testid="chat-list-container-0397ee51-f637-4453-9e2f-5cc8900c9554"
+          />
+        </div>
+        <div
+          class="MuiBox-root css-msw3ti"
+          data-testid="chat-view-input-area-8f4e2b1a-9c3d-4a5e-b6f7-8a9b0c1d2e3f"
+        >
+          <div
+            data-testid="chat-message-field-container-2a76494f-351d-409d-ba58-e1b2cfaf2a53"
+          />
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="MuiBox-root css-pkmnlt"
-  >
-    <div
-      data-testid="chat-list-container-0397ee51-f637-4453-9e2f-5cc8900c9554"
-    />
-  </div>
-  <div
-    class="MuiBox-root css-msw3ti"
-  >
-    <div
-      data-testid="chat-message-field-container-2a76494f-351d-409d-ba58-e1b2cfaf2a53"
-    />
+    <aside
+      class="MuiBox-root css-1ru1n3d"
+      data-testid="chat-page-sidebar-3f7a1b2c-8d4e-5f6a-9b0c-1d2e3f4a5b6c"
+    >
+      <div
+        data-testid="skills-discovery-sidebar-mock"
+      />
+    </aside>
   </div>
 </div>
 `;

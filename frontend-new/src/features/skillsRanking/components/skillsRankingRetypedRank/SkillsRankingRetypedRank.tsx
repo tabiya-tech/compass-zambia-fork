@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Box, useTheme } from "@mui/material";
 import PrimaryButton from "src/theme/PrimaryButton/PrimaryButton";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { SkillsRankingPhase, SkillsRankingState, getLatestPhaseName } from "src/features/skillsRanking/types";
@@ -24,6 +25,7 @@ const uniqueId = "eb90de4c-2462-4b6d-8b9c-1b5c6ae64129";
 
 export const DATA_TEST_ID = {
   SKILLS_RANKING_RETYPED_RANK_CONTAINER: `skills-ranking-retyped-rank-container-${uniqueId}`,
+  SKILLS_RANKING_RETYPED_RANK_BRAND_LOGO: `skills-ranking-retyped-rank-brand-logo-${uniqueId}`,
   SKILLS_RANKING_RETYPED_RANK_SLIDER: `skills-ranking-retyped-rank-slider-${uniqueId}`,
   SKILLS_RANKING_RETYPED_RANK_SUBMIT_BUTTON: `skills-ranking-retyped-rank-submit-button-${uniqueId}`,
 };
@@ -138,52 +140,57 @@ const SkillsRankingRetypedRank: React.FC<Readonly<SkillsRankingRetypedRankProps>
       gap={theme.fixedSpacing(theme.tabiyaSpacing.md)}
     >
       {!shouldNotShow && (
-        <Box sx={{ width: "100%" }}>
-          <ChatBubble
-            sender={ConversationMessageSender.COMPASS}
-            message={
-              <>
-                {t("features.skillsRanking.components.skillsRankingRetypedRank.question_1")}{" "}
-                <strong>{t("features.skillsRanking.components.skillsRankingRetypedRank.question_2")}</strong>
-                {t("features.skillsRanking.components.skillsRankingRetypedRank.question_3")} {getJobPlatformUrl()}
-                {t("features.skillsRanking.components.skillsRankingRetypedRank.question_4")}
-              </>
-            }
-          >
-            <Box padding={theme.fixedSpacing(theme.tabiyaSpacing.md)}>
-              <SkillsRankingSlider
-                value={value}
-                onChange={(_, newVal) => {
-                  setStartedEditing(true);
-                  setValue(newVal as number);
-                }}
-                disabled={submitted || !isOnline || currentPhase !== SkillsRankingPhase.RETYPED_RANK}
-                data-testid={DATA_TEST_ID.SKILLS_RANKING_RETYPED_RANK_SLIDER}
-                aria-label={t("features.skillsRanking.components.skillsRankingRetypedRank.sliderAria")}
-              />
-
-              <Box mt={theme.spacing(2)} textAlign="right">
-                <PrimaryButton
-                  onClick={handleSubmit}
-                  disabled={
-                    submitted || !startedEditing || !isOnline || currentPhase !== SkillsRankingPhase.RETYPED_RANK
-                  }
-                  data-testid={DATA_TEST_ID.SKILLS_RANKING_RETYPED_RANK_SUBMIT_BUTTON}
-                >
-                  {t("common.buttons.submit")}
-                </PrimaryButton>
-              </Box>
-            </Box>
-          </ChatBubble>
-
-          <ChatMessageFooterLayout sender={ConversationMessageSender.COMPASS}>
-            <Timestamp
-              sentAt={
-                skillsRankingState.phases[skillsRankingState.phases.length - 1]?.time || skillsRankingState.started_at
+        <>
+          <Box data-testid={DATA_TEST_ID.SKILLS_RANKING_RETYPED_RANK_BRAND_LOGO}>
+            <BrandLogo />
+          </Box>
+          <Box sx={{ width: "100%" }}>
+            <ChatBubble
+              sender={ConversationMessageSender.COMPASS}
+              message={
+                <>
+                  {t("features.skillsRanking.components.skillsRankingRetypedRank.question_1")}{" "}
+                  <strong>{t("features.skillsRanking.components.skillsRankingRetypedRank.question_2")}</strong>
+                  {t("features.skillsRanking.components.skillsRankingRetypedRank.question_3")} {getJobPlatformUrl()}
+                  {t("features.skillsRanking.components.skillsRankingRetypedRank.question_4")}
+                </>
               }
-            />
-          </ChatMessageFooterLayout>
-        </Box>
+            >
+              <Box padding={theme.fixedSpacing(theme.tabiyaSpacing.md)}>
+                <SkillsRankingSlider
+                  value={value}
+                  onChange={(_, newVal) => {
+                    setStartedEditing(true);
+                    setValue(newVal as number);
+                  }}
+                  disabled={submitted || !isOnline || currentPhase !== SkillsRankingPhase.RETYPED_RANK}
+                  data-testid={DATA_TEST_ID.SKILLS_RANKING_RETYPED_RANK_SLIDER}
+                  aria-label={t("features.skillsRanking.components.skillsRankingRetypedRank.sliderAria")}
+                />
+
+                <Box mt={theme.spacing(2)} textAlign="right">
+                  <PrimaryButton
+                    onClick={handleSubmit}
+                    disabled={
+                      submitted || !startedEditing || !isOnline || currentPhase !== SkillsRankingPhase.RETYPED_RANK
+                    }
+                    data-testid={DATA_TEST_ID.SKILLS_RANKING_RETYPED_RANK_SUBMIT_BUTTON}
+                  >
+                    {t("common.buttons.submit")}
+                  </PrimaryButton>
+                </Box>
+              </Box>
+            </ChatBubble>
+
+            <ChatMessageFooterLayout sender={ConversationMessageSender.COMPASS}>
+              <Timestamp
+                sentAt={
+                  skillsRankingState.phases[skillsRankingState.phases.length - 1]?.time || skillsRankingState.started_at
+                }
+              />
+            </ChatMessageFooterLayout>
+          </Box>
+        </>
       )}
 
       <AnimatePresence mode="wait">

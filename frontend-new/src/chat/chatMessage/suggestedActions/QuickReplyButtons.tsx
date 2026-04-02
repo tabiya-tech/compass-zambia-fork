@@ -1,11 +1,12 @@
 import React from "react";
-import { Box, Chip, useTheme } from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import { QuickReplyOption } from "src/chat/ChatService/ChatService.types";
 
 const uniqueId = "quick-reply-buttons-3f7a8b2c";
 
 export const DATA_TEST_ID = {
   QUICK_REPLY_CONTAINER: `quick-reply-container-${uniqueId}`,
+  QUICK_REPLY_HEADER: `quick-reply-header-${uniqueId}`,
   QUICK_REPLY_BUTTON: `quick-reply-button-${uniqueId}`,
 };
 
@@ -21,33 +22,64 @@ const QuickReplyButtons: React.FC<QuickReplyButtonsProps> = ({ options, onSelect
 
   return (
     <Box
-      data-testid={DATA_TEST_ID.QUICK_REPLY_CONTAINER}
       sx={{
         display: "flex",
-        flexWrap: "wrap",
-        gap: theme.spacing(1),
-        marginTop: theme.spacing(1),
+        flexDirection: "column",
+        gap: theme.tabiyaSpacing.sm,
       }}
     >
-      {options.map((option) => (
-        <Chip
-          key={option.label}
-          label={option.label}
-          variant="outlined"
-          size="small"
-          onClick={() => onSelect(option.label)}
-          data-testid={DATA_TEST_ID.QUICK_REPLY_BUTTON}
-          sx={{
-            cursor: "pointer",
-            "& .MuiChip-label": {
-              fontSize: theme.typography.body2.fontSize,
-            },
-            "&:hover": {
-              backgroundColor: theme.palette.action.hover,
-            },
-          }}
-        />
-      ))}
+      <Typography
+        data-testid={DATA_TEST_ID.QUICK_REPLY_HEADER}
+        sx={{
+          fontWeight: theme.typography.fontWeightBold,
+          fontSize: theme.typography.caption.fontSize,
+          textTransform: "uppercase",
+        }}
+      >
+        Quick replies:
+      </Typography>
+      <Box
+        data-testid={DATA_TEST_ID.QUICK_REPLY_CONTAINER}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          maxWidth: 500,
+          width: "100%",
+          flexWrap: "wrap",
+          gap: theme.tabiyaSpacing.sm,
+        }}
+      >
+        {options.map((option) => (
+          <Box key={option.label}>
+            <Button
+              variant="outlined"
+              onClick={() => onSelect(option.label)}
+              data-testid={DATA_TEST_ID.QUICK_REPLY_BUTTON}
+              sx={{
+                justifyContent: "flex-start",
+                textAlign: "left",
+                textTransform: "none",
+                display: "inline !important",
+                paddingX: theme.tabiyaSpacing.lg,
+                paddingY: theme.tabiyaSpacing.sm,
+                borderRadius: theme.tabiyaRounding.md,
+                borderBottomRightRadius: 0,
+                borderColor: theme.palette.grey[400],
+                backgroundColor: theme.palette.grey[100],
+                color: theme.palette.text.secondary,
+                fontSize: theme.typography.body2.fontSize,
+                fontWeight: theme.typography.fontWeightRegular,
+                "&:hover": {
+                  backgroundColor: theme.palette.grey[100],
+                  borderColor: theme.palette.grey[500],
+                },
+              }}
+            >
+              {option.label}
+            </Button>
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 };

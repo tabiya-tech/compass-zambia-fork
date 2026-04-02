@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import {
@@ -28,6 +29,7 @@ const uniqueId = "0e95404a-2044-4634-a6e8-29cc7b2d754e";
 
 export const DATA_TEST_ID = {
   SKILLS_RANKING_BRIEFING_CONTAINER: `skills-ranking-briefing-container-${uniqueId}`,
+  SKILLS_RANKING_BRIEFING_BRAND_LOGO: `skills-ranking-briefing-brand-logo-${uniqueId}`,
   SKILLS_RANKING_BRIEFING_CONTINUE_BUTTON: `skills-ranking-briefing-continue-button-${uniqueId}`,
 };
 
@@ -136,6 +138,9 @@ const SkillsRankingBriefing: React.FC<Readonly<SkillsRankingBriefingProps>> = ({
       ref={scrollRef}
       gap={theme.fixedSpacing(theme.tabiyaSpacing.md)}
     >
+      <Box data-testid={DATA_TEST_ID.SKILLS_RANKING_BRIEFING_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       <Box sx={{ width: "100%" }}>
         {/* TIME_BASED or first WORK_BASED message */}
         <ChatBubble

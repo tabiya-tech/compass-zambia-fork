@@ -2,7 +2,7 @@
 
 exports[`ChatList should render the Chat List and show the appropriate message type for each message 1`] = `
 <div
-  class="MuiBox-root css-15hfhb0"
+  class="MuiBox-root css-0"
   data-testid="chat-list-container-0397ee51-f637-4453-9e2f-5cc8900c9554"
   tabindex="0"
 >

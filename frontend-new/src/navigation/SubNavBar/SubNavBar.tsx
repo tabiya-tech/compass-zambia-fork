@@ -41,14 +41,14 @@ const SubNavBar: React.FC<SubNavBarProps> = ({
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
 
   const paletteColor = theme.palette[headerColor as keyof typeof theme.palette] as PaletteColor;
-  const bgColor = paletteColor?.main ?? theme.palette.brandAction.main;
-  const textColor = paletteColor?.contrastText ?? theme.palette.brandAction.contrastText;
+  const bgColor = paletteColor?.main ?? theme.palette.primary.main;
+  const textColor = paletteColor?.contrastText ?? theme.palette.primary.contrastText;
 
   const backLinkSx = {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    color: textColor,
+    color: "white",
     opacity: 0.85,
     fontSize: "0.9rem",
     fontWeight: 500,

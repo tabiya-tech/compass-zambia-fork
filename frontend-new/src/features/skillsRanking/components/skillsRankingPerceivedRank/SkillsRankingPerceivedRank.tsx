@@ -3,6 +3,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { Box, useTheme } from "@mui/material";
 import PrimaryButton from "src/theme/PrimaryButton/PrimaryButton";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
 import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { SkillsRankingState, SkillsRankingPhase, getLatestPhaseName } from "src/features/skillsRanking/types";
@@ -24,6 +25,7 @@ const uniqueId = "7c582beb-6070-43b0-92fb-7fd0a4cb533e";
 
 export const DATA_TEST_ID = {
   SKILLS_RANKING_PERCEIVED_RANK_CONTAINER: `skills-ranking-perceived-rank-container-${uniqueId}`,
+  SKILLS_RANKING_PERCEIVED_RANK_BRAND_LOGO: `skills-ranking-perceived-rank-brand-logo-${uniqueId}`,
   SKILLS_RANKING_PERCEIVED_RANK_SLIDER: `skills-ranking-perceived-rank-slider-${uniqueId}`,
   SKILLS_RANKING_PERCEIVED_RANK_SUBMIT_BUTTON: `skills-ranking-perceived-rank-submit-button-${uniqueId}`,
 };
@@ -113,6 +115,9 @@ const SkillsRankingPerceivedRank: React.FC<Readonly<SkillsRankingPerceivedRankPr
       data-testid={DATA_TEST_ID.SKILLS_RANKING_PERCEIVED_RANK_CONTAINER}
       gap={theme.fixedSpacing(theme.tabiyaSpacing.md)}
     >
+      <Box data-testid={DATA_TEST_ID.SKILLS_RANKING_PERCEIVED_RANK_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       <Box sx={{ width: "100%" }}>
         <ChatBubble
           sender={ConversationMessageSender.COMPASS}

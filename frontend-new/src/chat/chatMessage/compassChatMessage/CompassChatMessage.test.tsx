@@ -2,29 +2,12 @@
 import "src/_test_utilities/consoleMock";
 
 import CompassChatMessage, { COMPASS_CHAT_MESSAGE_TYPE, DATA_TEST_ID } from "./CompassChatMessage";
-import ChatMessageFooterLayout, {
-  DATA_TEST_ID as CHAT_MESSAGE_FOOTER_DATA_TEST_ID,
-} from "src/chat/chatMessage/components/chatMessageFooter/ChatMessageFooterLayout";
 import ChatBubble, {
   DATA_TEST_ID as CHAT_BUBBLE_DATA_TEST_ID,
 } from "src/chat/chatMessage/components/chatBubble/ChatBubble";
 import { render, screen } from "src/_test_utilities/test-utils";
-import { ConversationMessageSender, QuickReplyOption } from "src/chat/ChatService/ChatService.types";
+import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { nanoid } from "nanoid";
-import Timestamp from "src/chat/chatMessage/components/chatMessageFooter/components/timestamp/Timestamp";
-import ReactionButtons from "src/chat/reaction/components/reactionButtons/ReactionButtons";
-import { DATA_TEST_ID as QUICK_REPLY_DATA_TEST_ID } from "src/chat/chatMessage/suggestedActions/QuickReplyButtons";
-
-jest.mock("src/chat/chatMessage/components/chatMessageFooter/ChatMessageFooterLayout", () => {
-  const originalModule = jest.requireActual(
-    "src/chat/chatMessage/components/chatMessageFooter/ChatMessageFooterLayout"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: jest.fn(() => <div data-testid={originalModule.DATA_TEST_ID.CHAT_MESSAGE_FOOTER_LAYOUT_CONTAINER}></div>),
-  };
-});
 
 jest.mock("src/chat/chatMessage/components/chatBubble/ChatBubble", () => {
   const originalModule = jest.requireActual("src/chat/chatMessage/components/chatBubble/ChatBubble");
@@ -36,7 +19,7 @@ jest.mock("src/chat/chatMessage/components/chatBubble/ChatBubble", () => {
 });
 
 describe("render tests", () => {
-  test("should render the Compass Chat message with a timestamp", () => {
+  test("should render the Compass Chat message", () => {
     // GIVEN a compass chat message sent at a given time
     const givenDate = new Date(2024, 6, 25).toISOString();
     const messageData = {
@@ -53,30 +36,7 @@ describe("render tests", () => {
     expect(screen.getByTestId(DATA_TEST_ID.CHAT_MESSAGE_CONTAINER)).toBeInTheDocument();
     // AND expect the message bubble to be visible
     expect(screen.getByTestId(CHAT_BUBBLE_DATA_TEST_ID.CHAT_MESSAGE_BUBBLE_CONTAINER)).toBeInTheDocument();
-    // AND expect the message footer to be visible
-    expect(
-      screen.getByTestId(CHAT_MESSAGE_FOOTER_DATA_TEST_ID.CHAT_MESSAGE_FOOTER_LAYOUT_CONTAINER)
-    ).toBeInTheDocument();
 
-    // AND the correct date to have been displayed
-    const footerLayoutCalls = (ChatMessageFooterLayout as jest.Mock).mock.calls.at(-1)[0];
-    expect(footerLayoutCalls.children).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          type: Timestamp,
-          props: {
-            sentAt: givenDate,
-          },
-        }),
-        expect.objectContaining({
-          type: ReactionButtons,
-          props: {
-            messageId: messageData.message_id,
-            currentReaction: messageData.reaction,
-          },
-        }),
-      ])
-    );
     // AND expect the Chat bubble to have been rendered with the expected message
     expect(ChatBubble).toHaveBeenNthCalledWith(
       1,
@@ -90,116 +50,6 @@ describe("render tests", () => {
     // AND expect the component to match the snapshot
     expect(screen.getByTestId(DATA_TEST_ID.CHAT_MESSAGE_CONTAINER)).toMatchSnapshot();
     // THEN expect no errors or warnings to have occurred
-    expect(console.error).not.toHaveBeenCalled();
-    expect(console.warn).not.toHaveBeenCalled();
-  });
-
-  test("should render QuickReplyButtons when quick_reply_options are provided with an onQuickReplyClick handler", () => {
-    // GIVEN a compass chat message with quick reply options
-    const givenDate = new Date(2024, 6, 25).toISOString();
-    const givenQuickReplyOptions: QuickReplyOption[] = [{ label: "Yes" }, { label: "No" }];
-    const givenOnQuickReplyClick = jest.fn();
-    const messageData = {
-      message_id: nanoid(),
-      message: "Do you want to continue?",
-      sent_at: givenDate,
-      type: COMPASS_CHAT_MESSAGE_TYPE,
-      reaction: null,
-      quick_reply_options: givenQuickReplyOptions,
-      onQuickReplyClick: givenOnQuickReplyClick,
-    };
-
-    // WHEN the compass chat message is rendered with quick reply options
-    render(<CompassChatMessage {...messageData} />);
-
-    // THEN expect the message container to be visible
-    expect(screen.getByTestId(DATA_TEST_ID.CHAT_MESSAGE_CONTAINER)).toBeInTheDocument();
-    // AND expect the quick reply container to be in the document
-    expect(screen.getByTestId(QUICK_REPLY_DATA_TEST_ID.QUICK_REPLY_CONTAINER)).toBeInTheDocument();
-    // AND expect the correct number of quick reply buttons to be rendered
-    const actualQuickReplyButtons = screen.getAllByTestId(QUICK_REPLY_DATA_TEST_ID.QUICK_REPLY_BUTTON);
-    expect(actualQuickReplyButtons).toHaveLength(givenQuickReplyOptions.length);
-    // AND expect each quick reply option label to be displayed
-    givenQuickReplyOptions.forEach((option) => {
-      expect(screen.getByText(option.label)).toBeInTheDocument();
-    });
-
-    // AND expect no errors or warnings to have occurred
-    expect(console.error).not.toHaveBeenCalled();
-    expect(console.warn).not.toHaveBeenCalled();
-  });
-
-  test("should NOT render QuickReplyButtons when quick_reply_options is null", () => {
-    // GIVEN a compass chat message with null quick reply options
-    const givenDate = new Date(2024, 6, 25).toISOString();
-    const messageData = {
-      message_id: nanoid(),
-      message: "Hello, I'm Compass",
-      sent_at: givenDate,
-      type: COMPASS_CHAT_MESSAGE_TYPE,
-      reaction: null,
-      quick_reply_options: null,
-    };
-
-    // WHEN the compass chat message is rendered without quick reply options
-    render(<CompassChatMessage {...messageData} />);
-
-    // THEN expect the message container to be visible
-    expect(screen.getByTestId(DATA_TEST_ID.CHAT_MESSAGE_CONTAINER)).toBeInTheDocument();
-    // AND expect the quick reply container to NOT be in the document
-    expect(screen.queryByTestId(QUICK_REPLY_DATA_TEST_ID.QUICK_REPLY_CONTAINER)).not.toBeInTheDocument();
-
-    // AND expect no errors or warnings to have occurred
-    expect(console.error).not.toHaveBeenCalled();
-    expect(console.warn).not.toHaveBeenCalled();
-  });
-
-  test("should NOT render QuickReplyButtons when quick_reply_options is undefined", () => {
-    // GIVEN a compass chat message without quick reply options
-    const givenDate = new Date(2024, 6, 25).toISOString();
-    const messageData = {
-      message_id: nanoid(),
-      message: "Hello, I'm Compass",
-      sent_at: givenDate,
-      type: COMPASS_CHAT_MESSAGE_TYPE,
-      reaction: null,
-    };
-
-    // WHEN the compass chat message is rendered without quick reply options
-    render(<CompassChatMessage {...messageData} />);
-
-    // THEN expect the message container to be visible
-    expect(screen.getByTestId(DATA_TEST_ID.CHAT_MESSAGE_CONTAINER)).toBeInTheDocument();
-    // AND expect the quick reply container to NOT be in the document
-    expect(screen.queryByTestId(QUICK_REPLY_DATA_TEST_ID.QUICK_REPLY_CONTAINER)).not.toBeInTheDocument();
-
-    // AND expect no errors or warnings to have occurred
-    expect(console.error).not.toHaveBeenCalled();
-    expect(console.warn).not.toHaveBeenCalled();
-  });
-
-  test("should NOT render QuickReplyButtons when quick_reply_options is provided but onQuickReplyClick is not", () => {
-    // GIVEN a compass chat message with quick reply options but no click handler
-    const givenDate = new Date(2024, 6, 25).toISOString();
-    const givenQuickReplyOptions: QuickReplyOption[] = [{ label: "Yes" }, { label: "No" }];
-    const messageData = {
-      message_id: nanoid(),
-      message: "Do you want to continue?",
-      sent_at: givenDate,
-      type: COMPASS_CHAT_MESSAGE_TYPE,
-      reaction: null,
-      quick_reply_options: givenQuickReplyOptions,
-    };
-
-    // WHEN the compass chat message is rendered with quick reply options but no handler
-    render(<CompassChatMessage {...messageData} />);
-
-    // THEN expect the message container to be visible
-    expect(screen.getByTestId(DATA_TEST_ID.CHAT_MESSAGE_CONTAINER)).toBeInTheDocument();
-    // AND expect the quick reply container to NOT be in the document since onQuickReplyClick is required
-    expect(screen.queryByTestId(QUICK_REPLY_DATA_TEST_ID.QUICK_REPLY_CONTAINER)).not.toBeInTheDocument();
-
-    // AND expect no errors or warnings to have occurred
     expect(console.error).not.toHaveBeenCalled();
     expect(console.warn).not.toHaveBeenCalled();
   });

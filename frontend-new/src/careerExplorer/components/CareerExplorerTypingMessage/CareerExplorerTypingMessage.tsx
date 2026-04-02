@@ -2,7 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Box, keyframes, Typography } from "@mui/material";
 import ChatBubble from "src/chat/chatMessage/components/chatBubble/ChatBubble";
-import { MessageContainer } from "src/chat/chatMessage/userChatMessage/UserChatMessage";
+import BrandLogo from "src/chat/chatMessage/components/brandLogo/BrandLogo";
+import { MessageContainer } from "src/chat/chatMessage/compassChatMessage/CompassChatMessage";
 import { ConversationMessageSender } from "src/chat/ChatService/ChatService.types";
 import { nanoid } from "nanoid";
 import type { IChatMessage } from "src/chat/Chat.types";
@@ -12,6 +13,11 @@ const TYPING_KEY = "chat.chatMessage.typingChatMessage.typing";
 const uniqueId = "b2c3d4e5-f6a7-8901-bcde-f23456789012";
 
 export const CAREER_EXPLORER_TYPING_MESSAGE_TYPE = `career-explorer-typing-${uniqueId}`;
+
+export const DATA_TEST_ID = {
+  CAREER_EXPLORER_TYPING_MESSAGE_CONTAINER: `career-explorer-typing-message`,
+  CAREER_EXPLORER_TYPING_MESSAGE_BRAND_LOGO: `career-explorer-typing-message-brand-logo-${uniqueId}`,
+};
 
 const dotAnimation = keyframes`
   0%, 100% {
@@ -33,7 +39,13 @@ const CareerExplorerTypingMessage: React.FC<CareerExplorerTypingMessageProps> = 
   const displayText = t(TYPING_KEY);
 
   return (
-    <MessageContainer origin={ConversationMessageSender.COMPASS} data-testid="career-explorer-typing-message">
+    <MessageContainer
+      origin={ConversationMessageSender.COMPASS}
+      data-testid={DATA_TEST_ID.CAREER_EXPLORER_TYPING_MESSAGE_CONTAINER}
+    >
+      <Box data-testid={DATA_TEST_ID.CAREER_EXPLORER_TYPING_MESSAGE_BRAND_LOGO}>
+        <BrandLogo />
+      </Box>
       <ChatBubble message="" sender={ConversationMessageSender.COMPASS}>
         <Box display="flex" alignItems="baseline">
           <Typography>{displayText}</Typography>

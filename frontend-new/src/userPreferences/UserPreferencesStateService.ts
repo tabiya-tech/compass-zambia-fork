@@ -56,6 +56,11 @@ export default class UserPreferencesStateService {
     if (activeSessionId === null) {
       return false;
     }
+
+    if (!this.userPreferences) {
+      return false;
+    }
+
     const answered_questions = this.userPreferences!.user_feedback_answered_questions;
     if (Object.keys(answered_questions).length === 0) {
       return false;
@@ -78,6 +83,11 @@ export default class UserPreferencesStateService {
     // userPreferences.user_feedback_answered_questions is an object with session ids as keys,
     // and it is never undefined, but it can be an empty object: {}.
     // For Postel's Law: assert that the object is defined.
+
+    if (!this.userPreferences) {
+      return false;
+    }
+
     const answered_questions = this.userPreferences!.user_feedback_answered_questions;
     if (!answered_questions || Object.keys(answered_questions).length === 0) {
       return false;

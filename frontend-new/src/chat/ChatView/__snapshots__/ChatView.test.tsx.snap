@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChatView should match snapshot with messages and quick replies 1`] = `
+<div
+  class="MuiBox-root css-nrtu2f"
+  data-testid="chat-view-container-8f4e2b1a-9c3d-4a5e-b6f7-8a9b0c1d2e3f"
+>
+  <div
+    class="MuiBox-root css-ghq5n5"
+    data-testid="chat-view-messages-area-8f4e2b1a-9c3d-4a5e-b6f7-8a9b0c1d2e3f"
+  >
+    <div
+      data-testid="chat-list-container-0397ee51-f637-4453-9e2f-5cc8900c9554"
+    >
+      1
+       messages
+    </div>
+  </div>
+  <div
+    class="MuiBox-root css-msw3ti"
+    data-testid="chat-view-input-area-8f4e2b1a-9c3d-4a5e-b6f7-8a9b0c1d2e3f"
+  >
+    <div
+      class="MuiBox-root css-9iyoh4"
+      data-testid="chat-view-quick-replies-container-8f4e2b1a-9c3d-4a5e-b6f7-8a9b0c1d2e3f"
+    >
+      <div
+        data-testid="quick-reply-container-quick-reply-buttons-3f7a8b2c"
+      >
+        <button
+          data-testid="quick-reply-0"
+        >
+          Yes
+        </button>
+        <button
+          data-testid="quick-reply-1"
+        >
+          No
+        </button>
+      </div>
+    </div>
+    <div
+      data-testid="chat-message-field-container-2a76494f-351d-409d-ba58-e1b2cfaf2a53"
+    />
+  </div>
+</div>
+`;
