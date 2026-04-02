@@ -9,7 +9,7 @@ exports[`Footer should render the footer container, logos, links, and collaborat
     class="MuiDivider-root MuiDivider-fullWidth css-1tcwv4l-MuiDivider-root"
   />
   <div
-    class="MuiContainer-root MuiContainer-maxWidthMd css-1np76bk-MuiContainer-root"
+    class="MuiContainer-root css-5oegr8-MuiContainer-root"
   >
     <div
       class="MuiBox-root css-o5x28k"

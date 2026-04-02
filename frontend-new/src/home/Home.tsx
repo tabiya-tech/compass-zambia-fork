@@ -54,11 +54,19 @@ const Home: React.FC = () => {
               ? theme.fixedSpacing(theme.tabiyaSpacing.lg)
               : theme.fixedSpacing(theme.tabiyaSpacing.md),
             paddingBottom: { xs: theme.fixedSpacing(theme.tabiyaSpacing.sm), md: 0 },
-            paddingX: "var(--layout-gutter-x)",
             overflow: "visible",
           }}
         >
-          <HomeHero />
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: "var(--layout-content-max-width)",
+              mx: "auto",
+              px: "var(--layout-gutter-x)",
+            }}
+          >
+            <HomeHero />
+          </Box>
         </Box>
 
         <Box
@@ -70,11 +78,19 @@ const Home: React.FC = () => {
               md: theme.spacing(-4),
               lg: theme.spacing(-6),
             },
-            paddingX: "var(--layout-gutter-x)",
             paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.lg),
           }}
         >
-          <HomeCtaGrid />
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: "var(--layout-content-max-width)",
+              mx: "auto",
+              px: "var(--layout-gutter-x)",
+            }}
+          >
+            <HomeCtaGrid />
+          </Box>
         </Box>
 
         <Box
@@ -83,15 +99,16 @@ const Home: React.FC = () => {
             width: "100%",
             flex: 1,
             backgroundColor: theme.palette.containerBackground.main,
-            paddingX: "var(--layout-gutter-x)",
             paddingTop: theme.fixedSpacing(theme.tabiyaSpacing.xl),
             paddingBottom: theme.fixedSpacing(theme.tabiyaSpacing.xl),
           }}
         >
           <Box
             sx={{
-              width: { xs: "100%", md: "90%" },
-              mx: { md: "auto" },
+              width: "100%",
+              maxWidth: "var(--layout-content-max-width)",
+              mx: "auto",
+              px: "var(--layout-gutter-x)",
               display: "flex",
               flexDirection: { xs: "column", md: "row" },
               alignItems: "flex-start",

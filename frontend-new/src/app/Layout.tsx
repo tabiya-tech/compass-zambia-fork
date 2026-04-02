@@ -49,7 +49,11 @@ const Layout: React.FC = () => {
       flexDirection="column"
       height="100vh"
       sx={(theme) => ({
-        "--layout-gutter-x": { xs: theme.spacing(theme.tabiyaSpacing.sm), md: theme.spacing(theme.tabiyaSpacing.xl) },
+        "--layout-content-max-width": "80rem",
+        "--layout-gutter-x": {
+          xs: theme.fixedSpacing(theme.tabiyaSpacing.md),
+          md: theme.spacing(theme.tabiyaSpacing.xl),
+        },
       })}
     >
       <Box sx={{ flexShrink: 0 }}>

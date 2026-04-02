@@ -55,6 +55,7 @@ const circleIconSx = (bg: string, fg: string) => ({
 
 interface CtaCardProps {
   testKey: "profile" | "paths" | "jobs";
+  edge?: "start" | "middle" | "end";
   title: string;
   description: string;
   cta: string;
@@ -76,6 +77,7 @@ interface CtaCardProps {
 
 const HomeCtaCard: React.FC<CtaCardProps> = ({
   testKey,
+  edge = "middle",
   title,
   description,
   cta,
@@ -89,9 +91,11 @@ const HomeCtaCard: React.FC<CtaCardProps> = ({
 }) => {
   const theme = useTheme();
   const contentPadding = theme.fixedSpacing(theme.tabiyaSpacing.lg);
+  const alignedEdgeInset =
+    "min(calc(max((100vw - var(--layout-content-max-width)) / 2, 0px) + var(--layout-gutter-x)), calc(100% - 320px))";
 
   return (
-    <Grid size={{ xs: 12, sm: 4 }}>
+    <Grid size={{ xs: 12, md: 4 }}>
       <Box
         data-testid={`${DATA_TEST_ID.HOME_CTA_CARD}-${testKey}`}
         sx={{
@@ -99,8 +103,16 @@ const HomeCtaCard: React.FC<CtaCardProps> = ({
           borderRadius: 0,
           paddingTop: contentPadding,
           paddingBottom: contentPadding,
-          paddingLeft: "var(--layout-gutter-x)",
-          paddingRight: "var(--layout-gutter-x)",
+          paddingLeft: {
+            xs: "var(--layout-gutter-x)",
+            sm: contentPadding,
+            md: edge === "start" ? alignedEdgeInset : contentPadding,
+          },
+          paddingRight: {
+            xs: "var(--layout-gutter-x)",
+            sm: contentPadding,
+            md: edge === "end" ? alignedEdgeInset : contentPadding,
+          },
           minHeight: { xs: "auto", sm: 240 },
           display: "flex",
           flexDirection: "column",
@@ -188,13 +200,14 @@ const HomeCtaGrid: React.FC = () => {
       sx={{
         position: "relative",
         zIndex: 0,
-        marginLeft: "calc(var(--layout-gutter-x) * -1)",
-        marginRight: "calc(var(--layout-gutter-x) * -1)",
-        width: "calc(100% + (var(--layout-gutter-x) * 2))",
+        width: { xs: "100%", md: "100vw" },
+        marginLeft: { xs: 0, md: "calc(50% - 50vw)" },
+        marginRight: { xs: 0, md: "calc(50% - 50vw)" },
       }}
     >
       <HomeCtaCard
         testKey="profile"
+        edge="start"
         title={t("home.cta.buildProfileTitle")}
         description={t("home.cta.buildProfileDesc")}
         cta={t("home.cta.buildProfileCta")}
@@ -211,6 +224,7 @@ const HomeCtaGrid: React.FC = () => {
 
       <HomeCtaCard
         testKey="paths"
+        edge="middle"
         title={t("home.cta.explorePathsTitle")}
         description={t("home.cta.explorePathsDesc")}
         cta={t("home.cta.explorePathsCta")}
@@ -227,6 +241,7 @@ const HomeCtaGrid: React.FC = () => {
 
       <HomeCtaCard
         testKey="jobs"
+        edge="end"
         title={t("home.cta.jobMatchesTitle")}
         description={t("home.cta.jobMatchesDesc")}
         cta={t("home.cta.jobMatchesCta")}

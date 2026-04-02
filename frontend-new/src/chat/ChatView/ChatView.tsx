@@ -54,7 +54,10 @@ const ChatView: React.FC<ChatViewProps> = ({
           flex: 1,
           minHeight: 0,
           overflowY: "auto",
-          paddingX: theme.spacing(theme.tabiyaSpacing.lg),
+          width: "100%",
+          maxWidth: "var(--layout-content-max-width)",
+          marginX: "auto",
+          paddingX: "var(--layout-gutter-x)",
           paddingTop: theme.spacing(theme.tabiyaSpacing.sm),
         }}
         data-testid={DATA_TEST_ID.CHAT_VIEW_MESSAGES_AREA}
@@ -69,7 +72,11 @@ const ChatView: React.FC<ChatViewProps> = ({
       <Box
         sx={{
           flexShrink: 0,
-          padding: theme.tabiyaSpacing.lg,
+          width: "100%",
+          maxWidth: "var(--layout-content-max-width)",
+          marginX: "auto",
+          paddingX: "var(--layout-gutter-x)",
+          paddingBottom: theme.tabiyaSpacing.lg,
           paddingTop: theme.tabiyaSpacing.xs,
         }}
         data-testid={DATA_TEST_ID.CHAT_VIEW_INPUT_AREA}
