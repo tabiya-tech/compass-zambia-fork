@@ -56,7 +56,7 @@ def add_institutions_routes(app: FastAPI):
             ) from exc
 
     @router.get(
-        "/{institution_id}/programmes",
+        "/programmes",
         response_model=InstitutionProgrammes,
         responses={
             HTTPStatus.NOT_FOUND: {"model": HTTPErrorResponse},
@@ -65,13 +65,13 @@ def add_institutions_routes(app: FastAPI):
         description="Return all programmes offered by a specific institution identified by its registration number.",
     )
     async def get_programmes_by_institution(
-        institution_id: str,
         response: Response,
+        reg_no: str = Query(..., description="Institution registration number"),
         institution_service: IInstitutionService = Depends(get_institution_service),
     ):
         response.headers["Access-Control-Allow-Origin"] = "*"
         try:
-            return await institution_service.get_programmes_by_institution(institution_id)
+            return await institution_service.get_programmes_by_institution(reg_no)
         except HTTPException:
             raise
         except Exception as exc:
