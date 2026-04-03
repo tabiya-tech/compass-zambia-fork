@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
+import { Outlet } from "react-router-dom";
 import AuthPageShell, { layoutContentColumnSx } from "src/auth/components/AuthPageShell/AuthPageShell";
 import Footer from "src/home/components/Footer/Footer";
 import { getLogoUrl, getProductName } from "src/envService";
-
-export type AuthLayoutProps = {
-  children: React.ReactNode;
-  contentTestId?: string;
-};
+import { AuthPageProvider } from "src/auth/components/AuthLayout/AuthPageContext";
+import { Backdrop } from "src/theme/Backdrop/Backdrop";
+import BugReportButton from "src/feedback/bugReport/bugReportButton/BugReportButton";
 
 const FeatureColumn: React.FC<{ imageSrc: string; title: string; body: string }> = ({ imageSrc, title, body }) => (
   <Box sx={{ textAlign: "center", px: { xs: 1, md: 0 } }}>
@@ -21,9 +20,20 @@ const FeatureColumn: React.FC<{ imageSrc: string; title: string; body: string }>
   </Box>
 );
 
-const AuthLayout: React.FC<AuthLayoutProps> = ({ children, contentTestId }) => {
+const AuthLayout: React.FC = () => {
   const theme = useTheme();
   const { t } = useTranslation();
+  const [loadingState, setLoadingState] = useState({
+    isLoading: false,
+    loadingMessage: undefined as string | undefined,
+  });
+
+  const handleStateChange = useCallback(
+    ({ isLoading, loadingMessage }: { isLoading: boolean; loadingMessage?: string }) => {
+      setLoadingState({ isLoading, loadingMessage });
+    },
+    []
+  );
 
   const logoSrc = getLogoUrl() || `${process.env.PUBLIC_URL}/njila_logo-red.svg`;
   const appName = getProductName() || "Njila";
@@ -110,57 +120,61 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, contentTestId }) => {
             color: theme.palette.common.white,
           }}
         >
-          {children}
+          <Outlet />
         </Box>
       </Box>
     </Box>
   );
 
   return (
-    <AuthPageShell logoUrl={logoSrc} whiteContainerTestId={contentTestId} whiteBandContent={whiteBandContent}>
-      <Box
-        sx={{
-          ...layoutContentColumnSx,
-          pt: { xs: 3, md: 6 },
-          pb: { xs: 3, md: 4 },
-        }}
-      >
-        <Typography variant="h2" sx={{ fontWeight: 700, textAlign: "start", mb: 3 }}>
-          {t("auth.pages.login.appHero.whatIsTitleBefore")}{" "}
-          <Box component="span" sx={{ color: theme.palette.brandAction.main }}>
-            {t("auth.pages.login.appHero.whatIsTitleBrand", { appName })}
-          </Box>
-          ?
-        </Typography>
-
+    <AuthPageProvider onStateChange={handleStateChange}>
+      <AuthPageShell logoUrl={logoSrc} whiteBandContent={whiteBandContent}>
         <Box
           sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
-            gap: { xs: 3, md: 4 },
-            mb: { xs: 2, md: 3 },
+            ...layoutContentColumnSx,
+            pt: { xs: 3, md: 6 },
+            pb: { xs: 3, md: 4 },
           }}
         >
-          <FeatureColumn
-            imageSrc={`${process.env.PUBLIC_URL}/conversation.svg`}
-            title={t("auth.pages.login.appHero.feature1Title")}
-            body={t("auth.pages.login.appHero.feature1Body")}
-          />
-          <FeatureColumn
-            imageSrc={`${process.env.PUBLIC_URL}/resume.svg`}
-            title={t("auth.pages.login.appHero.feature2Title")}
-            body={t("auth.pages.login.appHero.feature2Body")}
-          />
-          <FeatureColumn
-            imageSrc={`${process.env.PUBLIC_URL}/runner-v2.svg`}
-            title={t("auth.pages.login.appHero.feature3Title")}
-            body={t("auth.pages.login.appHero.feature3Body")}
-          />
-        </Box>
-      </Box>
+          <Typography variant="h2" sx={{ fontWeight: 700, textAlign: "start", mb: 3 }}>
+            {t("auth.pages.login.appHero.whatIsTitleBefore")}{" "}
+            <Box component="span" sx={{ color: theme.palette.brandAction.main }}>
+              {t("auth.pages.login.appHero.whatIsTitleBrand", { appName })}
+            </Box>
+            ?
+          </Typography>
 
-      <Footer sx={{ mt: "auto", backgroundColor: theme.palette.common.cream }} />
-    </AuthPageShell>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
+              gap: { xs: 3, md: 4 },
+              mb: { xs: 2, md: 3 },
+            }}
+          >
+            <FeatureColumn
+              imageSrc={`${process.env.PUBLIC_URL}/conversation.svg`}
+              title={t("auth.pages.login.appHero.feature1Title")}
+              body={t("auth.pages.login.appHero.feature1Body")}
+            />
+            <FeatureColumn
+              imageSrc={`${process.env.PUBLIC_URL}/resume.svg`}
+              title={t("auth.pages.login.appHero.feature2Title")}
+              body={t("auth.pages.login.appHero.feature2Body")}
+            />
+            <FeatureColumn
+              imageSrc={`${process.env.PUBLIC_URL}/runner-v2.svg`}
+              title={t("auth.pages.login.appHero.feature3Title")}
+              body={t("auth.pages.login.appHero.feature3Body")}
+            />
+          </Box>
+        </Box>
+
+        <Footer sx={{ mt: "auto", backgroundColor: theme.palette.common.cream }} />
+      </AuthPageShell>
+      <BugReportButton bottomAlign={true} />
+      <Backdrop isShown={loadingState.isLoading} message={loadingState.loadingMessage} />
+    </AuthPageProvider>
   );
 };
 

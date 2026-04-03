@@ -158,7 +158,7 @@ const ResetPasswordEmailSender: React.FC<ResetPasswordEmailSenderProps> = ({ ini
             </PrimaryIconButton>
           </Box>
           <TextField
-            label={t("common.fields.email")}
+            placeholder={t("common.fields.email")}
             type="email"
             fullWidth
             value={emailInput}

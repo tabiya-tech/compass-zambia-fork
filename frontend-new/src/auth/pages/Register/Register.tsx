@@ -10,16 +10,14 @@ import { FirebaseError, getUserFriendlyFirebaseErrorMessage } from "src/error/Fi
 import FirebaseEmailAuthService from "src/auth/services/FirebaseAuthenticationService/emailAuth/FirebaseEmailAuthentication.service";
 import { getUserFriendlyErrorMessage, RestAPIError } from "src/error/restAPIError/RestAPIError";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
-import { Backdrop } from "src/theme/Backdrop/Backdrop";
-import BugReportButton from "src/feedback/bugReport/bugReportButton/BugReportButton";
 import FirebaseSocialAuthenticationService from "src/auth/services/FirebaseAuthenticationService/socialAuth/FirebaseSocialAuthentication.service";
+import { useAuthPageContext } from "src/auth/components/AuthLayout/AuthPageContext";
 import RequestInvitationCode from "src/auth/components/requestInvitationCode/RequestInvitationCode";
 import { InvitationType } from "src/auth/services/invitationsService/invitations.types";
 import CustomLink from "src/theme/CustomLink/CustomLink";
 import { FirebaseErrorCodes } from "src/error/FirebaseError/firebaseError.constants";
 import { INVITATIONS_PARAM_NAME } from "src/auth/auth.types";
 import { getApplicationRegistrationCode, getSocialAuthDisabled, getRegistrationCodeDisabled } from "src/envService";
-import AuthLayout from "src/auth/components/AuthLayout/AuthLayout";
 
 const uniqueId = "ab02918f-d559-47ba-9662-ea6b3a3606d0";
 
@@ -45,6 +43,7 @@ const Register: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const { setPageLoading } = useAuthPageContext();
 
   const registrationCodeDisabled = useMemo(() => {
     return getRegistrationCodeDisabled().toLowerCase() === "true";
@@ -73,6 +72,10 @@ const Register: React.FC = () => {
   // a state to determine if the user is currently registering with email
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    setPageLoading(isLoading, t("auth.pages.register.registeringYou"));
+  }, [isLoading, setPageLoading, t]);
 
   const handleError = useCallback(
     async (error: Error) => {
@@ -194,90 +197,86 @@ const Register: React.FC = () => {
 
   return (
     <Box data-testid={DATA_TEST_ID.REGISTER_CONTAINER} sx={{ minHeight: "100%" }}>
-      <AuthLayout>
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent={"space-evenly"}
-          gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
-          width={"100%"}
-          sx={{
-            color: theme.palette.common.white,
-            "& .MuiTypography-root": { color: theme.palette.common.white },
-            "& .MuiLink-root": { color: theme.palette.common.white },
-          }}
-        >
-          <Typography variant="h3" sx={{ fontWeight: 700, textTransform: "uppercase" }}>
-            Sign Up
-          </Typography>
-          {!applicationRegistrationCode && !registrationCodeDisabled && (
-            <React.Fragment>
-              <Typography variant="subtitle2">{t("auth.pages.register.enterRegistrationCode")}</Typography>
-              <TextField
-                fullWidth
-                label={t("auth.pages.register.registrationCode")}
-                variant="outlined"
-                required
-                value={registrationCode}
-                onChange={(e) => handleRegistrationCodeChanged(e)}
-                sx={{
-                  "& .MuiInputBase-root": { backgroundColor: theme.palette.common.white },
-                  "& .MuiInputLabel-root": { color: theme.palette.common.black },
-                }}
-                inputProps={{ "data-testid": DATA_TEST_ID.REGISTRATION_CODE_INPUT }}
-              />
-            </React.Fragment>
-          )}
-          {!applicationRegistrationCode && !registrationCodeDisabled && (
-            <Divider textAlign="center" style={{ width: "100%" }}>
-              <Typography
-                variant="subtitle2"
-                sx={{ color: theme.palette.common.white }}
-                padding={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
-              >
-                {t("auth.pages.register.andEitherContinueWith")}
-              </Typography>
-            </Divider>
-          )}
-          <RegisterWithEmailForm
-            disabled={!registrationCode && !applicationRegistrationCode && !registrationCodeDisabled}
-            notifyOnRegister={handleRegister}
-            isRegistering={isLoading}
-          />
-          {!socialAuthDisabled && (
-            <SocialAuth
-              postLoginHandler={handlePostLogin}
-              isLoading={isLoading}
-              disabled={!registrationCode && !applicationRegistrationCode && !registrationCodeDisabled}
-              label={t("auth.pages.register.registerWithGoogle")}
-              notifyOnLoading={notifyOnSocialLoading}
-              registrationCode={registrationCode || applicationRegistrationCode}
-            />
-          )}
-          <Typography variant="caption" data-testid={DATA_TEST_ID.LOGIN_LINK}>
-            {t("auth.pages.register.alreadyHaveAccount")}{" "}
-            <CustomLink
-              onClick={() => navigate(routerPaths.LOGIN)}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent={"space-evenly"}
+        gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
+        width={"100%"}
+        sx={{
+          color: theme.palette.common.white,
+          "& .MuiTypography-root": { color: theme.palette.common.white },
+          "& .MuiLink-root": { color: theme.palette.common.white },
+        }}
+      >
+        <Typography variant="h3" sx={{ fontWeight: 700, textTransform: "uppercase" }}>
+          Sign Up
+        </Typography>
+        {!applicationRegistrationCode && !registrationCodeDisabled && (
+          <React.Fragment>
+            <Typography variant="subtitle2">{t("auth.pages.register.enterRegistrationCode")}</Typography>
+            <TextField
+              fullWidth
+              label={t("auth.pages.register.registrationCode")}
+              variant="outlined"
+              required
+              value={registrationCode}
+              onChange={(e) => handleRegistrationCodeChanged(e)}
               sx={{
-                color: theme.palette.common.white,
-                fontWeight: 700,
-                "&:hover": {
-                  color: theme.palette.common.white,
-                  opacity: 0.75,
-                },
+                "& .MuiInputBase-root": { backgroundColor: theme.palette.common.white },
+                "& .MuiInputLabel-root": { color: theme.palette.common.black },
               }}
+              inputProps={{ "data-testid": DATA_TEST_ID.REGISTRATION_CODE_INPUT }}
+            />
+          </React.Fragment>
+        )}
+        {!applicationRegistrationCode && !registrationCodeDisabled && (
+          <Divider textAlign="center" style={{ width: "100%" }}>
+            <Typography
+              variant="subtitle2"
+              sx={{ color: theme.palette.common.white }}
+              padding={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
             >
-              {t("common.buttons.login")}
-            </CustomLink>
-          </Typography>
-          {!applicationRegistrationCode && !registrationCodeDisabled && (
-            <RequestInvitationCode invitationCodeType={InvitationType.REGISTER} />
-          )}
-        </Box>
-      </AuthLayout>
-      <BugReportButton bottomAlign={true} />
-      <Backdrop isShown={isLoading} message={t("auth.pages.register.registeringYou")} />
+              {t("auth.pages.register.andEitherContinueWith")}
+            </Typography>
+          </Divider>
+        )}
+        <RegisterWithEmailForm
+          disabled={!registrationCode && !applicationRegistrationCode && !registrationCodeDisabled}
+          notifyOnRegister={handleRegister}
+          isRegistering={isLoading}
+        />
+        {!socialAuthDisabled && (
+          <SocialAuth
+            postLoginHandler={handlePostLogin}
+            isLoading={isLoading}
+            disabled={!registrationCode && !applicationRegistrationCode && !registrationCodeDisabled}
+            label={t("auth.pages.register.registerWithGoogle")}
+            notifyOnLoading={notifyOnSocialLoading}
+            registrationCode={registrationCode || applicationRegistrationCode}
+          />
+        )}
+        <Typography variant="caption" data-testid={DATA_TEST_ID.LOGIN_LINK}>
+          {t("auth.pages.register.alreadyHaveAccount")}{" "}
+          <CustomLink
+            onClick={() => navigate(routerPaths.LOGIN)}
+            sx={{
+              color: theme.palette.common.white,
+              fontWeight: 700,
+              "&:hover": {
+                color: theme.palette.common.white,
+                opacity: 0.75,
+              },
+            }}
+          >
+            {t("common.buttons.login")}
+          </CustomLink>
+        </Typography>
+        {!applicationRegistrationCode && !registrationCodeDisabled && (
+          <RequestInvitationCode invitationCodeType={InvitationType.REGISTER} />
+        )}
+      </Box>
     </Box>
   );
 };

@@ -19,7 +19,6 @@ import authStateService from "src/auth/services/AuthenticationState.service";
 import { INVITATIONS_PARAM_NAME, TabiyaUser } from "src/auth/auth.types";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
 import * as AuthenticationServiceFactoryModule from "src/auth/services/Authentication.service.factory";
-import { DATA_TEST_ID as BUG_REPORT_DATA_TEST_ID } from "src/feedback/bugReport/bugReportButton/BugReportButton";
 import * as Sentry from "@sentry/react";
 import { DATA_TEST_ID as REQUEST_INVITATION_CODE_DATA_TEST_ID } from "src/auth/components/requestInvitationCode/RequestInvitationCode";
 import * as ReactRouterDomModule from "react-router-dom";
@@ -199,9 +198,6 @@ describe("Testing Register component", () => {
 
     // AND the sign-up heading should be rendered
     expect(screen.getByText("Sign Up")).toBeInTheDocument();
-
-    // AND expect the bug report button to be rendered
-    expect(screen.getByTestId(BUG_REPORT_DATA_TEST_ID.BUG_REPORT_BUTTON_CONTAINER)).toBeInTheDocument();
 
     // AND the request registration code link should be displayed
     expect(screen.getByTestId(REQUEST_INVITATION_CODE_DATA_TEST_ID.REQUEST_INVITATION_CODE_LINK)).toBeInTheDocument();

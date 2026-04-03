@@ -62,21 +62,20 @@ const RegisterWithEmailForm: React.FC<Readonly<RegisterFormProps>> = ({
     >
       <TextField
         fullWidth
-        label={t("common.fields.email")}
+        placeholder={t("common.fields.email")}
         type="email"
         disabled={isRegistering || disabled}
         variant="outlined"
         required
         sx={{
           "& .MuiInputBase-root": { backgroundColor: theme.palette.common.white },
-          "& .MuiInputLabel-root": { color: theme.palette.common.black },
         }}
         onChange={(e) => handleEmailChange(e)}
         inputProps={{ "data-testid": DATA_TEST_ID.EMAIL_INPUT }}
       />
       <PasswordInput
         fullWidth
-        label={t("common.fields.password")}
+        placeholder={t("common.fields.password")}
         disabled={isRegistering || disabled}
         variant="outlined"
         required
@@ -86,7 +85,6 @@ const RegisterWithEmailForm: React.FC<Readonly<RegisterFormProps>> = ({
         inputProps={{ "data-testid": DATA_TEST_ID.PASSWORD_INPUT }}
         sx={{
           "& .MuiInputBase-root": { backgroundColor: theme.palette.common.white },
-          "& .MuiInputLabel-root": { color: theme.palette.common.black },
         }}
       />
       <PrimaryButton

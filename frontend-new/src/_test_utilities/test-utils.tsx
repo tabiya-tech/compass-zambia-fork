@@ -7,12 +7,15 @@ import applicationTheme, { ThemeMode } from "src/theme/applicationTheme/applicat
 import SnackbarProvider from "src/theme/SnackbarProvider/SnackbarProvider";
 import { IsOnlineProvider } from "src/app/isOnlineProvider/IsOnlineProvider";
 import { HashRouter } from "react-router-dom";
+import { AuthPageProvider } from "src/auth/components/AuthLayout/AuthPageContext";
 
 export const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <IsOnlineProvider>
       <ThemeProvider theme={applicationTheme(ThemeMode.LIGHT)}>
-        <SnackbarProvider>{children}</SnackbarProvider>
+        <SnackbarProvider>
+          <AuthPageProvider onStateChange={() => {}}>{children}</AuthPageProvider>
+        </SnackbarProvider>
       </ThemeProvider>
     </IsOnlineProvider>
   );

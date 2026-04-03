@@ -29,6 +29,7 @@ import { initSentry } from "../src/sentryInit";
 import SnackbarProvider from "../src/theme/SnackbarProvider/SnackbarProvider";
 import { LocalesLabels, Locale } from "../src/i18n/constants";
 import { applyBrandingFromEnv } from "../src/branding/branding";
+import { AuthPageProvider } from "../src/auth/components/AuthLayout/AuthPageContext";
 
 applyBrandingFromEnv();
 
@@ -182,7 +183,9 @@ export const decorators = [
                 >
                   <Suspense fallback={<div>loading translations...</div>}>
                     <I18nextProvider i18n={i18n}>
-                      <Story />
+                      <AuthPageProvider onStateChange={() => {}}>
+                        <Story />
+                      </AuthPageProvider>
                     </I18nextProvider>
                   </Suspense>
                 </ChatProvider>

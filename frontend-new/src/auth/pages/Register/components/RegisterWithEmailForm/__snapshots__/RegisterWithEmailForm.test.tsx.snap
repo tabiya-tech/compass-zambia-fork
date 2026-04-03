@@ -6,23 +6,8 @@ exports[`Testing Register Email Form component it should show register form 1`] 
   data-testid="register-form-6cf1a0fa-8d75-4342-bf6b-1203d5b114d7"
 >
   <div
-    class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-84m7qf-MuiFormControl-root-MuiTextField-root"
+    class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1o3jzkp-MuiFormControl-root-MuiTextField-root"
   >
-    <label
-      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-181ccgh-MuiFormLabel-root-MuiInputLabel-root"
-      data-shrink="false"
-      for=":r1:"
-      id=":r1:-label"
-    >
-      Email
-      <span
-        aria-hidden="true"
-        class="MuiFormLabel-asterisk MuiInputLabel-asterisk css-gvy03r-MuiFormLabel-asterisk"
-      >
-         
-        *
-      </span>
-    </label>
     <div
       class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1nrrg6d-MuiInputBase-root-MuiOutlinedInput-root"
     >
@@ -31,6 +16,7 @@ exports[`Testing Register Email Form component it should show register form 1`] 
         class="MuiInputBase-input MuiOutlinedInput-input css-1y15kj-MuiInputBase-input-MuiOutlinedInput-input"
         data-testid="register-email-input-6cf1a0fa-8d75-4342-bf6b-1203d5b114d7"
         id=":r1:"
+        placeholder="Email"
         required=""
         type="email"
         value=""
@@ -40,12 +26,13 @@ exports[`Testing Register Email Form component it should show register form 1`] 
         class="MuiOutlinedInput-notchedOutline css-1ohs4y1-MuiNotchedOutlined-root-MuiOutlinedInput-notchedOutline"
       >
         <legend
-          class="css-1n64csd-MuiNotchedOutlined-root"
+          class="css-1nf2c5d-MuiNotchedOutlined-root"
         >
-          <span>
-            Email
-             
-            *
+          <span
+            aria-hidden="true"
+            class="notranslate"
+          >
+            ​
           </span>
         </legend>
       </fieldset>
