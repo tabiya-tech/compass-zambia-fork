@@ -44,6 +44,34 @@ class InstitutionRepository(IInstitutionRepository):
         self._collection = collection
         self._logger = logging.getLogger(self.__class__.__name__)
 
+    @staticmethod
+    def _keyword_filter(keywords: str) -> Dict[str, Any]:
+        """
+        Build a filter that matches institutions where ALL keyword tokens appear
+        somewhere across the searchable fields (name, province, sectors, programmes).
+        Each token is a case-insensitive substring regex, so "kab" matches "Kabwe",
+        "inst" matches "Institute", etc.
+        """
+        tokens = [t for t in keywords.strip().split() if t]
+        if not tokens:
+            return {}
+
+        # Each token must match at least one of the searchable fields
+        token_conditions = []
+        for token in tokens:
+            pattern = {"$regex": token, "$options": "i"}
+            token_conditions.append({
+                "$or": [
+                    {"name": pattern},
+                    {"location.province": pattern},
+                    # {"sectors_covered": pattern},
+                    {"programmes.name": pattern},
+                ]
+            })
+
+        # All tokens must match (AND across tokens, OR across fields per token)
+        return {"$and": token_conditions} if len(token_conditions) > 1 else token_conditions[0]
+
     def _build_filter(
         self,
         keywords: Optional[str],
@@ -51,12 +79,24 @@ class InstitutionRepository(IInstitutionRepository):
         sector: Optional[str],
     ) -> Dict[str, Any]:
         query: Dict[str, Any] = {}
+        conditions: List[Dict[str, Any]] = []
+
         if keywords:
-            query["$text"] = {"$search": keywords}
+            kw_filter = self._keyword_filter(keywords)
+            if kw_filter:
+                conditions.append(kw_filter)
+
         if province:
-            query["location.province"] = {"$regex": province, "$options": "i"}
+            conditions.append({"location.province": {"$regex": province, "$options": "i"}})
+
         if sector:
-            query["sectors_covered"] = {"$regex": sector, "$options": "i"}
+            conditions.append({"sectors_covered": {"$regex": sector, "$options": "i"}})
+
+        if len(conditions) == 1:
+            query = conditions[0]
+        elif len(conditions) > 1:
+            query = {"$and": conditions}
+
         return query
 
     async def search_institutions(
