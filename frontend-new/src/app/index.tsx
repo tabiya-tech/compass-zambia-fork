@@ -2,6 +2,7 @@ import React, { startTransition, useEffect, useState } from "react";
 import { createHashRouter, Outlet, RouterProvider, useRouteError } from "react-router-dom";
 import Layout from "src/app/Layout";
 import Login from "src/auth/pages/Login/Login";
+import AuthLayout from "src/auth/components/AuthLayout/AuthLayout";
 import ErrorPage from "src/error/errorPage/ErrorPage";
 import Register from "src/auth/pages/Register/Register";
 import VerifyEmail from "src/auth/pages/VerifyEmail/VerifyEmail";
@@ -393,32 +394,37 @@ const App = () => {
         },
         // Unauthenticated routes (no Layout)
         {
-          path: routerPaths.LANDING,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.LANDING}>
-              <Landing />
-            </ProtectedRoute>
-          ),
-        },
-        ...(isRegistrationDisabled
-          ? []
-          : [
-              {
-                path: routerPaths.REGISTER,
-                element: (
-                  <ProtectedRoute key={ProtectedRouteKeys.REGISTER}>
-                    <Register />
-                  </ProtectedRoute>
-                ),
-              },
-            ]),
-        {
-          path: routerPaths.LOGIN,
-          element: (
-            <ProtectedRoute key={ProtectedRouteKeys.LOGIN}>
-              <Login />
-            </ProtectedRoute>
-          ),
+          element: <AuthLayout />,
+          children: [
+            {
+              path: routerPaths.LANDING,
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.LANDING}>
+                  <Landing />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: routerPaths.LOGIN,
+              element: (
+                <ProtectedRoute key={ProtectedRouteKeys.LOGIN}>
+                  <Login />
+                </ProtectedRoute>
+              ),
+            },
+            ...(isRegistrationDisabled
+              ? []
+              : [
+                  {
+                    path: routerPaths.REGISTER,
+                    element: (
+                      <ProtectedRoute key={ProtectedRouteKeys.REGISTER}>
+                        <Register />
+                      </ProtectedRoute>
+                    ),
+                  },
+                ]),
+          ],
         },
         {
           path: routerPaths.VERIFY_EMAIL,

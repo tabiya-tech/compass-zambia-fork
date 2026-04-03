@@ -13,9 +13,8 @@ import { FirebaseError, getUserFriendlyFirebaseErrorMessage } from "src/error/Fi
 import { FirebaseErrorCodes } from "src/error/FirebaseError/firebaseError.constants";
 import FirebaseEmailAuthService from "src/auth/services/FirebaseAuthenticationService/emailAuth/FirebaseEmailAuthentication.service";
 import UserPreferencesStateService from "src/userPreferences/UserPreferencesStateService";
-import { Backdrop } from "src/theme/Backdrop/Backdrop";
-import BugReportButton from "src/feedback/bugReport/bugReportButton/BugReportButton";
 import FirebaseInvitationCodeAuthenticationService from "src/auth/services/FirebaseAuthenticationService/invitationCodeAuth/FirebaseInvitationCodeAuthenticationService";
+import { useAuthPageContext } from "src/auth/components/AuthLayout/AuthPageContext";
 import { AuthenticationError } from "src/error/commonErrors";
 import ResendVerificationEmail from "src/auth/components/resendVerificationEmail/ResendVerificationEmail";
 import RequestInvitationCode from "src/auth/components/requestInvitationCode/RequestInvitationCode";
@@ -34,7 +33,6 @@ import {
   getSocialAuthDisabled,
 } from "src/envService";
 import PasswordReset from "src/auth/components/passwordReset/PasswordReset";
-import AuthLayout from "src/auth/components/AuthLayout/AuthLayout";
 
 const uniqueId = "7ce9ba1f-bde0-48e2-88df-e4f697945cc4";
 
@@ -63,6 +61,7 @@ const Login: React.FC = () => {
   const theme = useTheme();
   const { t } = useTranslation();
   const location = useLocation();
+  const { setPageLoading } = useAuthPageContext();
 
   const [inviteCode, setInviteCode] = useState("");
   const [email, setEmail] = useState("");
@@ -435,6 +434,10 @@ const Login: React.FC = () => {
     setShowResendVerification(false);
   }, [email, password]);
 
+  useEffect(() => {
+    setPageLoading(isLoading, t("auth.pages.login.loggingYouIn"));
+  }, [isLoading, setPageLoading, t]);
+
   // Hide `Login Code request link`
   // `if the application login code is set` OR `if the login code is disabled`
   const showRequestLoginCode = useMemo(
@@ -444,118 +447,114 @@ const Login: React.FC = () => {
 
   return (
     <Box data-testid={DATA_TEST_ID.LOGIN_CONTAINER} sx={{ minHeight: "100%" }}>
-      <AuthLayout>
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent={"space-evenly"}
+        gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
+        width={"100%"}
+        sx={{
+          color: theme.palette.common.white,
+          "& .MuiTypography-root": { color: theme.palette.common.white },
+          "& .MuiLink-root": { color: theme.palette.common.white },
+        }}
+      >
+        <Typography variant="h3" sx={{ fontWeight: 700, textTransform: "uppercase" }}>
+          Sign In
+        </Typography>
         <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent={"space-evenly"}
-          gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
+          component="form"
+          onSubmit={handleLoginSubmit}
+          data-testid={DATA_TEST_ID.FORM}
+          display={"flex"}
+          flexDirection={"column"}
+          textAlign={"center"}
           width={"100%"}
-          sx={{
-            color: theme.palette.common.white,
-            "& .MuiTypography-root": { color: theme.palette.common.white },
-            "& .MuiLink-root": { color: theme.palette.common.white },
-          }}
+          gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
         >
-          <Typography variant="h3" sx={{ fontWeight: 700, textTransform: "uppercase" }}>
-            Sign In
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleLoginSubmit}
-            data-testid={DATA_TEST_ID.FORM}
-            display={"flex"}
-            flexDirection={"column"}
-            textAlign={"center"}
-            width={"100%"}
-            gap={theme.fixedSpacing(theme.tabiyaSpacing.sm)}
-          >
-            {getLoginCodeComponent}
-            <LoginWithEmailForm
-              email={email}
-              password={password}
-              notifyOnEmailChanged={handleEmailChanged}
-              notifyOnPasswordChanged={handlePasswordChanged}
-              isDisabled={isLoading}
-            />
-            {showResendVerification && (
-              <ResendVerificationEmail email={lastAttemptedEmail} password={lastAttemptedPassword} />
-            )}
-            {
-              /*dont show both the resend verification email and forgot password at the same time*/
-              !showResendVerification && <PasswordReset />
-            }
-            <PrimaryButton
-              fullWidth
-              variant="outlined"
-              color="brandAction"
-              showCircle
-              style={{ marginTop: 8 }}
-              type="submit"
-              disabled={isLoginButtonDisabled}
-              disableWhenOffline={true}
-              data-testid={DATA_TEST_ID.LOGIN_BUTTON}
-              sx={{
-                textTransform: "uppercase",
+          {getLoginCodeComponent}
+          <LoginWithEmailForm
+            email={email}
+            password={password}
+            notifyOnEmailChanged={handleEmailChanged}
+            notifyOnPasswordChanged={handlePasswordChanged}
+            isDisabled={isLoading}
+          />
+          {showResendVerification && (
+            <ResendVerificationEmail email={lastAttemptedEmail} password={lastAttemptedPassword} />
+          )}
+          {
+            /*dont show both the resend verification email and forgot password at the same time*/
+            !showResendVerification && <PasswordReset />
+          }
+          <PrimaryButton
+            fullWidth
+            variant="outlined"
+            color="brandAction"
+            showCircle
+            style={{ marginTop: 8 }}
+            type="submit"
+            disabled={isLoginButtonDisabled}
+            disableWhenOffline={true}
+            data-testid={DATA_TEST_ID.LOGIN_BUTTON}
+            sx={{
+              textTransform: "uppercase",
+              backgroundColor: theme.palette.common.cream,
+              border: "none",
+              color: theme.palette.brandAction.main,
+              "&:hover:not(:disabled)": {
                 backgroundColor: theme.palette.common.cream,
                 border: "none",
-                color: theme.palette.brandAction.main,
-                "&:hover:not(:disabled)": {
-                  backgroundColor: theme.palette.common.cream,
-                  border: "none",
-                  opacity: 0.95,
-                },
-                "&.Mui-disabled": {
-                  opacity: 0.8,
+                opacity: 0.95,
+              },
+              "&.Mui-disabled": {
+                opacity: 0.8,
+              },
+            }}
+          >
+            {isLoading ? (
+              <CircularProgress
+                color={"secondary"}
+                data-testid={DATA_TEST_ID.LOGIN_BUTTON_CIRCULAR_PROGRESS}
+                aria-label={t("auth.pages.login.loggingInAria")}
+                size={16}
+                sx={{ marginTop: theme.tabiyaSpacing.sm, marginBottom: theme.tabiyaSpacing.sm }}
+              />
+            ) : (
+              t("common.buttons.login")
+            )}
+          </PrimaryButton>
+        </Box>
+        {!socialAuthDisabled && (
+          <SocialAuth
+            disabled={false}
+            postLoginHandler={handlePostLogin}
+            isLoading={isLoading}
+            notifyOnLoading={notifyOnSocialLoading}
+            registrationCode={applicationRegistrationCode}
+          />
+        )}
+        {!registrationDisabled && (
+          <Typography variant="caption" data-testid={DATA_TEST_ID.REGISTER_LINK}>
+            {t("auth.pages.login.dontHaveAnAccount")}
+            <CustomLink
+              onClick={() => navigate(routerPaths.REGISTER)}
+              sx={{
+                color: theme.palette.common.white,
+                fontWeight: 700,
+                "&:hover": {
+                  color: theme.palette.common.white,
+                  opacity: 0.75,
                 },
               }}
             >
-              {isLoading ? (
-                <CircularProgress
-                  color={"secondary"}
-                  data-testid={DATA_TEST_ID.LOGIN_BUTTON_CIRCULAR_PROGRESS}
-                  aria-label={t("auth.pages.login.loggingInAria")}
-                  size={16}
-                  sx={{ marginTop: theme.tabiyaSpacing.sm, marginBottom: theme.tabiyaSpacing.sm }}
-                />
-              ) : (
-                t("common.buttons.login")
-              )}
-            </PrimaryButton>
-          </Box>
-          {!socialAuthDisabled && (
-            <SocialAuth
-              disabled={false}
-              postLoginHandler={handlePostLogin}
-              isLoading={isLoading}
-              notifyOnLoading={notifyOnSocialLoading}
-              registrationCode={applicationRegistrationCode}
-            />
-          )}
-          {!registrationDisabled && (
-            <Typography variant="caption" data-testid={DATA_TEST_ID.REGISTER_LINK}>
-              {t("auth.pages.login.dontHaveAnAccount")}
-              <CustomLink
-                onClick={() => navigate(routerPaths.REGISTER)}
-                sx={{
-                  color: theme.palette.common.white,
-                  fontWeight: 700,
-                  "&:hover": {
-                    color: theme.palette.common.white,
-                    opacity: 0.75,
-                  },
-                }}
-              >
-                {t("common.buttons.register")}
-              </CustomLink>
-            </Typography>
-          )}
-          {showRequestLoginCode && <RequestInvitationCode invitationCodeType={InvitationType.LOGIN} />}
-        </Box>
-      </AuthLayout>
-      <BugReportButton bottomAlign={true} />
-      <Backdrop isShown={isLoading} message={t("auth.pages.login.loggingYouIn")} />
+              {t("common.buttons.register")}
+            </CustomLink>
+          </Typography>
+        )}
+        {showRequestLoginCode && <RequestInvitationCode invitationCodeType={InvitationType.LOGIN} />}
+      </Box>
     </Box>
   );
 };

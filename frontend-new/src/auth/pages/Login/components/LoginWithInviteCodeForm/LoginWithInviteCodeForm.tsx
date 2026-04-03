@@ -31,11 +31,10 @@ const LoginWithInviteCodeForm: React.FC<Readonly<LoginFormProps>> = ({
   return (
     <TextField
       fullWidth
-      label={t("auth.pages.login.components.loginWithInviteCodeForm.loginCode")}
+      placeholder={t("auth.pages.login.components.loginWithInviteCodeForm.loginCode")}
       variant="outlined"
       sx={{
         "& .MuiInputBase-root": { backgroundColor: "common.white" },
-        "& .MuiInputLabel-root": { color: "common.black" },
       }}
       value={inviteCode}
       disabled={isDisabled}

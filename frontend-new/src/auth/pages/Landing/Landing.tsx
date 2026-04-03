@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { routerPaths } from "src/app/routerPaths";
@@ -7,7 +7,6 @@ import { alpha } from "@mui/material/styles";
 import PrimaryButton from "src/theme/PrimaryButton/PrimaryButton";
 import SecondaryButton from "src/theme/SecondaryButton/SecondaryButton";
 import CustomLink from "src/theme/CustomLink/CustomLink";
-import BugReportButton from "src/feedback/bugReport/bugReportButton/BugReportButton";
 import { getLoginCodeDisabled, getApplicationLoginCode, getRegistrationDisabled, getProductName } from "src/envService";
 import FirebaseInvitationCodeAuthenticationService from "src/auth/services/FirebaseAuthenticationService/invitationCodeAuth/FirebaseInvitationCodeAuthenticationService";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
@@ -15,8 +14,7 @@ import UserPreferencesStateService from "src/userPreferences/UserPreferencesStat
 import { AuthenticationError } from "src/error/commonErrors";
 import { RestAPIError, getUserFriendlyErrorMessage } from "src/error/restAPIError/RestAPIError";
 import { FirebaseError, getUserFriendlyFirebaseErrorMessage } from "src/error/FirebaseError/firebaseError";
-import { Backdrop } from "src/theme/Backdrop/Backdrop";
-import AuthLayout from "src/auth/components/AuthLayout/AuthLayout";
+import { useAuthPageContext } from "src/auth/components/AuthLayout/AuthPageContext";
 
 const uniqueId = "e9c346bb-bcc6-4aaa-aaa9-d24d09274925";
 
@@ -34,7 +32,12 @@ const Landing: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { setPageLoading } = useAuthPageContext();
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setPageLoading(isLoading, t("auth.pages.landing.loggingYouIn"));
+  }, [isLoading, setPageLoading, t]);
 
   const appName = getProductName() || "Njila";
 
@@ -189,9 +192,7 @@ const Landing: React.FC = () => {
 
   return (
     <Box data-testid={DATA_TEST_ID.LANDING_DIALOG} sx={{ minHeight: "100%" }}>
-      <AuthLayout contentTestId={DATA_TEST_ID.LANDING_DIALOG_CONTENT}>{form}</AuthLayout>
-      <BugReportButton bottomAlign={true} />
-      <Backdrop isShown={isLoading} message={t("auth.pages.landing.loggingYouIn")} />
+      <Box data-testid={DATA_TEST_ID.LANDING_DIALOG_CONTENT}>{form}</Box>
     </Box>
   );
 };

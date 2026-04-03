@@ -169,7 +169,7 @@ const AnonymousAccountConversionDialog: React.FC<AnonymousAccountConversionDialo
           <TextField
             autoFocus
             fullWidth
-            label={t("common.fields.email")}
+            placeholder={t("common.fields.email")}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -182,7 +182,7 @@ const AnonymousAccountConversionDialog: React.FC<AnonymousAccountConversionDialo
 
           <TextField
             fullWidth
-            label={t("common.fields.confirmEmail")}
+            placeholder={t("common.fields.confirmEmail")}
             type="email"
             value={emailConfirmation}
             onChange={(e) => setEmailConfirmation(e.target.value)}
@@ -197,7 +197,7 @@ const AnonymousAccountConversionDialog: React.FC<AnonymousAccountConversionDialo
 
           <PasswordInput
             fullWidth
-            label={t("common.fields.password")}
+            placeholder={t("common.fields.password")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             data-testid={DATA_TEST_ID.PASSWORD_INPUT}
