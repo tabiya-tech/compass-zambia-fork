@@ -293,7 +293,6 @@ async def lifespan(_app: FastAPI):
         CompassDBProvider.initialize_userdata_mongo_db(userdata_db, logger),
         CompassDBProvider.initialize_metrics_mongo_db(metrics_db, logger),
         CompassDBProvider.initialize_career_explorer_mongo_db(career_explorer_db, logger),
-        CompassDBProvider.initialize_jobs_mongo_db(jobs_db, logger),
         validate_taxonomy_model(taxonomy_db=taxonomy_db,
                                 taxonomy_model_id=app_cfg.taxonomy_model_id,
                                 embeddings_service_name=app_cfg.embeddings_service_name,

@@ -3,9 +3,9 @@
 Seed the institutions collection from institutions-programmes.json.
 
 Usage:
-    JOBS_MONGODB_URI=<uri> JOBS_DATABASE_NAME=<db> poetry run python scripts/seed_institutions.py [path/to/institutions-programmes.json]
+    APPLICATION_MONGODB_URI=<uri> APPLICATION_DATABASE_NAME=<db> poetry run python scripts/seed_institutions.py [path/to/institutions-programmes.json]
 
-The script uses the same JOBS_MONGODB_URI / JOBS_DATABASE_NAME env vars as the main
+The script uses the same APPLICATION_MONGODB_URI / APPLICATION_DATABASE_NAME env vars as the main
 application (set in your .env file or environment).
 
 NaN values produced by the Python JSON serialiser are replaced with null before parsing.
@@ -36,13 +36,13 @@ def _load_data(path: str) -> list[dict]:
 
 
 async def seed(json_path: str):
-    mongodb_uri = os.environ.get("JOBS_MONGODB_URI")
-    db_name = os.environ.get("JOBS_DATABASE_NAME")
+    mongodb_uri = os.environ.get("APPLICATION_MONGODB_URI")
+    db_name = os.environ.get("APPLICATION_DATABASE_NAME")
 
     if not mongodb_uri:
-        raise ValueError("JOBS_MONGODB_URI environment variable is not set")
+        raise ValueError("APPLICATION_MONGODB_URI environment variable is not set")
     if not db_name:
-        raise ValueError("JOBS_DATABASE_NAME environment variable is not set")
+        raise ValueError("APPLICATION_DATABASE_NAME environment variable is not set")
 
     logger.info("Loading data from %s", json_path)
     institutions = _load_data(json_path)

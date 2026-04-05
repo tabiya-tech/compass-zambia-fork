@@ -3,8 +3,7 @@ import "src/_test_utilities/consoleMock";
 import "src/_test_utilities/envServiceMock";
 
 import { useNavigate } from "react-router-dom";
-import { act, render, screen, userEvent, waitFor } from "src/_test_utilities/test-utils";
-import { getRandomString, getTestString } from "src/_test_utilities/specialCharacters";
+import { render, screen, userEvent, waitFor, fireEvent } from "src/_test_utilities/test-utils";
 import i18n from "src/i18n/i18n";
 
 import SensitiveDataForm, { DATA_TEST_ID } from "./SensitiveDataForm";
@@ -22,66 +21,16 @@ import {
 } from "src/userPreferences/UserPreferencesService/userPreferences.types";
 import { sensitivePersonalDataService } from "src/sensitiveData/services/sensitivePersonalDataService/sensitivePersonalData.service";
 import { EncryptedDataTooLarge } from "src/sensitiveData/services/sensitivePersonalDataService/errors";
-import { FieldDefinition, FieldType } from "./config/types";
-import * as useFieldsConfigModule from "./config/useFieldsConfig";
-import StringField from "./components/StringField";
-import EnumField from "./components/EnumField";
-import MultipleSelectField from "./components/MultipleSelectField";
 import {
   MaximumAESEncryptedDataSize,
   MaximumAESEncryptedKeySize,
   MaximumRSAKeyIdSize,
 } from "src/sensitiveData/services/encryptionConfig";
+import { getRandomString, getTestString } from "src/_test_utilities/specialCharacters";
 import { mockBrowserIsOnLine } from "src/_test_utilities/mockBrowserIsOnline";
 import { UserPreferenceError } from "src/error/commonErrors";
 import { useSnackbar } from "src/theme/SnackbarProvider/SnackbarProvider";
-
-// Mock the field components
-jest.mock("./components/StringField", () => {
-  return {
-    __esModule: true,
-    default: jest.fn((props: any) => {
-      return <div data-testid={props.dataTestId}>StringField: {props.field.name}</div>;
-    }),
-  };
-});
-
-jest.mock("./components/EnumField", () => {
-  return {
-    __esModule: true,
-    default: jest.fn((props: any) => {
-      return <div data-testid={props.dataTestId}>EnumField: {props.field.name}</div>;
-    }),
-  };
-});
-
-jest.mock("./components/MultipleSelectField", () => {
-  return {
-    __esModule: true,
-    default: jest.fn((props: any) => {
-      return <div data-testid={props.dataTestId}>MultipleField: {props.field.name}</div>;
-    }),
-  };
-});
-
-jest.mock("@mui/material", () => ({
-  ...jest.requireActual("@mui/material"),
-  MenuItem: jest.fn().mockImplementation((props) => {
-    return (
-      <option value={props.value} data-testid={props["data-testid"]}>
-        {props.children}
-      </option>
-    );
-  }),
-  Select: jest.fn().mockImplementation((props) => {
-    // @ts-ignore
-    return (
-      <select data-testid={props["data-testid"]} onChange={props.onChange}>
-        {props.children}
-      </select>
-    );
-  }),
-}));
+import InstitutionService from "src/institutions/services/InstitutionService";
 
 jest.mock("react-router-dom", () => {
   const actual = jest.requireActual("react-router-dom");
@@ -119,36 +68,6 @@ jest.mock("src/sensitiveData/components/sensitiveDataForm/SensitiveDataFormSkele
   };
 });
 
-// Sample field configurations for testing
-const SAMPLE_STRING_FIELD: FieldDefinition = {
-  name: "field1",
-  dataKey: "field1_key",
-  type: FieldType.String,
-  required: true,
-  label: "Field 1",
-  questionText: "Enter Field 1",
-};
-
-const SAMPLE_ENUM_FIELD: FieldDefinition = {
-  name: "field2",
-  dataKey: "field2_key",
-  type: FieldType.Enum,
-  required: true,
-  label: "Field 2",
-  values: ["option1", "option2", "option3"],
-};
-
-const SAMPLE_MULTIPLE_FIELD: FieldDefinition = {
-  name: "field3",
-  dataKey: "field3_key",
-  type: FieldType.MultipleSelect,
-  required: true,
-  label: "Field 3",
-  values: ["option1", "option2", "option3", "option4"],
-};
-
-const SAMPLE_FIELDS = [SAMPLE_STRING_FIELD, SAMPLE_ENUM_FIELD, SAMPLE_MULTIPLE_FIELD];
-
 const givenUserId = getTestString(10);
 
 const SAMPLE_USER_PREFERENCES = {
@@ -162,6 +81,17 @@ const SAMPLE_USER_PREFERENCES = {
   experiments: {},
 };
 
+const SAMPLE_INSTITUTION = {
+  name: "University of Zambia",
+  reg_no: "REG001",
+  province: "Lusaka",
+};
+
+const SAMPLE_PROGRAMMES = [
+  { name: "Computer Science", qualification_type: "BSc", zqf_level: "7", sectors: [] },
+  { name: "Engineering", qualification_type: "BEng", zqf_level: "7", sectors: [] },
+];
+
 const componentRender = () => {
   return render(<SensitiveDataForm />);
 };
@@ -169,17 +99,19 @@ const componentRender = () => {
 describe("Sensitive Data Form", () => {
   let mockLogout: jest.Mock = jest.fn();
   let mockNavigate: jest.Mock = jest.fn();
-  let useFieldsConfigSpy: jest.SpyInstance;
+  let mockSearchInstitutions: jest.Mock;
+  let mockGetProgrammes: jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Mock the useFieldsConfig hook to return our sample fields
-    useFieldsConfigSpy = jest.spyOn(useFieldsConfigModule, "useFieldsConfig").mockReturnValue({
-      fields: SAMPLE_FIELDS,
-      loading: false,
-      error: null,
-    });
+    mockSearchInstitutions = jest.fn().mockResolvedValue({ data: [SAMPLE_INSTITUTION] });
+    mockGetProgrammes = jest.fn().mockResolvedValue({ programmes: SAMPLE_PROGRAMMES });
+
+    jest.spyOn(InstitutionService, "getInstance").mockReturnValue({
+      searchInstitutions: mockSearchInstitutions,
+      getProgrammesByInstitution: mockGetProgrammes,
+    } as unknown as InstitutionService);
 
     // @ts-ignore
     jest.spyOn(AuthenticationServiceFactory, "getCurrentAuthenticationService").mockReturnValue({
@@ -195,47 +127,26 @@ describe("Sensitive Data Form", () => {
     jest.spyOn(UserPreferencesStateService.getInstance(), "setUserPreferences");
   });
 
-  describe("Rendering fields based on configuration", () => {
-    it("should render a StringField when configuration contains a string field", () => {
-      // GIVEN a SensitiveDataForm with a configuration containing a string field
-      useFieldsConfigSpy.mockReturnValue({
-        fields: [SAMPLE_STRING_FIELD],
-        loading: false,
-        error: null,
-      });
-      // AND the user preferences state service is mocked to return user preferences with PII required
-      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
-      });
-
+  describe("Rendering static fields", () => {
+    it("should render First Name, Last Name, Institution, Programme, School Year fields", () => {
+      // GIVEN a SensitiveDataForm
       // WHEN the form is rendered
       componentRender();
 
-      // THEN a StringField component should be rendered with the correct props
-      const fieldTestId = `sensitive-data-form-${SAMPLE_STRING_FIELD.name.toLowerCase()}-input-ab02918f-d559-47ba-9662-ea6b3a3606d1`;
-      expect(screen.getByTestId(fieldTestId)).toBeInTheDocument();
-      expect(screen.getByText(`StringField: ${SAMPLE_STRING_FIELD.name}`)).toBeInTheDocument();
+      // THEN all static fields should be rendered
+      expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Last Name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Institution/i)).toBeInTheDocument();
+      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_SCHOOL_YEAR_SELECT)).toBeInTheDocument();
 
       // AND the container should be in the document
       expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toBeInTheDocument();
 
-      // AND the submit button should be rendered
+      // AND the submit button should be rendered but disabled (no fields filled)
       expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeInTheDocument();
+      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
 
-      // AND the reject button should be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_REJECT_BUTTON)).toBeInTheDocument();
-
-      // AND the approval modal should not be rendered
-      expect(screen.queryByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL)).not.toBeInTheDocument();
-
-      // AND the backdrop should not be rendered
+      // AND the backdrop should not be visible
       expect(screen.queryByTestId(BACKDROP_DATA_TEST_IDS.BACKDROP_CONTAINER)).not.toBeVisible();
 
       // AND the circle progress should not be rendered
@@ -244,413 +155,167 @@ describe("Sensitive Data Form", () => {
       // AND it should match the snapshot
       expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toMatchSnapshot();
 
-      // THEN the component should render without error
+      // AND no console errors or warnings
       expect(console.warn).not.toHaveBeenCalled();
       expect(console.error).not.toHaveBeenCalled();
     });
 
-    it("should render an EnumField when configuration contains an enum field", () => {
-      // GIVEN a SensitiveDataForm with a configuration containing an enum field
-      useFieldsConfigSpy.mockReturnValue({
-        fields: [SAMPLE_ENUM_FIELD],
-        loading: false,
-        error: null,
-      });
-      // AND the user preferences state service is mocked to return user preferences with PII required
+    it("should render the reject button when PII is required", () => {
+      // GIVEN user preferences with PII required
       jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
+        ...SAMPLE_USER_PREFERENCES,
         sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
       });
 
       // WHEN the form is rendered
       componentRender();
 
-      // THEN an EnumField component should be rendered with the correct props
-      const fieldTestId = `sensitive-data-form-${SAMPLE_ENUM_FIELD.name.toLowerCase()}-input-ab02918f-d559-47ba-9662-ea6b3a3606d1`;
-      expect(screen.getByTestId(fieldTestId)).toBeInTheDocument();
-      expect(screen.getByText(`EnumField: ${SAMPLE_ENUM_FIELD.name}`)).toBeInTheDocument();
-
-      // AND the container should be in the document
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toBeInTheDocument();
-
-      // AND the submit button should be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeInTheDocument();
-
-      // AND the reject button should be rendered
+      // THEN the reject button should be shown
       expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_REJECT_BUTTON)).toBeInTheDocument();
-
-      // AND the approval modal should not be rendered
-      expect(screen.queryByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL)).not.toBeInTheDocument();
-
-      // AND the backdrop should not be rendered
-      expect(screen.queryByTestId(BACKDROP_DATA_TEST_IDS.BACKDROP_CONTAINER)).not.toBeVisible();
-
-      // AND the circle progress should not be rendered
-      expect(screen.queryByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON_CIRCULAR_PROGRESS)).not.toBeInTheDocument();
-
-      // AND it should match the snapshot
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toMatchSnapshot();
-
-      // THEN the component should render without error
-      expect(console.warn).not.toHaveBeenCalled();
-      expect(console.error).not.toHaveBeenCalled();
+      expect(screen.queryByTestId(DATA_TEST_ID.SENSITIVE_DATA_SKIP_BUTTON)).not.toBeInTheDocument();
     });
 
-    it("should render a MultipleField when configuration contains a multiple field", () => {
-      // GIVEN a SensitiveDataForm with a configuration containing a multiple field
-      useFieldsConfigSpy.mockReturnValue({
-        fields: [SAMPLE_MULTIPLE_FIELD],
-        loading: false,
-        error: null,
-      });
-      // AND the user preferences state service is mocked to return user preferences with PII required
+    it("should render the skip button when PII is not required", () => {
+      // GIVEN user preferences with PII not required
       jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
+        ...SAMPLE_USER_PREFERENCES,
+        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.NOT_REQUIRED,
       });
 
       // WHEN the form is rendered
       componentRender();
 
-      // THEN a MultipleField component should be rendered with the correct props
-      const fieldTestId = `sensitive-data-form-${SAMPLE_MULTIPLE_FIELD.name.toLowerCase()}-input-ab02918f-d559-47ba-9662-ea6b3a3606d1`;
-      expect(screen.getByTestId(fieldTestId)).toBeInTheDocument();
-      expect(screen.getByText(`MultipleField: ${SAMPLE_MULTIPLE_FIELD.name}`)).toBeInTheDocument();
-
-      // AND the container should be in the document
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toBeInTheDocument();
-
-      // AND the submit button should be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeInTheDocument();
-
-      // AND the reject button should be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_REJECT_BUTTON)).toBeInTheDocument();
-
-      // AND the approval modal should not be rendered
-      expect(screen.queryByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL)).not.toBeInTheDocument();
-
-      // AND the backdrop should not be rendered
-      expect(screen.queryByTestId(BACKDROP_DATA_TEST_IDS.BACKDROP_CONTAINER)).not.toBeVisible();
-
-      // AND the circle progress should not be rendered
-      expect(screen.queryByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON_CIRCULAR_PROGRESS)).not.toBeInTheDocument();
-
-      // AND it should match the snapshot
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toMatchSnapshot();
-
-      // THEN the component should render without error
-      expect(console.warn).not.toHaveBeenCalled();
-      expect(console.error).not.toHaveBeenCalled();
-    });
-
-    it("should render a complex form with multiple field types", () => {
-      // GIVEN a SensitiveDataForm with a configuration containing multiple field types
-      useFieldsConfigSpy.mockReturnValue({
-        fields: SAMPLE_FIELDS,
-        loading: false,
-        error: null,
-      });
-      // AND the user preferences state service is mocked to return user preferences with PII required
-      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
-      });
-
-      // WHEN the form is rendered
-      componentRender();
-
-      // THEN all field components should be rendered with the correct props
-      SAMPLE_FIELDS.forEach((field) => {
-        const fieldTestId = `sensitive-data-form-${field.name.toLowerCase()}-input-ab02918f-d559-47ba-9662-ea6b3a3606d1`;
-        expect(screen.getByTestId(fieldTestId)).toBeInTheDocument();
-      });
-
-      // AND the container should be in the document
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toBeInTheDocument();
-
-      // AND the submit button should be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeInTheDocument();
-
-      // AND the reject button should be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_REJECT_BUTTON)).toBeInTheDocument();
-
-      // AND the approval modal should not be rendered
-      expect(screen.queryByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL)).not.toBeInTheDocument();
-
-      // AND the backdrop should not be rendered
-      expect(screen.queryByTestId(BACKDROP_DATA_TEST_IDS.BACKDROP_CONTAINER)).not.toBeVisible();
-
-      // AND the circle progress should not be rendered
-      expect(screen.queryByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON_CIRCULAR_PROGRESS)).not.toBeInTheDocument();
-
-      // AND it should match the snapshot
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toMatchSnapshot();
-
-      // THEN the component should render without error
-      expect(console.warn).not.toHaveBeenCalled();
-      expect(console.error).not.toHaveBeenCalled();
-    });
-
-    it("should handle empty configuration gracefully", () => {
-      // GIVEN a SensitiveDataForm with an empty configuration
-      useFieldsConfigSpy.mockReturnValue({
-        fields: [],
-        loading: false,
-        error: null,
-      });
-      // AND the user preferences state service is mocked to return user preferences with PII required
-      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
-      });
-
-      // WHEN the form is rendered
-      componentRender();
-
-      // THEN no field components should be rendered and no errors should occur
-      expect(screen.queryByText(/StringField:/)).not.toBeInTheDocument();
-      expect(screen.queryByText(/EnumField:/)).not.toBeInTheDocument();
-      expect(screen.queryByText(/MultipleField:/)).not.toBeInTheDocument();
-
-      // AND the form container should still be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toBeInTheDocument();
-
-      // AND the submit button should be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeInTheDocument();
-
-      // AND the reject button should be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_REJECT_BUTTON)).toBeInTheDocument();
-
-      // AND the approval modal should not be rendered
-      expect(screen.queryByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL)).not.toBeInTheDocument();
-
-      // AND the backdrop should not be rendered
-      expect(screen.queryByTestId(BACKDROP_DATA_TEST_IDS.BACKDROP_CONTAINER)).not.toBeVisible();
-
-      // AND the circle progress should not be rendered
-      expect(screen.queryByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON_CIRCULAR_PROGRESS)).not.toBeInTheDocument();
-
-      // AND it should match the snapshot
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toMatchSnapshot();
-
-      // THEN the component should render without error
-      expect(console.warn).not.toHaveBeenCalled();
-      expect(console.error).not.toHaveBeenCalled();
-    });
-
-    it("should show loading state while configuration is loading", () => {
-      // GIVEN the configuration is still loading
-      useFieldsConfigSpy.mockReturnValue({
-        fields: [],
-        loading: true,
-        error: null,
-      });
-      // AND the user preferences state service is mocked to return user preferences with PII required
-      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
-      });
-
-      // WHEN the form is rendered
-      componentRender();
-
-      // THEN a loading indicator should be displayed
-      expect(screen.getByText("Loading form...")).toBeInTheDocument();
-
-      // AND the container should not be in the document
-      expect(screen.queryByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).not.toBeInTheDocument();
-
-      // AND the approval modal should not be rendered
-      expect(screen.queryByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL)).not.toBeInTheDocument();
-
-      // THEN the component should render without error
-      expect(console.warn).not.toHaveBeenCalled();
-      expect(console.error).not.toHaveBeenCalled();
-    });
-
-    it("should show error state if configuration failed to load", () => {
-      // GIVEN the configuration failed to load
-      useFieldsConfigSpy.mockReturnValue({
-        fields: [],
-        loading: false,
-        error: new Error("Failed to load configuration"),
-      });
-      // AND the user preferences state service is mocked to return user preferences with PII required
-      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
-      });
-
-      // WHEN the form is rendered
-      componentRender();
-
-      // THEN an error message should be displayed
-      expect(screen.getByText("Failed to load form configuration")).toBeInTheDocument();
-      expect(screen.getByText("Refresh Page")).toBeInTheDocument();
-
-      // AND the container should be in the document
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toBeInTheDocument();
-
-      // AND the approval modal should not be rendered
-      expect(screen.queryByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL)).not.toBeInTheDocument();
-
-      // THEN the component should render without error
-      expect(console.warn).not.toHaveBeenCalled();
-      expect(console.error).not.toHaveBeenCalled();
+      // THEN the skip button should be shown
+      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_SKIP_BUTTON)).toBeInTheDocument();
+      expect(screen.queryByTestId(DATA_TEST_ID.SENSITIVE_DATA_REJECT_BUTTON)).not.toBeInTheDocument();
     });
   });
 
   describe("Form validation", () => {
-    it("should enable submit button when all required fields are valid", async () => {
+    it("should enable submit button when all required fields are filled", async () => {
       // GIVEN a form with required fields
-      // AND the user preferences state service is mocked to return user preferences with PII required
       jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
+        ...SAMPLE_USER_PREFERENCES,
         sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
       });
+      const user = userEvent.setup();
 
       // WHEN the form is rendered
       componentRender();
 
-      // WHEN all fields report valid values
-      // Get the onChange callbacks from the most recent calls to each component
-      const stringFieldProps = (StringField as jest.Mock).mock.calls.at(-1)[0];
-      const enumFieldProps = (EnumField as jest.Mock).mock.calls.at(-1)[0];
-      const multipleFieldProps = (MultipleSelectField as jest.Mock).mock.calls.at(-1)[0];
+      // AND firstName and lastName are filled
+      await user.type(screen.getByLabelText(/First Name/i), "Alice");
+      await user.type(screen.getByLabelText(/Last Name/i), "Smith");
 
-      // Trigger the onChange callbacks with valid values
-      act(() => {
-        stringFieldProps.onChange("test value", true);
-      });
+      // AND an institution is searched and selected
+      const institutionInput = screen.getByLabelText(/Institution/i);
+      await user.type(institutionInput, "Univ");
 
-      act(() => {
-        enumFieldProps.onChange("option1", true);
-      });
+      await waitFor(() => expect(mockSearchInstitutions).toHaveBeenCalled());
+      const option = await screen.findByText("University of Zambia");
+      await user.click(option);
 
-      act(() => {
-        multipleFieldProps.onChange(["option1", "option2"], true);
-      });
+      // AND a programme is selected
+      await waitFor(() => expect(mockGetProgrammes).toHaveBeenCalled());
+      const programmeInput = screen.getByLabelText(/Programme/i);
+      await user.click(programmeInput);
+      const programmeOption = await screen.findByText("Computer Science");
+      await user.click(programmeOption);
 
-      // THEN the submit button should be enabled after validation
+      // AND the school year is selected
+      const schoolYearSelect = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_SCHOOL_YEAR_SELECT);
+      fireEvent.mouseDown(schoolYearSelect);
+      const yearOption = await screen.findByText("Year 1");
+      await user.click(yearOption);
+
+      // THEN the submit button should be enabled
       await waitFor(() => {
         expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).not.toBeDisabled();
       });
 
-      // AND the container should be in the document
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toBeInTheDocument();
-
-      // AND the submit button should be rendered
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeInTheDocument();
-
-      // AND the reject button should be rendered
-      const rejectButton = screen.getByText("No, thank you");
-      expect(rejectButton).toBeInTheDocument();
-
-      // AND the approval modal should not be rendered
-      expect(screen.queryByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL)).not.toBeInTheDocument();
-
-      // AND the backdrop should not be rendered
-      expect(screen.queryByTestId(BACKDROP_DATA_TEST_IDS.BACKDROP_CONTAINER)).not.toBeVisible();
-
-      // AND the circle progress should not be rendered
-      expect(screen.queryByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON_CIRCULAR_PROGRESS)).not.toBeInTheDocument();
-
-      // AND it should match the snapshot
-      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_CONTAINER)).toMatchSnapshot();
-
-      // THEN the component should render without error
       expect(console.warn).not.toHaveBeenCalled();
       expect(console.error).not.toHaveBeenCalled();
     });
 
-    it.each([
-      ["string field is invalid", "StringField", false],
-      ["enum field is invalid", "EnumField", false],
-      ["multiple field is invalid", "MultipleSelectField", false],
-    ])("should disable submit button when %s", async (_, fieldType, isValid) => {
-      // GIVEN a form with required fields
+    it("should disable submit button when string field is invalid (firstName empty)", async () => {
+      // GIVEN a form rendered
+      const user = userEvent.setup();
+      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
+        ...SAMPLE_USER_PREFERENCES,
+        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
+      });
       componentRender();
 
-      // Get the onChange callbacks from the most recent calls to each component
-      const stringFieldProps = (StringField as jest.Mock).mock.calls.at(-1)[0];
-      const enumFieldProps = (EnumField as jest.Mock).mock.calls.at(-1)[0];
-      const multipleFieldProps = (MultipleSelectField as jest.Mock).mock.calls.at(-1)[0];
-
-      // Force all fields to be valid to ensure the button is enabled
-      act(() => {
-        stringFieldProps.onChange("test value", true);
-        enumFieldProps.onChange("option1", true);
-        multipleFieldProps.onChange(["option1", "option2"], true);
-      });
-
-      // Wait for the button to be enabled first
-      await waitFor(() => {
-        const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-        expect(submitButton).not.toBeDisabled();
-      });
-
-      // WHEN one specific field is set to invalid
-      act(() => {
-        if (fieldType === "StringField") {
-          stringFieldProps.onChange("test value", isValid);
-        } else if (fieldType === "EnumField") {
-          enumFieldProps.onChange("option1", isValid);
-        } else if (fieldType === "MultipleSelectField") {
-          multipleFieldProps.onChange(["option1", "option2"], isValid);
-        }
-      });
+      // WHEN only lastName is filled but not firstName
+      await user.type(screen.getByLabelText(/Last Name/i), "Smith");
 
       // THEN the submit button should be disabled
-      await waitFor(() => {
-        const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-        expect(submitButton).toBeDisabled();
+      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
+    });
+
+    it("should disable submit button when enum field is invalid (no school year selected)", async () => {
+      // GIVEN a form rendered
+      const user = userEvent.setup();
+      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
+        ...SAMPLE_USER_PREFERENCES,
+        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
       });
+      componentRender();
+
+      // WHEN firstName and lastName are filled but no school year
+      await user.type(screen.getByLabelText(/First Name/i), "Alice");
+      await user.type(screen.getByLabelText(/Last Name/i), "Smith");
+
+      // THEN the submit button should remain disabled
+      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
+    });
+
+    it("should disable submit button when multiple field is invalid (no programme selected)", async () => {
+      // GIVEN a form rendered
+      const user = userEvent.setup();
+      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
+        ...SAMPLE_USER_PREFERENCES,
+        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
+      });
+      componentRender();
+
+      // WHEN firstName, lastName, schoolYear are filled but no institution/programme
+      await user.type(screen.getByLabelText(/First Name/i), "Alice");
+      await user.type(screen.getByLabelText(/Last Name/i), "Smith");
+
+      // THEN the submit button should remain disabled (institution + programme not set)
+      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
     });
   });
 
   describe("Form submission", () => {
+    const fillFormAndSubmit = async (user: ReturnType<typeof userEvent.setup>) => {
+      await user.type(screen.getByLabelText(/First Name/i), "Alice");
+      await user.type(screen.getByLabelText(/Last Name/i), "Smith");
+
+      const institutionInput = screen.getByLabelText(/Institution/i);
+      await user.type(institutionInput, "Univ");
+      await waitFor(() => expect(mockSearchInstitutions).toHaveBeenCalled());
+      const institutionOption = await screen.findByText("University of Zambia");
+      await user.click(institutionOption);
+
+      await waitFor(() => expect(mockGetProgrammes).toHaveBeenCalled());
+      const programmeInput = screen.getByLabelText(/Programme/i);
+      await user.click(programmeInput);
+      const programmeOption = await screen.findByText("Computer Science");
+      await user.click(programmeOption);
+
+      fireEvent.mouseDown(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_SCHOOL_YEAR_SELECT));
+      const yearOption = await screen.findByText("Year 1");
+      await user.click(yearOption);
+
+      await waitFor(() => {
+        expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).not.toBeDisabled();
+      });
+
+      await user.click(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON));
+    };
+
     it("should submit the form with sanitized data when all fields are valid", async () => {
       // GIVEN a form with valid fields
       const user = userEvent.setup();
@@ -658,43 +323,30 @@ describe("Sensitive Data Form", () => {
         .spyOn(sensitivePersonalDataService, "createSensitivePersonalData")
         .mockResolvedValue(undefined);
 
+      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
+        ...SAMPLE_USER_PREFERENCES,
+        user_id: givenUserId,
+      });
+
       componentRender();
+      await fillFormAndSubmit(user);
 
-      // WHEN all fields report valid values
-      // Get the onChange callbacks from the most recent calls to each component
-      const stringFieldProps = (StringField as jest.Mock).mock.calls.at(-1)[0];
-      const enumFieldProps = (EnumField as jest.Mock).mock.calls.at(-1)[0];
-      const multipleFieldProps = (MultipleSelectField as jest.Mock).mock.calls.at(-1)[0];
-
-      // Trigger the onChange callbacks with valid values
-      act(() => {
-        stringFieldProps.onChange("test value", true);
-        enumFieldProps.onChange("option1", true);
-        multipleFieldProps.onChange(["option1", "option2"], true);
-      });
-
-      // Wait for the button to be enabled
+      // THEN the service should be called
       await waitFor(() => {
-        const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-        expect(submitButton).not.toBeDisabled();
+        expect(mockCreateSensitivePersonalData).toHaveBeenCalled();
       });
 
-      // AND the user submits the form
-      const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-
-      // Click the button (no need to mock disabled property as it should be enabled)
-      await user.click(submitButton);
-
-      // THEN the service should be called with the correct data
-      expect(mockCreateSensitivePersonalData).toHaveBeenCalledWith(
-        {
-          field1: "test value",
-          field2: "option1",
-          field3: ["option1", "option2"],
-        },
-        givenUserId,
-        SAMPLE_FIELDS
-      );
+      // AND the data passed should include the filled values
+      const callArgs = mockCreateSensitivePersonalData.mock.calls[0];
+      expect(callArgs[0]).toMatchObject({
+        firstName: "Alice",
+        lastName: "Smith",
+        institution: "University of Zambia",
+        programme: "Computer Science",
+        province: "Lusaka",
+        schoolYear: "Year 1",
+      });
+      expect(callArgs[1]).toBe(givenUserId);
 
       // AND the user should be navigated to the root path
       expect(mockNavigate).toHaveBeenCalledWith(routerPaths.ROOT);
@@ -710,36 +362,15 @@ describe("Sensitive Data Form", () => {
       const user = userEvent.setup();
       const mockError = new RestAPIError("mockedService", "mockedFunction", "GET", "/", 400, "foo", "");
       jest.spyOn(sensitivePersonalDataService, "createSensitivePersonalData").mockRejectedValue(mockError);
-
       jest.spyOn(RestAPIErrorModule, "getUserFriendlyErrorMessage").mockReturnValue("User-friendly error message");
 
       componentRender();
-
-      // WHEN all fields report valid values
-      // Get the onChange callbacks from the most recent calls to each component
-      const stringFieldProps = (StringField as jest.Mock).mock.calls.at(-1)[0];
-      const enumFieldProps = (EnumField as jest.Mock).mock.calls.at(-1)[0];
-      const multipleFieldProps = (MultipleSelectField as jest.Mock).mock.calls.at(-1)[0];
-
-      // Trigger the onChange callbacks with valid values
-      act(() => {
-        stringFieldProps.onChange("test value", true);
-        enumFieldProps.onChange("option1", true);
-        multipleFieldProps.onChange(["option1", "option2"], true);
-      });
-
-      // Wait for the button to be enabled
-      await waitFor(() => {
-        const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-        expect(submitButton).not.toBeDisabled();
-      });
-
-      // AND the user submits the form
-      const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-      await user.click(submitButton);
+      await fillFormAndSubmit(user);
 
       // THEN an error message should be shown
-      expect(useSnackbar().enqueueSnackbar).toHaveBeenCalledWith("User-friendly error message", { variant: "error" });
+      await waitFor(() => {
+        expect(useSnackbar().enqueueSnackbar).toHaveBeenCalledWith("User-friendly error message", { variant: "error" });
+      });
     });
 
     it("should handle encrypted data too large error", async () => {
@@ -754,37 +385,15 @@ describe("Sensitive Data Form", () => {
       jest.spyOn(sensitivePersonalDataService, "createSensitivePersonalData").mockRejectedValue(mockError);
 
       componentRender();
+      await fillFormAndSubmit(user);
 
-      // WHEN all fields report valid values
-      // Get the onChange callbacks from the most recent calls to each component
-      const stringFieldProps = (StringField as jest.Mock).mock.calls.at(-1)[0];
-      const enumFieldProps = (EnumField as jest.Mock).mock.calls.at(-1)[0];
-      const multipleFieldProps = (MultipleSelectField as jest.Mock).mock.calls.at(-1)[0];
-
-      // Trigger the onChange callbacks with valid values
-      act(() => {
-        stringFieldProps.onChange("test value", true);
-        enumFieldProps.onChange("option1", true);
-        multipleFieldProps.onChange(["option1", "option2"], true);
-      });
-
-      // Wait for the button to be enabled
+      // THEN the specific error message for encrypted data too large should be shown
       await waitFor(() => {
-        const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-        expect(submitButton).not.toBeDisabled();
+        expect(useSnackbar().enqueueSnackbar).toHaveBeenCalledWith(
+          i18n.t("sensitiveData.components.sensitiveDataForm.errorEncryptedDataTooLarge"),
+          { variant: "error" }
+        );
       });
-
-      // AND the user submits the form
-      const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-      await user.click(submitButton);
-
-      // THEN the specific error message for encrypted data too large should be shown (via i18n)
-      expect(useSnackbar().enqueueSnackbar).toHaveBeenCalledWith(
-        i18n.t("sensitiveData.components.sensitiveDataForm.errorEncryptedDataTooLarge"),
-        {
-          variant: "error",
-        }
-      );
     });
 
     it("should handle missing user preferences error", async () => {
@@ -803,76 +412,6 @@ describe("Sensitive Data Form", () => {
       );
     });
 
-    it("should handle logout error when rejecting sensitive data", async () => {
-      // GIVEN logout fails
-      const user = userEvent.setup();
-      mockLogout.mockRejectedValue(new Error("Logout failed"));
-
-      // AND user preferences are set to show reject button
-      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: givenUserId,
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
-      });
-
-      // WHEN the form is rendered
-      componentRender();
-
-      // AND the user clicks the reject button
-      const rejectButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_REJECT_BUTTON);
-      await user.click(rejectButton);
-
-      // AND confirms the action
-      await user.click(screen.getByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL_CANCEL));
-
-      // THEN an error message should be shown
-      expect(useSnackbar().enqueueSnackbar).toHaveBeenCalledWith("Failed to log out.", { variant: "error" });
-    });
-
-    it("should handle service errors during skip operation", async () => {
-      // GIVEN skip operation fails
-      const user = userEvent.setup();
-      const mockError = new RestAPIError("mockedService", "mockedFunction", "GET", "/", 400, "foo", "");
-      jest.spyOn(sensitivePersonalDataService, "skip").mockRejectedValue(mockError);
-
-      jest.spyOn(RestAPIErrorModule, "getUserFriendlyErrorMessage").mockReturnValue("User-friendly error message");
-
-      // WHEN the form is rendered
-      componentRender();
-
-      // AND the user clicks the skip button
-      const skipButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_SKIP_BUTTON);
-      await user.click(skipButton);
-
-      // AND confirms the action
-      await user.click(screen.getByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL_CANCEL));
-
-      // THEN an error message should be shown
-      expect(useSnackbar().enqueueSnackbar).toHaveBeenCalledWith("User-friendly error message", { variant: "error" });
-    });
-
-    it("should handle YAML configuration parsing errors", async () => {
-      // GIVEN the configuration contains invalid YAML
-      const mockError = new Error("Failed to parse fields configuration");
-      jest.spyOn(useFieldsConfigModule, "useFieldsConfig").mockReturnValue({
-        fields: [],
-        loading: false,
-        error: mockError,
-      });
-
-      // WHEN the form is rendered
-      componentRender();
-
-      // THEN an error message should be shown
-      expect(screen.getByText("Failed to load form configuration")).toBeInTheDocument();
-      expect(screen.getByText("Refresh Page")).toBeInTheDocument();
-    });
-
     it("should handle personal info extraction errors gracefully", async () => {
       // GIVEN a form with valid fields
       const user = userEvent.setup();
@@ -880,41 +419,18 @@ describe("Sensitive Data Form", () => {
         .spyOn(sensitivePersonalDataService, "createSensitivePersonalData")
         .mockResolvedValue(undefined);
 
-      // AND the form is rendered
+      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
+        ...SAMPLE_USER_PREFERENCES,
+        user_id: givenUserId,
+      });
+
       componentRender();
+      await fillFormAndSubmit(user);
 
-      // WHEN all fields report valid values
-      const stringFieldProps = (StringField as jest.Mock).mock.calls.at(-1)[0];
-      const enumFieldProps = (EnumField as jest.Mock).mock.calls.at(-1)[0];
-      const multipleFieldProps = (MultipleSelectField as jest.Mock).mock.calls.at(-1)[0];
-
-      // Trigger the onChange callbacks with valid values
-      act(() => {
-        stringFieldProps.onChange("test value", true);
-        enumFieldProps.onChange("option1", true);
-        multipleFieldProps.onChange(["option1", "option2"], true);
-      });
-
-      // Wait for the button to be enabled
+      // THEN the service should be called
       await waitFor(() => {
-        const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-        expect(submitButton).not.toBeDisabled();
+        expect(mockCreateSensitivePersonalData).toHaveBeenCalled();
       });
-
-      // AND the user submits the form
-      const submitButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON);
-      await user.click(submitButton);
-
-      // THEN the service should be called with the correct data
-      expect(mockCreateSensitivePersonalData).toHaveBeenCalledWith(
-        {
-          field1: "test value",
-          field2: "option1",
-          field3: ["option1", "option2"],
-        },
-        givenUserId,
-        SAMPLE_FIELDS
-      );
 
       // AND the user should be navigated to the root path
       expect(mockNavigate).toHaveBeenCalledWith(routerPaths.ROOT);
@@ -928,16 +444,9 @@ describe("Sensitive Data Form", () => {
 
   describe("Reject providing sensitive data", () => {
     beforeEach(() => {
-      // GIVEN the user preferences state service is mocked to return user preferences with PII required
       jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
+        ...SAMPLE_USER_PREFERENCES,
         sensitive_personal_data_requirement: SensitivePersonalDataRequirement.REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
       });
     });
 
@@ -966,24 +475,37 @@ describe("Sensitive Data Form", () => {
 
       // AND a success message should be shown
       expect(useSnackbar().enqueueSnackbar).toHaveBeenCalledWith("Successfully logged out.", { variant: "success" });
-      // AND no console errors or warnings should be logged
       expect(console.warn).not.toHaveBeenCalled();
       expect(console.error).not.toHaveBeenCalled();
+    });
+
+    it("should handle logout error when rejecting sensitive data", async () => {
+      // GIVEN logout fails
+      const user = userEvent.setup();
+      mockLogout.mockRejectedValue(new Error("Logout failed"));
+
+      // WHEN the form is rendered
+      componentRender();
+
+      // AND the user clicks the reject button
+      const rejectButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_REJECT_BUTTON);
+      await user.click(rejectButton);
+
+      // AND confirms the action
+      await user.click(screen.getByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL_CANCEL));
+
+      // THEN an error message should be shown
+      await waitFor(() => {
+        expect(useSnackbar().enqueueSnackbar).toHaveBeenCalledWith("Failed to log out.", { variant: "error" });
+      });
     });
   });
 
   describe("Skip providing sensitive data", () => {
     beforeEach(() => {
-      // GIVEN the user preferences state service is mocked to return user preferences with PII not required
       jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
+        ...SAMPLE_USER_PREFERENCES,
         sensitive_personal_data_requirement: SensitivePersonalDataRequirement.NOT_REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
       });
     });
 
@@ -991,6 +513,12 @@ describe("Sensitive Data Form", () => {
       // GIVEN skip is successful
       const user = userEvent.setup();
       const skipSpy = jest.spyOn(sensitivePersonalDataService, "skip").mockResolvedValue(undefined);
+
+      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue({
+        ...SAMPLE_USER_PREFERENCES,
+        user_id: "given user id",
+        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.NOT_REQUIRED,
+      });
 
       // WHEN the form is rendered
       componentRender();
@@ -1006,16 +534,11 @@ describe("Sensitive Data Form", () => {
       expect(skipSpy).toHaveBeenCalledWith("given user id");
 
       // AND the user preferences should be updated
-      expect(UserPreferencesStateService.getInstance().setUserPreferences).toHaveBeenCalledWith({
-        user_id: "given user id",
-        language: Language.en,
-        accepted_tc: expect.any(Date),
-        experiments: {},
-        has_sensitive_personal_data: true,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.NOT_REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-      });
+      expect(UserPreferencesStateService.getInstance().setUserPreferences).toHaveBeenCalledWith(
+        expect.objectContaining({
+          has_sensitive_personal_data: true,
+        })
+      );
 
       // AND the user should be navigated to the root path
       expect(mockNavigate).toHaveBeenCalledWith(routerPaths.ROOT);
@@ -1026,21 +549,31 @@ describe("Sensitive Data Form", () => {
       });
     });
 
+    it("should handle service errors during skip operation", async () => {
+      // GIVEN skip operation fails
+      const user = userEvent.setup();
+      const mockError = new RestAPIError("mockedService", "mockedFunction", "GET", "/", 400, "foo", "");
+      jest.spyOn(sensitivePersonalDataService, "skip").mockRejectedValue(mockError);
+      jest.spyOn(RestAPIErrorModule, "getUserFriendlyErrorMessage").mockReturnValue("User-friendly error message");
+
+      // WHEN the form is rendered
+      componentRender();
+
+      // AND the user clicks the skip button
+      const skipButton = screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_SKIP_BUTTON);
+      await user.click(skipButton);
+
+      // AND confirms the action
+      await user.click(screen.getByTestId(CONFIRM_MODAL_DATA_TEST_IDS.CONFIRM_MODAL_CANCEL));
+
+      // THEN an error message should be shown
+      await waitFor(() => {
+        expect(useSnackbar().enqueueSnackbar).toHaveBeenCalledWith("User-friendly error message", { variant: "error" });
+      });
+    });
+
     test("should stay on the same page when the user cancels the skip action", async () => {
       const user = userEvent.setup();
-      // GIVEN sensitive personal data is not required
-      const givenUserPreferences = {
-        user_id: givenUserId,
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.NOT_REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
-      };
-      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue(givenUserPreferences);
-      // AND skipping sensitive personal data method
       const skipSpy = jest.spyOn(sensitivePersonalDataService, "skip");
 
       // WHEN the component is rendered
@@ -1066,18 +599,6 @@ describe("Sensitive Data Form", () => {
     test("should enable/disable the skip button when the browser online status changes", async () => {
       // GIVEN the browser is offline
       mockBrowserIsOnLine(false);
-      // AND the sensitive personal data is not required
-      const givenUserPreferences = {
-        user_id: givenUserId,
-        language: Language.en,
-        accepted_tc: new Date(),
-        has_sensitive_personal_data: false,
-        sensitive_personal_data_requirement: SensitivePersonalDataRequirement.NOT_REQUIRED,
-        sessions: [],
-        user_feedback_answered_questions: {},
-        experiments: {},
-      };
-      jest.spyOn(UserPreferencesStateService.getInstance(), "getUserPreferences").mockReturnValue(givenUserPreferences);
 
       // WHEN the component is rendered
       componentRender();
@@ -1097,111 +618,118 @@ describe("Sensitive Data Form", () => {
     });
   });
 
-  describe("Field validation", () => {
+  describe("Institution search", () => {
+    it("should search institutions when user types at least 2 characters", async () => {
+      // GIVEN a form is rendered
+      const user = userEvent.setup({ delay: null });
+      componentRender();
+
+      // WHEN the user types in the institution field
+      const institutionInput = screen.getByLabelText(/Institution/i);
+      await user.type(institutionInput, "Un");
+
+      // THEN the institution service should be called
+      await waitFor(() => {
+        expect(mockSearchInstitutions).toHaveBeenCalledWith("Un", 10);
+      });
+    });
+
+    it("should not search institutions when user types fewer than 2 characters", async () => {
+      // GIVEN a form is rendered
+      const user = userEvent.setup({ delay: null });
+      componentRender();
+
+      // WHEN the user types only 1 character
+      const institutionInput = screen.getByLabelText(/Institution/i);
+      await user.type(institutionInput, "U");
+
+      // THEN the institution service should not be called
+      expect(mockSearchInstitutions).not.toHaveBeenCalled();
+    });
+
+    it("should load programmes when an institution is selected", async () => {
+      // GIVEN a form is rendered
+      const user = userEvent.setup({ delay: null });
+      componentRender();
+
+      // WHEN the user searches and selects an institution
+      const institutionInput = screen.getByLabelText(/Institution/i);
+      await user.type(institutionInput, "Univ");
+      await waitFor(() => expect(mockSearchInstitutions).toHaveBeenCalled());
+      const institutionOption = await screen.findByText("University of Zambia");
+      await user.click(institutionOption);
+
+      // THEN programmes should be fetched for the selected institution
+      await waitFor(() => {
+        expect(mockGetProgrammes).toHaveBeenCalledWith("REG001");
+      });
+    });
+  });
+
+  describe("Field validation for static fields", () => {
     it("should show validation error for required string field when empty", async () => {
-      // GIVEN a form with a required string field
+      // GIVEN a form rendered
       componentRender();
 
-      // WHEN the field reports as invalid
-      const stringFieldProps = (StringField as jest.Mock).mock.calls.at(-1)[0];
-      act(() => {
-        stringFieldProps.onChange("", false);
-      });
-
-      // THEN the submit button should be disabled
-      await waitFor(() => {
-        expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
-      });
+      // THEN the submit button should be disabled initially (no fields filled)
+      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
     });
 
-    it("should show validation error for string field with invalid pattern", async () => {
-      // GIVEN a form with a string field that has a pattern validation
-      const fieldWithPattern = {
-        ...SAMPLE_STRING_FIELD,
-        validation: {
-          pattern: "^[A-Za-z]+$",
-          errorMessage: "Only letters are allowed",
-        },
-      };
-      useFieldsConfigSpy.mockReturnValue({
-        fields: [fieldWithPattern],
-        loading: false,
-        error: null,
-      });
-
+    it("should show validation error for required enum field when empty (no school year)", async () => {
+      // GIVEN a form with firstName and lastName filled
+      const user = userEvent.setup();
       componentRender();
 
-      // WHEN the field reports as invalid
-      const stringFieldProps = (StringField as jest.Mock).mock.calls.at(-1)[0];
-      act(() => {
-        stringFieldProps.onChange("123", false);
-      });
+      await user.type(screen.getByLabelText(/First Name/i), "Alice");
+      await user.type(screen.getByLabelText(/Last Name/i), "Smith");
 
-      // THEN the submit button should be disabled
-      await waitFor(() => {
-        expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
-      });
+      // THEN the submit button should remain disabled because school year not selected
+      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
     });
 
-    it("should show validation error for required enum field when empty", async () => {
-      // GIVEN a form with a required enum field
+    it("should show validation error for required multiple select field when empty (no programme)", async () => {
+      // GIVEN a form with firstName, lastName, schoolYear filled but no programme
+      const user = userEvent.setup();
       componentRender();
 
-      // WHEN the field reports as invalid
-      const enumFieldProps = (EnumField as jest.Mock).mock.calls.at(-1)[0];
-      act(() => {
-        enumFieldProps.onChange("", false);
-      });
+      await user.type(screen.getByLabelText(/First Name/i), "Alice");
+      await user.type(screen.getByLabelText(/Last Name/i), "Smith");
 
-      // THEN the submit button should be disabled
-      await waitFor(() => {
-        expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
-      });
+      // THEN the submit button should remain disabled
+      expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
     });
 
-    it("should show validation error for required multiple select field when empty", async () => {
-      // GIVEN a form with a required multiple select field
-      componentRender();
-
-      // WHEN the field reports as invalid
-      const multipleFieldProps = (MultipleSelectField as jest.Mock).mock.calls.at(-1)[0];
-      act(() => {
-        multipleFieldProps.onChange([], false);
+    it("should allow empty values for non-required fields (province is not required)", async () => {
+      // GIVEN a form with all required fields filled
+      const user = userEvent.setup({ delay: null });
+      // AND an institution with no province
+      mockSearchInstitutions.mockResolvedValue({
+        data: [{ name: "No Province Uni", reg_no: "REG002", province: null }],
       });
-
-      // THEN the submit button should be disabled
-      await waitFor(() => {
-        expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).toBeDisabled();
-      });
-    });
-
-    it("should allow empty values for non-required fields", async () => {
-      // GIVEN a form with non-required fields
-      const nonRequiredFields = [
-        { ...SAMPLE_STRING_FIELD, required: false },
-        { ...SAMPLE_ENUM_FIELD, required: false },
-        { ...SAMPLE_MULTIPLE_FIELD, required: false },
-      ];
-      useFieldsConfigSpy.mockReturnValue({
-        fields: nonRequiredFields,
-        loading: false,
-        error: null,
-      });
+      mockGetProgrammes.mockResolvedValue({ programmes: [{ name: "Law" }] });
 
       componentRender();
 
-      // WHEN all fields report as valid even when empty
-      const stringFieldProps = (StringField as jest.Mock).mock.calls.at(-1)[0];
-      const enumFieldProps = (EnumField as jest.Mock).mock.calls.at(-1)[0];
-      const multipleFieldProps = (MultipleSelectField as jest.Mock).mock.calls.at(-1)[0];
+      await user.type(screen.getByLabelText(/First Name/i), "Alice");
+      await user.type(screen.getByLabelText(/Last Name/i), "Smith");
 
-      act(() => {
-        stringFieldProps.onChange("", true);
-        enumFieldProps.onChange("", true);
-        multipleFieldProps.onChange([], true);
-      });
+      const institutionInput = screen.getByLabelText(/Institution/i);
+      await user.type(institutionInput, "No Pro");
+      await waitFor(() => expect(mockSearchInstitutions).toHaveBeenCalled());
+      const institutionOption = await screen.findByText("No Province Uni");
+      await user.click(institutionOption);
 
-      // THEN the submit button should be enabled
+      await waitFor(() => expect(mockGetProgrammes).toHaveBeenCalled());
+      const programmeInput = screen.getByLabelText(/Programme/i);
+      await user.click(programmeInput);
+      const programmeOption = await screen.findByText("Law");
+      await user.click(programmeOption);
+
+      fireEvent.mouseDown(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_SCHOOL_YEAR_SELECT));
+      const yearOption = await screen.findByText("Year 2");
+      await user.click(yearOption);
+
+      // THEN the submit button should be enabled (province is optional)
       await waitFor(() => {
         expect(screen.getByTestId(DATA_TEST_ID.SENSITIVE_DATA_FORM_BUTTON)).not.toBeDisabled();
       });

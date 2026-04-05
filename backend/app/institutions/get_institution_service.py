@@ -12,14 +12,14 @@ _institution_service_lock = asyncio.Lock()
 
 
 async def get_institution_service(
-        jobs_db=Depends(CompassDBProvider.get_jobs_db)
+        application_db=Depends(CompassDBProvider.get_application_db)
 ) -> IInstitutionService:
     global _institution_service_singleton
 
     if _institution_service_singleton is None:
         async with _institution_service_lock:
             if _institution_service_singleton is None:
-                collection = jobs_db.get_collection(Collections.INSTITUTIONS)
+                collection = application_db.get_collection(Collections.INSTITUTIONS)
                 _institution_service_singleton = InstitutionService(
                     repository=InstitutionRepository(collection)
                 )
