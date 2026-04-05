@@ -112,7 +112,8 @@ export const useUserProfile = (): UseUserProfileResult => {
 
         const authenticatedUser = authenticationStateService.getInstance().getUser();
         if (!authenticatedUser) {
-          throw new Error("User not found");
+          console.warn("useUserProfile: no authenticated user, skipping security data fetch");
+          return;
         }
 
         setSecurityData({ email: authenticatedUser.email });
@@ -136,7 +137,8 @@ export const useUserProfile = (): UseUserProfileResult => {
 
         const userPreferences = UserPreferencesStateService.getInstance().getUserPreferences();
         if (!userPreferences) {
-          throw new Error("User preferences not found");
+          console.warn("useUserProfile: no user preferences found, skipping preferences fetch");
+          return;
         }
 
         setPreferencesData({
@@ -165,7 +167,8 @@ export const useUserProfile = (): UseUserProfileResult => {
         const userId = user?.id;
 
         if (!userId) {
-          throw new Error("User ID not found");
+          console.warn("useUserProfile: no authenticated user ID, skipping profile data fetch");
+          return;
         }
 
         const data = await fetchPersonalData(userId);
@@ -225,6 +228,11 @@ export const useUserProfile = (): UseUserProfileResult => {
   // Effect 6: Fetch career readiness module statuses from API
   useEffect(() => {
     const fetchModules = async () => {
+      if (!authenticationStateService.getInstance().getUser()) {
+        console.warn("useUserProfile: no authenticated user, skipping career readiness modules fetch");
+        setIsLoadingModules(false);
+        return;
+      }
       try {
         setIsLoadingModules(true);
         setErrors((prev) => ({ ...prev, modules: null }));
@@ -245,6 +253,11 @@ export const useUserProfile = (): UseUserProfileResult => {
   // Effect 7: Fetch career explorer sector engagement for the user
   useEffect(() => {
     const fetchCareerExplorerData = async () => {
+      if (!authenticationStateService.getInstance().getUser()) {
+        console.warn("useUserProfile: no authenticated user, skipping career explorer fetch");
+        setIsLoadingCareerExplorer(false);
+        return;
+      }
       try {
         setIsLoadingCareerExplorer(true);
         setErrors((prev) => ({ ...prev, careerExplorer: null }));
