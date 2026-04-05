@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import {
   Autocomplete,
   Box,
@@ -10,7 +10,6 @@ import {
   Select,
   TextField,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -27,7 +26,12 @@ import { getUserFriendlyErrorMessage, RestAPIError } from "src/error/restAPIErro
 import { EncryptedDataTooLarge } from "src/sensitiveData/services/sensitivePersonalDataService/errors";
 import { sensitivePersonalDataService } from "src/sensitiveData/services/sensitivePersonalDataService/sensitivePersonalData.service";
 import TextConfirmModalDialog from "src/theme/textConfirmModalDialog/TextConfirmModalDialog";
-import { FieldDefinition, FieldType, StringFieldDefinition, EnumFieldDefinition } from "src/sensitiveData/components/sensitiveDataForm/config/types";
+import {
+  FieldDefinition,
+  FieldType,
+  StringFieldDefinition,
+  EnumFieldDefinition,
+} from "src/sensitiveData/components/sensitiveDataForm/config/types";
 import CustomLink from "src/theme/CustomLink/CustomLink";
 import {
   SensitivePersonalDataRequirement,
@@ -35,7 +39,6 @@ import {
 } from "src/userPreferences/UserPreferencesService/userPreferences.types";
 import { UserPreferenceError } from "src/error/commonErrors";
 import { HighlightedSpan } from "src/consent/components/consentPage/Consent";
-import { Theme } from "@mui/material/styles";
 import { PersistentStorageService } from "src/app/PersistentStorageService/PersistentStorageService";
 import { extractPersonalInfo } from "./config/utils";
 import SensitiveDataFormSkeleton from "src/sensitiveData/components/sensitiveDataForm/SensitiveDataFormSkeleton";
@@ -51,16 +54,53 @@ export const DATA_TEST_ID = {
   SENSITIVE_DATA_SKIP_BUTTON: `sensitive-data-skip-button-${uniqueId}`,
   SENSITIVE_DATA_FORM_ERROR_MESSAGE: `sensitive-data-form-error-message-${uniqueId}`,
   SENSITIVE_DATA_FORM_REFRESH_BUTTON: `sensitive-data-form-refresh-button-${uniqueId}`,
+  SENSITIVE_DATA_SCHOOL_YEAR_SELECT: `sensitive-data-school-year-select-${uniqueId}`,
 };
 
 // Static field definitions used for payload serialisation (encrypt/dataKey mapping).
 // Institution and programme are handled via custom UI but still included here so
 // the service knows to send them as plain (unencrypted) fields.
 const STATIC_FIELDS: FieldDefinition[] = [
-  new StringFieldDefinition({ name: "firstName", dataKey: "first_name", type: FieldType.String, required: true, label: "First Name", encrypt: true }),
-  new StringFieldDefinition({ name: "lastName", dataKey: "last_name", type: FieldType.String, required: true, label: "Last Name", encrypt: true }),
-  new StringFieldDefinition({ name: "institution", dataKey: "institution_name", type: FieldType.String, required: true, label: "Institution", encrypt: false }),
-  new StringFieldDefinition({ name: "programme", dataKey: "programme_name", type: FieldType.String, required: true, label: "Programme", encrypt: false }),
+  new StringFieldDefinition({
+    name: "firstName",
+    dataKey: "first_name",
+    type: FieldType.String,
+    required: true,
+    label: "First Name",
+    encrypt: false,
+  }),
+  new StringFieldDefinition({
+    name: "lastName",
+    dataKey: "last_name",
+    type: FieldType.String,
+    required: true,
+    label: "Last Name",
+    encrypt: false,
+  }),
+  new StringFieldDefinition({
+    name: "institution",
+    dataKey: "institution_name",
+    type: FieldType.String,
+    required: true,
+    label: "Institution",
+    encrypt: false,
+  }),
+  new StringFieldDefinition({
+    name: "programme",
+    dataKey: "programme_name",
+    type: FieldType.String,
+    required: true,
+    label: "Programme",
+    encrypt: false,
+  }),
+  new StringFieldDefinition({
+    name: "province",
+    dataKey: "province",
+    type: FieldType.String,
+    required: false,
+    label: "Province",
+    encrypt: false,
+  }),
   new EnumFieldDefinition({
     name: "schoolYear",
     dataKey: "school_year",
@@ -92,7 +132,6 @@ const INSTITUTION_SEARCH_DEBOUNCE_MS = 400;
 const SensitiveDataForm: React.FC = () => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -142,75 +181,84 @@ const SensitiveDataForm: React.FC = () => {
   // --- Institution search with debounce ---
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleInstitutionInputChange = useCallback((_event: React.SyntheticEvent, value: string) => {
-    setInstitutionInputValue(value);
+  const handleInstitutionInputChange = useCallback(
+    (_event: React.SyntheticEvent, value: string) => {
+      setInstitutionInputValue(value);
 
-    // Clear institution & programme when user clears or changes input
-    if (!value) {
-      setSelectedInstitution(null);
+      // Clear institution & programme when user clears or changes input
+      if (!value) {
+        setSelectedInstitution(null);
+        setSelectedProgramme("");
+        setProgrammes([]);
+        setFieldValid("institution", false);
+        setFieldValid("programme", false);
+      }
+
+      if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+
+      if (value.length < INSTITUTION_SEARCH_MIN_CHARS) {
+        setInstitutionOptions([]);
+        return;
+      }
+
+      searchTimerRef.current = setTimeout(async () => {
+        setInstitutionLoading(true);
+        try {
+          const result = await InstitutionService.getInstance().searchInstitutions(value, 10);
+          setInstitutionOptions(result.data);
+        } catch (e) {
+          console.error("Institution search failed", e);
+          setInstitutionOptions([]);
+        } finally {
+          setInstitutionLoading(false);
+        }
+      }, INSTITUTION_SEARCH_DEBOUNCE_MS);
+    },
+    [setFieldValid]
+  );
+
+  const handleInstitutionSelect = useCallback(
+    async (_event: React.SyntheticEvent, institution: InstitutionSummary | null) => {
+      setSelectedInstitution(institution);
       setSelectedProgramme("");
       setProgrammes([]);
-      setFieldValid("institution", false);
       setFieldValid("programme", false);
-    }
 
-    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
-
-    if (value.length < INSTITUTION_SEARCH_MIN_CHARS) {
-      setInstitutionOptions([]);
-      return;
-    }
-
-    searchTimerRef.current = setTimeout(async () => {
-      setInstitutionLoading(true);
-      try {
-        const result = await InstitutionService.getInstance().searchInstitutions(value, 10);
-        setInstitutionOptions(result.data);
-      } catch (e) {
-        console.error("Institution search failed", e);
-        setInstitutionOptions([]);
-      } finally {
-        setInstitutionLoading(false);
+      if (!institution) {
+        setFieldValid("institution", false);
+        return;
       }
-    }, INSTITUTION_SEARCH_DEBOUNCE_MS);
-  }, [setFieldValid]);
 
-  const handleInstitutionSelect = useCallback(async (_event: React.SyntheticEvent, institution: InstitutionSummary | null) => {
-    setSelectedInstitution(institution);
-    setSelectedProgramme("");
-    setProgrammes([]);
-    setFieldValid("programme", false);
+      setFieldValid("institution", true);
 
-    if (!institution) {
-      setFieldValid("institution", false);
-      return;
-    }
+      if (!institution.reg_no) return;
 
-    setFieldValid("institution", true);
-
-    if (!institution.reg_no) return;
-
-    setProgrammesLoading(true);
-    try {
-      const result = await InstitutionService.getInstance().getProgrammesByInstitution(institution.reg_no);
-      setProgrammes(result.programmes ?? []);
-    } catch (e) {
-      console.error("Failed to load programmes", e);
-      enqueueSnackbar("Failed to load programmes for this institution", { variant: "warning" });
-    } finally {
-      setProgrammesLoading(false);
-    }
-  }, [setFieldValid, enqueueSnackbar]);
-
+      setProgrammesLoading(true);
+      try {
+        const result = await InstitutionService.getInstance().getProgrammesByInstitution(institution.reg_no);
+        setProgrammes(result.programmes ?? []);
+      } catch (e) {
+        console.error("Failed to load programmes", e);
+        enqueueSnackbar("Failed to load programmes for this institution", { variant: "warning" });
+      } finally {
+        setProgrammesLoading(false);
+      }
+    },
+    [setFieldValid, enqueueSnackbar]
+  );
 
   // Build the sensitiveData payload from current field state
-  const buildSensitiveData = useCallback((): SensitivePersonalData => ({
-    firstName,
-    lastName,
-    institution: selectedInstitution?.name ?? "",
-    programme: selectedProgramme,
-    schoolYear,
-  }), [firstName, lastName, selectedInstitution, selectedProgramme, schoolYear]);
+  const buildSensitiveData = useCallback(
+    (): SensitivePersonalData => ({
+      firstName,
+      lastName,
+      institution: selectedInstitution?.name ?? "",
+      programme: selectedProgramme,
+      province: selectedInstitution?.province ?? "",
+      schoolYear,
+    }),
+    [firstName, lastName, selectedInstitution, selectedProgramme, schoolYear]
+  );
 
   const handleSaveSensitivePersonalData = useCallback(async () => {
     if (!isFormValid(validationErrors)) {
@@ -254,7 +302,7 @@ const SensitiveDataForm: React.FC = () => {
     try {
       const authenticationService = AuthenticationServiceFactory.getCurrentAuthenticationService();
       await authenticationService!.logout();
-      navigate(routerPaths.LANDING, { replace: true });
+      navigate(routerPaths.LOGIN, { replace: true });
       enqueueSnackbar(t("consent.components.consentPage.snackbarLoggedOutSuccess"), { variant: "success" });
     } catch (e) {
       console.error("Failed to log out", e);
@@ -303,17 +351,18 @@ const SensitiveDataForm: React.FC = () => {
   return (
     <Suspense fallback={<SensitiveDataFormSkeleton />}>
       <>
-        <Container maxWidth="xs" sx={{ height: "100%", display: "flex", alignItems: "center" }} data-testid={DATA_TEST_ID.SENSITIVE_DATA_CONTAINER}>
+        <Container
+          maxWidth="xs"
+          sx={{ height: "100%", padding: theme.fixedSpacing(theme.tabiyaSpacing.lg) }}
+          data-testid={DATA_TEST_ID.SENSITIVE_DATA_CONTAINER}
+        >
           <Box
             display="flex"
             flexDirection="column"
             alignItems="center"
+            justifyContent="space-evenly"
             gap={theme.fixedSpacing(theme.tabiyaSpacing.lg)}
             width={"100%"}
-            sx={{
-              paddingX: isMobile ? theme.fixedSpacing(theme.tabiyaSpacing.sm) : theme.spacing(0),
-              paddingBottom: (theme) => theme.fixedSpacing(theme.tabiyaSpacing.xl),
-            }}
           >
             <AuthHeader
               title={t("sensitiveData.components.sensitiveDataForm.title")}
@@ -334,7 +383,6 @@ const SensitiveDataForm: React.FC = () => {
               gap={theme.fixedSpacing(theme.tabiyaSpacing.lg)}
             >
               <Box display="flex" flexDirection="column" gap={theme.fixedSpacing(theme.tabiyaSpacing.md)}>
-
                 {/* First Name */}
                 <TextField
                   fullWidth
@@ -376,8 +424,8 @@ const SensitiveDataForm: React.FC = () => {
                     institutionInputValue.length < INSTITUTION_SEARCH_MIN_CHARS
                       ? "Type at least 2 characters to search"
                       : institutionLoading
-                      ? "Searching..."
-                      : "No institutions found"
+                        ? "Searching..."
+                        : "No institutions found"
                   }
                   renderOption={(props, option) => (
                     <li {...props} key={option.name}>
@@ -428,8 +476,8 @@ const SensitiveDataForm: React.FC = () => {
                     !selectedInstitution
                       ? "Select an institution first"
                       : programmesLoading
-                      ? "Loading programmes..."
-                      : "No programmes available"
+                        ? "Loading programmes..."
+                        : "No programmes available"
                   }
                   renderInput={(params) => (
                     <TextField
@@ -454,21 +502,28 @@ const SensitiveDataForm: React.FC = () => {
 
                 {/* School Year */}
                 <FormControl fullWidth required>
-                  <InputLabel>School Year</InputLabel>
+                  <InputLabel id="school-year-label">School Year</InputLabel>
                   <Select
                     value={schoolYear}
                     label="School Year"
+                    labelId="school-year-label"
+                    SelectDisplayProps={
+                      {
+                        "data-testid": DATA_TEST_ID.SENSITIVE_DATA_SCHOOL_YEAR_SELECT,
+                      } as React.HTMLAttributes<HTMLDivElement>
+                    }
                     onChange={(e) => {
                       setSchoolYear(e.target.value);
                       setFieldValid("schoolYear", !!e.target.value);
                     }}
                   >
                     {["Year 1", "Year 2", "Year 3", "Year 4", "Year 5", "Year 6"].map((yr) => (
-                      <MenuItem key={yr} value={yr}>{yr}</MenuItem>
+                      <MenuItem key={yr} value={yr}>
+                        {yr}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
-
               </Box>
 
               <Box
@@ -576,9 +631,7 @@ const SensitiveDataForm: React.FC = () => {
         <Backdrop
           isShown={isSkipping || isRejecting}
           message={
-            isSkipping
-              ? t("sensitiveData.components.sensitiveDataForm.skipping")
-              : t("common.backdrop.loggingYouOut")
+            isSkipping ? t("sensitiveData.components.sensitiveDataForm.skipping") : t("common.backdrop.loggingYouOut")
           }
         />
       </>
