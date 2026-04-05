@@ -55,3 +55,4 @@ class JobRepository(IJobRepository):
     async def distinct_values(self, field: str, filter_query: Dict[str, Any]) -> List[str]:
         values = await self._collection.distinct(field, filter_query)
         return [str(v) for v in values if v]
+
