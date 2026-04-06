@@ -1,9 +1,7 @@
 import asyncio
 import base64
 import hashlib
-import json
 import logging
-import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -25,40 +23,6 @@ def _anonymize(user_id: str) -> str:
     return hashlib.md5(user_id.encode(), usedforsecurity=False).hexdigest()
 
 
-def _load_institution_list() -> list[str]:
-    """
-    Load the canonical list of institutions from the PLAIN_PERSONAL_DATA_FIELDS env var.
-
-    The env var is expected to be a JSON array of field definitions (same schema as
-    FRONTEND_SENSITIVE_DATA_FIELDS). We look for the field with dataKey="school" and
-    type="ENUM" and return its values["en-US"] list.
-
-    Falls back to an empty list if the env var is not set or the field is not found.
-    """
-    raw = os.getenv("PLAIN_PERSONAL_DATA_FIELDS")
-    if not raw:
-        logger.warning("PLAIN_PERSONAL_DATA_FIELDS env var not set; institution list will be empty")
-        return []
-    try:
-        fields = json.loads(raw)
-        # Support both array-of-objects and object-of-objects formats
-        if isinstance(fields, dict):
-            fields = list(fields.values())
-        for field in fields:
-            if field.get("dataKey") == PLAIN_DATA_SCHOOL_KEY and field.get("type") == "ENUM":
-                values = field.get("values", {})
-                # Prefer en-US, fall back to first available locale
-                locale_values = values.get("en-US") or next(iter(values.values()), [])
-                return list(locale_values)
-    except Exception:
-        logger.exception("Failed to parse PLAIN_PERSONAL_DATA_FIELDS for institution list")
-    return []
-
-
-# Cache the list at import time so we don't re-parse on every request
-_INSTITUTION_LIST: list[str] = _load_institution_list()
-
-
 class InstitutionsRepository:
     def __init__(
         self,
@@ -70,11 +34,19 @@ class InstitutionsRepository:
         self._collection = userdata_db.get_collection(Collections.PLAIN_PERSONAL_DATA)
         self._metrics_collection = metrics_db.get_collection(Collections.COMPASS_METRICS)
         self._cr_conversations = application_db.get_collection(Collections.CAREER_READINESS_CONVERSATIONS)
+        self._institutions_collection = application_db.get_collection(Collections.INSTITUTIONS)
         self._sd_repo = SkillsDiscoveryAnalyticsRepository(application_db, userdata_db)
         self._ce_conversations = (
             career_explorer_db.get_collection(Collections.CAREER_EXPLORER_CONVERSATIONS)
             if career_explorer_db is not None else None
         )
+
+    async def _get_institution_names(self) -> list[str]:
+        """Fetch the canonical sorted list of institution names from the institutions collection."""
+        docs = await self._institutions_collection.find(
+            {}, projection={"_id": 0, "name": 1}
+        ).sort("name", 1).to_list(length=None)
+        return [d["name"] for d in docs if d.get("name")]
 
     async def _get_active_anon_ids_last_7_days(self) -> set[str]:
         """Return the set of anonymized_user_ids active in the last 7 days from metrics."""
@@ -117,14 +89,14 @@ class InstitutionsRepository:
         cursor: Optional[str] = None,
         limit: int = 20,
     ) -> tuple[list[Institution], Optional[str], bool]:
-        institution_names = _INSTITUTION_LIST
+        institution_names = await self._get_institution_names()
 
         # Apply province filter: province info is per-user, not per-institution in this model.
         # We skip province filtering at the institution level since the canonical list
         # does not carry province information. Callers who need per-province breakdown
         # should use the students endpoint.
         if province is not None:
-            logger.warning("Province filter on institutions is not supported with static institution list; ignoring")
+            logger.warning("Province filter on institutions is not supported; ignoring")
 
         # Decode cursor (index into the sorted list)
         start_index = 0
@@ -232,7 +204,7 @@ class InstitutionsRepository:
         active: Optional[bool] = None,
         province: Optional[str] = None,
     ) -> int:
-        return len(_INSTITUTION_LIST)
+        return await self._institutions_collection.count_documents({})
 
 
 InstitutionRepository = InstitutionsRepository
